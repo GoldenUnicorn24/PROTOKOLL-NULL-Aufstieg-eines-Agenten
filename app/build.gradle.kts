@@ -13,8 +13,8 @@ android {
         applicationId = "de.protokollnull.agent"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0-foundation"
+        versionCode = 2
+        versionName = "0.2.0-beta"
     }
     buildTypes {
         release {
@@ -28,6 +28,7 @@ android {
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+    testOptions { unitTests.isReturnDefaultValues = true }
 }
 
 dependencies {
@@ -40,5 +41,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("io.coil-kt:coil-svg:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

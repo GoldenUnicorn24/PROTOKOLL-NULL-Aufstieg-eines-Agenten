@@ -1,0 +1,294 @@
+package de.protokollnull.agent.model
+
+import kotlinx.serialization.Serializable
+
+const val CURRENT_SCHEMA = 2
+
+/** Attribute des Spielercharakters (0..100). */
+object Attr {
+    const val FITNESS = "fitness"
+    const val PRECISION = "precision"
+    const val INTELLECT = "intellect"
+    const val CHARISMA = "charisma"
+    const val PERCEPTION = "perception"
+    const val WILLPOWER = "willpower"
+    val all = listOf(FITNESS, PRECISION, INTELLECT, CHARISMA, PERCEPTION, WILLPOWER)
+    fun label(id: String): String = when (id) {
+        FITNESS -> "Fitness"
+        PRECISION -> "Präzision"
+        INTELLECT -> "Intellekt"
+        CHARISMA -> "Ausstrahlung"
+        PERCEPTION -> "Wahrnehmung"
+        WILLPOWER -> "Willenskraft"
+        else -> id
+    }
+}
+
+object Slots {
+    val ids = listOf("weapon", "armor", "gadget", "comms", "bag", "accessory")
+    fun label(id: String): String = when (id) {
+        "weapon" -> "Bewaffnung"
+        "armor" -> "Schutz"
+        "gadget" -> "Gerät"
+        "comms" -> "Kommunikation"
+        "bag" -> "Tasche"
+        "accessory" -> "Zubehör"
+        else -> id
+    }
+}
+
+@Serializable
+data class ItemStack(
+    val uid: Long,
+    val itemId: String,
+    val quantity: Int = 1,
+    val condition: Int = 100
+)
+
+@Serializable
+data class Relation(
+    val friendship: Int = 20,
+    val trust: Int = 50,
+    val loyalty: Int = 20,
+    val respect: Int = 30,
+    val affection: Int = 0,
+    val rivalry: Int = 0,
+    val memories: List<String> = emptyList(),
+    val lastTalkDay: Int = -1,
+    /** 0 = keine, 1 = Interesse, 2 = Paar, 3 = zusammengezogen, 4 = verheiratet, 5 = Familie */
+    val romanceStage: Int = 0,
+    val romanceSinceDay: Int = -1
+)
+
+@Serializable
+data class Appearance(
+    val avatar: AvatarSpec = AvatarSpec(),
+    val style: String = "sachlich"
+)
+
+@Serializable
+data class PlayerCharacter(
+    val firstName: String = "Lena",
+    val lastName: String = "Berg",
+    val codename: String = "Null",
+    val gender: String = "female",
+    val appearance: Appearance = Appearance(),
+    val background: String = "analyst",
+    val strength: String = "perception",
+    val weakness: String = "charisma",
+    val difficulty: String = "normal",
+    val level: Int = 1,
+    val xp: Int = 0,
+    val skillPoints: Int = 3,
+    val rank: Int = 1,
+    val reputation: Int = 0,
+    val credits: Int = 300,
+    val energy: Int = 100,
+    val stress: Int = 10,
+    val health: Int = 100,
+    val wounds: Int = 0,
+    val attributes: Map<String, Int> = mapOf(
+        Attr.FITNESS to 30, Attr.PRECISION to 30, Attr.INTELLECT to 30,
+        Attr.CHARISMA to 30, Attr.PERCEPTION to 30, Attr.WILLPOWER to 30
+    ),
+    val trainingProgress: Map<String, Int> = emptyMap(),
+    val skills: Map<String, Int> = emptyMap(),
+    val inventory: List<ItemStack> = emptyList(),
+    val storage: List<ItemStack> = emptyList(),
+    val equipment: Map<String, Long> = emptyMap(),
+    val nextUid: Long = 1,
+    val apartment: Boolean = false,
+    val coverJob: String? = null
+) {
+    val displayName: String get() = "$firstName $lastName"
+}
+
+@Serializable
+data class CustomNpc(
+    val id: String,
+    val firstName: String,
+    val lastName: String,
+    val gender: String,
+    val avatar: AvatarSpec,
+    val traits: List<String>,
+    val background: String,
+    val profession: String,
+    val interests: List<String>,
+    val skills: Map<String, Int>,
+    /** Spieltag, an dem die Figur 16 Jahre alt war. */
+    val createdDay: Int,
+    val ageAtCreation: Int = 16,
+    val rank: Int = 1
+) {
+    val name: String get() = "$firstName $lastName"
+}
+
+@Serializable
+data class GameClock(
+    /** Tag 0 = erster Tag in der Division (Spieler ist 16). */
+    val day: Int = 0,
+    /** 0 Morgen, 1 Vormittag, 2 Mittag, 3 Nachmittag, 4 Abend, 5 Nacht */
+    val slot: Int = 0
+)
+
+@Serializable
+data class TacticalUnit(
+    val id: String,
+    val name: String,
+    val ally: Boolean,
+    val x: Int,
+    val y: Int,
+    val hp: Int,
+    val maxHp: Int,
+    val ap: Int = 2,
+    val accuracy: Int = 60,
+    val damage: Int = 3,
+    val armor: Int = 0,
+    val ability: String? = null,
+    val abilityCooldown: Int = 0,
+    val guarding: Boolean = false,
+    val stunned: Int = 0,
+    val isPlayer: Boolean = false
+) {
+    val down: Boolean get() = hp <= 0
+}
+
+@Serializable
+data class TacticalState(
+    val width: Int,
+    val height: Int,
+    val tiles: List<String>,
+    val units: List<TacticalUnit>,
+    val turn: Int = 1,
+    val maxTurns: Int = 14,
+    val objective: String = "eliminate",
+    val selectedUnit: String? = null,
+    val log: List<String> = emptyList(),
+    val finished: Boolean = false,
+    val won: Boolean = false,
+    val focusOrder: Boolean = false,
+    val seed: Long = 0,
+    val rolls: Int = 0,
+    val enemyName: String = "Gegner",
+    val nonLethal: Boolean = true
+) {
+    fun tile(x: Int, y: Int): Char =
+        if (y in tiles.indices && x in 0 until tiles[y].length) tiles[y][x] else '#'
+}
+
+@Serializable
+data class SearchState(
+    val spots: List<String>,
+    val clues: Set<Int>,
+    val searched: Set<Int> = emptySet(),
+    val found: Int = 0,
+    val actionsLeft: Int,
+    val hints: Map<Int, Int> = emptyMap()
+)
+
+@Serializable
+data class ObserveState(
+    val round: Int = 0,
+    val rounds: Int,
+    val targets: List<String>,
+    val correct: List<Int>,
+    val hintRevealed: Boolean = false,
+    val hits: Int = 0
+)
+
+@Serializable
+data class MissionRun(
+    val missionId: String,
+    val seed: Long,
+    val stageId: String,
+    val generated: MissionDefinition? = null,
+    val approach: String = "balanced",
+    val team: List<String> = emptyList(),
+    val intel: Int = 0,
+    val alarm: Int = 0,
+    val cover: Int = 3,
+    val stressTaken: Int = 0,
+    val damageTaken: Int = 0,
+    val log: List<String> = emptyList(),
+    val search: SearchState? = null,
+    val observe: ObserveState? = null,
+    val tactical: TacticalState? = null,
+    val lastText: String = "",
+    val rollCounter: Int = 0,
+    val pendingEffects: List<Effects> = emptyList(),
+    val result: String? = null
+)
+
+@Serializable
+data class MissionReport(
+    val missionId: String,
+    val title: String,
+    val result: String,
+    val day: Int,
+    val xp: Int,
+    val credits: Int,
+    val reputation: Int,
+    val notes: List<String>
+)
+
+@Serializable
+data class DialogueRun(
+    val dialogueId: String,
+    val nodeId: String,
+    val lastResult: String = "",
+    val history: List<String> = emptyList()
+)
+
+@Serializable
+data class DirectorState(
+    val budget: Int = 50000,
+    val departments: Map<String, Int> = mapOf(
+        "training" to 1, "tech" to 1, "medical" to 1, "intel" to 1, "security" to 1
+    ),
+    val heads: Map<String, String> = emptyMap(),
+    val morale: Int = 60,
+    val oversight: Int = 50,
+    val policy: String = "balanced",
+    val lastWeekReport: String = ""
+)
+
+@Serializable
+data class Settings(
+    val fontScale: Float = 1f,
+    val animations: Boolean = true,
+    val sfxVolume: Int = 60,
+    val highContrast: Boolean = false,
+    val haptics: Boolean = true
+)
+
+@Serializable
+data class LogEntry(val day: Int, val slot: Int, val text: String)
+
+@Serializable
+data class GameState(
+    val schemaVersion: Int = CURRENT_SCHEMA,
+    val seed: Long = 1L,
+    val player: PlayerCharacter = PlayerCharacter(),
+    val clock: GameClock = GameClock(),
+    val phase: String = "prologue",
+    val prologueNode: String = "prolog_01",
+    val location: String = "dorm",
+    val relations: Map<String, Relation> = emptyMap(),
+    val flags: Set<String> = emptySet(),
+    val completedMissions: Set<String> = emptySet(),
+    val failedMissions: Set<String> = emptySet(),
+    val completedDialogues: Set<String> = emptySet(),
+    val activeMission: MissionRun? = null,
+    val activeDialogue: DialogueRun? = null,
+    val reports: List<MissionReport> = emptyList(),
+    val customNpcs: List<CustomNpc> = emptyList(),
+    val team: List<String> = emptyList(),
+    val factionStanding: Map<String, Int> = emptyMap(),
+    val director: DirectorState? = null,
+    val routine: String = "balanced",
+    val log: List<LogEntry> = emptyList(),
+    val boardWeek: Int = -1,
+    val board: List<MissionDefinition> = emptyList(),
+    val rolls: Int = 0,
+    val lastAutosave: Long = 0
+)
