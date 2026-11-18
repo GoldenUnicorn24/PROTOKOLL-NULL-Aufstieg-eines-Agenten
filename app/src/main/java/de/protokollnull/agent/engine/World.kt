@@ -213,7 +213,12 @@ object World {
 
     fun npcsIn(data: GameData, state: GameState, roomId: String): List<String> {
         val ids = data.agents.map { it.id } + state.customNpcs.map { it.id }
-        return ids.filter { npcLocation(data, state, it) == roomId && (it != "nikita" || "nikita_contact" in state.flags) }
+        return ids.filter { npcLocation(data, state, it) == roomId && revealed(data, state, it) }
+    }
+
+    fun revealed(data: GameData, state: GameState, id: String): Boolean {
+        val flag = data.agentById[id]?.revealFlag ?: return true
+        return flag in state.flags
     }
 
     data class RoomAction(val id: String, val label: String, val hint: String)

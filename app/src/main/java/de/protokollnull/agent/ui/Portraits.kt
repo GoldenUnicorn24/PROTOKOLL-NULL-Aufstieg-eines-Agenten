@@ -102,13 +102,14 @@ fun AvatarCanvas(spec: AvatarSpec, modifier: Modifier = Modifier) {
 
 /** Porträt eines NPCs: lizenziertes Foto (bzw. später lizenziertes Serienstill) oder Original-Avatar. */
 @Composable
-fun NpcPortrait(data: GameData, state: GameState, id: String, size: Dp, modifier: Modifier = Modifier, height: Dp = size * 1.25f) {
-    val shape = RoundedCornerShape(14.dp)
+fun NpcPortrait(data: GameData, state: GameState, id: String, size: Dp, modifier: Modifier = Modifier, height: Dp = size * 1.25f, framed: Boolean = true) {
+    val shape = RoundedCornerShape(if (framed) 14.dp else 0.dp)
     val photo = data.portraitFor(id)
     val def = data.agentById[id]
     val custom = state.customNpcs.firstOrNull { it.id == id }
     val loader = LocalLoader.current
-    Box(modifier.size(width = size, height = height).clip(shape).border(1.dp, Pn.Accent.copy(alpha = 0.35f), shape)) {
+    val base = if (framed) modifier.size(width = size, height = height).clip(shape).border(1.dp, Pn.Accent.copy(alpha = 0.35f), shape) else modifier.clip(shape)
+    Box(base) {
         if (photo != null && loader != null) {
             val f = def?.portraitFocus ?: listOf(0f, -0.5f)
             AsyncImage(

@@ -34,7 +34,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (pendingStory != null) item {
             GlassPanel(accent = Pn.Warn, onClick = { vm.act(silent = true) { d, st -> Dialogues.start(d, st, pendingStory.id) } }) {
-                Text("EINGEHENDE NACHRICHT", style = MaterialTheme.typography.labelLarge, color = Pn.Warn)
+                Row(verticalAlignment = Alignment.CenterVertically) { PulseDot(Pn.Warn, 6.dp); Spacer(Modifier.width(6.dp)); Text("EINGEHENDE NACHRICHT", style = MaterialTheme.typography.labelLarge, color = Pn.Warn) }
                 Text(pendingStory.title, style = MaterialTheme.typography.titleMedium)
                 Text("Tippen, um zu reagieren", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
@@ -55,7 +55,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item {
-            SectionLabel("Hauptquartier · 2D-Lageplan", trailing = "Tippe einen Raum")
+            SectionLabel("Hauptquartier · Lageplan", trailing = "Raum antippen", icon = PnIcons.Radar)
             Spacer(Modifier.height(8.dp))
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 data.hq.floors.forEach { f ->
@@ -97,11 +97,16 @@ private fun FloorMap(vm: GameViewModel, s: GameState, floor: Int) {
                         .padding(10.dp)
                 ) {
                     Column {
+                        PnIcon(PnIcons.forRoom(r.id), if (locked != null) Pn.Muted else if (here) Pn.Accent else Pn.Text.copy(alpha = 0.8f), 22.dp)
+                        Spacer(Modifier.height(4.dp))
                         Text(r.name, style = MaterialTheme.typography.labelLarge, color = if (locked != null) Pn.Muted else Pn.Text, maxLines = 2)
-                        if (locked != null) Text("🔒 gesperrt", style = MaterialTheme.typography.labelSmall, color = Pn.Danger)
+                        if (locked != null) Row(verticalAlignment = Alignment.CenterVertically) { PnIcon(PnIcons.Lock, Pn.Danger, 12.dp); Spacer(Modifier.width(3.dp)); Text("gesperrt", style = MaterialTheme.typography.labelSmall, color = Pn.Danger) }
                     }
-                    if (here) Text("◆ DU", style = MaterialTheme.typography.labelSmall, color = Pn.Accent, modifier = Modifier.align(Alignment.BottomStart))
-                    if (npcs.isNotEmpty()) Pill("${npcs.size} ●", Pn.Violet, Modifier.align(Alignment.BottomEnd))
+                    if (here) Box(Modifier.align(Alignment.BottomStart)) { PulseDot(size = 7.dp) }
+                    if (npcs.isNotEmpty()) Row(Modifier.align(Alignment.BottomEnd), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                        npcs.take(3).forEach { id -> NpcPortrait(data, s, id, 22.dp, height = 22.dp) }
+                        if (npcs.size > 3) Pill("+${npcs.size - 3}", Pn.Violet)
+                    }
                 }
             }
         }
@@ -115,8 +120,13 @@ private fun RoomPanel(vm: GameViewModel, s: GameState) {
     val npcs = World.npcsIn(data, s, room.id)
     val encounter = World.encounter(data, s, room.id)
     GlassPanel {
-        Text("STANDORT", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-        Text(room.name, style = MaterialTheme.typography.titleLarge)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconTile(PnIcons.forRoom(room.id), size = 46.dp)
+            Column {
+                Text("STANDORT · " + (data.hq.floors.firstOrNull { it.floor == room.floor }?.name?.substringBefore(" ·") ?: ""), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text(room.name.uppercase(), style = MaterialTheme.typography.titleLarge)
+            }
+        }
         Text(room.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (npcs.isNotEmpty()) {
             Text("Anwesend", style = MaterialTheme.typography.titleSmall)
@@ -144,17 +154,26 @@ private fun RoomPanel(vm: GameViewModel, s: GameState) {
         }
     }
     Spacer(Modifier.height(12.dp))
-    SectionLabel("Aktionen")
+    SectionLabel("Aktionen", icon = PnIcons.Bolt)
     Spacer(Modifier.height(8.dp))
     room.actions.chunked(2).forEach { row ->
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(bottom = 10.dp)) {
             row.forEach { a ->
                 val info = World.actionInfo(a)
-                ActionButton(info.label, Modifier.weight(1f), secondary = true, subtitle = info.hint) { roomAction(vm, s, a) }
+                ActionButton(info.label, Modifier.weight(1f), secondary = true, subtitle = info.hint, icon = actionIcon(a)) { roomAction(vm, s, a) }
             }
             if (row.size == 1) Spacer(Modifier.weight(1f))
         }
     }
+}
+
+private fun actionIcon(a: String) = when (a) {
+    "sleep", "rest" -> PnIcons.Bed; "storage" -> PnIcons.Box; "timeskip" -> PnIcons.Calendar; "eat" -> PnIcons.Food
+    "socialize" -> PnIcons.People; "training" -> PnIcons.Fist; "range" -> PnIcons.Target; "treat" -> PnIcons.Cross
+    "shop", "repair" -> PnIcons.Bag; "missions" -> PnIcons.Radar; "tech_lab" -> PnIcons.Chip; "therapy" -> PnIcons.Brain
+    "promotion" -> PnIcons.Star; "director_desk" -> PnIcons.Crown; "research" -> PnIcons.Archive; "team" -> PnIcons.People
+    "cafe" -> PnIcons.Food; "apartment" -> PnIcons.Hq; "cover_job" -> PnIcons.City; "study" -> PnIcons.Brain
+    else -> PnIcons.Chevron
 }
 
 private fun roomAction(vm: GameViewModel, s: GameState, a: String) {

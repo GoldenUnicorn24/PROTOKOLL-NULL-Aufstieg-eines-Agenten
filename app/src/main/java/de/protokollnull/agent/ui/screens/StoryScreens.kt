@@ -5,7 +5,10 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -180,34 +183,73 @@ fun DialogueScreen(vm: GameViewModel, s: GameState) {
         return
     }
     val (d, n) = cur
-    val speaker = n.speakerId ?: d.npcId
+    val speaker = (n.speakerId ?: d.npcId)?.takeIf { it != "narrator" }
     val choices = Dialogues.visibleChoices(data, s)
     Column(Modifier.fillMaxSize()) {
-        ScreenHeader(d.title, d.chapter.ifBlank { "Gespräch" })
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (speaker != null && speaker != "narrator") {
-                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    NpcPortrait(data, s, speaker, 110.dp)
-                    Column(Modifier.weight(1f)) {
-                        Text(Relations.displayName(data, s, speaker), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
-                        Text(data.agentById[speaker]?.role ?: "", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        if (Relations.isKnownNpc(data, s, speaker)) {
-                            val r = Relations.get(data, s, speaker)
-                            Spacer(Modifier.height(6.dp))
-                            StatBar("Vertrauen", r.trust, 100)
-                        }
+        // Kinoartiger Kopfbereich mit großem Porträt
+        Box(Modifier.fillMaxWidth().height(if (speaker != null) 300.dp else 120.dp)) {
+            if (speaker != null) {
+                NpcPortrait(data, s, speaker, 400.dp, Modifier.fillMaxSize(), height = 300.dp, framed = false)
+            }
+            Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(Color(0x66060C17), Color.Transparent, Color(0xF2060C17)))))
+            Column(Modifier.align(Alignment.TopStart).padding(16.dp)) {
+                Text(d.chapter.ifBlank { "Gespräch" }.uppercase(), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text(d.title.uppercase(), style = MaterialTheme.typography.titleLarge)
+            }
+            if (speaker != null) Column(Modifier.align(Alignment.BottomStart).padding(horizontal = 16.dp, vertical = 10.dp)) {
+                Text(Relations.displayName(data, s, speaker).uppercase(), style = MaterialTheme.typography.headlineSmall, color = Pn.Text)
+                Text(data.agentById[speaker]?.role ?: "", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                if (Relations.isKnownNpc(data, s, speaker)) {
+                    val r = Relations.get(data, s, speaker)
+                    Spacer(Modifier.height(6.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Pill("Vertrauen ${r.trust}", icon = PnIcons.Shield)
+                        Pill("Freundschaft ${r.friendship}", Pn.Ok, icon = PnIcons.Heart)
                     }
                 }
             }
+        }
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             s.activeDialogue?.history?.takeLast(2)?.forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontStyle = FontStyle.Italic) }
-            s.activeDialogue?.lastResult?.takeIf { it.isNotBlank() }?.let { Pill(it, if (it.contains("gelungen")) Pn.Ok else Pn.Danger) }
-            GlassPanel { Text(Dialogues.format(n.text, s), style = MaterialTheme.typography.bodyLarge) }
+            s.activeDialogue?.lastResult?.takeIf { it.isNotBlank() }?.let { Pill(it, if (it.contains("gelungen")) Pn.Ok else Pn.Danger, icon = PnIcons.Spark) }
+            GlassPanel {
+                TypewriterText(Dialogues.format(n.text, s), MaterialTheme.typography.bodyLarge.copy(fontStyle = if (speaker == null) FontStyle.Italic else FontStyle.Normal))
+            }
             choices.forEach { c ->
                 val chance = Dialogues.choiceChance(data, s, c)
                 val detail = c.check?.let { Attr.label(it.attribute) + (it.skill?.let { sk -> " · " + (data.skillById[sk]?.name ?: sk) } ?: "") }
-                ChoiceButton(Dialogues.format(c.text, s), detail, chance) { vm.act(silent = true) { dd, st -> Dialogues.choose(dd, st, c.id) } }
+                ChoiceButton(Dialogues.format(c.text, s), detail, chance, icon = if (c.check != null) PnIcons.Spark else PnIcons.Chat) { vm.act(silent = true) { dd, st -> Dialogues.choose(dd, st, c.id) } }
             }
             if (choices.isEmpty()) ActionButton("Gespräch beenden", Modifier.fillMaxWidth()) { vm.update { it.copy(activeDialogue = null, completedDialogues = it.completedDialogues + d.id) } }
+            Spacer(Modifier.height(12.dp))
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Epilog (nach der letzten Entscheidung)
+// ---------------------------------------------------------------------------
+
+@Composable
+fun EpilogueScreen(vm: GameViewModel, s: GameState) {
+    val sections = Endings.epilogue(vm.data, s)
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Spacer(Modifier.height(24.dp))
+        Box(Modifier.fillMaxWidth().height(170.dp), contentAlignment = Alignment.Center) {
+            RadarEmblem(Modifier.size(170.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("EPILOG", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+                Text(Endings.title(Endings.endingId(s)).removePrefix("Ende: ").uppercase(), style = MaterialTheme.typography.displaySmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            }
+        }
+        sections.forEachIndexed { i, sec ->
+            GlassPanel(accent = if (i == 0) Pn.Warn else Pn.Accent) {
+                Text(sec.title.uppercase(), style = MaterialTheme.typography.labelLarge, color = if (i == 0) Pn.Warn else Pn.Accent)
+                Text(sec.text, style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+        ActionButton("Weiterspielen (freies Spiel)", Modifier.fillMaxWidth(), icon = PnIcons.Play) { vm.update { it.copy(flags = it.flags + "epilogue_seen") } }
+        SmallNote("Nach dem Epilog bleibt die Division spielbar: Einsatzboard, Direktorat, Beziehungen und eigene Rekruten.")
+        Spacer(Modifier.height(24.dp))
     }
 }

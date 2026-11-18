@@ -332,5 +332,231 @@
         "quest_q10"
       ]
     }
+  },
+  {
+    "id": "q12",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "title": "Der Maulwurf",
+    "description": "Die Frau vom Hafenfoto arbeitet in der Division.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Der Maulwurf",
+        "missionId": "M017"
+      }
+    ],
+    "reward": {
+      "xp": 300
+    },
+    "completeFlag": "quest_q12",
+    "conditions": {
+      "flagsAll": [
+        "quest_q10"
+      ]
+    }
+  },
+  {
+    "id": "q13",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "title": "Kandidatin 4",
+    "description": "Finde Kira, bevor Voss sie verschwinden lässt.",
+    "giverId": "birkhoff",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Kandidatin 4",
+        "missionId": "M018"
+      },
+      {
+        "id": "o2",
+        "text": "Mit Kira sprechen (Quartier/Training)",
+        "dialogueId": "dlg_kira_reunion"
+      }
+    ],
+    "reward": {
+      "xp": 350
+    },
+    "completeFlag": "quest_q13",
+    "conditions": {
+      "flagsAll": [
+        "quest_q12"
+      ]
+    }
+  },
+  {
+    "id": "q14",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Vor dem Ausschuss",
+    "description": "Die Regierungsaufsicht will dich anhören.",
+    "giverId": "ryan",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Rang 6: Senior-Agent",
+        "flag": "rank_6"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Vor dem Ausschuss",
+        "missionId": "M019"
+      }
+    ],
+    "reward": {
+      "xp": 400
+    },
+    "completeFlag": "quest_q14",
+    "conditions": {
+      "flagsAll": [
+        "quest_q12"
+      ]
+    }
+  },
+  {
+    "id": "q15",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Feuerprobe",
+    "description": "Beweise, dass du ein Team führen kannst.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Rang 7: Spezialagent",
+        "flag": "rank_7"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Feuerprobe",
+        "missionId": "M020"
+      },
+      {
+        "id": "o3",
+        "text": "Rang 8: Teamleiter",
+        "flag": "rank_8"
+      }
+    ],
+    "reward": {
+      "xp": 500,
+      "credits": 500
+    },
+    "completeFlag": "quest_q15",
+    "conditions": {
+      "flagsAll": [
+        "quest_q14"
+      ]
+    }
+  },
+  {
+    "id": "q16",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Säuberung",
+    "description": "Voss lässt die ehemaligen Kandidaten verschwinden.",
+    "giverId": "birkhoff",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Säuberung",
+        "missionId": "M021"
+      }
+    ],
+    "reward": {
+      "xp": 500
+    },
+    "completeFlag": "quest_q16",
+    "conditions": {
+      "flagsAll": [
+        "quest_q15"
+      ]
+    }
+  },
+  {
+    "id": "q17",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Das letzte Protokoll",
+    "description": "Zurück in die Berge. Zurück zum Anfang.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Wahrheit über PHOENIX aufdecken",
+        "flag": "phoenix_truth"
+      },
+      {
+        "id": "o2",
+        "text": "Rang 9: Einsatzkommandant",
+        "flag": "rank_9"
+      },
+      {
+        "id": "o3",
+        "text": "Mission: Das letzte Protokoll",
+        "missionId": "M022"
+      }
+    ],
+    "reward": {
+      "xp": 800,
+      "reputation": 40
+    },
+    "completeFlag": "quest_q17",
+    "conditions": {
+      "flagsAll": [
+        "quest_q16"
+      ]
+    }
+  },
+  {
+    "id": "q18",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Der Stuhl des Direktors",
+    "description": "Gewinne das Direktorat.",
+    "giverId": "percy",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Rang 10: Sektionsleiter",
+        "flag": "rank_10"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Abstimmung im Direktorat",
+        "missionId": "M016"
+      },
+      {
+        "id": "o3",
+        "text": "Rang 12: Direktor",
+        "flag": "rank_12"
+      }
+    ],
+    "reward": {
+      "xp": 1500
+    },
+    "completeFlag": "quest_q18",
+    "conditions": {
+      "flagsAll": [
+        "quest_q17"
+      ]
+    }
+  },
+  {
+    "id": "q19",
+    "chapter": "Finale",
+    "title": "Protokoll Null",
+    "description": "Entscheide, was aus der Division wird.",
+    "giverId": null,
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Die letzte Entscheidung",
+        "dialogueId": "dlg_final"
+      }
+    ],
+    "reward": {
+      "xp": 2000
+    },
+    "completeFlag": "quest_q19",
+    "conditions": {
+      "flagsAll": [
+        "quest_q18"
+      ]
+    }
   }
 ]

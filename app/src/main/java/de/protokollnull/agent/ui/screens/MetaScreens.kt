@@ -2,7 +2,21 @@ package de.protokollnull.agent.ui.screens
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,31 +38,65 @@ import java.util.Locale
 @Composable
 fun StartScreen(vm: GameViewModel) {
     val auto = remember { vm.slotInfo("auto") }
+    val autoState = remember { if (auto != null) vm.peek("auto") else null }
     Column(
-        Modifier.fillMaxSize().systemBarsPadding().verticalScroll(rememberScrollState()).padding(24.dp),
+        Modifier.fillMaxSize().systemBarsPadding().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Spacer(Modifier.height(40.dp))
-        Text("DIVISION · PERSONALAKTE GESPERRT", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-        Text("PROTOKOLL\nNULL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 52.sp, lineHeight = 54.sp), color = Pn.Text)
-        Text("Aufstieg eines Agenten", style = MaterialTheme.typography.titleMedium, color = Pn.Muted)
-        Spacer(Modifier.height(20.dp))
-        if (auto != null) {
-            GlassPanel(onClick = { vm.load("auto") }) {
-                Text("FORTSETZEN", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
-                Text(auto.title, style = MaterialTheme.typography.titleMedium)
-                Text(auto.subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(12.dp))
+        Box(Modifier.fillMaxWidth().height(230.dp), contentAlignment = Alignment.Center) {
+            RadarEmblem(Modifier.size(220.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("DIVISION · AKTE 7", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text("PROTOKOLL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 54.sp, lineHeight = 56.sp), color = Pn.Text)
+                Text("NULL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 54.sp, lineHeight = 56.sp, letterSpacing = 12.sp), color = Pn.Accent)
             }
         }
-        ActionButton("Neues Spiel", Modifier.fillMaxWidth(), subtitle = "Agent erstellen · Prolog ab 13 Jahren") { vm.newGame() }
-        ActionButton("Spielstand laden", Modifier.fillMaxWidth(), secondary = true) { vm.open(Overlay.Saves) }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            ActionButton("Einstellungen", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Settings) }
-            ActionButton("Credits & Rechte", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Credits) }
+        Text("AUFSTIEG EINES AGENTEN", style = MaterialTheme.typography.labelLarge, color = Pn.Muted, modifier = Modifier.align(Alignment.CenterHorizontally))
+        Spacer(Modifier.height(8.dp))
+        if (auto != null) {
+            GlassPanel(onClick = { vm.load("auto") }) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                    if (autoState != null) Box(Modifier.size(58.dp, 72.dp).clip(RoundedCornerShape(12.dp))) { de.protokollnull.agent.ui.AvatarCanvas(autoState.player.appearance.avatar, Modifier.fillMaxSize()) }
+                    Column(Modifier.weight(1f)) {
+                        Text("FORTSETZEN", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+                        Text(auto.title, style = MaterialTheme.typography.titleMedium)
+                        Text(auto.subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    PnIcon(PnIcons.Play, size = 26.dp)
+                }
+            }
         }
-        Spacer(Modifier.height(12.dp))
-        Text("Privater Fan-Prototyp im Nikita-Universum. Offline spielbar. Keine Serienstills ohne Nutzungsrecht.",
-            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        ActionButton("Neues Spiel", Modifier.fillMaxWidth(), subtitle = "Agent erstellen · Prolog ab 13 Jahren", icon = PnIcons.Plus) { vm.newGame() }
+        ActionButton("Spielstand laden", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Save) { vm.open(Overlay.Saves) }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            ActionButton("Einstellungen", Modifier.weight(1f), secondary = true, icon = PnIcons.Gear) { vm.open(Overlay.Settings) }
+            ActionButton("Credits", Modifier.weight(1f), secondary = true, icon = PnIcons.Star) { vm.open(Overlay.Credits) }
+        }
+        Spacer(Modifier.height(8.dp))
+        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v0.3",
+            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterHorizontally))
+    }
+}
+
+/** Eigenes, abstraktes Radar-Emblem (rotierender Sweep). */
+@Composable
+fun RadarEmblem(modifier: Modifier = Modifier) {
+    val anim = animOn()
+    val angle = if (anim) rememberInfiniteTransition(label = "radar").animateFloat(0f, 360f, infiniteRepeatable(tween(5200, easing = LinearEasing)), label = "a").value else 35f
+    Canvas(modifier) {
+        val c = center
+        val r = size.minDimension / 2
+        for (i in 1..4) drawCircle(Pn.Accent.copy(alpha = 0.10f + i * 0.03f), r * i / 4f, c, style = Stroke(1.5f))
+        drawLine(Pn.Accent.copy(alpha = 0.15f), Offset(c.x - r, c.y), Offset(c.x + r, c.y), 1f)
+        drawLine(Pn.Accent.copy(alpha = 0.15f), Offset(c.x, c.y - r), Offset(c.x, c.y + r), 1f)
+        rotate(angle, c) {
+            drawArc(Brush.sweepGradient(listOf(Color.Transparent, Color.Transparent, Pn.Accent.copy(alpha = 0.28f)), c), -60f, 60f, true, topLeft = Offset(c.x - r, c.y - r), size = Size(r * 2, r * 2))
+        }
+        listOf(0.62f to 40f, 0.38f to 200f, 0.82f to 290f).forEach { (d, a) ->
+            val rad = Math.toRadians(a.toDouble())
+            drawCircle(Pn.Accent.copy(alpha = 0.7f), 3.5f, Offset(c.x + (r * d * kotlin.math.cos(rad)).toFloat(), c.y + (r * d * kotlin.math.sin(rad)).toFloat()))
+        }
     }
 }
 
@@ -164,8 +212,8 @@ fun CreditsScreen(vm: GameViewModel) {
             }
             item {
                 GlassPanel {
-                    Text("Gegenstandsbilder", style = MaterialTheme.typography.titleSmall)
-                    Text("32 Icons von game-icons.net (Lorc, Delapouite u. a.), CC BY 3.0 – creativecommons.org/licenses/by/3.0. Sechs zusätzliche Icons (Drohne, Einsatzbefehl, Markierungskartuschen, Regenerationspaket, PHOENIX-Marke, verschlüsseltes Archiv) sind Originalgrafiken dieses Projekts (CC0).", style = MaterialTheme.typography.bodySmall)
+                    Text("Gegenstandsbilder & Schriften", style = MaterialTheme.typography.titleSmall)
+                    Text("32 Icons von game-icons.net (Lorc, Delapouite u. a.), CC BY 3.0 – creativecommons.org/licenses/by/3.0. Sechs zusätzliche Icons (Drohne, Einsatzbefehl, Markierungskartuschen, Regenerationspaket, PHOENIX-Marke, verschlüsseltes Archiv) sind Originalgrafiken dieses Projekts (CC0). Schriften: Anton, Inter und Anonymous Pro unter SIL Open Font License 1.1 (Lizenztexte in licenses/fonts). Alle Benutzeroberflächen-Icons sind eigene Vektorgrafiken.", style = MaterialTheme.typography.bodySmall)
                 }
             }
             item {

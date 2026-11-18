@@ -234,4 +234,32 @@ class RulesTest {
         assertTrue(s.player.inventory.any { it.itemId == "id_card" })
         assertEquals("dlg_arrival", s.activeDialogue?.dialogueId)
     }
+
+    @Test fun endingsProduceEpilogue() {
+        var s = atAge(gameStart(), 30)
+        assertFalse(Endings.pending(s))
+        s = s.copy(flags = s.flags + setOf("ending_reform", "voss_arrested", "kira_rescued", "kira_joined"))
+        assertTrue(Endings.pending(s))
+        val ep = Endings.epilogue(d, s)
+        assertTrue(ep.size >= 4)
+        assertEquals("Ende: Im Licht", ep.first().title)
+        assertTrue(ep.any { it.title == "Kira" })
+        assertFalse(Endings.pending(s.copy(flags = s.flags + "epilogue_seen")))
+    }
+
+    @Test fun hiddenCharactersAppearAfterFlag() {
+        val s = gameStart()
+        assertFalse(World.revealed(d, s, "kira"))
+        assertTrue(World.revealed(d, s.copy(flags = s.flags + "kira_rescued"), "kira"))
+        assertTrue(World.revealed(d, s, "michael"))
+    }
+
+    @Test fun storyChainReachesFinale() {
+        // Jede Story-Mission hängt an existierenden Missionen; Kapitel 3 endet in der Direktoratsabstimmung
+        val m016 = d.missionById.getValue("M016")
+        assertTrue("voss_resolved" in m016.requires!!.flagsAll)
+        val ranks = d.ranks.associateBy { it.rank }
+        assertEquals(listOf("M020"), ranks.getValue(8).requiredMissions)
+        assertTrue(d.dialogues.any { it.id == "dlg_final" && it.nodes.first().choices.size == 4 })
+    }
 }

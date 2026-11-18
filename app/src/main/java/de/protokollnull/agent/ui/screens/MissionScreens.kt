@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.*
 import de.protokollnull.agent.ui.*
@@ -30,12 +31,18 @@ fun MissionBoardScreen(vm: GameViewModel, s: GameState) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
             Text("EINSATZZENTRALE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-            Text("Missionen & Aufträge", style = MaterialTheme.typography.titleLarge)
+            Text("MISSIONEN & AUFTRÄGE", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(6.dp))
             ChipRow(listOf("story" to "Kampagne", "board" to "Einsatzboard (Woche ${Clock.week(s.clock.day) + 1})", "reports" to "Berichte"), filter) { filter = it }
         }
         when (filter) {
-            "story" -> items(story, key = { it.id }) { m -> MissionCard(vm, s, m) }
+            "story" -> story.groupBy { it.chapter }.forEach { (chapter, list) ->
+                item(key = "h_$chapter") {
+                    val done = list.count { it.id in s.completedMissions }
+                    SectionLabel(chapter.ifBlank { "Aufträge" }, trailing = "$done/${list.size}", icon = PnIcons.Flag)
+                }
+                items(list, key = { it.id }) { m -> MissionCard(vm, s, m) }
+            }
             "board" -> {
                 item { SmallNote("Generierte Aufträge (Seed-basiert), wöchentlich neu. Unter 18 nur Gespräche, Untersuchungen und Observationen mit Gefahrenstufe ≤ 2.") }
                 items(s.board, key = { it.id }) { m -> MissionCard(vm, s, m) }
@@ -65,9 +72,10 @@ private fun MissionCard(vm: GameViewModel, s: GameState, m: MissionDefinition) {
     val done = m.id in s.completedMissions
     val failed = m.id in s.failedMissions && !done
     GlassPanel(accent = when { done -> Pn.Ok; lock != null -> Pn.Muted; m.threat >= 4 -> Pn.Danger; else -> Pn.Accent }, onClick = if (lock == null) ({ vm.open(Overlay.Briefing(m.id)) }) else null) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            IconTile(PnIcons.forMission(m.type), when { done -> Pn.Ok; lock != null -> Pn.Muted; m.threat >= 4 -> Pn.Danger; else -> Pn.Accent }, 44.dp)
             Column(Modifier.weight(1f)) {
-                Text((MissionGenerator.typeLabels[m.type] ?: m.type).uppercase() + " · " + (data.placeById[m.locationId]?.name ?: m.locationId), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text((MissionGenerator.typeLabels[m.type] ?: m.type).uppercase() + " · " + (data.placeById[m.locationId]?.name ?: m.locationId), style = MaterialTheme.typography.labelSmall, color = Pn.Accent, maxLines = 1)
                 Text(m.title, style = MaterialTheme.typography.titleMedium)
             }
             Text("▮".repeat(m.threat) + "▯".repeat((5 - m.threat).coerceAtLeast(0)), color = if (m.threat >= 4) Pn.Danger else Pn.Warn, style = MaterialTheme.typography.labelSmall)
@@ -168,12 +176,12 @@ fun MissionRunScreen(vm: GameViewModel, s: GameState) {
         ScreenHeader(m.title, (st.title.ifBlank { "Einsatz" }), trailing = {
             TextButton(onClick = { vm.act { d, x -> Missions.abort(d, x) } }) { Text("Abbrechen", color = Pn.Danger) }
         })
-        Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Pill("Intel ${run.intel}", Pn.Accent)
-            Pill("Alarm ${run.alarm}/6", if (run.alarm >= 4) Pn.Danger else Pn.Warn)
-            if (m.type == "undercover" || m.id == "M007") Pill("Tarnung ${run.cover}", if (run.cover <= 1) Pn.Danger else Pn.Ok)
-            val idx = m.stages.indexOfFirst { it.id == st.id }
-            Pill("Phase ${idx + 1}/${m.stages.size}", Pn.Muted)
+        val idx = m.stages.indexOfFirst { it.id == st.id }
+        PhaseStepper(m.stages.map { it.type }, idx, Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
+        Row(Modifier.padding(horizontal = 16.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Pill("Intel ${run.intel}", Pn.Accent, icon = PnIcons.Chip)
+            Pill("Alarm ${run.alarm}/6", if (run.alarm >= 4) Pn.Danger else Pn.Warn, icon = PnIcons.Skull)
+            if (m.type == "undercover" || m.id == "M007" || run.cover != 3) Pill("Tarnung ${run.cover}", if (run.cover <= 1) Pn.Danger else Pn.Ok, icon = PnIcons.Profile)
         }
         when (st.type) {
             "search" -> SearchStage(vm, s, st, run)
@@ -191,7 +199,13 @@ private fun StageHeader(vm: GameViewModel, s: GameState, st: StageDefinition, ru
         NpcPortrait(vm.data, s, st.speakerId, 64.dp)
         Text(Relations.displayName(vm.data, s, st.speakerId), style = MaterialTheme.typography.titleMedium, color = Pn.Accent)
     }
-    GlassPanel { Text(Dialogues.format(st.text, s), style = MaterialTheme.typography.bodyLarge) }
+    GlassPanel {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            PnIcon(PnIcons.forStage(st.type), size = 16.dp); Spacer(Modifier.width(6.dp))
+            Text(when (st.type) { "search" -> "UNTERSUCHUNG"; "observe" -> "OBSERVATION"; "tactical" -> "TAKTIK"; else -> "LAGE" }, style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+        }
+        TypewriterText(Dialogues.format(st.text, s), MaterialTheme.typography.bodyLarge)
+    }
 }
 
 @Composable
@@ -278,7 +292,7 @@ private fun DebriefScreen(vm: GameViewModel, s: GameState, m: MissionDefinition,
     val color = when (run.result) { "success" -> Pn.Ok; "fail" -> Pn.Danger; else -> Pn.Muted }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text("NACHBESPRECHUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-        Text(m.title, style = MaterialTheme.typography.headlineSmall)
+        Text(m.title.uppercase(), style = MaterialTheme.typography.displaySmall.copy(fontSize = 34.sp, lineHeight = 38.sp))
         Pill(when (run.result) { "success" -> "Auftrag erfüllt"; "fail" -> "Fehlgeschlagen"; else -> "Abgebrochen" }, color)
         GlassPanel(accent = color) {
             Text(when (run.result) { "success" -> m.debriefSuccess; "fail" -> m.debriefFail; else -> "Du brichst den Einsatz ab." }.ifBlank { "Einsatz beendet." }, style = MaterialTheme.typography.bodyLarge)

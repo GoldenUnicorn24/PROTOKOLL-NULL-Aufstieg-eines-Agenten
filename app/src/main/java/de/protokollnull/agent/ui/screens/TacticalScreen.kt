@@ -1,5 +1,6 @@
 package de.protokollnull.agent.ui.screens
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,10 +54,10 @@ fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: Mi
                             val inReach = (x to y) in reach
                             val isSel = sel != null && sel.x == x && sel.y == y
                             val bg = when (tile) {
-                                '#' -> Color(0xFF0B1320)
-                                'c' -> Color(0xFF233446)
-                                'X' -> Color(0x553FD6C4)
-                                else -> Color(0xFF142233)
+                                '#' -> Brush.linearGradient(listOf(Color(0xFF080F1A), Color(0xFF0B1320)))
+                                'c' -> Brush.linearGradient(listOf(Color(0xFF1B2B3D), Color(0xFF15233A)))
+                                'X' -> Brush.radialGradient(listOf(Color(0x883FD6C4), Color(0x223FD6C4)))
+                                else -> Brush.linearGradient(listOf(Color(0xFF15253A), Color(0xFF101C2D)))
                             }
                             Box(
                                 Modifier.size(cell).clip(RoundedCornerShape(6.dp)).background(bg)
@@ -76,7 +78,11 @@ fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: Mi
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
-                                if (tile == 'c') Box(Modifier.fillMaxSize(0.55f).clip(RoundedCornerShape(3.dp)).background(Color(0xFF38506A)))
+                                if (tile == '#') Canvas(Modifier.fillMaxSize()) {
+                                    var k = -size.height
+                                    while (k < size.width) { drawLine(Color(0x14FFFFFF), androidx.compose.ui.geometry.Offset(k, size.height), androidx.compose.ui.geometry.Offset(k + size.height, 0f), 2f); k += 10f }
+                                }
+                                if (tile == 'c') Box(Modifier.fillMaxSize(0.62f).clip(RoundedCornerShape(4.dp)).background(Brush.verticalGradient(listOf(Color(0xFF4A6684), Color(0xFF2B3F57)))).border(1.dp, Color(0x55A9C6E6), RoundedCornerShape(4.dp)))
                                 if (tile == 'X') Text("X", color = Pn.Accent, fontWeight = FontWeight.Black)
                                 if (inReach && unit == null) Box(Modifier.size(cell * 0.22f).clip(CircleShape).background(Pn.Accent.copy(alpha = 0.6f)))
                                 if (downUnit != null && unit == null) Text("✕", color = Pn.Muted)
@@ -133,11 +139,16 @@ fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: Mi
 @Composable
 private fun UnitToken(u: TacticalUnit, cell: androidx.compose.ui.unit.Dp) {
     val color = when { u.isPlayer -> Pn.Accent; u.ally -> Pn.Ok; else -> Pn.Danger }
-    Box(Modifier.size(cell * 0.82f).clip(CircleShape).background(color.copy(alpha = 0.25f)).border(2.dp, color, CircleShape), contentAlignment = Alignment.Center) {
-        Text(if (u.isPlayer) "◆" else u.name.take(1), color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
-        Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth(0.8f).height(3.dp).background(Color(0x55000000))) {
-            Box(Modifier.fillMaxHeight().fillMaxWidth((u.hp.toFloat() / u.maxHp).coerceIn(0f, 1f)).background(color))
+    val frac = (u.hp.toFloat() / u.maxHp).coerceIn(0f, 1f)
+    Box(Modifier.size(cell * 0.86f), contentAlignment = Alignment.Center) {
+        Canvas(Modifier.matchParentSize()) {
+            drawCircle(color.copy(alpha = 0.22f))
+            drawArc(Color(0x33000000), 0f, 360f, false, style = androidx.compose.ui.graphics.drawscope.Stroke(3.dp.toPx()))
+            drawArc(color, -90f, 360f * frac, false, style = androidx.compose.ui.graphics.drawscope.Stroke(3.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round))
         }
+        if (u.isPlayer) PnIcon(PnIcons.Star, color, cell * 0.38f)
+        else if (u.ally) Text(u.name.take(1), color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+        else PnIcon(PnIcons.Target, color, cell * 0.38f)
         if (u.guarding) Text("⛨", color = Pn.Text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.align(Alignment.TopEnd))
         if (u.stunned > 0) Text("z", color = Pn.Warn, style = MaterialTheme.typography.labelSmall, modifier = Modifier.align(Alignment.TopStart))
     }

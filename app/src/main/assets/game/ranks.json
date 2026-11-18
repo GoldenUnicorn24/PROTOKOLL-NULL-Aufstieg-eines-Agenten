@@ -75,7 +75,9 @@
     "supervisorId": "michael",
     "minSupervisorTrust": 62,
     "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredMissions": [
+      "M012"
+    ],
     "examDifficulty": 50,
     "salaryPerWeek": 180,
     "teamSize": 2
@@ -90,7 +92,9 @@
     "supervisorId": "michael",
     "minSupervisorTrust": 65,
     "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredMissions": [
+      "M017"
+    ],
     "examDifficulty": 55,
     "salaryPerWeek": 230,
     "teamSize": 2
@@ -105,7 +109,9 @@
     "supervisorId": "percy",
     "minSupervisorTrust": 50,
     "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredMissions": [
+      "M019"
+    ],
     "examDifficulty": 58,
     "salaryPerWeek": 290,
     "teamSize": 3
@@ -119,8 +125,12 @@
     "description": "Führt eigene Teams – Teamkommandos freigeschaltet.",
     "supervisorId": "percy",
     "minSupervisorTrust": 55,
-    "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredFlags": [
+      "team_lead_trial"
+    ],
+    "requiredMissions": [
+      "M020"
+    ],
     "examDifficulty": 60,
     "salaryPerWeek": 360,
     "teamSize": 3
@@ -135,7 +145,9 @@
     "supervisorId": "percy",
     "minSupervisorTrust": 60,
     "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredMissions": [
+      "M021"
+    ],
     "examDifficulty": 62,
     "salaryPerWeek": 440,
     "teamSize": 4
@@ -150,7 +162,9 @@
     "supervisorId": "percy",
     "minSupervisorTrust": 65,
     "requiredFlags": [],
-    "requiredMissions": [],
+    "requiredMissions": [
+      "M022"
+    ],
     "examDifficulty": 65,
     "salaryPerWeek": 520,
     "teamSize": 4

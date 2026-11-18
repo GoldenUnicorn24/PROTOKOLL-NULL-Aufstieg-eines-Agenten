@@ -20,9 +20,7 @@ import de.protokollnull.agent.ui.theme.*
 fun ContactsScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     var filter by remember { mutableStateOf("all") }
-    val ids = (data.agents.map { it.id } + s.customNpcs.map { it.id }).filter { id ->
-        if (id == "voss") "voss_contact" in s.flags else if (id == "nikita") "nikita_contact" in s.flags else true
-    }
+    val ids = (data.agents.map { it.id } + s.customNpcs.map { it.id }).filter { id -> World.revealed(data, s, id) }
     val shown = when (filter) {
         "friends" -> ids.filter { Relations.get(data, s, it).friendship >= 50 }
         "rivals" -> ids.filter { Relations.get(data, s, it).rivalry >= 20 }

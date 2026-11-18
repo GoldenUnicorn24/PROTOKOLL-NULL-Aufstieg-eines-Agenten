@@ -13,6 +13,9 @@ import de.protokollnull.agent.ui.AgentApp
 import de.protokollnull.agent.ui.GameViewModel
 import de.protokollnull.agent.ui.Overlay
 import org.junit.Assert.assertNotNull
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import kotlinx.coroutines.Dispatchers
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +45,9 @@ class ScreenshotTest {
         val app = ApplicationProvider.getApplicationContext<Application>()
         val vm = GameViewModel(app)
         vm.updateSettings { it.copy(animations = false, sfxVolume = 0) }
-        compose.setContent { AgentApp(vm) }
+        val loader = ImageLoader.Builder(app).components { add(SvgDecoder.Factory()) }
+            .dispatcher(Dispatchers.Unconfined).allowHardware(false).crossfade(false).build()
+        compose.setContent { AgentApp(vm, loader) }
         shot("01_start")
 
         vm.newGame(); shot("02_charaktereditor")
@@ -94,6 +99,9 @@ class ScreenshotTest {
         vm.update { it.copy(player = it.player.copy(rank = 12), director = DirectorState()) }
         vm.closeOverlays(); vm.open(Overlay.Director); shot("22_direktorat")
         vm.closeOverlays(); vm.open(Overlay.Saves); shot("23_spielstaende")
+        vm.closeOverlays()
+        vm.update { it.copy(flags = it.flags + setOf("ending_order", "voss_arrested", "kira_rescued", "nikita_ally")) }
+        shot("24_epilog")
         assertNotNull(vm.state.value)
     }
 }

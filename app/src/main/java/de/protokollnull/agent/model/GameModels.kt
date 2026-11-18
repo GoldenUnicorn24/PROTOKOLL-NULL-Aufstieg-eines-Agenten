@@ -43,7 +43,9 @@ data class AgentDefinition(
     val combat: Int = 40,
     val gender: String = "male",
     /** Bildausschnitt (BiasAlignment x/y, -1..1) für das Darstellerfoto. */
-    val portraitFocus: List<Float> = listOf(0f, -0.5f)
+    val portraitFocus: List<Float> = listOf(0f, -0.5f),
+    /** Figur erscheint erst, wenn dieses Flag gesetzt ist (z. B. nach Story-Kontakt). */
+    val revealFlag: String? = null
 )
 
 @Serializable

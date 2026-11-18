@@ -2039,7 +2039,8 @@
     "briefing": "Percy: „Du willst meinen Stuhl? Dann zeig, dass du ihn verdienst.“",
     "requires": {
       "flagsAll": [
-        "phoenix_truth"
+        "phoenix_truth",
+        "voss_resolved"
       ]
     },
     "recommendedItems": [
@@ -2136,6 +2137,986 @@
     ],
     "debriefSuccess": "Die Sektionsleiter stehen hinter dir. Der Weg zum Direktorat ist frei.",
     "debriefFail": "Die Abstimmung ist verloren. Für diesmal.",
-    "chapter": "Kapitel 2 · Protokoll Null"
+    "chapter": "Kapitel 3 · Schattenrat"
+  },
+  {
+    "id": "M017",
+    "factionId": "division",
+    "witnesses": 0,
+    "risk": 3,
+    "repeatable": false,
+    "maxTeam": 1,
+    "credits": 350,
+    "reputation": 18,
+    "rewardItems": {},
+    "title": "Der Maulwurf",
+    "locationId": "hq",
+    "type": "investigation",
+    "minRank": 5,
+    "minAge": 18,
+    "threat": 3,
+    "xp": 600,
+    "giverId": "michael",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "description": "Die Frau mit dem Division-Ausweis vom Hafenfoto arbeitet in der Logistik: Helena Kraus. Finde Beweise, bevor sie merkt, dass du sie im Blick hast.",
+    "briefing": "Michael: „Keine offizielle Ermittlung. Wenn Percy beteiligt ist, darf er nichts davon wissen.“",
+    "requires": {
+      "missionsDone": [
+        "M012"
+      ],
+      "flagsAll": [
+        "phoenix_clue_2"
+      ]
+    },
+    "recommendedItems": [
+      "camera",
+      "laptop",
+      "lockpicks"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Logistikbüro, 02:10 Uhr",
+        "text": "Helenas Arbeitsplatz. Finde drei Belege für ihre Verbindung zu Voss.",
+        "spots": [
+          "Schreibtischschublade",
+          "Monitor-Notizzettel",
+          "Frachtsystem",
+          "Mantel an der Tür",
+          "Kaffeetasse",
+          "Druckerablage",
+          "Rohrpostbelege",
+          "Pflanzenkübel",
+          "Kalender"
+        ],
+        "cluesNeeded": 3,
+        "actions": 7,
+        "successText": "Frachtnummern vom Kai 7, ein Taschenkalender mit Voss’ Telefonzeiten und eine Quittung aus einem Bergdorf nahe der alten PHOENIX-Kaserne.",
+        "failText": "Zu wenig für eine Anklage – aber genug für einen Verdacht."
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Schichtwechsel",
+        "text": "Am nächsten Morgen: Mit wem spricht Helena, wenn sie glaubt, dass niemand hinsieht?",
+        "targets": [
+          "Owen an der Ausgabe",
+          "Ein Kurier vom Fuhrpark",
+          "Percys Assistent",
+          "Sonya am Terminal"
+        ],
+        "rounds": 3,
+        "intelNeeded": 2,
+        "successText": "Der Kurier vom Fuhrpark nimmt einen Umschlag – und Percys Assistent sieht weg.",
+        "failText": "Du kannst die Kontakte nicht eindeutig zuordnen."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Konfrontation",
+        "text": "Du stellst Helena im Archivkeller. Sie wird blass, dann ruhig. „Du bist der Kandidat. Natürlich bist du es.“",
+        "options": [
+          {
+            "id": "arrest",
+            "text": "Sie festnehmen und Michael übergeben",
+            "success": {
+              "text": "Sie wehrt sich nicht. Michael nimmt sie in Gewahrsam.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "helena_arrested"
+                ],
+                "otherTrust": {
+                  "michael": 6
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "interview",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Sie redet nicht – aber sie ist in Gewahrsam.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "helena_arrested"
+                ]
+              }
+            }
+          },
+          {
+            "id": "turn",
+            "text": "Ihr anbieten, als Doppelagentin weiterzuarbeiten",
+            "success": {
+              "text": "Ein langer Blick. „Wenn Voss das merkt, bin ich tot.“ – „Dann sorgen wir dafür, dass er es nicht merkt.“",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "helena_turned"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "negotiation",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Sie lacht bitter. „Du bist genau wie er.“ Sie lässt sich festnehmen.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "helena_arrested"
+                ]
+              }
+            }
+          },
+          {
+            "id": "percy",
+            "text": "Percy offiziell informieren",
+            "success": {
+              "text": "Percy dankt dir knapp. Am nächsten Tag ist Helena versetzt. Wohin, sagt niemand.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "helena_reported"
+                ],
+                "otherTrust": {
+                  "percy": 8,
+                  "michael": -4
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "helena"
+      }
+    ],
+    "debriefSuccess": "Der Maulwurf ist enttarnt. Und die Spur führt zurück in die Berge.",
+    "debriefFail": "Helena ist gewarnt und untergetaucht."
+  },
+  {
+    "id": "M018",
+    "factionId": "division",
+    "witnesses": 0,
+    "risk": 4,
+    "repeatable": false,
+    "maxTeam": 2,
+    "credits": 300,
+    "reputation": 18,
+    "rewardItems": {},
+    "title": "Kandidatin 4",
+    "locationId": "hospital",
+    "type": "rescue",
+    "minRank": 5,
+    "minAge": 19,
+    "threat": 4,
+    "xp": 650,
+    "giverId": "birkhoff",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "description": "Birkhoff hat Kira gefunden – deine einzige Freundin bei PHOENIX. Sie liegt unter falschem Namen in einer Privatklinik, bewacht von Voss’ Leuten.",
+    "briefing": "Birkhoff: „Zimmer 412. Die Kameras gehören mir für genau vier Minuten. Danach gehören sie wieder denen.“",
+    "requires": {
+      "missionsDone": [
+        "M017"
+      ]
+    },
+    "recommendedItems": [
+      "medkit",
+      "vest_light",
+      "smartphone"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Empfang",
+        "text": "Eine Privatklinik mit Marmorboden und zu vielen Sicherheitsleuten.",
+        "options": [
+          {
+            "id": "doctor",
+            "text": "Als Ärztin/Arzt einer Partnerklinik auftreten",
+            "success": {
+              "text": "Man reicht dir einen Besucherausweis.",
+              "intel": 1,
+              "cover": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Die Rezeptionistin ruft zur Sicherheit nach.",
+              "alarm": 1,
+              "cover": -1
+            }
+          },
+          {
+            "id": "service",
+            "text": "Über den Lieferanteneingang",
+            "success": {
+              "text": "Zwischen Wäschewagen hindurch, unbemerkt.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "shadowstep",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ein Pfleger sieht dich.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Vierter Stock",
+        "text": "Erreiche Zimmer 412 (X), bevor die Kameras zurückkommen.",
+        "tactical": {
+          "map": [
+            "##.X.##",
+            "#c...c#",
+            "#.E.E.#",
+            "#..#..#",
+            "#c.#.c#",
+            "#.....#",
+            "#.E..c#",
+            "#c....#",
+            "#.PPP.#"
+          ],
+          "enemyName": "Wachmann",
+          "enemyHp": 6,
+          "enemyAccuracy": 58,
+          "objective": "reach",
+          "maxTurns": 11,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Zimmer 412",
+        "text": "Kira öffnet die Augen. Sie ist sediert, aber sie erkennt dich.",
+        "options": [
+          {
+            "id": "remind",
+            "text": "„Ich habe dich damals gewarnt. Erinnerst du dich?“",
+            "success": {
+              "text": "Ein schwaches Lächeln. „Du warst die Einzige.“ Sie steht auf, gestützt auf dich.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "kira_rescued",
+                  "kira_trusts"
+                ]
+              }
+            },
+            "requires": {
+              "flagsAll": [
+                "kira_warned"
+              ]
+            }
+          },
+          {
+            "id": "carry",
+            "text": "Sie stützen und sofort raus",
+            "success": {
+              "text": "Ihr erreicht den Wagen.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "kira_rescued"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ihr kommt raus – du bist verletzt.",
+              "next": "END_SUCCESS",
+              "health": -15,
+              "effects": {
+                "setFlags": [
+                  "kira_rescued"
+                ]
+              }
+            }
+          },
+          {
+            "id": "stabilize",
+            "text": "Erst die Sedierung abschwächen",
+            "success": {
+              "text": "Sie kann selbst laufen. Gemeinsam schneller.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "kira_rescued"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "stabilize",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Zu viel Zeit verloren – Rückzug unter Beschuss.",
+              "next": "END_FAIL",
+              "alarm": 2
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Kira lebt und ist in Sicherheit. Sie weiß, wo Voss die anderen Kandidaten versteckt.",
+    "debriefFail": "Kira wurde verlegt. Die Spur ist kalt – vorerst."
+  },
+  {
+    "id": "M019",
+    "factionId": "division",
+    "witnesses": 0,
+    "risk": 3,
+    "repeatable": false,
+    "maxTeam": 1,
+    "credits": 400,
+    "reputation": 22,
+    "rewardItems": {},
+    "title": "Vor dem Ausschuss",
+    "locationId": "embassy",
+    "type": "dialogue",
+    "minRank": 6,
+    "minAge": 20,
+    "threat": 3,
+    "xp": 700,
+    "giverId": "ryan",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "description": "Die Regierungsaufsicht lädt dich zur nichtöffentlichen Anhörung über die Division. Ryan hat dich empfohlen. Percy hat dich gewarnt.",
+    "briefing": "Ryan: „Sag die Wahrheit, wo du kannst. Und schweig, wo du musst. Sie merken den Unterschied nicht – ich schon.“",
+    "requires": {
+      "missionsDone": [
+        "M017"
+      ]
+    },
+    "recommendedItems": [
+      "briefcase",
+      "notebook"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Die erste Frage",
+        "text": "Eine Senatorin mit grauer Strickjacke: „Arbeitet die Division im Rahmen ihres Mandats?“",
+        "options": [
+          {
+            "id": "honest",
+            "text": "„Größtenteils. Und dort, wo nicht, will ich es ändern.“",
+            "success": {
+              "text": "Gemurmel. Respekt.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "resilience",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Man hält dich für naiv."
+            }
+          },
+          {
+            "id": "loyal",
+            "text": "„Ja. Ohne Einschränkung.“",
+            "success": {
+              "text": "Glatt. Zu glatt für Ryan.",
+              "cover": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Die Senatorin notiert sich deinen Namen – rot unterstrichen.",
+              "cover": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Protokoll Null",
+        "text": "Ein Ausschussmitglied schiebt eine Akte über den Tisch: „Was wissen Sie über ein Programm namens PHOENIX?“",
+        "options": [
+          {
+            "id": "reveal",
+            "text": "Alles offenlegen, was du weißt",
+            "success": {
+              "text": "Totenstille. Dann: „Danke. Das ändert vieles.“",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "oversight_ally",
+                  "phoenix_disclosed"
+                ],
+                "otherTrust": {
+                  "ryan": 8,
+                  "percy": -10
+                }
+              }
+            }
+          },
+          {
+            "id": "partial",
+            "text": "Nur bestätigen, was ohnehin in der Akte steht",
+            "success": {
+              "text": "Genug, um glaubwürdig zu sein. Nicht genug, um jemanden zu verbrennen.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "oversight_ally"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "negotiation",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Man merkt, dass du ausweichst.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "deny",
+            "text": "Nichts zugeben",
+            "success": {
+              "text": "Die Akte wird geschlossen. Percy wird zufrieden sein.",
+              "effects": {
+                "otherTrust": {
+                  "percy": 8,
+                  "ryan": -6
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "disguise",
+              "difficulty": 60
+            },
+            "failure": {
+              "text": "Ryan senkt den Blick. Er weiß, dass du lügst.",
+              "cover": -2,
+              "effects": {
+                "otherTrust": {
+                  "ryan": -10
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Schlusswort",
+        "text": "„Möchten Sie dem Ausschuss noch etwas mitteilen?“",
+        "options": [
+          {
+            "id": "vision",
+            "text": "Deine Vision einer kontrollierten, verantwortlichen Division skizzieren",
+            "success": {
+              "text": "Die Senatorin nickt langsam. „Wir werden Sie im Auge behalten. Im Guten.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "reputation": 10
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Schöne Worte. Mehr nicht.",
+              "next": "END_SUCCESS"
+            }
+          },
+          {
+            "id": "none",
+            "text": "„Nein.“",
+            "success": {
+              "text": "Man entlässt dich höflich.",
+              "next": "END_SUCCESS"
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Du hast die Anhörung überstanden – und die Aufsicht kennt jetzt deinen Namen.",
+    "debriefFail": "Die Anhörung lief schlecht. Percy wird davon hören."
+  },
+  {
+    "id": "M020",
+    "factionId": "syndicate",
+    "witnesses": 0,
+    "risk": 4,
+    "repeatable": false,
+    "maxTeam": 3,
+    "credits": 500,
+    "reputation": 25,
+    "rewardItems": {},
+    "title": "Feuerprobe",
+    "locationId": "harbor",
+    "type": "tactical",
+    "minRank": 7,
+    "minAge": 21,
+    "threat": 4,
+    "xp": 800,
+    "giverId": "michael",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "description": "Bewährung als Teamführung: Ein Waffenlager von Black Meridian im Containerhafen. Michael beobachtet nur. Jede Entscheidung liegt bei dir.",
+    "briefing": "Michael: „Ab heute rufe ich nicht mehr ‚Rückzug‘. Das tust du.“",
+    "requires": {
+      "missionsDone": [
+        "M019"
+      ]
+    },
+    "recommendedItems": [
+      "vest_light",
+      "radio_secure",
+      "night_vision"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Einsatzplan",
+        "text": "Dein Team wartet auf deine Ansage.",
+        "options": [
+          {
+            "id": "split",
+            "text": "Team aufteilen: Ablenkung im Norden, Zugriff im Süden",
+            "success": {
+              "text": "Der Plan greift wie ein Uhrwerk.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "planning",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Ein Funkloch zwischen den Gruppen.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "together",
+            "text": "Geschlossen vorrücken",
+            "success": {
+              "text": "Das Team vertraut deiner Stimme.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "inspire",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Zu langsam – die Wachen werden aufmerksam.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Containerhof",
+        "text": "Neutralisiere die Sicherheitsleute. Nutze Teamfähigkeiten und deinen Teambefehl.",
+        "tactical": {
+          "map": [
+            ".E.E.E.",
+            ".c.c.c.",
+            ".......",
+            "c..#..c",
+            "...#...",
+            ".c...c.",
+            "..E....",
+            ".c.c.c.",
+            "PP.P.PP"
+          ],
+          "enemyName": "Sicherheitsmann",
+          "enemyHp": 7,
+          "enemyAccuracy": 60,
+          "objective": "eliminate",
+          "maxTurns": 14,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Ein Teammitglied ist verletzt",
+        "text": "Das Lager ist gesichert, aber ein Mitglied deines Teams blutet am Arm. Der Lagerverwalter flieht.",
+        "options": [
+          {
+            "id": "team",
+            "text": "Versorgung zuerst – der Verwalter ist zweitrangig",
+            "success": {
+              "text": "Michael nickt kaum merklich. „Richtig.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "team_lead_trial"
+                ],
+                "otherTrust": {
+                  "michael": 6
+                }
+              }
+            }
+          },
+          {
+            "id": "chase",
+            "text": "Dem Verwalter hinterher",
+            "success": {
+              "text": "Du holst ihn ein. Aber Michael sagt kein Wort auf dem Rückweg.",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "team_lead_trial"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Er entkommt – und dein Team hat dich gebraucht.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "team_lead_trial"
+                ],
+                "otherTrust": {
+                  "michael": -4
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Bewährung bestanden. Du bist bereit, ein eigenes Team zu führen.",
+    "debriefFail": "Das Team ist zurück – angeschlagen. Die Bewährung wird wiederholt."
+  },
+  {
+    "id": "M021",
+    "factionId": "phoenix",
+    "witnesses": 0,
+    "risk": 5,
+    "repeatable": false,
+    "maxTeam": 3,
+    "credits": 600,
+    "reputation": 28,
+    "rewardItems": {},
+    "title": "Säuberung",
+    "locationId": "safehouse",
+    "type": "rescue",
+    "minRank": 8,
+    "minAge": 22,
+    "threat": 5,
+    "xp": 900,
+    "giverId": "birkhoff",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "description": "Voss lässt ehemalige PHOENIX-Kandidaten verschwinden, bevor die Aufsicht sie befragen kann. Kandidat 2 versteckt sich in einem Safehouse – und das Säuberungsteam ist schon unterwegs.",
+    "briefing": "Birkhoff: „Ihr habt zwölf Minuten Vorsprung. Vielleicht elf.“",
+    "requires": {
+      "missionsDone": [
+        "M020"
+      ]
+    },
+    "recommendedItems": [
+      "vest_heavy",
+      "medkit",
+      "radio_secure"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Ankunft",
+        "text": "Das Safehouse liegt über einer Wäscherei. Kandidat 2 öffnet nicht.",
+        "options": [
+          {
+            "id": "code",
+            "text": "Das alte PHOENIX-Klopfzeichen benutzen",
+            "success": {
+              "text": "Die Tür öffnet sich einen Spalt. „Sieben?“",
+              "intel": 2
+            },
+            "requires": {
+              "hasItem": "phoenix_token"
+            }
+          },
+          {
+            "id": "talk",
+            "text": "Durch die Tür überzeugen",
+            "success": {
+              "text": "Er lässt euch rein.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Kostbare Minuten vergehen.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Das Säuberungsteam",
+        "text": "Bringt Kandidat 2 zum Ausgang (X).",
+        "tactical": {
+          "map": [
+            "#..X..#",
+            "#c...c#",
+            "#E.c.E#",
+            "#.....#",
+            "##.c.##",
+            "#.....#",
+            "#cE.Ec#",
+            "#.....#",
+            "#.PPP.#"
+          ],
+          "enemyName": "Säuberungsteam",
+          "enemyHp": 7,
+          "enemyAccuracy": 62,
+          "objective": "reach",
+          "maxTurns": 12,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Ein Name",
+        "text": "Im Wagen flüstert Kandidat 2: „Voss ist in der alten Kaserne. Er räumt auf. Alles. Auch die Akten über dich.“",
+        "options": [
+          {
+            "id": "ok",
+            "text": "„Dann fahren wir dorthin.“",
+            "success": {
+              "text": "Der Weg in die Berge ist frei.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "candidates_saved"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Kandidat 2 lebt. Und du weißt, wo Voss ist.",
+    "debriefFail": "Das Säuberungsteam war schneller. Aber ihr habt seinen Funkcode."
+  },
+  {
+    "id": "M022",
+    "factionId": "phoenix",
+    "witnesses": 0,
+    "risk": 5,
+    "repeatable": false,
+    "maxTeam": 3,
+    "credits": 800,
+    "reputation": 35,
+    "rewardItems": {},
+    "title": "Das letzte Protokoll",
+    "locationId": "safehouse",
+    "type": "story",
+    "minRank": 9,
+    "minAge": 23,
+    "threat": 5,
+    "xp": 1200,
+    "giverId": "michael",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "description": "Die stillgelegte PHOENIX-Kaserne in den Bergen. Hier hat alles angefangen. Hier endet es – so oder so.",
+    "briefing": "Michael: „Ich komme mit. Keine Diskussion.“",
+    "requires": {
+      "missionsDone": [
+        "M021"
+      ],
+      "flagsAll": [
+        "phoenix_truth"
+      ]
+    },
+    "recommendedItems": [
+      "night_vision",
+      "vest_heavy",
+      "medkit"
+    ],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Der Schlafsaal",
+        "text": "Sieben Betten, sieben Spinde. Finde Voss’ Fluchtweg und die letzten Akten.",
+        "spots": [
+          "Spind 1",
+          "Spind 4 – Kira",
+          "Spind 7 – deiner",
+          "Lehrerpult",
+          "Wandtafel",
+          "Heizungskeller",
+          "Funkraum",
+          "Krankenzimmer",
+          "Fahnenmast"
+        ],
+        "cluesNeeded": 3,
+        "actions": 7,
+        "successText": "Im Funkraum: Voss’ Notizbuch. Im Keller: ein Tunnel zum Hubschrauberlandeplatz. In deinem alten Spind: ein Foto deiner Eltern.",
+        "failText": "Du findest den Tunnel – aber nicht alles."
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Der Exerzierplatz",
+        "text": "Voss’ letzte Getreue stellen sich euch in den Weg. Neutralisiere sie.",
+        "tactical": {
+          "map": [
+            "#E.X.E#",
+            "#c.c.c#",
+            "#.....#",
+            "#c#E#c#",
+            "#.....#",
+            "#..c..#",
+            "#E...E#",
+            "#c.c.c#",
+            "#.PPP.#"
+          ],
+          "enemyName": "PHOENIX-Wache",
+          "enemyHp": 8,
+          "enemyAccuracy": 62,
+          "objective": "eliminate",
+          "maxTurns": 14,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Voss",
+        "text": "Am Landeplatz wartet Voss, allein, die Hände sichtbar. „Kandidat 7. Du bist so weit gekommen, wie ich es geplant habe. Die Frage ist nur: für wen?“",
+        "options": [
+          {
+            "id": "arrest",
+            "text": "Ihn festnehmen und der Aufsicht übergeben",
+            "success": {
+              "text": "Voss lässt sich die Handfesseln anlegen. „Du machst einen Fehler.“ – „Dann ist es mein Fehler.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "voss_resolved",
+                  "voss_arrested"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "resilience",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Er versucht zu fliehen – Michael stoppt ihn. Am Ende sitzt er im Wagen.",
+              "next": "END_SUCCESS",
+              "health": -10,
+              "effects": {
+                "setFlags": [
+                  "voss_resolved",
+                  "voss_arrested"
+                ]
+              }
+            }
+          },
+          {
+            "id": "free",
+            "text": "Ihn gehen lassen – im Tausch gegen alle Namen",
+            "success": {
+              "text": "Er schreibt sieben Namen auf. Dann steigt er in den Hubschrauber. Michael sagt kein Wort.",
+              "next": "END_SUCCESS",
+              "intel": 3,
+              "effects": {
+                "setFlags": [
+                  "voss_resolved",
+                  "voss_free"
+                ],
+                "otherTrust": {
+                  "michael": -8
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "negotiation",
+              "difficulty": 60
+            },
+            "failure": {
+              "text": "Er lacht. „Nein.“ Und ist im Tunnel verschwunden, bevor du reagierst.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "voss_resolved",
+                  "voss_escaped"
+                ]
+              }
+            }
+          },
+          {
+            "id": "ally",
+            "text": "Sein Angebot annehmen: PHOENIX unter deiner Führung",
+            "success": {
+              "text": "„Ich wusste es.“ Voss reicht dir die Hand. Hinter dir senkt Michael langsam den Blick.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "voss_resolved",
+                  "voss_ally"
+                ],
+                "otherTrust": {
+                  "michael": -25
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "voss"
+      }
+    ],
+    "debriefSuccess": "PHOENIX ist Geschichte. Was davon bleibt, entscheidest du.",
+    "debriefFail": "Voss ist entkommen. Aber du kennst jetzt jeden seiner Schritte."
   }
 ]

@@ -32,7 +32,9 @@ object Missions {
     fun storyMissions(data: GameData, state: GameState) = data.missions
 
     fun teamCandidates(data: GameData, state: GameState, m: MissionDefinition): List<String> {
-        val ids = data.agents.filter { it.factionId == "division" && it.id !in setOf("percy", "amanda") }.map { it.id } + state.customNpcs.map { it.id }
+        val ids = data.agents.filter {
+            (it.factionId == "division" && it.id !in setOf("percy", "amanda", "helena")) || (it.id == "kira" && "kira_joined" in state.flags)
+        }.map { it.id } + state.customNpcs.map { it.id }
         return ids.filter { id ->
             val age = Ages.npc(data, state, id)
             val trust = Relations.get(data, state, id).trust

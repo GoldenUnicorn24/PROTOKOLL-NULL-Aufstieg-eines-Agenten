@@ -70,7 +70,8 @@
       0.06,
       -0.45
     ],
-    "look": "Dunkle Lederjacke, lange dunkelbraune Haare, häufig zusammengebunden, ernster Fokus."
+    "look": "Dunkle Lederjacke, lange dunkelbraune Haare, häufig zusammengebunden, ernster Fokus.",
+    "revealFlag": "nikita_contact"
   },
   {
     "id": "alex",
@@ -455,7 +456,8 @@
       "eyes": 1,
       "accessory": 0
     },
-    "look": "Grauer Mantel, kurz geschorenes graues Haar, randlose Brille – ein Mann, der wie ein Beamter aussieht und wie ein Chirurg denkt."
+    "look": "Grauer Mantel, kurz geschorenes graues Haar, randlose Brille – ein Mann, der wie ein Beamter aussieht und wie ein Chirurg denkt.",
+    "revealFlag": "voss_contact"
   },
   {
     "id": "maya",
@@ -537,5 +539,86 @@
       "accessory": 0
     },
     "look": "Kurzes dunkelblondes Haar, schwarzes Division-Shirt, Hundemarke seines Vaters um den Hals."
+  },
+  {
+    "id": "kira",
+    "name": "Kira Lind",
+    "role": "Ehemalige PHOENIX-Kandidatin 4",
+    "factionId": "phoenix",
+    "ageAtStart": 16,
+    "seriesCharacter": false,
+    "description": "Deine einzige Freundin bei PHOENIX.",
+    "initialTrust": 40,
+    "tags": [
+      "phoenix"
+    ],
+    "gender": "female",
+    "bio": "Kandidatin 4. Sie wollte damals fliehen – ob sie es geschafft hat, hing an deiner Entscheidung. Heute ist sie vorsichtig, schnell und hat einen trockenen Humor, der niemanden täuscht.",
+    "look": "Kurzes, aschblondes Haar, Narbe an der Augenbraue, graue Kapuzenjacke.",
+    "traits": [
+      "vorsichtig",
+      "loyal",
+      "trocken"
+    ],
+    "teamAbility": "distract",
+    "combat": 70,
+    "schedule": {
+      "morning": "training",
+      "forenoon": "range",
+      "noon": "canteen",
+      "afternoon": "training",
+      "evening": "canteen",
+      "night": "dorm"
+    },
+    "romanceable": true,
+    "avatar": {
+      "skin": 0,
+      "hairStyle": 6,
+      "hairColor": 3,
+      "outfit": 3,
+      "eyes": 1,
+      "accessory": 0
+    },
+    "revealFlag": "kira_rescued"
+  },
+  {
+    "id": "helena",
+    "name": "Helena Kraus",
+    "role": "Logistikoffizierin",
+    "factionId": "division",
+    "ageAtStart": 38,
+    "seriesCharacter": false,
+    "description": "Leitet die Materialplanung der Division.",
+    "initialTrust": 45,
+    "tags": [
+      "logistik"
+    ],
+    "gender": "female",
+    "bio": "Seit zwölf Jahren in der Logistik. Pünktlich, freundlich, unauffällig – die perfekte Tarnung für jemanden, der Frachtpapiere für Voss fälscht.",
+    "look": "Strenger Dutt, Lesebrille an einer Kette, dunkelblaues Kostüm.",
+    "traits": [
+      "gewissenhaft",
+      "nervös",
+      "pragmatisch"
+    ],
+    "teamAbility": "hack",
+    "combat": 30,
+    "schedule": {
+      "morning": "ops",
+      "forenoon": "armory",
+      "noon": "canteen",
+      "afternoon": "ops",
+      "evening": "away",
+      "night": "away"
+    },
+    "romanceable": false,
+    "avatar": {
+      "skin": 1,
+      "hairStyle": 4,
+      "hairColor": 1,
+      "outfit": 1,
+      "eyes": 0,
+      "accessory": 2
+    }
   }
 ]

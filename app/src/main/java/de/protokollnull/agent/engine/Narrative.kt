@@ -145,3 +145,68 @@ object Quests {
         return Result(s, msgs)
     }
 }
+
+/** Enden und Epilog: aus Story-Flags und Beziehungen zusammengesetzt. */
+object Endings {
+    data class Section(val title: String, val text: String)
+
+    fun endingId(state: GameState): String? =
+        listOf("ending_reform", "ending_order", "ending_shadow", "ending_exit").firstOrNull { it in state.flags }
+
+    fun pending(state: GameState): Boolean = endingId(state) != null && "epilogue_seen" !in state.flags
+
+    fun title(id: String?): String = when (id) {
+        "ending_reform" -> "Ende: Im Licht"
+        "ending_order" -> "Ende: Die neue Ordnung"
+        "ending_shadow" -> "Ende: Phönix"
+        "ending_exit" -> "Ende: Spurlos"
+        else -> "Epilog"
+    }
+
+    fun epilogue(data: GameData, state: GameState): List<Section> {
+        val id = endingId(state) ?: return emptyList()
+        val f = state.flags
+        val out = mutableListOf<Section>()
+        out += Section(title(id), when (id) {
+            "ending_reform" -> "Die Anhörungen dauern ein Jahr. Am Ende steht eine Division mit Gesetz, Aufsicht und Grenzen – und du an ihrer Spitze, öffentlich vereidigt. Niemand wird mehr abgeschaltet. Manche nennen dich naiv. Die Rekruten nennen dich die erste Direktion, die ihnen ihre Namen zurückgegeben hat."
+            "ending_order" -> "Die Division bleibt im Schatten, aber die Schatten haben neue Regeln. Keine Abschaltungen, keine Kinder in Programmen, keine Lügen innerhalb der Mauern. Die Aufsicht ahnt, dass du etwas verbirgst. Sie ahnt auch, dass die Welt sicherer geworden ist."
+            "ending_shadow" -> "PHOENIX steigt aus der Asche – effizienter, verborgener, deins. Sieben neue Kandidaten, sieben neue Nummern. Manchmal, spät in der Nacht, ertappst du dich dabei, wie du leise sprichst und selten lobst."
+            else -> "Die Enthüllung beherrscht wochenlang die Schlagzeilen. Die Division wird aufgelöst, Percy angeklagt, Untersuchungsausschüsse tagen. Du bist zu diesem Zeitpunkt längst jemand anderes, irgendwo am Meer, mit einem Namen, den nur zwei Menschen kennen."
+        })
+        val voss = when {
+            "voss_arrested" in f -> "Adrian Voss sitzt in einem Hochsicherheitstrakt und schreibt Briefe, die nie beantwortet werden."
+            "voss_ally" in f -> "Voss steht an deiner Seite, ein Schritt hinter dir – genau dort, wo er immer stehen wollte."
+            "voss_free" in f -> "Voss ist verschwunden. Die sieben Namen, die er dir gab, haben sieben Leben gerettet."
+            "voss_escaped" in f -> "Voss ist entkommen. Gelegentlich erhältst du Postkarten ohne Absender."
+            else -> null
+        }
+        if (voss != null) out += Section("Adrian Voss", voss)
+        val michael = Relations.get(data, state, "michael")
+        out += Section("Michael", when {
+            id == "ending_shadow" -> "Michael hat die Division am Tag deiner Entscheidung verlassen. Er hat sich nicht verabschiedet."
+            michael.trust >= 70 -> "Michael leitet weiter die Ausbildung. Wenn neue Rekruten fragen, wer der Beste war, den er je trainiert hat, zeigt er wortlos auf ein Foto von dir."
+            michael.trust >= 40 -> "Michael bleibt Ausbilder. Ihr redet selten, aber wenn, dann ehrlich."
+            else -> "Michael hat um seine Versetzung gebeten. Er glaubt nicht mehr, dass du die bist, die er ausgebildet hat."
+        })
+        val partner = Romance.partnerId(data, state)
+        if (partner != null) {
+            val r = Relations.get(data, state, partner)
+            val name = Relations.displayName(data, state, partner)
+            out += Section(name, when {
+                "family_started" in f -> "Mit $name hast du eine Familie gegründet. Die Division hat ein neues Sicherheitsprotokoll für Kinder von Agenten – du hast es selbst geschrieben."
+                r.romanceStage >= 4 -> "$name und du seid verheiratet. Euer Küchentisch ist der einzige Ort, an dem nie über Einsätze gesprochen wird."
+                r.romanceStage >= 3 -> "$name und du wohnt zusammen, mit einem Fenster zur Stadt."
+                else -> "$name ist an deiner Seite – Tag für Tag, Einsatz für Einsatz."
+            })
+        }
+        if ("kira_rescued" in f) out += Section("Kira", if ("kira_joined" in f) "Kira ist deine Stellvertreterin geworden. Kandidatin 4 und Kandidat 7, am Ende doch frei." else "Kira lebt unter neuem Namen in Skandinavien. Sie schreibt einmal im Jahr.")
+        if ("nikita_ally" in f) out += Section("Nikita", "Nikita taucht manchmal auf, ungefragt, mit einem Kaffee und einer Warnung. Ihr seid keine Freundinnen oder Freunde. Aber Verbündete.")
+        val birkhoff = Relations.get(data, state, "birkhoff")
+        if (birkhoff.trust >= 60) out += Section("Birkhoff", "Birkhoff hat dein Büro verwanzt, um zu beweisen, dass er es kann. Dann hat er dir die Wanzen geschenkt. Freundschaft auf seine Art.")
+        if ("percy_exposed" in f) out += Section("Percy", "Percy verbringt seine Tage vor Ausschüssen und Anwälten. Er lächelt immer noch, wenn er deinen Namen hört.")
+        else if ("percy_deal" in f) out += Section("Percy", "Percy hat seine Pension angetreten und schreibt angeblich Memoiren, die nie erscheinen werden.")
+        val friends = state.relations.count { it.value.friendship >= 70 }
+        out += Section("Bilanz", "Level ${state.player.level}, ${state.completedMissions.size} abgeschlossene Einsätze, $friends enge Freundschaften. Tag ${state.clock.day + 1} deiner Laufbahn.")
+        return out
+    }
+}

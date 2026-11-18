@@ -99,6 +99,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     // --- Spielstände --------------------------------------------------------
 
     fun slotInfo(slot: String) = saves.info(slot)
+    fun peek(slot: String): GameState? = saves.load(slot)
     fun hasAutosave() = saves.exists("auto")
 
     fun newGame() { _screen.value = "creator"; _overlays.value = emptyList() }
