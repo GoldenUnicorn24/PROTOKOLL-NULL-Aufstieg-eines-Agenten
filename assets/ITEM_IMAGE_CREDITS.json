@@ -269,5 +269,6 @@
       "license": "CC0 1.0",
       "source": "Eigene Erstellung im Repository"
     }
-  ]
+  ],
+  "modifications": "Für die App wurde bei allen Icons das schwarze Hintergrundquadrat entfernt; die Einfärbung erfolgt zur Laufzeit."
 }

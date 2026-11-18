@@ -257,6 +257,7 @@ data class Settings(
     val fontScale: Float = 1f,
     val animations: Boolean = true,
     val sfxVolume: Int = 60,
+    val musicVolume: Int = 35,
     val highContrast: Boolean = false,
     val haptics: Boolean = true
 )

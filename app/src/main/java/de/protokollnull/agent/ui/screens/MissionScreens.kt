@@ -75,21 +75,22 @@ private fun MissionCard(vm: GameViewModel, s: GameState, m: MissionDefinition) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             IconTile(PnIcons.forMission(m.type), when { done -> Pn.Ok; lock != null -> Pn.Muted; m.threat >= 4 -> Pn.Danger; else -> Pn.Accent }, 44.dp)
             Column(Modifier.weight(1f)) {
-                Text((MissionGenerator.typeLabels[m.type] ?: m.type).uppercase() + " · " + (data.placeById[m.locationId]?.name ?: m.locationId), style = MaterialTheme.typography.labelSmall, color = Pn.Accent, maxLines = 1)
+                Text((MissionGenerator.typeLabels[m.type] ?: m.type).uppercase(), style = MaterialTheme.typography.labelSmall, color = Pn.Accent, maxLines = 1)
                 Text(m.title, style = MaterialTheme.typography.titleMedium)
             }
             Text("▮".repeat(m.threat) + "▯".repeat((5 - m.threat).coerceAtLeast(0)), color = if (m.threat >= 4) Pn.Danger else Pn.Warn, style = MaterialTheme.typography.labelSmall)
         }
         Text(m.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 3)
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Pill(data.placeById[m.locationId]?.name ?: m.locationId, Pn.Muted, icon = PnIcons.City)
             Pill("${m.xp} XP")
             if (m.credits > 0) Pill("${m.credits} Cr", Pn.Warn)
-            when {
-                done -> Pill("Abgeschlossen", Pn.Ok)
-                failed -> Pill("Gescheitert – erneut möglich", Pn.Danger)
-                lock != null -> Pill(lock, Pn.Muted)
-                else -> Pill("Briefing öffnen", Pn.Accent)
-            }
+        }
+        when {
+            done -> Pill("Abgeschlossen", Pn.Ok, icon = PnIcons.Shield)
+            failed -> Pill("Gescheitert – erneut möglich", Pn.Danger, icon = PnIcons.Skull)
+            lock != null -> Row(verticalAlignment = Alignment.CenterVertically) { PnIcon(PnIcons.Lock, Pn.Muted, 14.dp); Spacer(Modifier.width(6.dp)); Text(lock, style = MaterialTheme.typography.labelSmall, color = Pn.Muted) }
+            else -> Pill("Briefing öffnen", Pn.Accent, icon = PnIcons.Chevron)
         }
     }
 }

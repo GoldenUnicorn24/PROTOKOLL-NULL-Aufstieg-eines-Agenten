@@ -30,7 +30,7 @@ fun ContactsScreen(vm: GameViewModel, s: GameState) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
             Text("PERSONALAKTEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-            Text("Kontakte & Beziehungen", style = MaterialTheme.typography.titleLarge)
+            Text("KONTAKTE & BEZIEHUNGEN", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(6.dp))
             ChipRow(listOf("all" to "Alle", "friends" to "Freunde", "rivals" to "Rivalen", "team" to "Team"), filter) { filter = it }
         }

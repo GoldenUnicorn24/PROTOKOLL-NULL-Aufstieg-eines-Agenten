@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.GameState
 import de.protokollnull.agent.ui.*
@@ -55,7 +56,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item {
-            SectionLabel("Hauptquartier · Lageplan", trailing = "Raum antippen", icon = PnIcons.Radar)
+            SectionLabel("Lageplan", trailing = "Raum antippen", icon = PnIcons.Radar)
             Spacer(Modifier.height(8.dp))
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 data.hq.floors.forEach { f ->
@@ -73,7 +74,7 @@ private fun FloorMap(vm: GameViewModel, s: GameState, floor: Int) {
     val data = vm.data
     val fdef = data.hq.floors.firstOrNull { it.floor == floor }
     val rooms = data.hq.rooms.filter { it.floor == floor }
-    val cell = 96.dp
+    val cell = 100.dp
     GlassPanel(padding = 12.dp) {
         Text(fdef?.name ?: "", style = MaterialTheme.typography.titleSmall)
         Text(fdef?.description ?: "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -99,7 +100,7 @@ private fun FloorMap(vm: GameViewModel, s: GameState, floor: Int) {
                     Column {
                         PnIcon(PnIcons.forRoom(r.id), if (locked != null) Pn.Muted else if (here) Pn.Accent else Pn.Text.copy(alpha = 0.8f), 22.dp)
                         Spacer(Modifier.height(4.dp))
-                        Text(r.name, style = MaterialTheme.typography.labelLarge, color = if (locked != null) Pn.Muted else Pn.Text, maxLines = 2)
+                        Text(r.name, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold), color = if (locked != null) Pn.Muted else Pn.Text, maxLines = 2, lineHeight = 15.sp)
                         if (locked != null) Row(verticalAlignment = Alignment.CenterVertically) { PnIcon(PnIcons.Lock, Pn.Danger, 12.dp); Spacer(Modifier.width(3.dp)); Text("gesperrt", style = MaterialTheme.typography.labelSmall, color = Pn.Danger) }
                     }
                     if (here) Box(Modifier.align(Alignment.BottomStart)) { PulseDot(size = 7.dp) }

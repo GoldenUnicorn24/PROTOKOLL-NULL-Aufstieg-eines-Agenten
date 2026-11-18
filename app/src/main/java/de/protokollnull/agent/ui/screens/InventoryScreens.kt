@@ -40,7 +40,8 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
     LazyVerticalGrid(columns = GridCells.Fixed(2), contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item(span = { GridItemSpan(2) }) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("INVENTAR", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text("AUSRÜSTUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Text("INVENTAR", style = MaterialTheme.typography.titleLarge)
                 StatBar("Gewicht ${"%.1f".format(weight / 1000.0)} / ${"%.1f".format(cap / 1000.0)} kg", weight, cap, if (weight > cap * 0.9) Pn.Danger else Pn.Accent, showValue = false)
                 GlassPanel(padding = 12.dp) {
                     Text("Ausrüstungsslots", style = MaterialTheme.typography.titleSmall)

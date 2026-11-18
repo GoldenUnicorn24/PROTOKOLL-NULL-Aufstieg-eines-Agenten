@@ -136,11 +136,17 @@ fun PlayerPortrait(state: GameState, size: Dp, modifier: Modifier = Modifier) {
 @Composable
 fun ItemIcon(icon: String, size: Dp, modifier: Modifier = Modifier, tint: Color = Pn.Accent) {
     val loader = LocalLoader.current
-    Box(modifier.size(size).clip(RoundedCornerShape(12.dp)).background(Brush.radialGradient(listOf(tint.copy(alpha = 0.25f), Color(0xFF0A1220)))), contentAlignment = Alignment.Center) {
+    Box(
+        modifier.size(size).clip(RoundedCornerShape(12.dp)).background(Brush.radialGradient(listOf(tint.copy(alpha = 0.30f), Color(0xFF0A1424))))
+            .border(1.dp, tint.copy(alpha = 0.35f), RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.Center
+    ) {
         if (loader != null) {
             AsyncImage(
                 model = "file:///android_asset/items/$icon.svg", imageLoader = loader, contentDescription = null,
-                contentScale = ContentScale.Fit, modifier = Modifier.fillMaxSize().padding(size * 0.12f).clip(RoundedCornerShape(8.dp))
+                contentScale = ContentScale.Fit,
+                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(androidx.compose.ui.graphics.lerp(Color.White, tint, 0.35f), androidx.compose.ui.graphics.BlendMode.Modulate),
+                modifier = Modifier.fillMaxSize().padding(size * 0.16f)
             )
         } else Text("▣", style = MaterialTheme.typography.titleLarge)
     }

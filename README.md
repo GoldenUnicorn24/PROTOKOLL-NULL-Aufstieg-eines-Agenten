@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: spielbare Beta 0.2.0** – Prolog, Kapitel 1 und die Kernsysteme sind spielbar; Kapitel 2 und das Endgame sind teilweise umgesetzt (Details unten).
+**Stand: Beta 0.3.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Danach freies Spiel (Details unten).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -15,7 +15,7 @@ Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests
 
 ## Screenshots
 
-Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflow *Screenshots*, Ordner `docs/screenshots/`). Hinweis: In der Testumgebung lädt Coil Bilder asynchron, daher fehlen auf einigen Aufnahmen Fotos und Item-Icons – auf dem Gerät werden sie angezeigt.
+Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflow *Screenshots*, Ordner `docs/screenshots/`). Fotos und Item-Icons werden in der Testumgebung synchron geladen und sind daher sichtbar.
 
 | Start | Charaktereditor | Prolog | Dialog |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/13_gegenstand.png) | ![](docs/screenshots/14_ausruestungskammer.png) | ![](docs/screenshots/15_kontakte.png) | ![](docs/screenshots/16_personalakte.png) |
 | **Profil** | **Skilltree** | **Ränge** | **Kalender** |
 | ![](docs/screenshots/17_profil.png) | ![](docs/screenshots/18_skilltree.png) | ![](docs/screenshots/19_raenge.png) | ![](docs/screenshots/20_kalender.png) |
-| **Rekrutierungseditor (ab 18)** | **Direktorat** | **Spielstände** | |
-| ![](docs/screenshots/21_rekrutierungseditor.png) | ![](docs/screenshots/22_direktorat.png) | ![](docs/screenshots/23_spielstaende.png) | |
+| **Rekrutierungseditor (ab 18)** | **Direktorat** | **Spielstände** | **Epilog** |
+| ![](docs/screenshots/21_rekrutierungseditor.png) | ![](docs/screenshots/22_direktorat.png) | ![](docs/screenshots/23_spielstaende.png) | ![](docs/screenshots/24_epilog.png) |
 
 ## Was ist spielbar? (ehrlicher Stand)
 
@@ -54,24 +54,25 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - **Ziviles Doppelleben** ab 17/18: Tarnjob, eigene Wohnung, Innenstadt.
 - **Einstellungen**: Schriftgröße (S–XL), Animationen, Effektlautstärke, hoher Kontrast, Haptik. **Credits** mit Bild-/Lizenz- und KI-Hinweisen.
 
-### 🟡 Teilweise / in Entwicklung
-- **Kapitel 2 „Protokoll Null“**: Missionen M011–M016, Archivrecherche, Nikita-Kontakt und die PHOENIX-Konfrontation sind spielbar, aber kürzer und weniger verzweigt als Kapitel 1.
-- **Mehrere Enden**: Story-Flags (Gehorsam, Wahrheit gegenüber Percy, Ablehnung von Voss u. a.) werden gesetzt, eigene Epilog-Sequenzen fehlen noch.
-- **Direktor-Endgame**: Verwaltung funktioniert; Fraktionspolitik ist bisher nur als Ansehenswerte und Wochenereignisse umgesetzt.
-- **Serien-Look der Figuren**: Die App zeigt die vorhandenen CC-lizenzierten Darstellerfotos (mit Bildausschnitt) plus die Look-Beschreibung aus `assets/SERIES_LOOK_REFERENCES.json`. Der Umschalter auf lizenzierte Serienstills ist eingebaut (siehe unten), aber es sind **keine** Stills im Repo, weil keine Nutzungsrechte vorliegen.
-- **Sound**: nur einfache System-Töne für Aktionen; keine Musik.
+### ✅ Neu in 0.3 (Vervollständigung)
+- **Kapitel 2 „Protokoll Null“** und **Kapitel 3 „Schattenrat“**: insgesamt 22 Story-Missionen (M001–M022), 19 Quests, 34 Dialoge; neue Figuren Kira (ehemalige Kandidatin 4, später Teammitglied/Romanze ab 18) und Helena (Maulwurf, kann umgedreht werden).
+- **Ränge 5–11 sind an Story-Missionen gekoppelt** (z. B. Teamleiter erst nach „Feuerprobe“).
+- **Finale**: letzte Entscheidung als Direktor/in mit **vier Enden** (Im Licht, Die neue Ordnung, Phönix, Spurlos) und einem **dynamischen Epilog**, der Voss’ Schicksal, Michael, Partner/Familie, Kira, Nikita, Birkhoff, Percy und deine Bilanz berücksichtigt. Danach freies Spiel.
+- **Design 2.0**: eigene Schriften (Anton, Inter, Anonymous Pro – OFL), eigene Vektor-Icons, Glas-Panels mit Eckmarken, Scanline-Hintergrund, Radar-Emblem, kinoartige Dialoge mit Schreibmaschinentext, Chancen-Ringe, Phasen-Stepper, Raum-Icons und Anwesenden-Miniaturen im Lageplan, überarbeitetes Taktikbrett.
+- **Musik**: prozedural erzeugte, eigene Ambient-Musik (Lautstärke in den Einstellungen, pausiert im Hintergrund).
 
-### ⏳ Geplant
-- Weitere Kapitel, NPC-eigene Questreihen, Epiloge/Enden.
-- Lizenzierte App-Schriftarten (derzeit Systemschriften).
-- Tablet-Layouts, Lokalisierung.
+### 🟡 Bewusst offen
+- **Serienstills**: Umschalter eingebaut, aber keine Stills im Repo, da keine Nutzungsrechte vorliegen (siehe unten).
+- Kein Sprachausgabe/Voice-Over, keine aufgenommene Musik; Tablet-Layouts und weitere Sprachen geplant.
 
 ## Figuren-Porträts und Bildrechte
 
 - **Serienfiguren** (Michael, Nikita, Alex, Birkhoff, Amanda, Percy, Thom, Jaden, Owen, Sonya, Ryan): CC-lizenzierte Fotos der Darsteller von Wikimedia Commons (`app/src/main/assets/cast/`, Credits in `assets/CAST_IMAGE_CREDITS.json`). Das sind keine Serienstills und keine Rechte an den Figuren.
 - **Serienstills**: Die Szenenbilder in `assets/SERIES_LOOK_REFERENCES.json` sind © The CW bzw. Rechteinhaber und dienen nur als Stilreferenz. Sie werden **nicht** heruntergeladen oder verlinkt. Liegt eine Nutzungserlaubnis vor, kann `app/src/main/assets/cast/show_<id>.jpg` ergänzt und in `app/src/main/assets/licenses/series_image_licenses.json` mit `verified: true`, Lizenz und Nachweis eingetragen werden – erst dann zeigt die App das Still. Ein Test bricht den Build ab, wenn ein `show_*.jpg` ohne Lizenznachweis auftaucht.
 - **Fiktive Figuren** (Voss, Maya, Ethan, eigene Rekruten, Spielfigur): prozedural gezeichnete Original-Avatare.
-- **Gegenstände**: 32 Icons von game-icons.net (CC BY 3.0), 6 eigene Original-Icons (CC0); siehe `assets/ITEM_IMAGE_CREDITS.json`.
+- **Gegenstände**: 32 Icons von game-icons.net (CC BY 3.0, Hintergrund entfernt), 6 eigene Original-Icons (CC0); siehe `assets/ITEM_IMAGE_CREDITS.json`.
+- **Schriften**: Anton, Inter, Anonymous Pro (SIL OFL 1.1), Lizenztexte in `app/src/main/assets/licenses/fonts/`.
+- **Musik/Icons der Oberfläche**: eigene Erstellung.
 
 ## Technik
 
@@ -93,6 +94,11 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - `ScreenshotTest`: rendert 23 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.3.0-beta
+- Kapitel 2/3, Finale mit vier Enden, Epilog, neue Figuren, Rang-Story-Kopplung.
+- Design 2.0 mit eigenen Schriften/Icons, kinoartigen Dialogen, prozeduraler Musik.
+- Screenshot-Tests laden Bilder synchron.
 
 ### 0.2.0-beta
 - Gradle-Wrapper, GitHub-Actions-CI mit Tests, Render-Smoke-Test und Debug-APK-Artefakt, Screenshot-Workflow.

@@ -44,7 +44,7 @@ class ScreenshotTest {
     fun coreScreens() {
         val app = ApplicationProvider.getApplicationContext<Application>()
         val vm = GameViewModel(app)
-        vm.updateSettings { it.copy(animations = false, sfxVolume = 0) }
+        vm.updateSettings { it.copy(animations = false, sfxVolume = 0, musicVolume = 0) }
         val loader = ImageLoader.Builder(app).components { add(SvgDecoder.Factory()) }
             .dispatcher(Dispatchers.Unconfined).allowHardware(false).crossfade(false).build()
         compose.setContent { AgentApp(vm, loader) }

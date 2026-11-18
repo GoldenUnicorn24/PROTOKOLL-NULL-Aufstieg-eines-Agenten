@@ -120,6 +120,8 @@ fun SettingsScreen(vm: GameViewModel) {
                 SettingSwitch("Haptik", "Vibration bei Aktionen", s.haptics) { v -> vm.updateSettings { it.copy(haptics = v) } }
             }
             GlassPanel {
+                Text("Musik (prozedural, eigene Komposition): ${s.musicVolume}%", style = MaterialTheme.typography.titleSmall)
+                Slider(value = s.musicVolume.toFloat(), onValueChange = { v -> vm.updateSettings { it.copy(musicVolume = v.toInt()) } }, valueRange = 0f..100f, steps = 9)
                 Text("Effektlautstärke: ${s.sfxVolume}%", style = MaterialTheme.typography.titleSmall)
                 Slider(value = s.sfxVolume.toFloat(), onValueChange = { v -> vm.updateSettings { it.copy(sfxVolume = v.toInt()) } }, valueRange = 0f..100f, steps = 9)
             }
