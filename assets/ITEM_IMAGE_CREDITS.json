@@ -1,0 +1,231 @@
+{
+  "source": "Game-icons.net",
+  "license": "CC BY 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+  "icons": [
+    {
+      "id": "pistol",
+      "path": "app/src/main/assets/items/pistol.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/crossed-pistols.svg"
+    },
+    {
+      "id": "armor",
+      "path": "app/src/main/assets/items/armor.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/armor-vest.svg"
+    },
+    {
+      "id": "radio",
+      "path": "app/src/main/assets/items/radio.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/walkie-talkie.svg"
+    },
+    {
+      "id": "medkit",
+      "path": "app/src/main/assets/items/medkit.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/first-aid-kit.svg"
+    },
+    {
+      "id": "multitool",
+      "path": "app/src/main/assets/items/multitool.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/swiss-army-knife.svg"
+    },
+    {
+      "id": "id_card",
+      "path": "app/src/main/assets/items/id_card.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/id-card.svg"
+    },
+    {
+      "id": "passport",
+      "path": "app/src/main/assets/items/passport.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/passport.svg"
+    },
+    {
+      "id": "night_vision",
+      "path": "app/src/main/assets/items/night_vision.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/night-vision.svg"
+    },
+    {
+      "id": "backpack",
+      "path": "app/src/main/assets/items/backpack.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/backpack.svg"
+    },
+    {
+      "id": "briefcase",
+      "path": "app/src/main/assets/items/briefcase.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/briefcase.svg"
+    },
+    {
+      "id": "flashlight",
+      "path": "app/src/main/assets/items/flashlight.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/flashlight.svg"
+    },
+    {
+      "id": "smartphone",
+      "path": "app/src/main/assets/items/smartphone.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/smartphone.svg"
+    },
+    {
+      "id": "laptop",
+      "path": "app/src/main/assets/items/laptop.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/laptop.svg"
+    },
+    {
+      "id": "keycard",
+      "path": "app/src/main/assets/items/keycard.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/key-card.svg"
+    },
+    {
+      "id": "handcuffs",
+      "path": "app/src/main/assets/items/handcuffs.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/handcuffs.svg"
+    },
+    {
+      "id": "binoculars",
+      "path": "app/src/main/assets/items/binoculars.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/binoculars.svg"
+    },
+    {
+      "id": "toolbox",
+      "path": "app/src/main/assets/items/toolbox.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/toolbox.svg"
+    },
+    {
+      "id": "usb",
+      "path": "app/src/main/assets/items/usb.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/usb-key.svg"
+    },
+    {
+      "id": "camera",
+      "path": "app/src/main/assets/items/camera.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/photo-camera.svg"
+    },
+    {
+      "id": "notebook",
+      "path": "app/src/main/assets/items/notebook.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/notebook.svg"
+    },
+    {
+      "id": "bandage",
+      "path": "app/src/main/assets/items/bandage.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/bandage-roll.svg"
+    },
+    {
+      "id": "syringe",
+      "path": "app/src/main/assets/items/syringe.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/syringe.svg"
+    },
+    {
+      "id": "battery",
+      "path": "app/src/main/assets/items/battery.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/car-battery.svg"
+    },
+    {
+      "id": "wallet",
+      "path": "app/src/main/assets/items/wallet.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/wallet.svg"
+    },
+    {
+      "id": "headset",
+      "path": "app/src/main/assets/items/headset.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/headphones.svg"
+    },
+    {
+      "id": "rope",
+      "path": "app/src/main/assets/items/rope.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/rope-coil.svg"
+    },
+    {
+      "id": "microchip",
+      "path": "app/src/main/assets/items/microchip.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/microchip.svg"
+    },
+    {
+      "id": "lockpicks",
+      "path": "app/src/main/assets/items/lockpicks.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/lockpicks.svg"
+    },
+    {
+      "id": "watch",
+      "path": "app/src/main/assets/items/watch.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/watch.svg"
+    },
+    {
+      "id": "gas_mask",
+      "path": "app/src/main/assets/items/gas_mask.svg",
+      "author": "Lorc",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/lorc/gas-mask.svg"
+    },
+    {
+      "id": "folder",
+      "path": "app/src/main/assets/items/folder.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/full-folder.svg"
+    },
+    {
+      "id": "wrench",
+      "path": "app/src/main/assets/items/wrench.svg",
+      "author": "Delapouite",
+      "license": "CC BY 3.0",
+      "source": "https://github.com/game-icons/icons/blob/master/delapouite/monkey-wrench.svg"
+    }
+  ]
+}
