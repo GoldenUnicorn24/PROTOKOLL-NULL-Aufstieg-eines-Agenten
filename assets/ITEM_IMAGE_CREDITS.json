@@ -226,6 +226,48 @@
       "author": "Delapouite",
       "license": "CC BY 3.0",
       "source": "https://github.com/game-icons/icons/blob/master/delapouite/monkey-wrench.svg"
+    },
+    {
+      "id": "drone",
+      "path": "app/src/main/assets/items/drone.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
+    },
+    {
+      "id": "mission_order",
+      "path": "app/src/main/assets/items/mission_order.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
+    },
+    {
+      "id": "marker_pack",
+      "path": "app/src/main/assets/items/marker_pack.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
+    },
+    {
+      "id": "recovery_kit",
+      "path": "app/src/main/assets/items/recovery_kit.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
+    },
+    {
+      "id": "phoenix_token",
+      "path": "app/src/main/assets/items/phoenix_token.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
+    },
+    {
+      "id": "encrypted_drive",
+      "path": "app/src/main/assets/items/encrypted_drive.svg",
+      "author": "PROTOKOLL NULL (Claude, Originalgrafik)",
+      "license": "CC0 1.0",
+      "source": "Eigene Erstellung im Repository"
     }
   ]
 }

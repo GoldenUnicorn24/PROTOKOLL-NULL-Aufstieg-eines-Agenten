@@ -1,0 +1,1950 @@
+[
+  {
+    "id": "dlg_arrival",
+    "npcId": "michael",
+    "title": "Ankunft",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 100,
+    "startNode": "a1",
+    "nodes": [
+      {
+        "id": "a1",
+        "speakerId": "michael",
+        "text": "„Willkommen in der Division. Ich bin Michael, ich bilde hier aus.“ Er blättert durch eine Akte, die nur aus drei Seiten besteht. „Deine Akte ist ungewöhnlich kurz, {codename}. Erzählst du mir, wer du wirklich bist?“",
+        "choices": [
+          {
+            "id": "quiet",
+            "text": "„Meine Vergangenheit spielt keine Rolle.“",
+            "nextNode": "a2",
+            "effects": {
+              "respect": 2
+            }
+          },
+          {
+            "id": "half",
+            "text": "„Ich war in einem staatlichen Programm. Mehr darf ich nicht sagen.“",
+            "nextNode": "a3",
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 35
+            },
+            "failNode": "a3b",
+            "effects": {
+              "trust": 3
+            }
+          },
+          {
+            "id": "ask",
+            "text": "„Was steht denn drin?“",
+            "nextNode": "a4",
+            "effects": {
+              "trust": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "a2",
+        "speakerId": "michael",
+        "text": "„Jeder hier hat eine Vergangenheit, die keine Rolle spielen soll.“ Ein kurzer Blick, fast Mitgefühl. „Die Regeln sind einfach: Du trainierst, du lernst, du hältst dich an die Regeln. Wer bricht, wird abgeschaltet.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Verstanden.“",
+            "effects": {
+              "xp": 40
+            }
+          }
+        ]
+      },
+      {
+        "id": "a3",
+        "speakerId": "michael",
+        "text": "Er nickt langsam. „Dann weißt du, wie man schweigt. Das ist hier viel wert.“ Er schließt die Akte. „Aber auf der Matte zählen nur deine Leistungen. Morgen, sechs Uhr dreißig.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Ich werde da sein.“",
+            "effects": {
+              "xp": 50
+            }
+          }
+        ]
+      },
+      {
+        "id": "a3b",
+        "speakerId": "michael",
+        "text": "Er hebt eine Augenbraue. „Du lügst schlecht für jemanden aus einem staatlichen Programm.“ Pause. „Das lernst du hier. Morgen, sechs Uhr dreißig.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„…Ja, Sir.“",
+            "effects": {
+              "xp": 30,
+              "stress": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "a4",
+        "speakerId": "michael",
+        "text": "„Ein Name, der nicht deiner ist, ein Geburtsdatum und eine Freigabestufe, die ich noch nie gesehen habe.“ Er mustert dich. „Das macht dich interessant. Interessant ist hier gefährlich.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Dann werde ich langweilig sein.“",
+            "effects": {
+              "xp": 40,
+              "respect": 3
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_michael"
+  },
+  {
+    "id": "dlg_thom_intro",
+    "npcId": "thom",
+    "title": "Der beste Rekrut",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "t1",
+    "nodes": [
+      {
+        "id": "t1",
+        "speakerId": "thom",
+        "text": "„Du bist neu, oder? Ich bin Thom.“ Er streckt dir die Hand hin, als wäre das hier eine Schule. „Hast du den Trainingsplan schon gesehen? Michael legt Neue gern gleich am ersten Tag auf die Matte.“",
+        "choices": [
+          {
+            "id": "friend",
+            "text": "„Danke für die Warnung. Trainieren wir zusammen?“",
+            "nextNode": "t2",
+            "effects": {
+              "friendship": 6,
+              "trust": 4
+            }
+          },
+          {
+            "id": "solo",
+            "text": "„Ich komme alleine klar.“",
+            "nextNode": "t3",
+            "effects": {
+              "friendship": -2,
+              "respect": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "speakerId": "thom",
+        "text": "„Klar. Ein Tipp: Bei Michael zählt nicht, ob du gewinnst, sondern wie du verlierst.“ Er grinst. „Und lass dich von Jaden nicht provozieren. Sie steht auf Platz zwei. Ich auf eins.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Gut zu wissen.“",
+            "effects": {
+              "xp": 30,
+              "memory": "Thom bot an, gemeinsam zu trainieren"
+            }
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "speakerId": "thom",
+        "text": "„Okay. Das sagen alle am Anfang.“ Er zuckt mit den Schultern, nicht beleidigt. „Angebot steht trotzdem.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicken.",
+            "effects": {
+              "xp": 20
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_thom"
+  },
+  {
+    "id": "dlg_alex_intro",
+    "npcId": "alex",
+    "title": "Ähnlicher, als du denkst",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "x1",
+    "nodes": [
+      {
+        "id": "x1",
+        "speakerId": "alex",
+        "text": "„Man sagt, niemand hätte deine Akte gesehen.“ Alex lehnt am Türrahmen des Quartiers, Arme verschränkt. „Nicht mal Birkhoff. Und Birkhoff sieht alles.“",
+        "choices": [
+          {
+            "id": "mirror",
+            "text": "„Und deine? Hat die jemand gesehen?“",
+            "nextNode": "x2",
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 40
+            },
+            "failNode": "x3",
+            "effects": {
+              "trust": 4,
+              "friendship": 3
+            }
+          },
+          {
+            "id": "deflect",
+            "text": "„Gerüchte sind hier wohl der einzige Sport außer Training.“",
+            "nextNode": "x3",
+            "effects": {
+              "friendship": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "x2",
+        "speakerId": "alex",
+        "text": "Ein kurzes, überraschtes Lachen. „Touché.“ Dann leiser: „Manchmal ist es besser, nicht alles zu wissen. Aber vielleicht können wir uns gegenseitig den Rücken freihalten.“",
+        "choices": [
+          {
+            "id": "deal",
+            "text": "„Abgemacht.“",
+            "effects": {
+              "xp": 40,
+              "loyalty": 5,
+              "memory": "Ein stiller Pakt mit Alex"
+            }
+          }
+        ]
+      },
+      {
+        "id": "x3",
+        "speakerId": "alex",
+        "text": "„Wie du meinst.“ Sie mustert dich noch einen Moment zu lang. „Pass auf dich auf. Hier verschwinden Leute.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Danke für die Warnung.“",
+            "effects": {
+              "xp": 20
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_alex"
+  },
+  {
+    "id": "dlg_jaden_intro",
+    "npcId": "jaden",
+    "title": "Rangliste",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "j1",
+    "nodes": [
+      {
+        "id": "j1",
+        "speakerId": "jaden",
+        "text": "„Platz einunddreißig.“ Jaden tippt auf die Rangliste an der Wand, auf deinen Decknamen ganz unten. „Mach es dir nicht gemütlich. Ich hab nicht vor, dass hier irgendwer an mir vorbeizieht.“",
+        "choices": [
+          {
+            "id": "fire",
+            "text": "„Dann solltest du schneller laufen.“",
+            "nextNode": "j2",
+            "effects": {
+              "rivalry": 25,
+              "respect": 4
+            }
+          },
+          {
+            "id": "calm",
+            "text": "„Ich bin nicht hier, um gegen dich anzutreten.“",
+            "nextNode": "j3",
+            "effects": {
+              "rivalry": 20
+            }
+          },
+          {
+            "id": "read",
+            "text": "Ihr Blick bleibt an Thoms Namen hängen. „Es geht dir gar nicht um mich, oder?“",
+            "nextNode": "j4",
+            "check": {
+              "attribute": "perception",
+              "skill": "lie_detector",
+              "difficulty": 45
+            },
+            "failNode": "j3",
+            "effects": {
+              "respect": 6,
+              "trust": 3,
+              "rivalry": 20
+            }
+          }
+        ]
+      },
+      {
+        "id": "j2",
+        "speakerId": "jaden",
+        "text": "Ein schmales Lächeln. „Wir werden sehen.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weitergehen.",
+            "effects": {
+              "xp": 25,
+              "memory": "Kampfansage an der Rangliste"
+            }
+          }
+        ]
+      },
+      {
+        "id": "j3",
+        "speakerId": "jaden",
+        "text": "„Hier tritt jeder gegen jeden an. Du wirst das schon noch lernen.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schulterzucken.",
+            "effects": {
+              "xp": 15
+            }
+          }
+        ]
+      },
+      {
+        "id": "j4",
+        "speakerId": "jaden",
+        "text": "Für einen Moment fällt die Maske. „Halt dich raus.“ Aber sie geht, ohne die letzte Spitze zu setzen – bei Jaden fast eine Entschuldigung.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schweigen.",
+            "effects": {
+              "xp": 35
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_jaden"
+  },
+  {
+    "id": "dlg_birkhoff_file",
+    "npcId": "birkhoff",
+    "title": "Die versiegelte Akte",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 50,
+    "startNode": "b1",
+    "nodes": [
+      {
+        "id": "b1",
+        "speakerId": "birkhoff",
+        "text": "„Ah. Der Mensch mit der Akte, die mein System hasst.“ Birkhoff dreht sich nicht um, tippt weiter. „Dein Personaldatensatz hat eine Freigabe, die es offiziell nicht gibt. Weißt du, was das für meinen Blutdruck bedeutet?“",
+        "choices": [
+          {
+            "id": "help",
+            "text": "„Kannst du herausfinden, wer sie gesetzt hat?“",
+            "nextNode": "b2",
+            "effects": {
+              "trust": 3
+            }
+          },
+          {
+            "id": "hide",
+            "text": "„Vielleicht lässt du die Akte einfach in Ruhe.“",
+            "nextNode": "b3",
+            "effects": {
+              "trust": -2,
+              "setFlags": [
+                "asked_birkhoff_hide"
+              ]
+            }
+          },
+          {
+            "id": "tech",
+            "text": "„Zeig mal den Header. Wenn das ein Siegel ist, verrät der Zeitstempel den Ursprung.“",
+            "nextNode": "b4",
+            "check": {
+              "attribute": "intellect",
+              "skill": "analysis",
+              "difficulty": 40
+            },
+            "failNode": "b2",
+            "effects": {
+              "respect": 8,
+              "trust": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "b2",
+        "speakerId": "birkhoff",
+        "text": "„Kann ich. Darf ich nicht. Werde ich trotzdem – aber nicht über das Netz.“ Er schiebt dir eine Sicherheitskarte zu. „Die alten Papierakten liegen im Geheimarchiv. Die Karte ist… geliehen. Bring mir, was du findest.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Die Karte einstecken.",
+            "effects": {
+              "xp": 40,
+              "giveItems": {
+                "keycard": 1
+              },
+              "setFlags": [
+                "archive_access"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "b3",
+        "speakerId": "birkhoff",
+        "text": "„Sehr gern. Wirklich.“ Er hält inne. „Nur: Irgendwer anders lässt sie nicht in Ruhe. Seit deiner Ankunft gab es drei Zugriffsversuche von innen.“ Er schiebt dir trotzdem eine Karte zu. „Falls du es dir anders überlegst.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Die Karte einstecken.",
+            "effects": {
+              "xp": 30,
+              "giveItems": {
+                "keycard": 1
+              },
+              "setFlags": [
+                "archive_access"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "b4",
+        "speakerId": "birkhoff",
+        "text": "Jetzt dreht er sich um. „Okay. Du bist kein normaler Rekrut.“ Er zeigt auf eine Zeile. „Zeitstempel zwei Tage vor deiner Ankunft, signiert aus dem Direktorat.“ Pause. „Ich hab das nicht gesagt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Du hast gar nichts gesagt.“",
+            "effects": {
+              "xp": 60,
+              "giveItems": {
+                "keycard": 1
+              },
+              "setFlags": [
+                "archive_access",
+                "file_signed_director"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "missionsDone": [
+        "M001"
+      ]
+    },
+    "completeFlag": "talked_birkhoff_file"
+  },
+  {
+    "id": "dlg_amanda_first",
+    "npcId": "amanda",
+    "title": "Erster Eindruck",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "m1",
+    "nodes": [
+      {
+        "id": "m1",
+        "speakerId": "amanda",
+        "text": "„Setz dich.“ Amanda lächelt, als hätte sie dich schon erwartet. „Ich lese gern Akten. Deine ist eine Kurzgeschichte mit geschwärzten Seiten. Wie fühlst du dich hier?“",
+        "choices": [
+          {
+            "id": "honest",
+            "text": "„Ehrlich? Beobachtet.“",
+            "nextNode": "m2",
+            "effects": {
+              "trust": 4
+            }
+          },
+          {
+            "id": "mask",
+            "text": "„Gut. Strukturiert. Ich mag Regeln.“",
+            "nextNode": "m3",
+            "check": {
+              "attribute": "willpower",
+              "skill": "disguise",
+              "difficulty": 45
+            },
+            "failNode": "m4"
+          },
+          {
+            "id": "turn",
+            "text": "„Wie fühlen Sie sich denn, wenn Sie Akten ohne Inhalt lesen?“",
+            "nextNode": "m5",
+            "check": {
+              "attribute": "charisma",
+              "skill": "interview",
+              "difficulty": 50
+            },
+            "failNode": "m4",
+            "effects": {
+              "respect": 6
+            }
+          }
+        ]
+      },
+      {
+        "id": "m2",
+        "speakerId": "amanda",
+        "text": "„Gut. Das bist du auch.“ Sie notiert etwas. „Ehrlichkeit ist hier selten. Ich werde sie nicht missbrauchen – solange sie bleibt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicken.",
+            "effects": {
+              "xp": 30
+            }
+          }
+        ]
+      },
+      {
+        "id": "m3",
+        "speakerId": "amanda",
+        "text": "Sie betrachtet dich eine Weile. „Überzeugend.“ Ein Strich auf ihrem Block. „Wir sehen uns wieder.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Aufstehen.",
+            "effects": {
+              "xp": 40,
+              "setFlags": [
+                "amanda_fooled_once"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "m4",
+        "speakerId": "amanda",
+        "text": "„Interessant, wie schnell deine Hände ruhig werden, wenn du lügst.“ Sie lächelt wieder. „Das ist trainiert. Von wem?“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schweigen.",
+            "effects": {
+              "xp": 20,
+              "stress": 8,
+              "setFlags": [
+                "amanda_suspicious"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "m5",
+        "speakerId": "amanda",
+        "text": "Ein winziges Zucken im Mundwinkel. „Neugierig. Das kann ich verwenden.“ Sie klappt ihren Block zu – zum ersten Mal sieht sie dich wirklich an.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Ihrem Blick standhalten.",
+            "effects": {
+              "xp": 45
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_amanda"
+  },
+  {
+    "id": "dlg_percy_first",
+    "npcId": "percy",
+    "title": "Der Direktor",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "p1",
+    "nodes": [
+      {
+        "id": "p1",
+        "speakerId": "percy",
+        "text": "„{codename}.“ Percy dreht sich nicht vom Glasfenster weg, unter ihm die Einsatzzentrale. „Ein Name ohne Vergangenheit. Wir haben hier viele davon. Aber deiner wurde mir… empfohlen.“",
+        "choices": [
+          {
+            "id": "who",
+            "text": "„Von wem?“",
+            "nextNode": "p2",
+            "effects": {
+              "trust": -1
+            }
+          },
+          {
+            "id": "serve",
+            "text": "„Ich bin hier, um zu dienen, Sir.“",
+            "nextNode": "p3",
+            "effects": {
+              "trust": 3,
+              "respect": 2
+            }
+          },
+          {
+            "id": "watch",
+            "text": "Du achtest auf seine Hände, als er „empfohlen“ sagt.",
+            "nextNode": "p4",
+            "check": {
+              "attribute": "perception",
+              "skill": "lie_detector",
+              "difficulty": 50
+            },
+            "failNode": "p3"
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "speakerId": "percy",
+        "text": "„Die Frage ist nicht, von wem. Die Frage ist, warum.“ Endlich sieht er dich an. „Finde es heraus – oder lass es. Beides verrät mir etwas über dich.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Gehen.",
+            "effects": {
+              "xp": 30
+            }
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "speakerId": "percy",
+        "text": "„Dienen.“ Er kostet das Wort wie einen billigen Wein. „Gut. Dann diene gut.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Gehen.",
+            "effects": {
+              "xp": 30
+            }
+          }
+        ]
+      },
+      {
+        "id": "p4",
+        "speakerId": "percy",
+        "text": "Ein leichtes Zögern, ein Daumen, der über einen Ring streicht. Er weiß, wer dich geschickt hat. Und es macht ihn nervös. „Das ist alles, Rekrut.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Gehen.",
+            "effects": {
+              "xp": 50,
+              "setFlags": [
+                "percy_nervous"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "met_michael"
+      ]
+    },
+    "completeFlag": "met_percy"
+  },
+  {
+    "id": "dlg_owen_intro",
+    "npcId": "owen",
+    "title": "Ausrüstungskammer",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "o1",
+    "nodes": [
+      {
+        "id": "o1",
+        "speakerId": "owen",
+        "text": "Owen schiebt dir ein Formular über die Theke. „Alles, was du nimmst, kommt zurück. Alles, was kaputtgeht, wird bezahlt.“ Er sieht dich an. „Du hältst dich wie jemand, der schon mal in einer Kaserne war.“",
+        "choices": [
+          {
+            "id": "deny",
+            "text": "„Pfadfinder.“",
+            "nextNode": "o2",
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 45
+            },
+            "failNode": "o3"
+          },
+          {
+            "id": "silent",
+            "text": "Schweigen.",
+            "nextNode": "o3",
+            "effects": {
+              "respect": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "o2",
+        "speakerId": "owen",
+        "text": "Er lacht kurz. Es klingt rostig. „Klar.“ Er legt eine Taschenlampe dazu. „Für Pfadfinder.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Danke.",
+            "effects": {
+              "xp": 25,
+              "giveItems": {
+                "flashlight": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "o3",
+        "speakerId": "owen",
+        "text": "„Gute Antwort.“ Er legt eine Taschenlampe auf die Theke. „Die Archive sind dunkel. Nur so.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nehmen.",
+            "effects": {
+              "xp": 25,
+              "giveItems": {
+                "flashlight": 1
+              },
+              "trust": 3
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_owen"
+  },
+  {
+    "id": "dlg_sonya_intro",
+    "npcId": "sonya",
+    "title": "Netzwerkrauschen",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "s1",
+    "nodes": [
+      {
+        "id": "s1",
+        "speakerId": "sonya",
+        "text": "„Du bist die Person, wegen der Birkhoff seit drei Tagen schlechte Laune hat.“ Sonya lächelt. „Keine Sorge, er hat immer schlechte Laune. Aber deine Akte hat in meinem Log Alarme ausgelöst.“",
+        "choices": [
+          {
+            "id": "ask",
+            "text": "„Was für Alarme?“",
+            "nextNode": "s2",
+            "effects": {
+              "trust": 2
+            }
+          },
+          {
+            "id": "help",
+            "text": "„Kann ich dir bei irgendwas helfen?“",
+            "nextNode": "s3",
+            "effects": {
+              "friendship": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "speakerId": "sonya",
+        "text": "„Jemand versucht, sie von außen zu lesen. Mit einem Schlüssel, der älter ist als unser System.“ Sie zögert. „Ich hab es Birkhoff gesagt. Nicht Percy.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Danke.“",
+            "effects": {
+              "xp": 30,
+              "setFlags": [
+                "outside_access_known"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "speakerId": "sonya",
+        "text": "„Lass mich überlegen…“ Sie reicht dir einen Datenträger. „Bring den zu Ryan, wenn du ihn siehst. Und frag nicht, was drauf ist.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Einstecken.",
+            "effects": {
+              "xp": 25,
+              "giveItems": {
+                "usb": 1
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_sonya"
+  },
+  {
+    "id": "dlg_ryan_intro",
+    "npcId": "ryan",
+    "title": "Muster",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "r1",
+    "nodes": [
+      {
+        "id": "r1",
+        "speakerId": "ryan",
+        "text": "„Interessant.“ Ryan blickt von einem Stapel Ausdrucke auf. „Deine Ankunft fällt mit drei Dingen zusammen: einem gelöschten Budgetposten, einer verschlüsselten Funkfrequenz und einem Treffen, das es offiziell nie gab.“",
+        "choices": [
+          {
+            "id": "coincidence",
+            "text": "„Zufall.“",
+            "nextNode": "r2"
+          },
+          {
+            "id": "curious",
+            "text": "„Erzähl mir mehr.“",
+            "nextNode": "r3",
+            "effects": {
+              "trust": 3
+            }
+          },
+          {
+            "id": "expose",
+            "text": "„Und du sammelst Daten über Rekruten für die Aufsicht?“",
+            "nextNode": "r4",
+            "check": {
+              "attribute": "perception",
+              "skill": "profiling",
+              "difficulty": 45
+            },
+            "failNode": "r2",
+            "effects": {
+              "respect": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "speakerId": "ryan",
+        "text": "„Ich glaube nicht an Zufälle. Das ist mein Problem.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Gehen.",
+            "effects": {
+              "xp": 20
+            }
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "speakerId": "ryan",
+        "text": "„Das Budget hieß ‚P-Null‘. Die Frequenz wird nur nachts benutzt. Und das Treffen…“ Er senkt die Stimme. „Fand am Industriehafen statt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Merken.",
+            "effects": {
+              "xp": 35,
+              "setFlags": [
+                "harbor_hint"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "speakerId": "ryan",
+        "text": "Er lächelt schief. „Schlau. Sagen wir: Ich bin jemandem Rechenschaft schuldig, der nicht Percy heißt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Dein Geheimnis ist sicher.“",
+            "effects": {
+              "xp": 35,
+              "trust": 4,
+              "setFlags": [
+                "ryan_oversight_known",
+                "harbor_hint"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "missionsDone": [
+        "M002"
+      ]
+    },
+    "completeFlag": "met_ryan"
+  },
+  {
+    "id": "dlg_maya_intro",
+    "npcId": "maya",
+    "title": "Skizzenbuch",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "y1",
+    "nodes": [
+      {
+        "id": "y1",
+        "speakerId": "maya",
+        "text": "Maya klappt hastig ein Skizzenbuch zu, als du dich setzt. „Erwischt.“ Sie wird ein bisschen rot. „Ich zeichne Leute. Ist hier nicht direkt erlaubt. Ist hier irgendwas erlaubt?“",
+        "choices": [
+          {
+            "id": "see",
+            "text": "„Darf ich mal sehen?“",
+            "nextNode": "y2",
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 30
+            },
+            "failNode": "y3",
+            "effects": {
+              "friendship": 6
+            }
+          },
+          {
+            "id": "joke",
+            "text": "„Atmen. Manchmal.“",
+            "nextNode": "y2",
+            "effects": {
+              "friendship": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "y2",
+        "speakerId": "maya",
+        "text": "Sie zeigt dir die Seiten: Michael mit verschränkten Armen, Birkhoff hinter drei Monitoren, Thom beim Lachen. Auf der letzten Seite: eine halbfertige Skizze von dir. „Du bist schwer zu zeichnen. Du guckst immer so, als würdest du gleich verschwinden.“",
+        "choices": [
+          {
+            "id": "stay",
+            "text": "„Ich bleibe. Versprochen.“",
+            "effects": {
+              "xp": 30,
+              "friendship": 4,
+              "affection": 5,
+              "memory": "Maya zeigte dir ihr Skizzenbuch"
+            }
+          },
+          {
+            "id": "laugh",
+            "text": "„Dann zeichne schnell.“",
+            "effects": {
+              "xp": 30,
+              "friendship": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "y3",
+        "speakerId": "maya",
+        "text": "„Vielleicht später.“ Sie lächelt trotzdem. „Wenn ich weiß, dass du mich nicht verpfeifst.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Würde ich nie.“",
+            "effects": {
+              "xp": 20,
+              "trust": 3
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_maya"
+  },
+  {
+    "id": "dlg_ethan_intro",
+    "npcId": "ethan",
+    "title": "Hundemarke",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 0,
+    "startNode": "e1",
+    "nodes": [
+      {
+        "id": "e1",
+        "speakerId": "ethan",
+        "text": "„Du warst vorher woanders. Das sieht man an der Art, wie du Räume scannst.“ Ethan spielt mit einer Hundemarke an seiner Kette. „Ich will ins Einsatzteam. Wenn du Tricks kennst, will ich sie lernen.“",
+        "choices": [
+          {
+            "id": "teach",
+            "text": "„Ich zeig dir, was ich weiß – wenn du mir zeigst, wie man hier überlebt.“",
+            "nextNode": "e2",
+            "effects": {
+              "friendship": 5,
+              "trust": 3
+            }
+          },
+          {
+            "id": "tag",
+            "text": "„Wem gehört die Marke?“",
+            "nextNode": "e3",
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 40
+            },
+            "failNode": "e2",
+            "effects": {
+              "trust": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "e2",
+        "speakerId": "ethan",
+        "text": "„Deal.“ Er schlägt ein, fester als nötig.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Grinsen.",
+            "effects": {
+              "xp": 25
+            }
+          }
+        ]
+      },
+      {
+        "id": "e3",
+        "speakerId": "ethan",
+        "text": "Er sieht lange auf das Metall. „Meinem Vater. Er hat nicht für die Division gearbeitet. Glaube ich zumindest.“ Er steckt sie weg. „Erzähl es keinem.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Niemandem.“",
+            "effects": {
+              "xp": 35,
+              "loyalty": 5,
+              "memory": "Ethan erzählte von seinem Vater"
+            }
+          }
+        ]
+      }
+    ],
+    "completeFlag": "met_ethan"
+  },
+  {
+    "id": "dlg_maya_roof",
+    "npcId": "maya",
+    "title": "Auf dem Dach",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 0,
+    "startNode": "mr1",
+    "nodes": [
+      {
+        "id": "mr1",
+        "speakerId": "maya",
+        "text": "Maya hat herausgefunden, wie man über den Lüftungsschacht aufs Dach des Quartiers kommt. Die Stadt glitzert in der Ferne. „Manchmal tu ich so, als wäre ich eine ganz normale Schülerin, die heimlich aufs Schuldach klettert.“",
+        "choices": [
+          {
+            "id": "normal",
+            "text": "„Erzähl mir von deinem normalen Leben.“",
+            "nextNode": "mr2",
+            "effects": {
+              "friendship": 5,
+              "affection": 4
+            }
+          },
+          {
+            "id": "quiet",
+            "text": "Einfach neben ihr sitzen und die Lichter zählen.",
+            "nextNode": "mr3",
+            "effects": {
+              "friendship": 4,
+              "affection": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "mr2",
+        "speakerId": "maya",
+        "text": "Sie erzählt von einem Fahrrad mit gelbem Korb, einer Großmutter, die Waffeln backt, einem Hafen voller Möwen. Dann wird sie still. „Danke, dass du fragst. Das hat hier noch keiner.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Lächeln.",
+            "effects": {
+              "xp": 30,
+              "memory": "Ein Abend auf dem Dach mit Maya"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mr3",
+        "speakerId": "maya",
+        "text": "Nach einer Weile lehnt sie den Kopf an deine Schulter. „Das ist schön. Einfach so.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Sitzen bleiben.",
+            "effects": {
+              "xp": 30,
+              "memory": "Ein stiller Abend auf dem Dach mit Maya"
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "minFriendship": 40,
+      "flagsAll": [
+        "met_maya"
+      ]
+    }
+  },
+  {
+    "id": "dlg_ethan_letters",
+    "npcId": "ethan",
+    "title": "Briefe",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 0,
+    "startNode": "el1",
+    "nodes": [
+      {
+        "id": "el1",
+        "speakerId": "ethan",
+        "text": "Ethan sitzt mit einem Stapel Briefe im Aufenthaltsraum. Er sieht ertappt aus. „An meine Schwester. Ich darf sie nicht abschicken. Ich schreibe trotzdem.“",
+        "choices": [
+          {
+            "id": "read",
+            "text": "„Willst du mir einen vorlesen?“",
+            "nextNode": "el2",
+            "effects": {
+              "friendship": 5,
+              "affection": 3
+            }
+          },
+          {
+            "id": "help",
+            "text": "„Vielleicht kann Birkhoff einen Weg finden, ihr ein Lebenszeichen zu schicken.“",
+            "nextNode": "el3",
+            "effects": {
+              "trust": 6
+            }
+          }
+        ]
+      },
+      {
+        "id": "el2",
+        "speakerId": "ethan",
+        "text": "Er liest einen Absatz über einen Hund namens Bruno und einen verpassten Geburtstag. Seine Stimme bricht an einer Stelle. Er tut so, als wäre nichts.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schweigend dasitzen.",
+            "effects": {
+              "xp": 30,
+              "memory": "Ethan las dir einen Brief vor"
+            }
+          }
+        ]
+      },
+      {
+        "id": "el3",
+        "speakerId": "ethan",
+        "text": "„Das würdest du riskieren?“ Er sieht dich an, als würde er dich zum ersten Mal sehen. „Danke. Ehrlich.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicken.",
+            "effects": {
+              "xp": 30,
+              "loyalty": 6
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "minFriendship": 40,
+      "flagsAll": [
+        "met_ethan"
+      ]
+    }
+  },
+  {
+    "id": "dlg_voss_call",
+    "npcId": null,
+    "title": "Die Stimme",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 80,
+    "startNode": "v1",
+    "nodes": [
+      {
+        "id": "v1",
+        "speakerId": "voss",
+        "text": "Dein Funkgerät knackt auf einer Frequenz, die es nicht geben dürfte. „Kandidat 7.“ Die Stimme ist ruhig wie immer. „Du hast im Archiv gegraben. Das war nicht klug.“",
+        "choices": [
+          {
+            "id": "who",
+            "text": "„Voss.“",
+            "nextNode": "v2"
+          },
+          {
+            "id": "cut",
+            "text": "Die Verbindung sofort trennen.",
+            "nextNode": "v3",
+            "effects": {
+              "setFlags": [
+                "voss_cut"
+              ]
+            }
+          },
+          {
+            "id": "trace",
+            "text": "Ihn hinhalten und die Frequenz mitschneiden.",
+            "nextNode": "v4",
+            "check": {
+              "attribute": "intellect",
+              "skill": "electronics",
+              "difficulty": 45
+            },
+            "failNode": "v2",
+            "effects": {
+              "setFlags": [
+                "voss_traced"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "v2",
+        "speakerId": "voss",
+        "text": "„Du kennst meine Stimme. Gut. Dann weißt du auch, dass ich nicht drohe. Ich erinnere. Die Division ist nicht, was sie zu sein vorgibt. Halte dich bereit.“ Das Signal bricht ab.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 60,
+              "stress": 10,
+              "setFlags": [
+                "voss_contact"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "v3",
+        "speakerId": "voss",
+        "text": "Stille. Dann, zwei Sekunden später, eine Textnachricht ohne Absender: „Unhöflich, Kandidat 7.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 40,
+              "stress": 8,
+              "setFlags": [
+                "voss_contact"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "v4",
+        "speakerId": "voss",
+        "text": "Während Voss spricht, läuft der Mitschnitt. Als er auflegt, hast du 41 Sekunden einer verschlüsselten Übertragung. Birkhoff wird es lieben. Oder hassen.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 80,
+              "stress": 6,
+              "setFlags": [
+                "voss_contact"
+              ],
+              "giveItems": {
+                "research_drive": 1
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "missionsDone": [
+        "M005"
+      ]
+    },
+    "completeFlag": "voss_called"
+  },
+  {
+    "id": "dlg_ch1_end",
+    "npcId": null,
+    "title": "Nachtfall",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "once": true,
+    "priority": 90,
+    "startNode": "c1",
+    "nodes": [
+      {
+        "id": "c1",
+        "speakerId": "percy",
+        "text": "Im Direktorat ist es still. Percy hat die Fotos vom Hafen vor sich ausgebreitet. Auf einem ist ein Mann im grauen Mantel zu sehen. „Du hast gute Arbeit geleistet, Rekrut. Bessere, als mir lieb ist.“ Er schiebt dir ein Foto hin. „Kennst du diesen Mann?“",
+        "choices": [
+          {
+            "id": "lie",
+            "text": "„Nein, Sir.“",
+            "nextNode": "c2",
+            "check": {
+              "attribute": "willpower",
+              "skill": "disguise",
+              "difficulty": 50
+            },
+            "failNode": "c3"
+          },
+          {
+            "id": "truth",
+            "text": "„Er heißt Voss. Er hat mich ausgebildet.“",
+            "nextNode": "c4",
+            "effects": {
+              "trust": -5,
+              "setFlags": [
+                "told_percy_truth"
+              ]
+            }
+          },
+          {
+            "id": "counter",
+            "text": "„Sie kennen ihn. Sonst würden Sie nicht fragen.“",
+            "nextNode": "c5",
+            "check": {
+              "attribute": "perception",
+              "skill": "lie_detector",
+              "difficulty": 55
+            },
+            "failNode": "c3",
+            "effects": {
+              "setFlags": [
+                "percy_confronted"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "speakerId": "percy",
+        "text": "Er sieht dich lange an. „Gut.“ Er sammelt die Fotos ein. „Dann vergiss sein Gesicht. Du bist ab sofort für die Vorbereitung zum Junior-Agenten vorgesehen.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Danke, Sir.“",
+            "effects": {
+              "xp": 150,
+              "reputation": 15
+            }
+          }
+        ]
+      },
+      {
+        "id": "c3",
+        "speakerId": "percy",
+        "text": "„Amanda hatte recht. Du lügst inzwischen fast gut.“ Kein Lächeln. „Fast.“ Er drückt einen Knopf; Michael betritt den Raum. „Du stehst ab heute unter seiner persönlichen Aufsicht.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schweigen.",
+            "effects": {
+              "xp": 120,
+              "reputation": 10,
+              "stress": 10,
+              "otherTrust": {
+                "michael": 5
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "c4",
+        "speakerId": "percy",
+        "text": "Ein Moment, in dem Percy nicht der Direktor ist, sondern ein Mann, der rechnet. „Ehrlichkeit. Wie unerwartet.“ Er nickt. „Dann wirst du verstehen, warum ich dich ab heute sehr genau beobachten werde.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Verstanden.“",
+            "effects": {
+              "xp": 150,
+              "reputation": 10
+            }
+          }
+        ]
+      },
+      {
+        "id": "c5",
+        "speakerId": "percy",
+        "text": "Seine Hand stockt über dem Foto. Nur kurz. „Du gehst zu weit, Rekrut.“ Dann, leiser, fast anerkennend: „Aber du gehst in die richtige Richtung. Wegtreten.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Wegtreten.",
+            "effects": {
+              "xp": 180,
+              "reputation": 15,
+              "setFlags": [
+                "percy_knows_voss"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "missionsDone": [
+        "M010"
+      ]
+    },
+    "completeFlag": "ch1_done"
+  },
+  {
+    "id": "dlg_michael_past",
+    "npcId": "michael",
+    "title": "Eine Narbe",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 0,
+    "startNode": "mp1",
+    "nodes": [
+      {
+        "id": "mp1",
+        "speakerId": "michael",
+        "text": "Nach dem Training bleibt Michael auf der Bank sitzen. „Du hast heute nicht aufgegeben, als du hättest sollen.“ Er dreht einen Ring zwischen den Fingern, den er nie trägt. „Woher kommt das?“",
+        "choices": [
+          {
+            "id": "truth",
+            "text": "„Ich habe meine Eltern bei einem Anschlag verloren.“",
+            "nextNode": "mp2",
+            "effects": {
+              "trust": 8,
+              "memory": "Du hast Michael von deinen Eltern erzählt"
+            }
+          },
+          {
+            "id": "turn",
+            "text": "„Und woher kommt der Ring?“",
+            "nextNode": "mp3",
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 55
+            },
+            "failNode": "mp4"
+          }
+        ]
+      },
+      {
+        "id": "mp2",
+        "speakerId": "michael",
+        "text": "Er schweigt lange. „Ich auch. Meine Familie.“ Er steht auf. „Das macht uns nicht zu besseren Agenten. Nur zu gefährlicheren.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Schweigen.",
+            "effects": {
+              "xp": 80,
+              "loyalty": 10
+            }
+          }
+        ]
+      },
+      {
+        "id": "mp3",
+        "speakerId": "michael",
+        "text": "Er sieht dich an, überrascht. „Von einem Leben, das es nicht mehr gibt.“ Mehr sagt er nicht – aber er klopft dir beim Gehen auf die Schulter.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicken.",
+            "effects": {
+              "xp": 80,
+              "trust": 6,
+              "loyalty": 6
+            }
+          }
+        ]
+      },
+      {
+        "id": "mp4",
+        "speakerId": "michael",
+        "text": "„Das geht dich nichts an.“ Nicht unfreundlich. Nur endgültig.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Verstanden.“",
+            "effects": {
+              "xp": 30
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "minTrust": 70,
+      "flagsAll": [
+        "ch1_done"
+      ]
+    }
+  },
+  {
+    "id": "dlg_alex_secret",
+    "npcId": "alex",
+    "title": "Ein Name",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 0,
+    "startNode": "as1",
+    "nodes": [
+      {
+        "id": "as1",
+        "speakerId": "alex",
+        "text": "Alex sitzt nachts im Aufenthaltsraum, ein altes Foto in der Hand. Sie versteckt es nicht, als du kommst. „Mein richtiger Nachname ist nicht der in meiner Akte. Wusstest du das?“",
+        "choices": [
+          {
+            "id": "listen",
+            "text": "Dich setzen und zuhören.",
+            "nextNode": "as2",
+            "effects": {
+              "trust": 6,
+              "friendship": 6
+            }
+          },
+          {
+            "id": "trade",
+            "text": "„Meiner auch nicht.“",
+            "nextNode": "as3",
+            "effects": {
+              "trust": 10,
+              "setFlags": [
+                "told_alex_secret"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "as2",
+        "speakerId": "alex",
+        "text": "Sie erzählt von einer Familie, einem Feuer und Jahren, über die sie nie wieder sprechen will. Am Ende sagt sie nur: „Jetzt weißt du etwas, das mich in Gefahr bringen könnte.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Bei mir ist es sicher.“",
+            "effects": {
+              "xp": 60,
+              "loyalty": 8,
+              "memory": "Alex vertraute dir ihre Herkunft an"
+            }
+          }
+        ]
+      },
+      {
+        "id": "as3",
+        "speakerId": "alex",
+        "text": "Sie lacht leise, ungläubig. „Natürlich nicht.“ Sie hält dir das Foto hin. „Dann sind wir quitt. Zwei Geister in einem Bunker.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Das Foto ansehen.",
+            "effects": {
+              "xp": 70,
+              "loyalty": 10
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "minTrust": 60,
+      "minFriendship": 50
+    }
+  },
+  {
+    "id": "dlg_birkhoff_phoenix",
+    "npcId": "birkhoff",
+    "title": "P-Null",
+    "chapter": "Die PHOENIX-Verschwörung",
+    "once": true,
+    "priority": 0,
+    "startNode": "bp1",
+    "nodes": [
+      {
+        "id": "bp1",
+        "speakerId": "birkhoff",
+        "text": "„Okay, ich hab den Archivkram ausgewertet.“ Birkhoff sieht ausnahmsweise nicht gelangweilt aus. „‚P-Null‘ ist kein Budget. Es ist ein Protokoll. Protokoll Null. Und dein Name steht als Endpunkt drin.“",
+        "choices": [
+          {
+            "id": "what",
+            "text": "„Endpunkt wofür?“",
+            "nextNode": "bp2"
+          },
+          {
+            "id": "trust",
+            "text": "„Kann ich dir vertrauen, Birkhoff?“",
+            "nextNode": "bp3",
+            "conditions": {
+              "minTrust": 60
+            },
+            "effects": {
+              "trust": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "bp2",
+        "speakerId": "birkhoff",
+        "text": "„Keine Ahnung. Aber jemand hat dich hier platziert, wie man einen Schalter in einen Stromkreis setzt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 80,
+              "setFlags": [
+                "protocol_zero_known"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "bp3",
+        "speakerId": "birkhoff",
+        "text": "„Nein. Niemandem hier.“ Er grinst schief. „Aber ich hab Percy nichts erzählt. Das ist das Nächste, was ich an Freundschaft im Angebot hab.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Reicht mir.“",
+            "effects": {
+              "xp": 90,
+              "loyalty": 8,
+              "setFlags": [
+                "protocol_zero_known"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "phoenix_clue_2"
+      ]
+    }
+  },
+  {
+    "id": "dlg_nikita_signal",
+    "npcId": null,
+    "title": "Anonyme Nachricht",
+    "chapter": "Die PHOENIX-Verschwörung",
+    "once": true,
+    "priority": 60,
+    "startNode": "n1",
+    "nodes": [
+      {
+        "id": "n1",
+        "speakerId": null,
+        "text": "Auf deinem Mobilgerät erscheint eine Nachricht ohne Absender: „Sie haben dich nicht gerettet. Sie haben dich gesammelt. Café am Marktplatz, 19 Uhr. Komm allein. – N.“",
+        "choices": [
+          {
+            "id": "go",
+            "text": "Hingehen (Innenstadt, abends).",
+            "effects": {
+              "setFlags": [
+                "nikita_contact"
+              ]
+            }
+          },
+          {
+            "id": "report",
+            "text": "Die Nachricht an Michael weiterleiten.",
+            "effects": {
+              "otherTrust": {
+                "michael": 5
+              },
+              "setFlags": [
+                "nikita_reported",
+                "nikita_contact"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "ch1_done"
+      ],
+      "minAge": 18
+    },
+    "completeFlag": "nikita_signal_read"
+  },
+  {
+    "id": "dlg_nikita_meet",
+    "npcId": "nikita",
+    "title": "Die Abtrünnige",
+    "chapter": "Die PHOENIX-Verschwörung",
+    "once": true,
+    "priority": 0,
+    "startNode": "nm1",
+    "nodes": [
+      {
+        "id": "nm1",
+        "speakerId": "nikita",
+        "text": "Sie sitzt mit dem Rücken zur Wand, natürlich. „Du bist PHOENIX. Ich erkenne die Art, wie du die Ausgänge zählst.“ Sie schiebt dir einen Kaffee hin. „Voss und Percy haben eine Abmachung. Du bist der Preis.“",
+        "choices": [
+          {
+            "id": "ask",
+            "text": "„Welche Abmachung?“",
+            "nextNode": "nm2",
+            "effects": {
+              "trust": 5
+            }
+          },
+          {
+            "id": "doubt",
+            "text": "„Warum sollte ich einer Abtrünnigen glauben?“",
+            "nextNode": "nm3",
+            "effects": {
+              "respect": 4
+            }
+          },
+          {
+            "id": "read",
+            "text": "Auf ihre Augen achten, als sie Voss erwähnt.",
+            "nextNode": "nm4",
+            "check": {
+              "attribute": "perception",
+              "skill": "lie_detector",
+              "difficulty": 55
+            },
+            "failNode": "nm3"
+          }
+        ]
+      },
+      {
+        "id": "nm2",
+        "speakerId": "nikita",
+        "text": "„Das musst du selbst herausfinden. Ich gebe dir nur das hier.“ Ein Datenträger. „Und einen Rat: Vertrau Michael. Nur Michael.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Den Datenträger nehmen.",
+            "effects": {
+              "xp": 120,
+              "giveItems": {
+                "research_drive": 1
+              },
+              "setFlags": [
+                "nikita_ally"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "nm3",
+        "speakerId": "nikita",
+        "text": "„Solltest du nicht. Prüf es.“ Sie steht auf, lässt Geld auf dem Tisch. „Wenn du die Wahrheit willst, weißt du, wo du mich findest.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Ihr nachsehen.",
+            "effects": {
+              "xp": 80
+            }
+          }
+        ]
+      },
+      {
+        "id": "nm4",
+        "speakerId": "nikita",
+        "text": "Echter Zorn. Und darunter etwas wie Angst. Sie lügt nicht. „Du hast es gesehen, oder?“ Ein knappes Nicken. „Gut. Dann bist du klüger als ich damals.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Erzähl mir alles.“",
+            "effects": {
+              "xp": 140,
+              "trust": 8,
+              "setFlags": [
+                "nikita_ally"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "nikita_contact"
+      ]
+    }
+  },
+  {
+    "id": "dlg_phoenix_truth",
+    "npcId": null,
+    "title": "Protokoll Null",
+    "chapter": "Die PHOENIX-Verschwörung",
+    "once": true,
+    "priority": 70,
+    "startNode": "pt1",
+    "nodes": [
+      {
+        "id": "pt1",
+        "speakerId": "voss",
+        "text": "Das Geheimarchiv, drei Uhr nachts. Voss steht zwischen den Regalen, als hätte er hier immer gestanden. „Du hast es gefunden. Protokoll Null: ein PHOENIX-Kandidat im Herzen der Division, der eines Tages ihr Direktor wird. Percy dachte, er kontrolliert dich. Ich wusste es besser.“",
+        "choices": [
+          {
+            "id": "join",
+            "text": "„Und wenn ich Direktor bin, gehöre ich dir?“",
+            "nextNode": "pt2"
+          },
+          {
+            "id": "refuse",
+            "text": "„Ich gehöre niemandem. Weder dir noch Percy.“",
+            "nextNode": "pt3",
+            "effects": {
+              "setFlags": [
+                "phoenix_rejected"
+              ]
+            }
+          },
+          {
+            "id": "michael",
+            "text": "Unauffällig den Notruf an Michael auslösen.",
+            "nextNode": "pt4",
+            "conditions": {
+              "minTrust": 60
+            },
+            "effects": {
+              "setFlags": [
+                "phoenix_exposed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pt2",
+        "speakerId": "voss",
+        "text": "„Du gehörst der Idee. Sicherheit ohne Schwäche.“ Er lächelt dünn. „Denk darüber nach.“ Als du blinzelst, ist er fort.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 200,
+              "setFlags": [
+                "phoenix_truth",
+                "phoenix_tempted"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pt3",
+        "speakerId": "voss",
+        "text": "„Das sagen alle meine Kandidaten. Bis sie die Macht spüren.“ Er geht, ohne sich umzudrehen.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Weiter.",
+            "effects": {
+              "xp": 220,
+              "setFlags": [
+                "phoenix_truth"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pt4",
+        "speakerId": "voss",
+        "text": "Schritte auf der Treppe. Voss hört sie auch. „Michael. Natürlich.“ Er verschwindet durch einen Wartungsgang – aber er hat seinen Mantel zurückgelassen. Und darin: Namen.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Den Mantel durchsuchen.",
+            "effects": {
+              "xp": 260,
+              "setFlags": [
+                "phoenix_truth"
+              ],
+              "otherTrust": {
+                "michael": 8
+              },
+              "giveItems": {
+                "folder": 1
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "protocol_zero_known",
+        "phoenix_clue_3"
+      ],
+      "minAge": 18
+    },
+    "completeFlag": "phoenix_truth_scene"
+  }
+]

@@ -1,0 +1,4 @@
+{
+  "_hinweis": "Nur verifizierte, schriftlich nachweisbare Lizenzen für Serienstills eintragen. Ein Eintrag schaltet cast/show_<id>.jpg erst frei, wenn verified=true UND license/proof ausgefüllt sind UND die Datei existiert.",
+  "entries": []
+}

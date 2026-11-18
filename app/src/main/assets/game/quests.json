@@ -1,0 +1,336 @@
+[
+  {
+    "id": "q1",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Ankunft",
+    "description": "Melde dich bei Michael und bestehe den Eignungstest.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mit Michael sprechen (Rekrutenquartier)",
+        "dialogueId": "dlg_arrival"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Erster Dienstantritt",
+        "missionId": "M001"
+      }
+    ],
+    "reward": {
+      "xp": 50,
+      "credits": 50
+    },
+    "completeFlag": "quest_q1"
+  },
+  {
+    "id": "q2",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Neue Gesichter",
+    "description": "Lerne die anderen Rekruten kennen – und überstehe deinen ersten Konflikt.",
+    "giverId": "thom",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Thom kennenlernen",
+        "dialogueId": "dlg_thom_intro"
+      },
+      {
+        "id": "o2",
+        "text": "Jaden kennenlernen",
+        "dialogueId": "dlg_jaden_intro"
+      },
+      {
+        "id": "o3",
+        "text": "Alex kennenlernen",
+        "dialogueId": "dlg_alex_intro"
+      },
+      {
+        "id": "o4",
+        "text": "Mission: Schichtwechsel",
+        "missionId": "M003"
+      }
+    ],
+    "reward": {
+      "xp": 80
+    },
+    "completeFlag": "quest_q2",
+    "conditions": {
+      "flagsAll": [
+        "quest_q1"
+      ]
+    }
+  },
+  {
+    "id": "q3",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Die versiegelte Akte",
+    "description": "Birkhoff hat etwas Seltsames an deiner Akte entdeckt.",
+    "giverId": "birkhoff",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mit Birkhoff sprechen (Techniklabor)",
+        "dialogueId": "dlg_birkhoff_file"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Die versiegelte Akte",
+        "missionId": "M002"
+      }
+    ],
+    "reward": {
+      "xp": 80,
+      "reputation": 5
+    },
+    "completeFlag": "quest_q3",
+    "conditions": {
+      "flagsAll": [
+        "quest_q1"
+      ]
+    }
+  },
+  {
+    "id": "q4",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Michaels Methode",
+    "description": "Michael will sehen, ob du im Team funktionierst.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Training unter Michael",
+        "missionId": "M004"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Probealarm",
+        "missionId": "M006"
+      }
+    ],
+    "reward": {
+      "xp": 100,
+      "giveItems": {
+        "vest_light": 1
+      }
+    },
+    "completeFlag": "quest_q4",
+    "conditions": {
+      "flagsAll": [
+        "quest_q1"
+      ]
+    }
+  },
+  {
+    "id": "q5",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Unter Amandas Blick",
+    "description": "Die Psychologie lädt zur Evaluation.",
+    "giverId": "amanda",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Amanda kennenlernen (Psychologie, Ebene −3)",
+        "dialogueId": "dlg_amanda_first"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Gespräch mit Amanda",
+        "missionId": "M007"
+      }
+    ],
+    "reward": {
+      "xp": 100
+    },
+    "completeFlag": "quest_q5",
+    "conditions": {
+      "flagsAll": [
+        "quest_q2"
+      ]
+    }
+  },
+  {
+    "id": "q6",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Spuren im Archiv",
+    "description": "Wer hat deine Akte versiegelt?",
+    "giverId": "birkhoff",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Ryan in der Einsatzzentrale treffen",
+        "dialogueId": "dlg_ryan_intro"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Die Spur im Archiv",
+        "missionId": "M005"
+      }
+    ],
+    "reward": {
+      "xp": 120
+    },
+    "completeFlag": "quest_q6",
+    "conditions": {
+      "flagsAll": [
+        "quest_q3"
+      ]
+    }
+  },
+  {
+    "id": "q7",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Die Stimme",
+    "description": "Eine Frequenz aus deiner Vergangenheit meldet sich.",
+    "giverId": null,
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Den Anruf annehmen",
+        "dialogueId": "dlg_voss_call"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Verschlüsselter Hinweis",
+        "missionId": "M009"
+      }
+    ],
+    "reward": {
+      "xp": 120
+    },
+    "completeFlag": "quest_q7",
+    "conditions": {
+      "flagsAll": [
+        "quest_q6"
+      ]
+    }
+  },
+  {
+    "id": "q8",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Erster Außeneinsatz",
+    "description": "Michael nimmt dich mit nach draußen.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Der erste Informant",
+        "missionId": "M008"
+      }
+    ],
+    "reward": {
+      "xp": 120,
+      "credits": 100
+    },
+    "completeFlag": "quest_q8",
+    "conditions": {
+      "flagsAll": [
+        "quest_q4",
+        "quest_q5"
+      ]
+    }
+  },
+  {
+    "id": "q9",
+    "chapter": "Kapitel 1 · Neues Blut",
+    "title": "Nachtfall",
+    "description": "Am Industriehafen trifft sich jemand, den du kennst.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Nachtfall am Hafen",
+        "missionId": "M010"
+      },
+      {
+        "id": "o2",
+        "text": "Bericht im Direktorat",
+        "dialogueId": "dlg_ch1_end"
+      }
+    ],
+    "reward": {
+      "xp": 250,
+      "reputation": 15
+    },
+    "completeFlag": "quest_q9",
+    "conditions": {
+      "flagsAll": [
+        "quest_q7",
+        "quest_q8"
+      ]
+    }
+  },
+  {
+    "id": "q10",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "title": "Erwachsen werden",
+    "description": "Die operative Ausbildung beginnt mit 18. Nutze die Zeit: Training, Freundschaften, Zeitraffer im Quartier.",
+    "giverId": "michael",
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Volljährig werden (18)",
+        "flag": "age_18"
+      },
+      {
+        "id": "o2",
+        "text": "Rang 4: Junior-Agent",
+        "flag": "rank_4"
+      },
+      {
+        "id": "o3",
+        "text": "Mission: Ausbildung zum Junior-Agenten",
+        "missionId": "M011"
+      }
+    ],
+    "reward": {
+      "xp": 300,
+      "credits": 300
+    },
+    "completeFlag": "quest_q10",
+    "conditions": {
+      "flagsAll": [
+        "ch1_done"
+      ]
+    }
+  },
+  {
+    "id": "q11",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "title": "Protokoll Null",
+    "description": "Finde heraus, wofür PHOENIX dich in die Division geschleust hat.",
+    "giverId": null,
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Archivrecherche: drei Hinweise",
+        "flag": "phoenix_clue_2"
+      },
+      {
+        "id": "o2",
+        "text": "Birkhoff: „P-Null“",
+        "dialogueId": "dlg_birkhoff_phoenix"
+      },
+      {
+        "id": "o3",
+        "text": "Mission: Die Wahrheit über PHOENIX",
+        "missionId": "M015"
+      },
+      {
+        "id": "o4",
+        "text": "Konfrontation",
+        "dialogueId": "dlg_phoenix_truth"
+      }
+    ],
+    "reward": {
+      "xp": 600,
+      "reputation": 30
+    },
+    "completeFlag": "quest_q11",
+    "conditions": {
+      "flagsAll": [
+        "quest_q10"
+      ]
+    }
+  }
+]

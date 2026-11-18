@@ -7,31 +7,278 @@
     "minRank": 1,
     "minAge": 16,
     "threat": 1,
-    "xp": 120,
-    "description": "Mission 1 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 150,
+    "description": "Michaels Eignungstest: Ausdauer, Urteilsvermögen und ein Simulationsdurchlauf mit Markierungsmunition.",
+    "credits": 40,
+    "reputation": 6,
+    "giverId": "michael",
+    "briefing": "„Ich will nicht sehen, wie stark du bist. Ich will sehen, wie du entscheidest.“ – Michael",
+    "requires": {
+      "flagsAll": [
+        "met_michael"
+      ]
+    },
+    "recommendedItems": [
+      "watch"
     ],
-    "storyNodeId": "arrival_001"
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Der Parcours",
+        "text": "Zwölf Hindernisse, eine Stoppuhr, Michael mit verschränkten Armen. Auf halber Strecke stürzt ein anderer Rekrut und bleibt liegen.",
+        "options": [
+          {
+            "id": "help",
+            "text": "Anhalten und helfen",
+            "success": {
+              "text": "Du verlierst Zeit – aber Michael notiert etwas und nickt.",
+              "intel": 1,
+              "effects": {
+                "otherTrust": {
+                  "michael": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "first_aid",
+              "difficulty": 30
+            },
+            "failure": {
+              "text": "Du hilfst, wirst aber langsam und unsicher.",
+              "stress": 5,
+              "effects": {
+                "otherTrust": {
+                  "michael": 2
+                }
+              }
+            }
+          },
+          {
+            "id": "finish",
+            "text": "Weiterlaufen – die Zeit zählt",
+            "success": {
+              "text": "Bestzeit unter den Neuen.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Du stolperst am letzten Hindernis.",
+              "stress": 5
+            }
+          }
+        ],
+        "speakerId": "michael"
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Simulation: Halle B",
+        "text": "Markierungsmunition, Schaumstoffdeckungen, drei Ausbilder als Gegner. Setze alle außer Gefecht.",
+        "tactical": {
+          "map": [
+            "#E...E#",
+            "#.c.c.#",
+            "#.....#",
+            "#c.#.c#",
+            "#..#..#",
+            "#.....#",
+            "#c...c#",
+            "#.....#",
+            "#..P..#"
+          ],
+          "enemyName": "Ausbilder",
+          "enemyHp": 4,
+          "enemyAccuracy": 40,
+          "objective": "eliminate",
+          "maxTurns": 12,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Nachbesprechung",
+        "text": "Michael geht die Aufzeichnung mit dir durch. „Was war dein größter Fehler?“",
+        "options": [
+          {
+            "id": "honest",
+            "text": "Ehrlich deinen Fehler benennen",
+            "success": {
+              "text": "„Gut. Wer seine Fehler kennt, überlebt sie.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 3
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": null,
+              "difficulty": 30
+            },
+            "failure": {
+              "text": "Du suchst zu lange nach Worten.",
+              "next": "END_SUCCESS"
+            }
+          },
+          {
+            "id": "none",
+            "text": "„Ich habe keinen gemacht.“",
+            "success": {
+              "text": "„Doch. Gerade eben.“ Michael schreibt etwas auf.",
+              "next": "END_SUCCESS",
+              "stress": 5
+            }
+          }
+        ],
+        "speakerId": "michael"
+      }
+    ],
+    "debriefSuccess": "Michael: „Du bist nicht die Schnellste. Aber du denkst.“ Du bestehst den Eignungstest.",
+    "debriefFail": "Michael: „Das war nichts. Morgen wieder.“",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M002",
-    "title": "Die verschwundene Akte",
+    "title": "Die versiegelte Akte",
     "locationId": "archives",
     "type": "investigation",
     "minRank": 1,
     "minAge": 16,
     "threat": 1,
-    "xp": 160,
-    "description": "Mission 2 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 170,
+    "description": "Mit Birkhoffs geliehener Sicherheitskarte suchst du im Geheimarchiv nach der Papierfassung deiner Personalakte.",
+    "credits": 40,
+    "reputation": 5,
+    "giverId": "birkhoff",
+    "briefing": "„Du hast neunzig Minuten, bevor die Wachrunde kommt. Und du warst nie hier.“ – Birkhoff",
+    "requires": {
+      "flagsAll": [
+        "talked_birkhoff_file"
+      ]
+    },
+    "recommendedItems": [
+      "flashlight",
+      "notebook"
     ],
-    "storyNodeId": "arrival_001"
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Regale im Halbdunkel",
+        "text": "Hunderte Ordner, keine Beschriftung, die Sinn ergibt. Finde drei Hinweise auf deine Versetzung.",
+        "spots": [
+          "Regal A-17",
+          "Mikrofilm-Leser",
+          "Ausleihjournal",
+          "Panzerschrank",
+          "Lesetisch",
+          "Kopierer",
+          "Rohrpost",
+          "Zugangsprotokoll",
+          "Aktenvernichter"
+        ],
+        "cluesNeeded": 3,
+        "actions": 7,
+        "successText": "Ein Versetzungsbeleg mit dem Stempel „P-0“, ein Ausleihjournal mit Percys Kürzel und eine Lücke im Zugangsprotokoll.",
+        "failText": "Die Wachrunde kommt früher. Du hast nur Bruchstücke."
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Schritte im Gang",
+        "text": "Jemand kommt die Treppe herunter. Taschenlampenlicht wandert über die Regale.",
+        "options": [
+          {
+            "id": "hide",
+            "text": "Hinter dem Panzerschrank verstecken",
+            "success": {
+              "text": "Die Wache geht vorbei, ohne dich zu bemerken."
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "blend_in",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Du stößt einen Ordner um. Die Wache stutzt, geht aber weiter.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "bluff",
+            "text": "Herausgehen und eine Ausrede liefern",
+            "success": {
+              "text": "„Birkhoff schickt mich wegen der Verkabelung.“ Die Wache verdreht die Augen."
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Die Wache notiert deinen Namen.",
+              "alarm": 2,
+              "stress": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Zurück im Labor",
+        "text": "Birkhoff starrt auf deine Funde. „Okay. Das ist… schlimmer als gedacht.“",
+        "options": [
+          {
+            "id": "share",
+            "text": "Alles mit Birkhoff teilen",
+            "success": {
+              "text": "Er nickt langsam. „Ich behalte das für mich. Vorerst.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "birkhoff": 5
+                },
+                "setFlags": [
+                  "phoenix_clue_1"
+                ]
+              }
+            }
+          },
+          {
+            "id": "keep",
+            "text": "Den Versetzungsbeleg für dich behalten",
+            "success": {
+              "text": "Birkhoff merkt es. Natürlich. Aber er sagt nichts.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "birkhoff": -2
+                },
+                "setFlags": [
+                  "phoenix_clue_1"
+                ],
+                "giveItems": {
+                  "folder": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "rewardItems": {},
+    "debriefSuccess": "Deine Akte wurde zwei Tage vor deiner Ankunft aus dem Direktorat versiegelt. Jemand hat dich erwartet.",
+    "debriefFail": "Du kommst mit leeren Händen zurück.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M003",
@@ -41,133 +288,1142 @@
     "minRank": 1,
     "minAge": 16,
     "threat": 1,
-    "xp": 130,
-    "description": "Mission 3 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 140,
+    "description": "Zwischen Thom und Jaden eskaliert ein Streit um die Rangliste – mitten im Aufenthaltsbereich. Schlichte, bevor Michael es tut.",
+    "credits": 30,
+    "reputation": 6,
+    "giverId": "michael",
+    "briefing": "Kantine, 18:40 Uhr. Zwölf Rekruten, zwei Lager, eine Rangliste.",
+    "requires": {
+      "flagsAll": [
+        "met_thom",
+        "met_jaden"
+      ]
+    },
+    "recommendedItems": [],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Der Streit",
+        "text": "Jaden wirft Thom vor, beim Sparring geschont worden zu sein. Thom lacht – ein Fehler. Stühle schaben.",
+        "options": [
+          {
+            "id": "between",
+            "text": "Dich dazwischenstellen",
+            "success": {
+              "text": "Beide halten inne. Für einen Moment hast du die Aufmerksamkeit.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "inspire",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Jaden schiebt dich beiseite.",
+              "stress": 5
+            }
+          },
+          {
+            "id": "joke",
+            "text": "Mit einem Witz die Spannung brechen",
+            "success": {
+              "text": "Die halbe Kantine lacht. Thom auch. Jaden nicht, aber sie setzt sich.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Der Witz verpufft."
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Der Kern",
+        "text": "Es geht nicht um das Sparring. Jaden glaubt, Thom wird bevorzugt, weil Michael ihn mag.",
+        "options": [
+          {
+            "id": "jaden",
+            "text": "Jaden recht geben – Fairness zählt",
+            "success": {
+              "text": "Jaden sieht dich überrascht an. „Endlich sagt es mal jemand.“",
+              "effects": {
+                "otherTrust": {
+                  "jaden": 6,
+                  "thom": -2
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Thom fühlt sich verraten.",
+              "effects": {
+                "otherTrust": {
+                  "thom": -4
+                }
+              }
+            }
+          },
+          {
+            "id": "thom",
+            "text": "Thom verteidigen – er hat es sich verdient",
+            "success": {
+              "text": "Thom nickt dir dankbar zu. Jaden kocht.",
+              "effects": {
+                "otherTrust": {
+                  "thom": 5,
+                  "jaden": -3
+                }
+              }
+            }
+          },
+          {
+            "id": "both",
+            "text": "Beide zum offiziellen Wettkampf vorschlagen",
+            "success": {
+              "text": "Ein fairer Weg. Beide stimmen zu.",
+              "intel": 1,
+              "effects": {
+                "otherTrust": {
+                  "thom": 3,
+                  "jaden": 3
+                }
+              }
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "planning",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Keiner hört zu."
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Michael kommt",
+        "text": "Michael steht in der Tür. „Was ist hier los?“",
+        "options": [
+          {
+            "id": "cover",
+            "text": "Die Sache herunterspielen",
+            "success": {
+              "text": "„Nur eine Diskussion über Taktik, Sir.“ Michael glaubt kein Wort – aber er lässt es gut sein.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "thom": 2,
+                  "jaden": 2
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Michael durchschaut dich sofort. Alle drei: Extrarunden.",
+              "next": "END_SUCCESS",
+              "stress": 8
+            }
+          },
+          {
+            "id": "report",
+            "text": "Die Wahrheit sagen",
+            "success": {
+              "text": "Michael nickt. „Danke. Jaden, Thom – mein Büro.“ Jaden wirft dir einen Blick zu, der Eis schmelzen lässt.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 4,
+                  "jaden": -4
+                }
+              }
+            }
+          }
+        ]
+      }
     ],
-    "storyNodeId": "arrival_001"
+    "debriefSuccess": "Die Kantine ist wieder ruhig. Die Rekruten haben gesehen, wie du mit Konflikten umgehst.",
+    "debriefFail": "",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M004",
     "title": "Training unter Michael",
     "locationId": "training",
-    "type": "training",
+    "type": "tactical",
     "minRank": 1,
     "minAge": 16,
-    "threat": 2,
-    "xp": 220,
-    "description": "Mission 4 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "threat": 1,
+    "xp": 180,
+    "description": "Teamsimulation: Du und ein Partner gegen eine Ausbilderzelle. Michael bewertet Kommunikation, nicht Treffer.",
+    "credits": 40,
+    "reputation": 7,
+    "giverId": "michael",
+    "maxTeam": 1,
+    "briefing": "„Wählt einen Partner. Vertraut ihm. Oder lasst es – und lernt daraus.“",
+    "requires": {
+      "missionsDone": [
+        "M001"
+      ]
+    },
+    "recommendedItems": [
+      "radio_basic"
     ],
-    "storyNodeId": "arrival_001"
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Absprache",
+        "text": "Dir bleiben zwei Minuten bis zum Start.",
+        "options": [
+          {
+            "id": "plan",
+            "text": "Einen klaren Plan mit Rollen festlegen",
+            "success": {
+              "text": "Ihr wisst beide, wer was tut.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "planning",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Der Plan ist zu kompliziert.",
+              "intel": 0
+            }
+          },
+          {
+            "id": "signals",
+            "text": "Handzeichen vereinbaren",
+            "success": {
+              "text": "Stille Kommunikation – Michael mag das.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "observe",
+              "difficulty": 30
+            },
+            "failure": {
+              "text": "Missverständnisse vorprogrammiert."
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Simulation: Lagerhalle",
+        "text": "Neutralisiere die vier Ausbilder. Dein Partner kämpft an deiner Seite.",
+        "tactical": {
+          "map": [
+            "#.E.E.#",
+            "#.c.c.#",
+            "#.....#",
+            "#c...c#",
+            "#..#..#",
+            "#c...c#",
+            "#.....#",
+            "#.c.c.#",
+            "#.PP..#"
+          ],
+          "enemyName": "Ausbilder",
+          "enemyHp": 4,
+          "enemyAccuracy": 45,
+          "objective": "eliminate",
+          "maxTurns": 12,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Bewertung",
+        "text": "„Wer hat heute wen gerettet?“, fragt Michael.",
+        "options": [
+          {
+            "id": "credit",
+            "text": "Deinem Partner die Anerkennung geben",
+            "success": {
+              "text": "Michael hebt eine Augenbraue. „Teamfähig. Selten hier.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 3
+                }
+              }
+            }
+          },
+          {
+            "id": "self",
+            "text": "Deine eigenen Treffer betonen",
+            "success": {
+              "text": "„Zahlen. Langweilig.“ Aber er notiert sie.",
+              "next": "END_SUCCESS"
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Simulation bestanden. Michael empfiehlt dich für die Beförderung zum Fortgeschrittenen Rekruten.",
+    "debriefFail": "Die Ausbilderzelle hat euch auseinandergenommen. Wiederholung nächste Woche.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M005",
     "title": "Die Spur im Archiv",
     "locationId": "archives",
     "type": "investigation",
-    "minRank": 2,
+    "minRank": 1,
     "minAge": 16,
     "threat": 2,
-    "xp": 280,
-    "description": "Mission 5 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 220,
+    "description": "Wer hat deine Akte aus dem Direktorat versiegelt – und wer liest sie von außen? Zurück ins Archiv, diesmal tiefer.",
+    "credits": 60,
+    "reputation": 8,
+    "giverId": "birkhoff",
+    "briefing": "Birkhoff hat die Zugriffe auf zwei Personen eingegrenzt. Die Beweise liegen auf Papier.",
+    "requires": {
+      "missionsDone": [
+        "M002"
+      ],
+      "flagsAll": [
+        "met_ryan"
+      ]
+    },
+    "recommendedItems": [
+      "flashlight",
+      "camera"
     ],
-    "storyNodeId": "arrival_001"
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Das Zugangsprotokoll",
+        "text": "Finde drei Belege: Wer war wann im Archiv?",
+        "spots": [
+          "Wachbuch Januar",
+          "Schlüsselkasten",
+          "Mikrofilm 1998",
+          "Aktenwagen",
+          "Telefonregister",
+          "Lampe am Lesetisch",
+          "Besucherausweis",
+          "Aschenbecher",
+          "Rohrpoststation"
+        ],
+        "cluesNeeded": 3,
+        "actions": 7,
+        "successText": "Zwei Einträge: Percy – und ein Besucherausweis auf den Namen „A. Vogt“. Die Handschrift kennst du.",
+        "failText": "Nur Fragmente. Ein Name fehlt."
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Der Besucherausweis",
+        "text": "„A. Vogt“. Die Schrift ist dieselbe wie auf deinen PHOENIX-Zeugnissen.",
+        "options": [
+          {
+            "id": "photo",
+            "text": "Den Ausweis fotografieren und zurücklegen",
+            "success": {
+              "text": "Saubere Aufnahme, keine Spuren.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "precision",
+              "skill": "evidence",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Das Foto ist unscharf, aber lesbar."
+            }
+          },
+          {
+            "id": "take",
+            "text": "Den Ausweis mitnehmen",
+            "success": {
+              "text": "Ein Beweisstück – und ein Risiko.",
+              "intel": 1,
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Ryans Frage",
+        "text": "Ryan fängt dich vor dem Archiv ab. „Du siehst aus, als hättest du einen Geist gesehen.“",
+        "options": [
+          {
+            "id": "share",
+            "text": "Ihm den Namen nennen",
+            "success": {
+              "text": "Ryan wird blass. „Vogt war ein Deckname. Für einen Mann namens Voss.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "ryan": 6
+                },
+                "setFlags": [
+                  "voss_identified"
+                ]
+              }
+            }
+          },
+          {
+            "id": "lie",
+            "text": "Abwinken",
+            "success": {
+              "text": "„Nur Staub.“ Ryan glaubt dir. Fast.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Ryan merkt, dass du lügst – und schreibt es auf.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "ryan": -3
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Voss war hier. In der Division. Vor deiner Ankunft.",
+    "debriefFail": "Die Spur verliert sich im Staub.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M006",
     "title": "Probealarm",
     "locationId": "training",
     "type": "tactical",
-    "minRank": 2,
+    "minRank": 1,
     "minAge": 16,
     "threat": 2,
-    "xp": 300,
-    "description": "Mission 6 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 220,
+    "description": "Nächtlicher Lockdown-Drill: Erreiche den Kontrollraum, bevor das Sicherheitsteam (Ausbilder) dich markiert.",
+    "credits": 60,
+    "reputation": 8,
+    "giverId": "michael",
+    "maxTeam": 2,
+    "briefing": "Sirene, rotes Licht, verriegelte Türen. „Kontrollraum in zehn Runden. Los.“",
+    "requires": {
+      "missionsDone": [
+        "M004"
+      ]
+    },
+    "recommendedItems": [
+      "flashlight"
     ],
-    "storyNodeId": "arrival_001"
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Lockdown",
+        "text": "Die Türen sind verriegelt. Du hast zwei Wege.",
+        "options": [
+          {
+            "id": "vent",
+            "text": "Durch den Wartungsschacht",
+            "success": {
+              "text": "Eng, dunkel, aber unbewacht.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "orientation",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Du verirrst dich kurz.",
+              "stress": 5
+            }
+          },
+          {
+            "id": "panel",
+            "text": "Das Türpanel überbrücken",
+            "success": {
+              "text": "Die Tür gleitet auf. Leise.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "electronics",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Ein Funken – der Alarm wird lauter.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Gang zum Kontrollraum",
+        "text": "Erreiche den Kontrollraum (X). Deckung nutzen!",
+        "tactical": {
+          "map": [
+            "##.X.##",
+            "#..c..#",
+            "#E...E#",
+            "#.c#c.#",
+            "#..#..#",
+            "#c...c#",
+            "#.....#",
+            "#.c.c.#",
+            "#.PP..#"
+          ],
+          "enemyName": "Sicherheitsteam",
+          "enemyHp": 4,
+          "enemyAccuracy": 45,
+          "objective": "reach",
+          "maxTurns": 10,
+          "nonLethal": true
+        }
+      }
+    ],
+    "debriefSuccess": "Kontrollraum erreicht. Michael stoppt die Uhr: Rekord unter den Neuen.",
+    "debriefFail": "Markiert. Michael: „Tot in einem echten Einsatz. Nochmal.“",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M007",
     "title": "Gespräch mit Amanda",
     "locationId": "director",
     "type": "dialogue",
-    "minRank": 2,
+    "minRank": 1,
     "minAge": 16,
     "threat": 2,
-    "xp": 240,
-    "description": "Mission 7 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 200,
+    "description": "Psychologische Evaluation. Amanda wird versuchen, hinter deine Legende zu schauen. PHOENIX darf nicht zur Sprache kommen.",
+    "credits": 40,
+    "reputation": 6,
+    "giverId": "amanda",
+    "briefing": "Tarnung startet bei 3. Sinkt sie auf 0, kennt Amanda dein Geheimnis.",
+    "requires": {
+      "missionsDone": [
+        "M003"
+      ],
+      "flagsAll": [
+        "met_amanda"
+      ]
+    },
+    "recommendedItems": [],
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Assoziationen",
+        "text": "„Ich sage ein Wort, du sagst das erste, was dir einfällt. Feuer.“",
+        "options": [
+          {
+            "id": "calm",
+            "text": "„Kamin.“",
+            "success": {
+              "text": "Amanda nickt neutral.",
+              "cover": 0
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "resilience",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Deine Stimme zittert kaum merklich.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "true",
+            "text": "„Bahnhof.“",
+            "success": {
+              "text": "Amanda hält inne. „Interessant.“ Ein Strich auf dem Block.",
+              "intel": 1,
+              "cover": -1
+            }
+          }
+        ],
+        "speakerId": "amanda"
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Die Lücke",
+        "text": "„Zwischen deinem dreizehnten und sechzehnten Lebensjahr gibt es keine Schulzeugnisse. Wo warst du?“",
+        "options": [
+          {
+            "id": "legend",
+            "text": "Die Internatslegende erzählen",
+            "success": {
+              "text": "Detailreich, glaubwürdig.",
+              "cover": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Ein Detail passt nicht zur Akte.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "deflect",
+            "text": "„Das sollten Sie Ihren Vorgesetzten fragen.“",
+            "success": {
+              "text": "Amanda lächelt. „Ich habe keine Vorgesetzten, nur Kollegen.“ Aber sie lässt es fallen."
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "interview",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "„Ausweichen ist auch eine Antwort.“",
+              "cover": -1
+            }
+          }
+        ],
+        "speakerId": "amanda"
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Der Test",
+        "text": "Amanda schiebt dir ein Foto hin: eine stillgelegte Kaserne in den Bergen. „Kennst du diesen Ort?“",
+        "options": [
+          {
+            "id": "no",
+            "text": "„Nein.“",
+            "success": {
+              "text": "Keine Regung. Amanda legt das Foto weg.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "amanda_test_passed"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "lie_detector",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Deine Pupillen verraten dich.",
+              "next": "END_FAIL",
+              "cover": -2
+            }
+          },
+          {
+            "id": "counter",
+            "text": "„Woher haben Sie das?“",
+            "success": {
+              "text": "Amanda zögert – zum ersten Mal. Sie weiß selbst nicht alles. „Gut pariert.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "amanda_test_passed",
+                  "amanda_knows_something"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "profiling",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "„Ich stelle hier die Fragen.“",
+              "next": "END_FAIL",
+              "cover": -1
+            }
+          }
+        ],
+        "speakerId": "amanda"
+      }
     ],
-    "storyNodeId": null
+    "successEffects": {
+      "otherTrust": {
+        "amanda": 3
+      }
+    },
+    "failEffects": {
+      "setFlags": [
+        "amanda_suspects_phoenix"
+      ],
+      "stress": 10
+    },
+    "debriefSuccess": "Amanda schließt die Akte. „Stabil. Belastbar. Wir sehen uns.“ Dein Geheimnis ist sicher – vorerst.",
+    "debriefFail": "Amanda weiß jetzt, dass es ein Geheimnis gibt. Noch nicht welches.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M008",
     "title": "Der erste Informant",
     "locationId": "city",
     "type": "undercover",
-    "minRank": 3,
-    "minAge": 17,
+    "minRank": 1,
+    "minAge": 16,
     "threat": 2,
-    "xp": 350,
-    "description": "Mission 8 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 240,
+    "description": "Ausbildungseinsatz unter Aufsicht: Triff in einem Café einen Informanten, der Hinweise auf Black Meridian verkauft. Michael beobachtet von außen.",
+    "credits": 80,
+    "reputation": 9,
+    "giverId": "michael",
+    "maxTeam": 1,
+    "briefing": "Legende: Studentin/Student, die Nachhilfe sucht. Codewort: „Novemberregen“.",
+    "requires": {
+      "missionsDone": [
+        "M006",
+        "M007"
+      ]
+    },
+    "recommendedItems": [
+      "smartphone",
+      "notebook"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Das Café",
+        "text": "Der Informant sitzt am Fenster, nervös, die Zeitung verkehrt herum. Neben ihm ein Mann, der zu oft zur Tür schaut.",
+        "options": [
+          {
+            "id": "code",
+            "text": "Das Codewort beiläufig einbauen",
+            "success": {
+              "text": "Er entspannt sich. „Setz dich.“",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Er versteht es erst beim zweiten Mal.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "watch",
+            "text": "Erst den zweiten Mann einschätzen",
+            "success": {
+              "text": "Ein Beschatter von Black Meridian. Gut zu wissen.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "observe",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Du bist dir nicht sicher."
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Die Übergabe",
+        "text": "Der Informant schiebt dir einen Umschlag zu. Wer im Café beobachtet euch?",
+        "targets": [
+          "Barista",
+          "Mann mit Zeitung",
+          "Frau mit Kinderwagen",
+          "Kurier an der Tür"
+        ],
+        "rounds": 3,
+        "intelNeeded": 2,
+        "successText": "Du identifizierst den Beschatter und seinen Kontakt draußen.",
+        "failText": "Du verlierst den Überblick."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Abgang",
+        "text": "Der Beschatter steht auf, als du gehst.",
+        "options": [
+          {
+            "id": "lose",
+            "text": "Ihn in der Fußgängerzone abschütteln",
+            "success": {
+              "text": "Drei Ecken später ist er weg.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "shadowstep",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Er bleibt dran – Michael muss eingreifen.",
+              "next": "END_SUCCESS",
+              "alarm": 1,
+              "effects": {
+                "otherTrust": {
+                  "michael": -2
+                }
+              }
+            }
+          },
+          {
+            "id": "michael",
+            "text": "Michael per Funk informieren",
+            "success": {
+              "text": "„Verstanden. Ich übernehme.“ Ruhige Stimme, präzise Arbeit.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "rewardItems": {
+      "mission_order": 1
+    },
+    "debriefSuccess": "Der Umschlag enthält Frachtlisten – und einen Termin am Industriehafen.",
+    "debriefFail": "Der Informant ist untergetaucht.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M009",
     "title": "Verschlüsselter Hinweis",
     "locationId": "tech",
     "type": "investigation",
-    "minRank": 3,
-    "minAge": 17,
+    "minRank": 1,
+    "minAge": 16,
     "threat": 2,
-    "xp": 380,
-    "description": "Mission 9 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 240,
+    "description": "Die Funkfrequenz, auf der Voss dich angerufen hat, sendet nachts Datenpakete. Entschlüssele sie mit Birkhoff und Sonya.",
+    "credits": 60,
+    "reputation": 8,
+    "giverId": "birkhoff",
+    "maxTeam": 1,
+    "briefing": "„Ich habe drei Ansätze und null Schlaf.“ – Birkhoff",
+    "requires": {
+      "flagsAll": [
+        "voss_called"
+      ]
+    },
+    "recommendedItems": [
+      "laptop",
+      "smartphone"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Das Signal",
+        "text": "Birkhoff hat die Pakete gesammelt. Sie wiederholen sich alle 17 Minuten.",
+        "options": [
+          {
+            "id": "pattern",
+            "text": "Das Wiederholungsmuster analysieren",
+            "success": {
+              "text": "Es ist ein Kalender. Datum, Uhrzeit, Ort.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "analysis",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Zu viel Rauschen.",
+              "stress": 5
+            }
+          },
+          {
+            "id": "sonya",
+            "text": "Sonya um Hilfe bitten",
+            "success": {
+              "text": "Sonya erkennt eine alte Militärchiffre.",
+              "intel": 1,
+              "effects": {
+                "otherTrust": {
+                  "sonya": 4
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "search",
+        "title": "Datenfragmente",
+        "text": "Finde in den Fragmenten die drei Teile des Schlüssels.",
+        "spots": [
+          "Paket 01",
+          "Paket 04",
+          "Paket 07",
+          "Paket 09",
+          "Paket 12",
+          "Paket 15",
+          "Paket 18",
+          "Paket 21",
+          "Paket 24"
+        ],
+        "cluesNeeded": 3,
+        "actions": 7,
+        "successText": "Schlüssel komplett: „Hafen · Kai 7 · 23:40“.",
+        "failText": "Nur zwei Teile – genug für den Ort, nicht für die Zeit."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Was tun damit?",
+        "text": "Ihr kennt den Ort eines Treffens von Voss. Birkhoff sieht dich an.",
+        "options": [
+          {
+            "id": "michael",
+            "text": "Michael einweihen",
+            "success": {
+              "text": "Michael hört schweigend zu. „Dann gehen wir hin. Zusammen.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 5
+                },
+                "setFlags": [
+                  "harbor_planned_with_michael"
+                ]
+              }
+            }
+          },
+          {
+            "id": "percy",
+            "text": "Offiziell an Percy melden",
+            "success": {
+              "text": "Percy nimmt den Bericht entgegen, ohne eine Miene zu verziehen.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "percy": 5
+                },
+                "setFlags": [
+                  "harbor_reported_percy"
+                ]
+              }
+            }
+          },
+          {
+            "id": "secret",
+            "text": "Es geheim halten",
+            "success": {
+              "text": "Birkhoff seufzt. „Ich hab das nicht gehört.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "harbor_secret"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Treffpunkt entschlüsselt: Industriehafen, Kai 7.",
+    "debriefFail": "",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M010",
-    "title": "Beweisaufnahme am Hafen",
+    "title": "Nachtfall am Hafen",
     "locationId": "harbor",
-    "type": "investigation",
-    "minRank": 3,
-    "minAge": 17,
-    "threat": 3,
-    "xp": 420,
-    "description": "Mission 10 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "type": "observation",
+    "minRank": 1,
+    "minAge": 16,
+    "threat": 2,
+    "xp": 320,
+    "description": "Kapitelfinale: Beobachte aus sicherer Entfernung das Treffen am Kai 7. Nur dokumentieren – kein Zugriff.",
+    "credits": 120,
+    "reputation": 12,
+    "giverId": "michael",
+    "maxTeam": 1,
+    "briefing": "Michael ist bei dir. „Wir sehen nur zu. Wenn es heiß wird, ziehen wir uns zurück. Ohne Diskussion.“",
+    "requires": {
+      "missionsDone": [
+        "M008",
+        "M009"
+      ]
+    },
+    "recommendedItems": [
+      "binoculars",
+      "camera"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Position",
+        "text": "Containerstapel, Kräne, Nebel vom Wasser. Wo beziehst du Stellung?",
+        "options": [
+          {
+            "id": "crane",
+            "text": "Auf dem Kranführerhaus – beste Sicht",
+            "success": {
+              "text": "Perfekte Übersicht über Kai 7.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Der Aufstieg dauert – du verpasst die Ankunft.",
+              "alarm": 0
+            }
+          },
+          {
+            "id": "container",
+            "text": "Zwischen den Containern – gute Deckung",
+            "success": {
+              "text": "Unsichtbar, nah dran.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "blend_in",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Ein Hafenarbeiter läuft vorbei.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Kai 7, 23:40",
+        "text": "Zwei Wagen, sechs Personen. Wer verhandelt wirklich?",
+        "targets": [
+          "Fahrer im Mantel",
+          "Mann im grauen Mantel",
+          "Frau mit Aktenkoffer",
+          "Leibwächter"
+        ],
+        "rounds": 4,
+        "intelNeeded": 2,
+        "successText": "Der Mann im grauen Mantel: Voss. Und die Frau mit dem Aktenkoffer trägt einen Division-Ausweis.",
+        "failText": "Der Nebel verschluckt die Gesichter."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Entdeckt?",
+        "text": "Ein Leibwächter leuchtet in eure Richtung.",
+        "options": [
+          {
+            "id": "freeze",
+            "text": "Regungslos bleiben",
+            "success": {
+              "text": "Das Licht wandert weiter.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "resilience",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Er kommt näher. Michael zieht dich weg – ihr entkommt knapp.",
+              "next": "END_SUCCESS",
+              "stress": 10
+            }
+          },
+          {
+            "id": "photo",
+            "text": "Noch ein letztes Foto machen",
+            "success": {
+              "text": "Klick. Das Gesicht der Frau, gestochen scharf.",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "mole_photo"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "precision",
+              "skill": "evidence",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Der Blitz! Ihr rennt.",
+              "next": "END_FAIL",
+              "alarm": 2
+            }
+          },
+          {
+            "id": "retreat",
+            "text": "Sofortiger Rückzug wie vereinbart",
+            "success": {
+              "text": "Michael nickt anerkennend. Ihr verschwindet im Nebel.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "michael": 4
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "rewardItems": {
+      "research_drive": 1
+    },
+    "successEffects": {
+      "setFlags": [
+        "phoenix_clue_2"
+      ]
+    },
+    "debriefSuccess": "Voss lebt, ist aktiv – und hat eine Quelle in der Division. Percy will dich sehen.",
+    "debriefFail": "Ihr musstet fliehen. Die Fotos sind unbrauchbar. Ein neuer Versuch ist riskant, aber möglich.",
+    "chapter": "Kapitel 1 · Neues Blut"
   },
   {
     "id": "M011",
@@ -177,31 +1433,232 @@
     "minRank": 4,
     "minAge": 18,
     "threat": 3,
-    "xp": 500,
-    "description": "Mission 11 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 420,
+    "description": "Abschlussprüfung der operativen Ausbildung: Planung, Teamführung und eine Live-Simulation.",
+    "credits": 150,
+    "reputation": 15,
+    "giverId": "michael",
+    "maxTeam": 2,
+    "briefing": "„Ab heute bist du nicht mehr meine Schülerin/mein Schüler. Zeig mir, dass das ein Fehler war.“",
+    "requires": {
+      "flagsAll": [
+        "ch1_done"
+      ]
+    },
+    "recommendedItems": [
+      "vest_light",
+      "radio_secure"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Planung",
+        "text": "Ein Lagerhaus, drei Zugänge, unbekannte Gegnerzahl.",
+        "options": [
+          {
+            "id": "recon",
+            "text": "Aufklärung zuerst",
+            "success": {
+              "text": "Fünf Gegner, zwei Kameras.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "observe",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Ungenaue Daten."
+            }
+          },
+          {
+            "id": "team",
+            "text": "Rollen im Team verteilen",
+            "success": {
+              "text": "Jeder kennt seine Aufgabe.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "planning",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Unklare Rollen.",
+              "stress": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Live-Simulation",
+        "text": "Neutralisiere die Simulationsgegner.",
+        "tactical": {
+          "map": [
+            ".E...E.",
+            ".cc.cc.",
+            ".......",
+            "##.c.##",
+            "...c...",
+            ".c...c.",
+            "...E...",
+            ".c.c.c.",
+            "PP...P."
+          ],
+          "enemyName": "Simulationsgegner",
+          "enemyHp": 5,
+          "enemyAccuracy": 55,
+          "objective": "eliminate",
+          "maxTurns": 14,
+          "nonLethal": true
+        }
+      }
+    ],
+    "debriefSuccess": "Bestanden. Du bist offiziell einsatzfähig.",
+    "debriefFail": "Durchgefallen – aber nicht ausgeschlossen.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   },
   {
     "id": "M012",
-    "title": "Operation Nachtfall",
+    "title": "Operation Nachtfall II",
     "locationId": "harbor",
     "type": "tactical",
     "minRank": 4,
     "minAge": 18,
     "threat": 4,
-    "xp": 800,
-    "description": "Mission 12 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 520,
+    "description": "Zugriff am Industriehafen: Ein Black-Meridian-Lager soll sichergestellt werden.",
+    "credits": 400,
+    "reputation": 20,
+    "giverId": "percy",
+    "maxTeam": 3,
+    "briefing": "Percy: „Kein Lärm, keine Presse, keine Fehler.“",
+    "requires": {
+      "missionsDone": [
+        "M011"
+      ]
+    },
+    "recommendedItems": [
+      "vest_light",
+      "radio_secure",
+      "night_vision"
     ],
-    "storyNodeId": null
+    "factionId": "syndicate",
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Annäherung",
+        "text": "Wasserseite oder Landseite?",
+        "options": [
+          {
+            "id": "water",
+            "text": "Mit dem Schlauchboot von der Wasserseite",
+            "success": {
+              "text": "Unbemerkt am Kai.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "orientation",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ein Wachmann sieht das Boot.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "land",
+            "text": "Als Hafenarbeiter getarnt",
+            "success": {
+              "text": "Durch das Tor gewunken.",
+              "intel": 1,
+              "cover": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Der Ausweis wird kontrolliert.",
+              "cover": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Lagerhalle C",
+        "text": "Setze die Sicherheitsleute außer Gefecht.",
+        "tactical": {
+          "map": [
+            ".E...E.",
+            ".cc.cc.",
+            ".......",
+            "##.c.##",
+            "...c...",
+            ".c...c.",
+            "...E...",
+            ".c.c.c.",
+            "PP...P."
+          ],
+          "enemyName": "Sicherheitsmann",
+          "enemyHp": 6,
+          "enemyAccuracy": 58,
+          "objective": "eliminate",
+          "maxTurns": 14,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Das Lager",
+        "text": "Kisten voller Datenträger – und ein Laptop, der sich gerade selbst löscht.",
+        "options": [
+          {
+            "id": "save",
+            "text": "Den Löschvorgang stoppen",
+            "success": {
+              "text": "Gerettet: Kundenlisten.",
+              "next": "END_SUCCESS",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "systems",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Zu spät – aber die Datenträger bleiben.",
+              "next": "END_SUCCESS"
+            }
+          },
+          {
+            "id": "grab",
+            "text": "Alles einpacken und raus",
+            "success": {
+              "text": "Ihr nehmt, was ihr tragen könnt.",
+              "next": "END_SUCCESS"
+            }
+          }
+        ]
+      }
+    ],
+    "successEffects": {
+      "faction": {
+        "syndicate": -10
+      }
+    },
+    "debriefSuccess": "Das Lager ist gesichert. Black Meridian verliert ein Drittel seiner Logistik.",
+    "debriefFail": "Rückzug unter Beschuss. Alle leben – aber das Lager ist verloren.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   },
   {
     "id": "M013",
@@ -211,14 +1668,143 @@
     "minRank": 4,
     "minAge": 18,
     "threat": 4,
-    "xp": 750,
-    "description": "Mission 13 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 520,
+    "description": "Ein Informant der Aufsicht wurde in einer konspirativen Wohnung festgesetzt. Hol ihn raus.",
+    "credits": 350,
+    "reputation": 18,
+    "giverId": "ryan",
+    "maxTeam": 3,
+    "briefing": "Ryan: „Er hat Familie. Bitte.“",
+    "requires": {
+      "missionsDone": [
+        "M011"
+      ]
+    },
+    "recommendedItems": [
+      "medkit",
+      "vest_light"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Zugang",
+        "text": "Ein Mehrfamilienhaus, dritter Stock.",
+        "options": [
+          {
+            "id": "roof",
+            "text": "Über das Dach",
+            "success": {
+              "text": "Lautlos am Fenster.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ein Ziegel fällt.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "neighbor",
+            "text": "Bei den Nachbarn klingeln – Paketdienst",
+            "success": {
+              "text": "Die Tür summt.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Misstrauen im Treppenhaus.",
+              "alarm": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Die Wohnung",
+        "text": "Erreiche den Informanten (X).",
+        "tactical": {
+          "map": [
+            "##.X.##",
+            "#..c..#",
+            "#E...E#",
+            "#.c#c.#",
+            "#..#..#",
+            "#c...c#",
+            "#..E..#",
+            "#.c.c.#",
+            "#.PPP.#"
+          ],
+          "enemyName": "Wache",
+          "enemyHp": 6,
+          "enemyAccuracy": 58,
+          "objective": "reach",
+          "maxTurns": 12,
+          "nonLethal": true
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Versorgung",
+        "text": "Der Informant ist verletzt.",
+        "options": [
+          {
+            "id": "aid",
+            "text": "Erstversorgung",
+            "success": {
+              "text": "Stabil.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "stabilize",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Er hält durch – knapp.",
+              "next": "END_SUCCESS",
+              "stress": 10
+            }
+          },
+          {
+            "id": "carry",
+            "text": "Tragen und rennen",
+            "success": {
+              "text": "Ihr erreicht den Wagen.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Du verletzt dich, aber er ist sicher.",
+              "next": "END_SUCCESS",
+              "health": -15
+            }
+          }
+        ]
+      }
+    ],
+    "successEffects": {
+      "otherTrust": {
+        "ryan": 10
+      }
+    },
+    "debriefSuccess": "Der Informant lebt. Ryan schuldet dir etwas.",
+    "debriefFail": "Ihr musstet ohne ihn gehen.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   },
   {
     "id": "M014",
@@ -228,14 +1814,132 @@
     "minRank": 5,
     "minAge": 18,
     "threat": 4,
-    "xp": 900,
-    "description": "Mission 14 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 560,
+    "description": "Empfang im Diplomatenviertel. Als Übersetzer/in getarnt sollst du einen Datenaustausch abfangen.",
+    "credits": 450,
+    "reputation": 20,
+    "giverId": "amanda",
+    "maxTeam": 1,
+    "briefing": "Amanda: „Du bist heute jemand anderes. Das kannst du doch so gut.“",
+    "requires": {
+      "missionsDone": [
+        "M012"
+      ]
+    },
+    "recommendedItems": [
+      "passport",
+      "smartphone",
+      "briefcase"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Der Empfang",
+        "text": "Champagner, Streichquartett, sieben Sprachen gleichzeitig.",
+        "options": [
+          {
+            "id": "lang",
+            "text": "Fließend zwischen den Gästen übersetzen",
+            "success": {
+              "text": "Du bist unverzichtbar – und unsichtbar.",
+              "intel": 1,
+              "cover": 1
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "language",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ein Fehler beim Übersetzen.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "charm",
+            "text": "Den Attaché um den Finger wickeln",
+            "success": {
+              "text": "Er erzählt mehr, als er sollte.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Er wird misstrauisch.",
+              "cover": -1
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Der Austausch",
+        "text": "Wer trägt den Datenträger?",
+        "targets": [
+          "Attaché",
+          "Kellner",
+          "Sicherheitschef",
+          "Pianist"
+        ],
+        "rounds": 3,
+        "intelNeeded": 2,
+        "successText": "",
+        "failText": ""
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Der Tausch",
+        "text": "Du hast eine Chance.",
+        "options": [
+          {
+            "id": "swap",
+            "text": "Den Datenträger austauschen",
+            "success": {
+              "text": "Unbemerkt.",
+              "next": "END_SUCCESS",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "precision",
+              "skill": "shadowstep",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Ertappt – Exfiltration!",
+              "next": "END_FAIL",
+              "alarm": 2
+            }
+          },
+          {
+            "id": "copy",
+            "text": "Daten kopieren statt tauschen",
+            "success": {
+              "text": "Kopie gezogen, Original zurück.",
+              "next": "END_SUCCESS",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "electronics",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Die Kopie bricht ab.",
+              "next": "END_FAIL"
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Die Daten sind gesichert. Niemand weiß, dass du da warst.",
+    "debriefFail": "Deine Legende ist verbrannt.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   },
   {
     "id": "M015",
@@ -244,15 +1948,79 @@
     "type": "story",
     "minRank": 5,
     "minAge": 18,
-    "threat": 5,
-    "xp": 1200,
-    "description": "Mission 15 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "threat": 4,
+    "xp": 700,
+    "description": "Alle Spuren führen zurück ins Geheimarchiv. Diesmal suchst du nicht nach deiner Akte – sondern nach Protokoll Null.",
+    "credits": 300,
+    "reputation": 25,
+    "giverId": "michael",
+    "maxTeam": 2,
+    "briefing": "Michael: „Was auch immer du findest – ich stehe hinter dir.“",
+    "requires": {
+      "flagsAll": [
+        "protocol_zero_known"
+      ]
+    },
+    "recommendedItems": [
+      "flashlight",
+      "laptop"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Protokoll Null",
+        "text": "Finde die vier Teile des Protokolls.",
+        "spots": [
+          "Panzerschrank 3",
+          "Mikrofilm „P“",
+          "Doppelter Boden",
+          "Percys Ablage",
+          "Rohrpost-Archiv",
+          "Lüftungsgitter",
+          "Kartei Kandidaten",
+          "Tresor",
+          "Altes Terminal"
+        ],
+        "cluesNeeded": 4,
+        "actions": 8,
+        "successText": "Protokoll Null: Sieben PHOENIX-Kandidaten sollten in Schlüsselbehörden platziert werden. Du bist der letzte.",
+        "failText": "Lückenhaft – aber der Kern ist klar."
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Säuberungsteam",
+        "text": "Jemand will verhindern, dass du mit den Akten das Archiv verlässt. Erreiche den Ausgang (X).",
+        "tactical": {
+          "map": [
+            "##.X.##",
+            "#..c..#",
+            "#E...E#",
+            "#.c#c.#",
+            "#..#..#",
+            "#c...c#",
+            "#..E..#",
+            "#.c.c.#",
+            "#.PPP.#"
+          ],
+          "enemyName": "Säuberungsteam",
+          "enemyHp": 6,
+          "enemyAccuracy": 58,
+          "objective": "reach",
+          "maxTurns": 12,
+          "nonLethal": true
+        }
+      }
+    ],
+    "successEffects": {
+      "setFlags": [
+        "phoenix_clue_3"
+      ]
+    },
+    "debriefSuccess": "Du hast Protokoll Null. Jetzt musst du entscheiden, was du damit tust.",
+    "debriefFail": "Die Akten sind verbrannt. Aber du hast genug gesehen.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   },
   {
     "id": "M016",
@@ -262,13 +2030,112 @@
     "minRank": 10,
     "minAge": 25,
     "threat": 4,
-    "xp": 1400,
-    "description": "Mission 16 mit verbundenen Story- und NPC-Entscheidungen.",
-    "steps": [
-      "Briefing prüfen",
-      "Vorgehen wählen",
-      "Konsequenzen auswerten"
+    "xp": 900,
+    "description": "Die Aufsicht verlangt eine Abstimmung über die Zukunft der Division. Gewinne die Sektionsleiter für deinen Kurs.",
+    "credits": 800,
+    "reputation": 40,
+    "giverId": "percy",
+    "maxTeam": 1,
+    "briefing": "Percy: „Du willst meinen Stuhl? Dann zeig, dass du ihn verdienst.“",
+    "requires": {
+      "flagsAll": [
+        "phoenix_truth"
+      ]
+    },
+    "recommendedItems": [
+      "briefcase"
     ],
-    "storyNodeId": null
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Die Sektionsleiter",
+        "text": "Fünf Stimmen. Du brauchst drei.",
+        "options": [
+          {
+            "id": "facts",
+            "text": "Mit Zahlen und Ergebnissen überzeugen",
+            "success": {
+              "text": "Zwei Stimmen sicher.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "planning",
+              "difficulty": 60
+            },
+            "failure": {
+              "text": "Die Zahlen langweilen."
+            }
+          },
+          {
+            "id": "loyal",
+            "text": "Auf persönliche Loyalität setzen",
+            "success": {
+              "text": "Drei Leiter nicken.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "inspire",
+              "difficulty": 60
+            },
+            "failure": {
+              "text": "Man zweifelt an deinen Motiven."
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Percys Konter",
+        "text": "Percy legt Protokoll Null auf den Tisch. „Unser Kandidat ist ein PHOENIX-Produkt.“",
+        "options": [
+          {
+            "id": "own",
+            "text": "Es offen zugeben",
+            "success": {
+              "text": "Stille – dann Respekt. Ehrlichkeit wiegt schwerer als Herkunft.",
+              "next": "END_SUCCESS"
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "resilience",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Ein Leiter wendet sich ab.",
+              "next": "END_FAIL"
+            }
+          },
+          {
+            "id": "turn",
+            "text": "Percys Rolle bei Protokoll Null offenlegen",
+            "success": {
+              "text": "Percy verliert die Fassung. Die Abstimmung ist entschieden.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "percy_exposed"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 60
+            },
+            "failure": {
+              "text": "Es klingt wie Rache.",
+              "next": "END_FAIL"
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Die Sektionsleiter stehen hinter dir. Der Weg zum Direktorat ist frei.",
+    "debriefFail": "Die Abstimmung ist verloren. Für diesmal.",
+    "chapter": "Kapitel 2 · Protokoll Null"
   }
 ]

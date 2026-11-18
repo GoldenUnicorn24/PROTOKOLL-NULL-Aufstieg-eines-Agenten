@@ -13,7 +13,30 @@
     "tags": [
       "michael",
       "mentor"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Ehemaliger Elitesoldat, seit Jahren Ausbilder der Division. Verlor seine Familie bei einem Anschlag – ein Detail, das er nie erwähnt, das ihn dir aber näherbringt, als ihm lieb ist.",
+    "traits": [
+      "diszipliniert",
+      "loyal",
+      "verschlossen"
+    ],
+    "teamAbility": "focus",
+    "combat": 80,
+    "schedule": {
+      "morning": "training",
+      "forenoon": "training",
+      "noon": "canteen",
+      "afternoon": "range",
+      "evening": "ops",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      -0.16,
+      -0.5
+    ],
+    "look": "Dunkle Lederjacke, kurze dunkle Haare, Handschuhe, sachlicher Ausbilder-Look."
   },
   {
     "id": "nikita",
@@ -29,7 +52,25 @@
     "tags": [
       "nikita mears",
       "npc"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Die erste Rekrutin, die Division verlassen hat und lebte. Für Percy eine Verräterin, für manche Rekruten eine Legende. Sie taucht dort auf, wo Division Spuren verwischt.",
+    "traits": [
+      "unabhängig",
+      "entschlossen",
+      "misstrauisch"
+    ],
+    "teamAbility": "distract",
+    "combat": 90,
+    "schedule": {
+      "evening": "city"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.06,
+      -0.45
+    ],
+    "look": "Dunkle Lederjacke, lange dunkelbraune Haare, häufig zusammengebunden, ernster Fokus."
   },
   {
     "id": "alex",
@@ -45,7 +86,30 @@
     "tags": [
       "alex udinov",
       "npc"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Rekrutin mit einer Vergangenheit, die sie hütet wie ein Staatsgeheimnis. Schnell, klug, und sie beobachtet dich genauer als die Kameras.",
+    "traits": [
+      "wachsam",
+      "loyal",
+      "verletzlich"
+    ],
+    "teamAbility": "distract",
+    "combat": 55,
+    "schedule": {
+      "morning": "canteen",
+      "forenoon": "training",
+      "noon": "canteen",
+      "afternoon": "range",
+      "evening": "dorm",
+      "night": "dorm"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      -0.1,
+      -0.55
+    ],
+    "look": "Junge Rekrutin mit dunklen Haaren, oft graue Trainings- oder Freizeitkleidung."
   },
   {
     "id": "birkhoff",
@@ -61,7 +125,30 @@
     "tags": [
       "seymour birkhoff",
       "npc"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Technischer Kopf der Division. Kam über ein Hacking-Verfahren statt über ein Gerichtsurteil hierher und tut so, als wäre ihm alles egal. Ist es nicht.",
+    "traits": [
+      "technik",
+      "sarkastisch",
+      "neugierig"
+    ],
+    "teamAbility": "hack",
+    "combat": 30,
+    "schedule": {
+      "morning": "tech",
+      "forenoon": "tech",
+      "noon": "canteen",
+      "afternoon": "tech",
+      "evening": "tech",
+      "night": "tech"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      -0.05,
+      -0.6
+    ],
+    "look": "Längere nach hinten fallende dunkle Haare, Bartansatz, legeres Shirt und Jackett vor Monitoren."
   },
   {
     "id": "amanda",
@@ -77,7 +164,30 @@
     "tags": [
       "amanda",
       "npc"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Leiterin der Psychologie. Sie formt Rekruten zu Agenten, indem sie herausfindet, was sie zerbrechen könnte – und es dann schützt. Oder benutzt.",
+    "traits": [
+      "manipulativ",
+      "brillant",
+      "kontrolliert"
+    ],
+    "teamAbility": "distract",
+    "combat": 35,
+    "schedule": {
+      "morning": "psych",
+      "forenoon": "psych",
+      "noon": "director",
+      "afternoon": "psych",
+      "evening": "psych",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.0,
+      -0.55
+    ],
+    "look": "Gepflegte lange braune Haare, dunkle elegante Kleidung, strenge souveräne Körpersprache."
   },
   {
     "id": "percy",
@@ -93,7 +203,30 @@
     "tags": [
       "percy",
       "npc"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Direktor der Division. Er spricht von Schutz und meint Kontrolle. Dass jemand mit versiegelter PHOENIX-Akte in seiner Organisation auftaucht, gefällt ihm nicht – oder genau das ist sein Plan.",
+    "traits": [
+      "machtbewusst",
+      "kalkulierend",
+      "charismatisch"
+    ],
+    "teamAbility": "focus",
+    "combat": 45,
+    "schedule": {
+      "morning": "director",
+      "forenoon": "ops",
+      "noon": "director",
+      "afternoon": "director",
+      "evening": "director",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      -0.1,
+      -0.5
+    ],
+    "look": "Hellgraue kurze Haare, dunkler dreiteiliger Anzug, autoritäre Haltung im Kontrollraum."
   },
   {
     "id": "thom",
@@ -109,7 +242,30 @@
     "tags": [
       "thom",
       "npc"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Bester Rekrut seines Jahrgangs, hilfsbereit und ehrgeizig. Er glaubt an die Division – noch.",
+    "traits": [
+      "hilfsbereit",
+      "ehrgeizig",
+      "offen"
+    ],
+    "teamAbility": "shield",
+    "combat": 65,
+    "schedule": {
+      "morning": "canteen",
+      "forenoon": "training",
+      "noon": "canteen",
+      "afternoon": "range",
+      "evening": "canteen",
+      "night": "dorm"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.0,
+      -0.5
+    ],
+    "look": "Junger Rekrut, kurzes dunkles Haar, schlichte Trainingskleidung."
   },
   {
     "id": "jaden",
@@ -125,7 +281,30 @@
     "tags": [
       "jaden",
       "npc"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Kämpft um jeden Platz in der Rangliste und hält Freundschaft für eine Schwäche. Ihr Respekt ist schwer zu verdienen – und viel wert.",
+    "traits": [
+      "ehrgeizig",
+      "konkurrenzbetont",
+      "direkt"
+    ],
+    "teamAbility": "focus",
+    "combat": 70,
+    "schedule": {
+      "morning": "training",
+      "forenoon": "training",
+      "noon": "canteen",
+      "afternoon": "training",
+      "evening": "dorm",
+      "night": "dorm"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.0,
+      -0.5
+    ],
+    "look": "Junge Rekrutin, Trainingskleidung der Division, konkurrenzbetonter Auftritt."
   },
   {
     "id": "owen",
@@ -141,7 +320,30 @@
     "tags": [
       "owen elliot",
       "npc"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Ehemaliger Wächter eines Schattenprogramms. Heute verwaltet er die Ausrüstungskammer und redet wenig. Er erkennt Menschen, die etwas verbergen.",
+    "traits": [
+      "wortkarg",
+      "beschützend",
+      "gezeichnet"
+    ],
+    "teamAbility": "shield",
+    "combat": 85,
+    "schedule": {
+      "morning": "armory",
+      "forenoon": "armory",
+      "noon": "canteen",
+      "afternoon": "range",
+      "evening": "lobby",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.36,
+      -0.5
+    ],
+    "look": "Kurzes helles Haar, schwarzes Leder, zurückhaltender und gespannter Ausdruck."
   },
   {
     "id": "sonya",
@@ -157,7 +359,30 @@
     "tags": [
       "sonya",
       "npc"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Technikspezialistin und Birkhoffs heimliche Rückversicherung. Präzise, ruhig und meist die Einzige, die versteht, was im Netz wirklich passiert.",
+    "traits": [
+      "technik",
+      "präzise",
+      "freundlich"
+    ],
+    "teamAbility": "hack",
+    "combat": 35,
+    "schedule": {
+      "morning": "tech",
+      "forenoon": "tech",
+      "noon": "canteen",
+      "afternoon": "tech",
+      "evening": "ops",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      0.0,
+      -0.55
+    ],
+    "look": "Technikexpertin in Division-Umgebung, funktionaler Bürostil."
   },
   {
     "id": "ryan",
@@ -173,7 +398,30 @@
     "tags": [
       "ryan fletcher",
       "npc"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Analyst mit Verbindungen zur Regierungsaufsicht. Er sammelt Muster, Widersprüche und Akten – auch deine.",
+    "traits": [
+      "analytisch",
+      "prinzipientreu",
+      "neugierig"
+    ],
+    "teamAbility": "focus",
+    "combat": 40,
+    "schedule": {
+      "morning": "ops",
+      "forenoon": "ops",
+      "noon": "canteen",
+      "afternoon": "archives",
+      "evening": "ops",
+      "night": "away"
+    },
+    "romanceable": false,
+    "portraitFocus": [
+      -0.1,
+      -0.55
+    ],
+    "look": "Glatte kurze dunkle Haare, dunkelblauer Anzug mit Krawatte, nüchterner Analysten-Look."
   },
   {
     "id": "voss",
@@ -181,13 +429,33 @@
     "role": "Leitender PHOENIX-Ausbilder",
     "factionId": "phoenix",
     "ageAtStart": 48,
-    "portraitAsset": "cast/placeholder.svg",
+    "portraitAsset": null,
     "description": "Kennt deine verborgene Vergangenheit.",
     "initialTrust": 65,
     "tags": [
       "mentor",
       "phoenix"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Leitender Ausbilder von Projekt PHOENIX. Er hat dich drei Jahre lang geformt. Seine Stimme am Telefon ist das Letzte, was du in der Division hören willst.",
+    "traits": [
+      "kühl",
+      "visionär",
+      "skrupellos"
+    ],
+    "teamAbility": "focus",
+    "combat": 75,
+    "schedule": {},
+    "romanceable": false,
+    "avatar": {
+      "skin": 1,
+      "hairStyle": 5,
+      "hairColor": 4,
+      "outfit": 3,
+      "eyes": 1,
+      "accessory": 0
+    },
+    "look": "Grauer Mantel, kurz geschorenes graues Haar, randlose Brille – ein Mann, der wie ein Beamter aussieht und wie ein Chirurg denkt."
   },
   {
     "id": "maya",
@@ -195,25 +463,79 @@
     "role": "Rekrutin",
     "factionId": "division",
     "ageAtStart": 17,
-    "portraitAsset": "cast/placeholder.svg",
+    "portraitAsset": null,
     "description": "Loyale und ambitionierte Rekrutin; Freundschaft oder altersgerechte Romanze möglich.",
     "initialTrust": 45,
     "tags": [
       "friend",
       "romance"
-    ]
+    ],
+    "gender": "female",
+    "bio": "Rekrutin aus Rotterdam, kam über ein Zeugenschutzprogramm in die Division. Zeichnet heimlich Porträts aller Kollegen und lacht zu laut für diesen Ort.",
+    "traits": [
+      "kreativ",
+      "herzlich",
+      "neugierig"
+    ],
+    "teamAbility": "medic",
+    "combat": 45,
+    "schedule": {
+      "morning": "canteen",
+      "forenoon": "training",
+      "noon": "canteen",
+      "afternoon": "medical",
+      "evening": "canteen",
+      "night": "dorm"
+    },
+    "romanceable": true,
+    "avatar": {
+      "skin": 3,
+      "hairStyle": 2,
+      "hairColor": 2,
+      "outfit": 1,
+      "eyes": 2,
+      "accessory": 1
+    },
+    "look": "Dunkle Locken, meist zusammengebunden, graue Trainingsjacke mit hochgekrempelten Ärmeln, Bleistift hinter dem Ohr."
   },
   {
     "id": "ethan",
     "name": "Ethan Cole",
     "role": "Rekrut",
     "factionId": "division",
-    "ageAtStart": 18,
-    "portraitAsset": "cast/placeholder.svg",
+    "ageAtStart": 17,
+    "portraitAsset": null,
     "description": "Begabter Rivale; kann zum Freund werden.",
     "initialTrust": 35,
     "tags": [
       "rival"
-    ]
+    ],
+    "gender": "male",
+    "bio": "Rekrut aus einer Soldatenfamilie, der um jeden Preis ins Einsatzteam will. Unter der harten Schale steckt jemand, der nachts Briefe an seine Schwester schreibt, die er nie abschickt.",
+    "traits": [
+      "ehrgeizig",
+      "loyal",
+      "impulsiv"
+    ],
+    "teamAbility": "shield",
+    "combat": 60,
+    "schedule": {
+      "morning": "training",
+      "forenoon": "range",
+      "noon": "canteen",
+      "afternoon": "training",
+      "evening": "canteen",
+      "night": "dorm"
+    },
+    "romanceable": true,
+    "avatar": {
+      "skin": 2,
+      "hairStyle": 1,
+      "hairColor": 1,
+      "outfit": 2,
+      "eyes": 0,
+      "accessory": 0
+    },
+    "look": "Kurzes dunkelblondes Haar, schwarzes Division-Shirt, Hundemarke seines Vaters um den Hals."
   }
 ]

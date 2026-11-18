@@ -1,227 +1,239 @@
 [
   {
-    "id": "arrival_001",
-    "chapter": "Ankunft",
-    "speakerId": "michael",
-    "text": "Willkommen bei Division. Deine Akte ist ungewöhnlich kurz. Erzählst du mir, wer du wirklich bist?",
-    "choices": [
-      {
-        "id": "quiet",
-        "text": "Meine Vergangenheit spielt keine Rolle.",
-        "nextNode": "arrival_002",
-        "trustDelta": 1
-      },
-      {
-        "id": "truth",
-        "text": "Ich wurde von der Regierung ausgebildet.",
-        "nextNode": "arrival_003",
-        "trustDelta": 2
-      }
-    ]
-  },
-  {
-    "id": "arrival_002",
-    "chapter": "Ankunft",
-    "speakerId": "michael",
-    "text": "Du behältst deine Geheimnisse. Das ist dein gutes Recht. Hier musst du trotzdem deinen Platz finden.",
-    "choices": [
-      {
-        "id": "follow",
-        "text": "Zum Ausbildungszentrum gehen.",
-        "nextNode": "training_001",
-        "xp": 50
-      }
-    ]
-  },
-  {
-    "id": "arrival_003",
-    "chapter": "Ankunft",
-    "speakerId": "michael",
-    "text": "Interessant. Dann solltest du wissen, dass du hier wieder ganz von vorn anfängst.",
-    "choices": [
-      {
-        "id": "follow",
-        "text": "Anweisung bestätigen.",
-        "nextNode": "training_001",
-        "xp": 50
-      }
-    ]
-  },
-  {
-    "id": "training_001",
-    "chapter": "Die ersten Tage",
-    "speakerId": "thom",
-    "text": "Du bist der Neue, oder? Ich bin Thom. Hast du heute schon den Trainingsplan gesehen?",
-    "choices": [
-      {
-        "id": "friend",
-        "text": "Danke, wir können zusammen trainieren.",
-        "nextNode": "training_002",
-        "trustDelta": 5,
-        "xp": 40
-      },
-      {
-        "id": "solo",
-        "text": "Ich komme alleine klar.",
-        "nextNode": "training_002",
-        "trustDelta": -2,
-        "xp": 25
-      }
-    ]
-  },
-  {
-    "id": "training_002",
-    "chapter": "Die ersten Tage",
-    "speakerId": "michael",
-    "text": "Die erste Beurteilung steht an. Deine Entscheidungen zählen mindestens so viel wie dein Können.",
-    "choices": [
-      {
-        "id": "proceed",
-        "text": "Prüfung beginnen.",
-        "nextNode": "assessment_001"
-      }
-    ]
-  },
-  {
-    "id": "assessment_001",
-    "chapter": "Die Beurteilung",
-    "speakerId": "michael",
-    "text": "Ein Teamkollege gerät im Training in Schwierigkeiten. Was ist dir wichtiger?",
+    "id": "prolog_01",
+    "chapter": "Prolog · 13 Jahre",
+    "age": 13,
+    "speakerId": null,
+    "text": "Hauptbahnhof, ein grauer Novembermorgen. Deine Eltern streiten liebevoll über den richtigen Bahnsteig, du hältst die Fahrkarten. Dann bricht die Welt in einem einzigen, viel zu lauten Augenblick auseinander. Als der Staub sich legt, ist es still. Zu still.",
     "choices": [
       {
         "id": "help",
-        "text": "Dem Teamkollegen helfen.",
-        "nextNode": "assessment_team",
-        "trustDelta": 8,
-        "xp": 80
+        "text": "Du kriechst zu einem weinenden Kind unter einer Bank und hältst seine Hand, bis Helfer kommen.",
+        "nextNode": "prolog_02",
+        "effects": {
+          "attributes": {
+            "charisma": 3,
+            "willpower": 2
+          },
+          "setFlags": [
+            "origin_empathy"
+          ]
+        }
       },
       {
-        "id": "finish",
-        "text": "Prüfung zuerst zu Ende führen.",
-        "nextNode": "assessment_solo",
-        "trustDelta": -3,
-        "xp": 80
-      }
-    ]
-  },
-  {
-    "id": "assessment_team",
-    "chapter": "Die Beurteilung",
-    "speakerId": "michael",
-    "text": "Du hast eine richtige Priorität erkannt: Du bist nur so gut wie dein Team.",
-    "choices": [
-      {
-        "id": "next",
-        "text": "Weiter.",
-        "nextNode": "social_001"
-      }
-    ]
-  },
-  {
-    "id": "assessment_solo",
-    "chapter": "Die Beurteilung",
-    "speakerId": "michael",
-    "text": "Schnell warst du. Aber das allein macht noch keinen Division-Agenten.",
-    "choices": [
-      {
-        "id": "next",
-        "text": "Weiter.",
-        "nextNode": "social_001"
-      }
-    ]
-  },
-  {
-    "id": "social_001",
-    "chapter": "Das neue Zuhause",
-    "speakerId": "alex",
-    "text": "Man sagt, niemand habe deine Akte gesehen. Vielleicht sind wir uns ähnlicher, als du denkst.",
-    "choices": [
-      {
-        "id": "talk",
-        "text": "Nach ihrer Geschichte fragen.",
-        "nextNode": "social_002",
-        "trustDelta": 4
+        "id": "run",
+        "text": "Du rennst durch den Rauch zum Ausgang und holst die ersten Sanitäter.",
+        "nextNode": "prolog_02",
+        "effects": {
+          "attributes": {
+            "fitness": 4,
+            "willpower": 1
+          },
+          "setFlags": [
+            "origin_action"
+          ]
+        }
       },
       {
-        "id": "end",
-        "text": "Mich verabschieden.",
-        "nextNode": "phoenix_001"
+        "id": "watch",
+        "text": "Du siehst einen Mann im grauen Mantel, der viel zu ruhig zum Ausgang geht – und prägst dir sein Gesicht ein.",
+        "nextNode": "prolog_02",
+        "effects": {
+          "attributes": {
+            "perception": 5
+          },
+          "setFlags": [
+            "origin_witness"
+          ]
+        }
       }
     ]
   },
   {
-    "id": "social_002",
-    "chapter": "Das neue Zuhause",
-    "speakerId": "alex",
-    "text": "Manchmal ist es besser, nicht alles zu wissen. Aber vielleicht können wir einander helfen.",
-    "choices": [
-      {
-        "id": "continue",
-        "text": "Zusammen nach Antworten suchen.",
-        "nextNode": "phoenix_001",
-        "trustDelta": 5
-      }
-    ]
-  },
-  {
-    "id": "phoenix_001",
-    "chapter": "Die Akte",
-    "speakerId": "voss",
-    "text": "Eine unbekannte Nummer meldet sich: Es gibt Dinge, die niemand in Division über dich erfahren darf.",
-    "choices": [
-      {
-        "id": "answer",
-        "text": "Wer spricht da?",
-        "nextNode": "phoenix_002"
-      },
-      {
-        "id": "ignore",
-        "text": "Verbindung abbrechen.",
-        "nextNode": "phoenix_003"
-      }
-    ]
-  },
-  {
-    "id": "phoenix_002",
-    "chapter": "Die Akte",
-    "speakerId": "voss",
-    "text": "Du kennst meine Stimme. Vergiss nicht, woher du kommst.",
-    "choices": [
-      {
-        "id": "continue",
-        "text": "Nach dem Geheimprogramm recherchieren.",
-        "nextNode": "phoenix_003",
-        "xp": 100
-      }
-    ]
-  },
-  {
-    "id": "phoenix_003",
-    "chapter": "Die Akte",
-    "speakerId": "birkhoff",
-    "text": "Seltsam. Ein Teil deiner Personaldatei wurde mit einer Sicherheitsfreigabe versehen, die ich noch nie gesehen habe.",
-    "choices": [
-      {
-        "id": "investigate",
-        "text": "Um Hilfe bitten.",
-        "nextNode": "chapter_end",
-        "trustDelta": 5,
-        "xp": 100
-      },
-      {
-        "id": "hide",
-        "text": "Die Spur verwischen lassen.",
-        "nextNode": "chapter_end",
-        "trustDelta": -2,
-        "xp": 60
-      }
-    ]
-  },
-  {
-    "id": "chapter_end",
-    "chapter": "Die Akte",
+    "id": "prolog_02",
+    "chapter": "Prolog · 13 Jahre",
+    "age": 13,
     "speakerId": null,
-    "text": "Kapitel 1 abgeschlossen. Die offene Spielwelt und weitere Missionen warten.",
-    "choices": []
+    "text": "Drei Wochen später. Ein Zimmer im Kinderheim, das nach Desinfektionsmittel riecht. Deine Eltern stehen auf einer Liste mit 41 Namen. Ein Mann mit randloser Brille setzt sich ohne zu fragen an dein Bett. „Mein Name ist Adrian Voss. Die Leute, die das getan haben, werden wieder zuschlagen. Ich kann dir beibringen, sie aufzuhalten.“",
+    "choices": [
+      {
+        "id": "answers",
+        "text": "„Ich will wissen, wer es war.“",
+        "nextNode": "prolog_03",
+        "effects": {
+          "setFlags": [
+            "motive_truth"
+          ]
+        }
+      },
+      {
+        "id": "protect",
+        "text": "„Ich will, dass so etwas niemandem mehr passiert.“",
+        "nextNode": "prolog_03",
+        "effects": {
+          "setFlags": [
+            "motive_protect"
+          ]
+        }
+      },
+      {
+        "id": "nothing",
+        "text": "„Ich habe sowieso nichts mehr zu verlieren.“",
+        "nextNode": "prolog_03",
+        "effects": {
+          "setFlags": [
+            "motive_void"
+          ],
+          "stress": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "prolog_03",
+    "chapter": "Projekt PHOENIX · 14 Jahre",
+    "age": 14,
+    "speakerId": "voss",
+    "text": "Eine stillgelegte Kaserne in den Bergen, offiziell ein Internat für Hochbegabte. Sieben Kinder, sieben Nummern. Du bist Kandidat 7. Voss spricht leise und lobt selten. „Jeder von euch erhält einen Schwerpunkt. Wählt klug – PHOENIX formt, was ihr mitbringt.“",
+    "choices": [
+      {
+        "id": "body",
+        "text": "Körper: Ausdauer, Nahkampf, Präzision.",
+        "nextNode": "prolog_04",
+        "effects": {
+          "attributes": {
+            "fitness": 4,
+            "precision": 4
+          },
+          "giveItems": {
+            "phoenix_token": 1
+          }
+        }
+      },
+      {
+        "id": "mind",
+        "text": "Verstand: Sprachen, Systeme, Analyse.",
+        "nextNode": "prolog_04",
+        "effects": {
+          "attributes": {
+            "intellect": 5,
+            "perception": 3
+          },
+          "giveItems": {
+            "phoenix_token": 1
+          }
+        }
+      },
+      {
+        "id": "mask",
+        "text": "Maske: Legenden, Psychologie, Täuschung.",
+        "nextNode": "prolog_04",
+        "effects": {
+          "attributes": {
+            "charisma": 5,
+            "willpower": 3
+          },
+          "giveItems": {
+            "phoenix_token": 1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "prolog_04",
+    "chapter": "Projekt PHOENIX · 15 Jahre",
+    "age": 15,
+    "speakerId": "voss",
+    "text": "Kandidatin 4, Kira, ist deine einzige Freundin hier. Eines Nachts ruft Voss dich zu sich. „Kira plant zu fliehen. Du wirst ihr Vertrauen nutzen und mir sagen, wann.“ Seine Brille spiegelt das Neonlicht. Er wartet.",
+    "choices": [
+      {
+        "id": "obey",
+        "text": "Du gehorchst. PHOENIX ist alles, was du hast.",
+        "nextNode": "prolog_05",
+        "effects": {
+          "setFlags": [
+            "phoenix_obedient"
+          ],
+          "attributes": {
+            "willpower": 2
+          },
+          "stress": 10
+        }
+      },
+      {
+        "id": "refuse",
+        "text": "Du weigerst dich – und nimmst die Strafe in Kauf.",
+        "nextNode": "prolog_05",
+        "effects": {
+          "setFlags": [
+            "phoenix_defiant"
+          ],
+          "attributes": {
+            "willpower": 4
+          },
+          "stress": 15
+        }
+      },
+      {
+        "id": "warn",
+        "text": "Du sagst Ja – und warnst Kira noch in derselben Nacht.",
+        "nextNode": "prolog_05",
+        "effects": {
+          "setFlags": [
+            "phoenix_double",
+            "kira_warned"
+          ],
+          "attributes": {
+            "charisma": 2,
+            "perception": 2
+          },
+          "stress": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "prolog_05",
+    "chapter": "Projekt PHOENIX · 15 Jahre",
+    "age": 15,
+    "speakerId": null,
+    "text": "Kurz vor deinem sechzehnten Geburtstag wird PHOENIX aufgelöst – über Nacht, ohne Erklärung. Die anderen Kandidaten verschwinden in Bussen ohne Kennzeichen. Voss drückt dir einen Umschlag in die Hand: eine neue Identität, eine Versetzungsorder. „Die Division. Dort wird niemand wissen, wer du bist. Sorg dafür, dass es so bleibt.“",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Den Umschlag öffnen.",
+        "nextNode": "prolog_06"
+      },
+      {
+        "id": "burn",
+        "text": "Das Foto aus deiner alten Akte verbrennen, bevor du gehst.",
+        "nextNode": "prolog_06",
+        "effects": {
+          "setFlags": [
+            "burned_past"
+          ],
+          "attributes": {
+            "willpower": 1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "prolog_06",
+    "chapter": "Versetzung · 16 Jahre",
+    "age": 16,
+    "speakerId": null,
+    "text": "Ein schwarzer Transporter, verdunkelte Scheiben, zwei Stunden Fahrt. Dann eine Tiefgarage, eine Schleuse, ein Fingerabdruckscanner, der dich bereits kennt. Deine alte Identität ist verschlüsselt. Nur drei Menschen kennen die Wahrheit – und du weißt nicht, wer sie sind.",
+    "choices": [
+      {
+        "id": "enter",
+        "text": "Die Division betreten.",
+        "effects": {
+          "xp": 0
+        }
+      }
+    ]
   }
 ]

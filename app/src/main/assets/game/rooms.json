@@ -1,0 +1,209 @@
+{
+  "floors": [
+    {
+      "floor": 0,
+      "name": "Ebene 0 · Zugang & Quartiere",
+      "description": "Schleuse, Aufenthaltsbereich und die Schlafräume der Rekruten."
+    },
+    {
+      "floor": -1,
+      "name": "Ebene −1 · Ausbildung",
+      "description": "Trainingshalle, Präzisionsstand, Krankenstation, Ausrüstung."
+    },
+    {
+      "floor": -2,
+      "name": "Ebene −2 · Operationen",
+      "description": "Einsatzzentrale und Techniklabor – das Nervenzentrum."
+    },
+    {
+      "floor": -3,
+      "name": "Ebene −3 · Führung & Archiv",
+      "description": "Direktorat, Psychologie und das Geheimarchiv."
+    }
+  ],
+  "rooms": [
+    {
+      "id": "lobby",
+      "name": "Sicherheitsschleuse",
+      "floor": 0,
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 1,
+      "description": "Biometrische Schleuse. Hier beginnt und endet jeder Weg nach draußen.",
+      "actions": [
+        "team"
+      ]
+    },
+    {
+      "id": "dorm",
+      "name": "Rekrutenquartier",
+      "floor": 0,
+      "x": 0,
+      "y": 1,
+      "w": 1,
+      "h": 2,
+      "description": "Schmale Betten, Spinde, kein Fenster. Dein Zuhause.",
+      "actions": [
+        "sleep",
+        "rest",
+        "storage",
+        "timeskip"
+      ]
+    },
+    {
+      "id": "canteen",
+      "name": "Aufenthaltsbereich",
+      "floor": 0,
+      "x": 1,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "description": "Kantine, Sofas, ein Tischkicker. Hier entstehen Freundschaften – und Rivalitäten.",
+      "actions": [
+        "eat",
+        "socialize",
+        "study"
+      ]
+    },
+    {
+      "id": "city",
+      "name": "Ausgang: Innenstadt",
+      "floor": 0,
+      "x": 1,
+      "y": 2,
+      "w": 1,
+      "h": 1,
+      "description": "Ziviles Leben unter falschem Namen. Ab 17 genehmigt.",
+      "minAge": 17,
+      "actions": [
+        "cafe",
+        "cover_job",
+        "apartment"
+      ]
+    },
+    {
+      "id": "training",
+      "name": "Trainingshalle",
+      "floor": -1,
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 1,
+      "description": "Matten, Parcours, Simulationsbereich. Michaels Reich.",
+      "actions": [
+        "training"
+      ]
+    },
+    {
+      "id": "range",
+      "name": "Präzisionsstand",
+      "floor": -1,
+      "x": 0,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "description": "Schallgedämmte Kabinen mit Markierungsmunition.",
+      "actions": [
+        "range"
+      ]
+    },
+    {
+      "id": "medical",
+      "name": "Krankenstation",
+      "floor": -1,
+      "x": 1,
+      "y": 1,
+      "w": 1,
+      "h": 1,
+      "description": "Weiß, kalt, effizient. Hier wird man schnell wieder einsatzfähig gemacht.",
+      "actions": [
+        "treat",
+        "rest"
+      ]
+    },
+    {
+      "id": "armory",
+      "name": "Ausrüstungskammer",
+      "floor": -1,
+      "x": 0,
+      "y": 2,
+      "w": 2,
+      "h": 1,
+      "description": "Owens Kammer. Alles ist nummeriert, alles wird zurückgegeben.",
+      "actions": [
+        "shop",
+        "repair",
+        "storage"
+      ]
+    },
+    {
+      "id": "ops",
+      "name": "Einsatzzentrale",
+      "floor": -2,
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 1,
+      "description": "Bildschirmwände, Karten, Stimmengewirr. Hier werden Einsätze vergeben.",
+      "actions": [
+        "missions",
+        "team"
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "Techniklabor",
+      "floor": -2,
+      "x": 0,
+      "y": 1,
+      "w": 2,
+      "h": 1,
+      "description": "Birkhoffs Server-Höhle. Es riecht nach Kaffee und heißen Lüftern.",
+      "actions": [
+        "tech_lab"
+      ]
+    },
+    {
+      "id": "psych",
+      "name": "Psychologie",
+      "floor": -3,
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 1,
+      "description": "Amandas Büro. Bequeme Sessel, unbequeme Fragen.",
+      "actions": [
+        "therapy"
+      ]
+    },
+    {
+      "id": "director",
+      "name": "Direktorat",
+      "floor": -3,
+      "x": 1,
+      "y": 0,
+      "w": 1,
+      "h": 1,
+      "description": "Percys Büro über der Einsatzzentrale. Glaswand, Blick auf alles.",
+      "actions": [
+        "promotion",
+        "director_desk"
+      ]
+    },
+    {
+      "id": "archives",
+      "name": "Geheimarchiv",
+      "floor": -3,
+      "x": 0,
+      "y": 1,
+      "w": 2,
+      "h": 1,
+      "description": "Papierakten, die nie digitalisiert wurden. Zutritt nur mit Sicherheitskarte.",
+      "requiredItem": "keycard",
+      "actions": [
+        "research"
+      ]
+    }
+  ]
+}

@@ -5,7 +5,11 @@
     "tree": "kampf",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+    "description": "Selbstverteidigung, Ruhe unter Druck und Präzision.",
+    "attribute": "fitness",
+    "effect": "+8 pro Stufe auf Abwehr- und Wettkampfproben",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "focus",
@@ -13,7 +17,11 @@
     "tree": "kampf",
     "maxRank": 5,
     "prerequisite": "defense",
-    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+    "description": "Selbstverteidigung, Ruhe unter Druck und Präzision.",
+    "attribute": "fitness",
+    "effect": "Weniger Stressschaden in Taktikbegegnungen",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "weapon_handling",
@@ -21,7 +29,11 @@
     "tree": "kampf",
     "maxRank": 5,
     "prerequisite": "focus",
-    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+    "description": "Selbstverteidigung, Ruhe unter Druck und Präzision.",
+    "attribute": "fitness",
+    "effect": "+4 Treffer pro Stufe im Taktikmodus",
+    "kind": "passive",
+    "minLevel": 9
   },
   {
     "id": "disguise",
@@ -29,7 +41,11 @@
     "tree": "tarnung",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+    "description": "Legenden, Unauffälligkeit, lautlose Bewegung.",
+    "attribute": "perception",
+    "effect": "+8 pro Stufe auf Legenden-Proben",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "blend_in",
@@ -37,7 +53,11 @@
     "tree": "tarnung",
     "maxRank": 5,
     "prerequisite": "disguise",
-    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+    "description": "Legenden, Unauffälligkeit, lautlose Bewegung.",
+    "attribute": "perception",
+    "effect": "+8 pro Stufe, um unbemerkt zu bleiben",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "shadowstep",
@@ -45,7 +65,11 @@
     "tree": "tarnung",
     "maxRank": 5,
     "prerequisite": "blend_in",
-    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+    "description": "Legenden, Unauffälligkeit, lautlose Bewegung.",
+    "attribute": "perception",
+    "effect": "+8 pro Stufe auf Schleich- und Verfolgungsproben",
+    "kind": "active",
+    "minLevel": 9
   },
   {
     "id": "empathy",
@@ -53,7 +77,11 @@
     "tree": "psychologie",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+    "description": "Menschen lesen, befragen, durchschauen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe beim Gesprächseinstieg, Romanzen-Proben",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "interview",
@@ -61,7 +89,11 @@
     "tree": "psychologie",
     "maxRank": 5,
     "prerequisite": "empathy",
-    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+    "description": "Menschen lesen, befragen, durchschauen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe bei Befragungen",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "lie_detector",
@@ -69,7 +101,11 @@
     "tree": "psychologie",
     "maxRank": 5,
     "prerequisite": "interview",
-    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+    "description": "Menschen lesen, befragen, durchschauen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe, um Lügen zu erkennen",
+    "kind": "active",
+    "minLevel": 9
   },
   {
     "id": "analysis",
@@ -77,7 +113,11 @@
     "tree": "technik",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich technik."
+    "description": "Daten, Elektronik und Netzwerke.",
+    "attribute": "intellect",
+    "effect": "+8 pro Stufe beim Auswerten von Spuren",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "electronics",
@@ -85,7 +125,11 @@
     "tree": "technik",
     "maxRank": 5,
     "prerequisite": "analysis",
-    "description": "Aktive und passive Verbesserungen im Bereich technik."
+    "description": "Daten, Elektronik und Netzwerke.",
+    "attribute": "intellect",
+    "effect": "Taktikfähigkeit „Störsender“ ab Stufe 1",
+    "kind": "active",
+    "minLevel": 4
   },
   {
     "id": "systems",
@@ -93,7 +137,11 @@
     "tree": "technik",
     "maxRank": 5,
     "prerequisite": "electronics",
-    "description": "Aktive und passive Verbesserungen im Bereich technik."
+    "description": "Daten, Elektronik und Netzwerke.",
+    "attribute": "intellect",
+    "effect": "+8 pro Stufe bei Netzwerkproben",
+    "kind": "passive",
+    "minLevel": 9
   },
   {
     "id": "negotiation",
@@ -101,7 +149,11 @@
     "tree": "diplomatie",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+    "description": "Verhandeln, Sprachen, Überzeugen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe bei Deals",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "language",
@@ -109,7 +161,11 @@
     "tree": "diplomatie",
     "maxRank": 5,
     "prerequisite": "negotiation",
-    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+    "description": "Verhandeln, Sprachen, Überzeugen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe bei Undercover im Ausland",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "persuasion",
@@ -117,7 +173,11 @@
     "tree": "diplomatie",
     "maxRank": 5,
     "prerequisite": "language",
-    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+    "description": "Verhandeln, Sprachen, Überzeugen.",
+    "attribute": "charisma",
+    "effect": "+8 pro Stufe beim Überzeugen",
+    "kind": "active",
+    "minLevel": 9
   },
   {
     "id": "inspire",
@@ -125,7 +185,11 @@
     "tree": "fuehrung",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+    "description": "Motivieren, planen, versorgen.",
+    "attribute": "willpower",
+    "effect": "Team-Loyalität wächst schneller",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "planning",
@@ -133,7 +197,11 @@
     "tree": "fuehrung",
     "maxRank": 5,
     "prerequisite": "inspire",
-    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+    "description": "Motivieren, planen, versorgen.",
+    "attribute": "willpower",
+    "effect": "+8 pro Stufe bei Einsatzplanung und Beförderungsprüfungen",
+    "kind": "active",
+    "minLevel": 4
   },
   {
     "id": "logistics",
@@ -141,7 +209,11 @@
     "tree": "fuehrung",
     "maxRank": 5,
     "prerequisite": "planning",
-    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+    "description": "Motivieren, planen, versorgen.",
+    "attribute": "willpower",
+    "effect": "+500 g Tragkraft pro Stufe",
+    "kind": "passive",
+    "minLevel": 9
   },
   {
     "id": "first_aid",
@@ -149,7 +221,11 @@
     "tree": "medizin",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+    "description": "Versorgen, stabilisieren, regenerieren.",
+    "attribute": "intellect",
+    "effect": "Taktikfähigkeit „Erste Hilfe“, Heilgegenstände +3",
+    "kind": "active",
+    "minLevel": 1
   },
   {
     "id": "stabilize",
@@ -157,7 +233,11 @@
     "tree": "medizin",
     "maxRank": 5,
     "prerequisite": "first_aid",
-    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+    "description": "Versorgen, stabilisieren, regenerieren.",
+    "attribute": "intellect",
+    "effect": "+8 pro Stufe beim Versorgen Verletzter",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "rehab",
@@ -165,7 +245,11 @@
     "tree": "medizin",
     "maxRank": 5,
     "prerequisite": "stabilize",
-    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+    "description": "Versorgen, stabilisieren, regenerieren.",
+    "attribute": "intellect",
+    "effect": "Schnellere Regeneration",
+    "kind": "passive",
+    "minLevel": 9
   },
   {
     "id": "observe",
@@ -173,7 +257,11 @@
     "tree": "aufklaerung",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+    "description": "Beobachten, Beweise sichern, Profile erstellen.",
+    "attribute": "perception",
+    "effect": "+8 pro Stufe bei Beobachtung und Suchhinweisen",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "evidence",
@@ -181,7 +269,11 @@
     "tree": "aufklaerung",
     "maxRank": 5,
     "prerequisite": "observe",
-    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+    "description": "Beobachten, Beweise sichern, Profile erstellen.",
+    "attribute": "perception",
+    "effect": "+1 Suchaktion pro Stufe",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "profiling",
@@ -189,7 +281,11 @@
     "tree": "aufklaerung",
     "maxRank": 5,
     "prerequisite": "evidence",
-    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+    "description": "Beobachten, Beweise sichern, Profile erstellen.",
+    "attribute": "perception",
+    "effect": "+8 pro Stufe bei Fallanalysen",
+    "kind": "passive",
+    "minLevel": 9
   },
   {
     "id": "stamina",
@@ -197,7 +293,11 @@
     "tree": "ueberleben",
     "maxRank": 5,
     "prerequisite": null,
-    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+    "description": "Ausdauer, Orientierung, Belastbarkeit.",
+    "attribute": "fitness",
+    "effect": "+400 g Tragkraft pro Stufe",
+    "kind": "passive",
+    "minLevel": 1
   },
   {
     "id": "orientation",
@@ -205,7 +305,11 @@
     "tree": "ueberleben",
     "maxRank": 5,
     "prerequisite": "stamina",
-    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+    "description": "Ausdauer, Orientierung, Belastbarkeit.",
+    "attribute": "fitness",
+    "effect": "+8 pro Stufe bei Flucht- und Orientierungsproben",
+    "kind": "passive",
+    "minLevel": 4
   },
   {
     "id": "resilience",
@@ -213,6 +317,145 @@
     "tree": "ueberleben",
     "maxRank": 5,
     "prerequisite": "orientation",
-    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+    "description": "Ausdauer, Orientierung, Belastbarkeit.",
+    "attribute": "fitness",
+    "effect": "+1 Trefferpunkt pro Stufe im Taktikmodus",
+    "kind": "passive",
+    "minLevel": 9
+  },
+  {
+    "id": "combat_master",
+    "name": "Ruhige Hand",
+    "tree": "kampf",
+    "prerequisite": "weapon_handling",
+    "requires": [
+      "resilience"
+    ],
+    "effect": "Kritische Momente: +10 auf alle Taktik-Treffer bei voller Gesundheit",
+    "attribute": "precision",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "ghost",
+    "name": "Geist",
+    "tree": "tarnung",
+    "prerequisite": "shadowstep",
+    "requires": [
+      "observe"
+    ],
+    "effect": "Alarm steigt in Einsätzen um 1 weniger (einmal pro Einsatz)",
+    "attribute": "perception",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "mind_reader",
+    "name": "Gedankenleser",
+    "tree": "psychologie",
+    "prerequisite": "lie_detector",
+    "requires": [
+      "profiling"
+    ],
+    "effect": "Zeigt in Dialogen verborgene Optionen",
+    "attribute": "charisma",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "ghost_net",
+    "name": "Phantomnetz",
+    "tree": "technik",
+    "prerequisite": "systems",
+    "requires": [
+      "analysis"
+    ],
+    "effect": "+1 Intel zu Beginn jeder Untersuchung",
+    "attribute": "intellect",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "silver_tongue",
+    "name": "Silberzunge",
+    "tree": "diplomatie",
+    "prerequisite": "persuasion",
+    "requires": [
+      "empathy"
+    ],
+    "effect": "Misslungene Gesprächsproben kosten keine Tarnung",
+    "attribute": "charisma",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "commander",
+    "name": "Kommandostimme",
+    "tree": "fuehrung",
+    "prerequisite": "logistics",
+    "requires": [
+      "inspire"
+    ],
+    "effect": "+1 Teamplatz (ab Rang 8)",
+    "attribute": "willpower",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "field_surgeon",
+    "name": "Feldchirurgie",
+    "tree": "medizin",
+    "prerequisite": "rehab",
+    "requires": [
+      "stabilize"
+    ],
+    "effect": "Fehlschläge verursachen keine Wunden mehr",
+    "attribute": "intellect",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "profiler",
+    "name": "Spurenleser",
+    "tree": "aufklaerung",
+    "prerequisite": "profiling",
+    "requires": [
+      "analysis"
+    ],
+    "effect": "Suchhinweise immer sichtbar",
+    "attribute": "perception",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
+  },
+  {
+    "id": "iron_will",
+    "name": "Eiserner Wille",
+    "tree": "ueberleben",
+    "prerequisite": "resilience",
+    "requires": [
+      "focus"
+    ],
+    "effect": "Stress über 80 senkt Proben nicht mehr",
+    "attribute": "willpower",
+    "maxRank": 3,
+    "kind": "passive",
+    "minLevel": 15,
+    "description": "Meisterperk des Baums – verbindet zwei Disziplinen."
   }
 ]

@@ -5,7 +5,14 @@
     "minLevel": 1,
     "minAge": 16,
     "minReputation": 0,
-    "description": "Beförderungsstufe 1 in der Geheimorganisation."
+    "description": "Neu in der Division. Pflichttraining, keine Außeneinsätze.",
+    "supervisorId": null,
+    "minSupervisorTrust": 0,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 30,
+    "salaryPerWeek": 60,
+    "teamSize": 1
   },
   {
     "rank": 2,
@@ -13,15 +20,33 @@
     "minLevel": 3,
     "minAge": 16,
     "minReputation": 10,
-    "description": "Beförderungsstufe 2 in der Geheimorganisation."
+    "description": "Hat die Grundausbildung bestanden. Erste Simulationen.",
+    "supervisorId": "michael",
+    "minSupervisorTrust": 50,
+    "requiredFlags": [],
+    "requiredMissions": [
+      "M001"
+    ],
+    "examDifficulty": 35,
+    "salaryPerWeek": 80,
+    "teamSize": 1
   },
   {
     "rank": 3,
     "name": "Operativer Anwärter",
     "minLevel": 5,
-    "minAge": 17,
+    "minAge": 16,
     "minReputation": 25,
-    "description": "Beförderungsstufe 3 in der Geheimorganisation."
+    "description": "Darf Ausbildungseinsätze unter Aufsicht begleiten.",
+    "supervisorId": "michael",
+    "minSupervisorTrust": 55,
+    "requiredFlags": [],
+    "requiredMissions": [
+      "M004"
+    ],
+    "examDifficulty": 40,
+    "salaryPerWeek": 100,
+    "teamSize": 2
   },
   {
     "rank": 4,
@@ -29,7 +54,16 @@
     "minLevel": 8,
     "minAge": 18,
     "minReputation": 50,
-    "description": "Beförderungsstufe 4 in der Geheimorganisation."
+    "description": "Volljährig und einsatzfähig. Erste eigene Missionen.",
+    "supervisorId": "michael",
+    "minSupervisorTrust": 60,
+    "requiredFlags": [
+      "ch1_done"
+    ],
+    "requiredMissions": [],
+    "examDifficulty": 45,
+    "salaryPerWeek": 140,
+    "teamSize": 2
   },
   {
     "rank": 5,
@@ -37,62 +71,120 @@
     "minLevel": 12,
     "minAge": 18,
     "minReputation": 80,
-    "description": "Beförderungsstufe 5 in der Geheimorganisation."
+    "description": "Vollwertige Einsatzkraft der Division.",
+    "supervisorId": "michael",
+    "minSupervisorTrust": 62,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 50,
+    "salaryPerWeek": 180,
+    "teamSize": 2
   },
   {
     "rank": 6,
     "name": "Senior-Agent",
-    "minLevel": 18,
-    "minAge": 20,
-    "minReputation": 150,
-    "description": "Beförderungsstufe 6 in der Geheimorganisation."
+    "minLevel": 16,
+    "minAge": 19,
+    "minReputation": 140,
+    "description": "Erfahrene Agentin/erfahrener Agent mit eigenem Profil.",
+    "supervisorId": "michael",
+    "minSupervisorTrust": 65,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 55,
+    "salaryPerWeek": 230,
+    "teamSize": 2
   },
   {
     "rank": 7,
     "name": "Spezialagent",
-    "minLevel": 26,
-    "minAge": 21,
-    "minReputation": 250,
-    "description": "Beförderungsstufe 7 in der Geheimorganisation."
+    "minLevel": 22,
+    "minAge": 20,
+    "minReputation": 220,
+    "description": "Für sensible Einsätze freigegeben.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 50,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 58,
+    "salaryPerWeek": 290,
+    "teamSize": 3
   },
   {
     "rank": 8,
     "name": "Teamleiter",
-    "minLevel": 34,
+    "minLevel": 28,
     "minAge": 22,
-    "minReputation": 350,
-    "description": "Beförderungsstufe 8 in der Geheimorganisation."
+    "minReputation": 320,
+    "description": "Führt eigene Teams – Teamkommandos freigeschaltet.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 55,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 60,
+    "salaryPerWeek": 360,
+    "teamSize": 3
   },
   {
     "rank": 9,
     "name": "Einsatzkommandant",
-    "minLevel": 44,
-    "minAge": 24,
-    "minReputation": 500,
-    "description": "Beförderungsstufe 9 in der Geheimorganisation."
+    "minLevel": 35,
+    "minAge": 23,
+    "minReputation": 430,
+    "description": "Plant Operationen und delegiert Teams.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 60,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 62,
+    "salaryPerWeek": 440,
+    "teamSize": 4
   },
   {
     "rank": 10,
     "name": "Sektionsleiter",
-    "minLevel": 56,
+    "minLevel": 42,
     "minAge": 25,
-    "minReputation": 650,
-    "description": "Beförderungsstufe 10 in der Geheimorganisation."
+    "minReputation": 560,
+    "description": "Leitet eine Sektion des Hauptquartiers.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 65,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 65,
+    "salaryPerWeek": 520,
+    "teamSize": 4
   },
   {
     "rank": 11,
     "name": "Stellvertretender Direktor",
-    "minLevel": 70,
+    "minLevel": 50,
     "minAge": 27,
-    "minReputation": 800,
-    "description": "Beförderungsstufe 11 in der Geheimorganisation."
+    "minReputation": 720,
+    "description": "Vertritt den Direktor in allen Belangen.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 70,
+    "requiredFlags": [],
+    "requiredMissions": [
+      "M016"
+    ],
+    "examDifficulty": 70,
+    "salaryPerWeek": 620,
+    "teamSize": 4
   },
   {
     "rank": 12,
     "name": "Direktor",
-    "minLevel": 85,
-    "minAge": 30,
-    "minReputation": 1000,
-    "description": "Beförderungsstufe 12 in der Geheimorganisation."
+    "minLevel": 60,
+    "minAge": 29,
+    "minReputation": 900,
+    "description": "Führt die Division. Budget, Abteilungen, Politik.",
+    "supervisorId": "percy",
+    "minSupervisorTrust": 75,
+    "requiredFlags": [],
+    "requiredMissions": [],
+    "examDifficulty": 75,
+    "salaryPerWeek": 800,
+    "teamSize": 4
   }
 ]

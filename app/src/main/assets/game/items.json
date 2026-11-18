@@ -8,7 +8,9 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 0,
-    "description": "Personalidentifikation und Sicherheitsfreigabe."
+    "description": "Personalidentifikation und Sicherheitsfreigabe.",
+    "slot": "none",
+    "buyable": false
   },
   {
     "id": "radio_basic",
@@ -19,7 +21,11 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 150,
-    "description": "Kommunikation mit Zentrale und Team."
+    "description": "Kommunikation mit Zentrale und Team.",
+    "slot": "comms",
+    "bonuses": {
+      "perception": 1
+    }
   },
   {
     "id": "bandage",
@@ -30,18 +36,27 @@
     "rarity": "common",
     "maxStack": 8,
     "baseValue": 18,
-    "description": "Zur Behandlung leichter Verletzungen."
+    "description": "Zur Behandlung leichter Verletzungen.",
+    "effect": {
+      "health": 12
+    },
+    "slot": "none"
   },
   {
     "id": "pistol_training",
-    "name": "Ausbildungspistole",
+    "name": "Trainingsmarkierer",
     "category": "weapons",
     "icon": "pistol",
     "weightGrams": 850,
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 400,
-    "description": "Ausrüstungsgegenstand für virtuelle Trainingsmissionen."
+    "description": "Markierungsgerät für Ausbildung und Simulationen. Kein scharfes Gerät.",
+    "slot": "weapon",
+    "damage": 1,
+    "bonuses": {
+      "precision": 3
+    }
   },
   {
     "id": "pistol_service",
@@ -52,7 +67,13 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 1250,
-    "description": "Standardwaffe für befugte erwachsene Division-Agenten."
+    "description": "Dienstausrüstung für volljährige Einsatzkräfte. Im Spiel abstrakt: erhöht Wirkung im Taktikmodus.",
+    "slot": "weapon",
+    "damage": 2,
+    "minRank": 4,
+    "bonuses": {
+      "precision": 5
+    }
   },
   {
     "id": "vest_light",
@@ -63,7 +84,10 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 600,
-    "description": "Erhöht den Schutz in taktischen Begegnungen."
+    "description": "Erhöht den Schutz in taktischen Begegnungen.",
+    "slot": "armor",
+    "armor": 1,
+    "minRank": 2
   },
   {
     "id": "vest_heavy",
@@ -74,7 +98,13 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 1600,
-    "description": "Höherer Schutz bei geringerer Beweglichkeit."
+    "description": "Höherer Schutz bei geringerer Beweglichkeit.",
+    "slot": "armor",
+    "armor": 2,
+    "minRank": 6,
+    "bonuses": {
+      "fitness": -3
+    }
   },
   {
     "id": "radio_secure",
@@ -85,7 +115,13 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 1800,
-    "description": "Gegenstände zur teaminternen Kommunikation."
+    "description": "Gegenstände zur teaminternen Kommunikation.",
+    "slot": "comms",
+    "minRank": 3,
+    "bonuses": {
+      "perception": 2,
+      "intellect": 2
+    }
   },
   {
     "id": "medkit",
@@ -96,7 +132,11 @@
     "rarity": "uncommon",
     "maxStack": 3,
     "baseValue": 300,
-    "description": "Versorgung verletzter Teamkameraden."
+    "description": "Versorgung verletzter Teamkameraden.",
+    "effect": {
+      "health": 35
+    },
+    "slot": "none"
   },
   {
     "id": "multitool",
@@ -107,7 +147,11 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 100,
-    "description": "Nützlich bei technischen Aufgaben."
+    "description": "Nützlich bei technischen Aufgaben.",
+    "slot": "accessory",
+    "bonuses": {
+      "intellect": 2
+    }
   },
   {
     "id": "passport",
@@ -118,7 +162,10 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 2500,
-    "description": "Verdeckt in der Story die wirkliche Identität."
+    "description": "Verdeckt in der Story die wirkliche Identität.",
+    "slot": "none",
+    "minRank": 4,
+    "bonuses": {}
   },
   {
     "id": "night_vision",
@@ -129,7 +176,12 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 2400,
-    "description": "Verbesserte Wahrnehmung in dunklen Einsatzkarten."
+    "description": "Verbesserte Wahrnehmung in dunklen Einsatzkarten.",
+    "slot": "gadget",
+    "minRank": 5,
+    "bonuses": {
+      "perception": 6
+    }
   },
   {
     "id": "backpack_small",
@@ -140,7 +192,9 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 250,
-    "description": "Trägt zusätzliche Ausrüstung."
+    "description": "Trägt zusätzliche Ausrüstung.",
+    "slot": "bag",
+    "capacityBonusGrams": 4000
   },
   {
     "id": "backpack_large",
@@ -151,7 +205,10 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 800,
-    "description": "Mehr Stauraum für längere Einsätze."
+    "description": "Mehr Stauraum für längere Einsätze.",
+    "slot": "bag",
+    "capacityBonusGrams": 8000,
+    "minRank": 3
   },
   {
     "id": "briefcase",
@@ -162,7 +219,12 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 450,
-    "description": "Diskreter Transport von Missionsobjekten."
+    "description": "Diskreter Transport von Missionsobjekten.",
+    "slot": "bag",
+    "capacityBonusGrams": 2500,
+    "bonuses": {
+      "charisma": 2
+    }
   },
   {
     "id": "flashlight",
@@ -173,7 +235,11 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 80,
-    "description": "Lichtquelle für dunkle Bereiche."
+    "description": "Lichtquelle für dunkle Bereiche.",
+    "slot": "gadget",
+    "bonuses": {
+      "perception": 2
+    }
   },
   {
     "id": "smartphone",
@@ -184,7 +250,11 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 950,
-    "description": "Agenten-Apps, Nachrichten und Kalender."
+    "description": "Agenten-Apps, Nachrichten und Kalender.",
+    "slot": "gadget",
+    "bonuses": {
+      "intellect": 3
+    }
   },
   {
     "id": "laptop",
@@ -195,7 +265,12 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 1800,
-    "description": "Analyse und Fallbearbeitung."
+    "description": "Analyse und Fallbearbeitung.",
+    "slot": "gadget",
+    "minRank": 3,
+    "bonuses": {
+      "intellect": 6
+    }
   },
   {
     "id": "keycard",
@@ -206,7 +281,9 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 0,
-    "description": "Öffnet freigeschaltete Bereiche."
+    "description": "Öffnet freigeschaltete Bereiche.",
+    "buyable": false,
+    "slot": "none"
   },
   {
     "id": "handcuffs",
@@ -217,7 +294,8 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 90,
-    "description": "Ermöglicht Festnahmen innerhalb der Mission."
+    "description": "Ermöglicht Festnahmen innerhalb der Mission.",
+    "slot": "none"
   },
   {
     "id": "binoculars",
@@ -228,7 +306,11 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 340,
-    "description": "Erhöht Beobachtungsreichweite."
+    "description": "Erhöht Beobachtungsreichweite.",
+    "slot": "gadget",
+    "bonuses": {
+      "perception": 4
+    }
   },
   {
     "id": "toolbox",
@@ -239,7 +321,8 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 350,
-    "description": "Reparaturen und Ausrüstungswartung."
+    "description": "Reparaturen und Ausrüstungswartung.",
+    "slot": "none"
   },
   {
     "id": "usb",
@@ -250,7 +333,8 @@
     "rarity": "common",
     "maxStack": 5,
     "baseValue": 50,
-    "description": "Für Beweisstücke und Missionsdaten."
+    "description": "Für Beweisstücke und Missionsdaten.",
+    "slot": "none"
   },
   {
     "id": "camera",
@@ -261,7 +345,12 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 650,
-    "description": "Dokumentiert Beweise."
+    "description": "Dokumentiert Beweise.",
+    "slot": "gadget",
+    "bonuses": {
+      "perception": 2,
+      "precision": 2
+    }
   },
   {
     "id": "notebook",
@@ -272,18 +361,27 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 25,
-    "description": "Notizen, Hinweise und Kontakte."
+    "description": "Notizen, Hinweise und Kontakte.",
+    "slot": "accessory",
+    "bonuses": {
+      "intellect": 1
+    }
   },
   {
     "id": "syringe",
-    "name": "Medizinische Spritze",
+    "name": "Kreislaufampulle",
     "category": "medical",
     "icon": "syringe",
     "weightGrams": 30,
     "rarity": "uncommon",
     "maxStack": 4,
     "baseValue": 90,
-    "description": "Medizinisches Werkzeug für Betreuungsszenen."
+    "description": "Medizinisches Notfallpräparat gegen Erschöpfung (nur durch Sanitätsdienst).",
+    "effect": {
+      "health": 10,
+      "energy": 20
+    },
+    "slot": "none"
   },
   {
     "id": "battery",
@@ -294,7 +392,8 @@
     "rarity": "common",
     "maxStack": 4,
     "baseValue": 110,
-    "description": "Versorgt Geräte mit Energie."
+    "description": "Versorgt Geräte mit Energie.",
+    "slot": "none"
   },
   {
     "id": "wallet",
@@ -305,7 +404,11 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 100,
-    "description": "Für das Doppelleben außerhalb der Basis."
+    "description": "Für das Doppelleben außerhalb der Basis.",
+    "slot": "accessory",
+    "bonuses": {
+      "charisma": 1
+    }
   },
   {
     "id": "headset",
@@ -316,7 +419,11 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 180,
-    "description": "Funkkommunikation bei Missionen."
+    "description": "Funkkommunikation bei Missionen.",
+    "slot": "comms",
+    "bonuses": {
+      "perception": 2
+    }
   },
   {
     "id": "rope",
@@ -327,7 +434,8 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 120,
-    "description": "Hilfsmittel für Hindernisse und Rettung."
+    "description": "Hilfsmittel für Hindernisse und Rettung.",
+    "slot": "none"
   },
   {
     "id": "microchip",
@@ -338,7 +446,9 @@
     "rarity": "epic",
     "maxStack": 4,
     "baseValue": 5000,
-    "description": "Wichtiger Handlungsgegenstand."
+    "description": "Wichtiger Handlungsgegenstand.",
+    "buyable": false,
+    "slot": "none"
   },
   {
     "id": "lockpicks",
@@ -349,7 +459,12 @@
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 600,
-    "description": "Für abstrahierte Schlossrätsel."
+    "description": "Für abstrahierte Schlossrätsel.",
+    "slot": "accessory",
+    "minRank": 3,
+    "bonuses": {
+      "precision": 3
+    }
   },
   {
     "id": "watch",
@@ -360,7 +475,12 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 450,
-    "description": "Kalender, Alarm und taktische Statusanzeige."
+    "description": "Kalender, Alarm und taktische Statusanzeige.",
+    "slot": "accessory",
+    "bonuses": {
+      "willpower": 1,
+      "perception": 1
+    }
   },
   {
     "id": "gas_mask",
@@ -371,7 +491,12 @@
     "rarity": "uncommon",
     "maxStack": 1,
     "baseValue": 440,
-    "description": "Schützt in bestimmten Einsatzsituationen."
+    "description": "Schützt in bestimmten Einsatzsituationen.",
+    "slot": "accessory",
+    "minRank": 3,
+    "bonuses": {
+      "willpower": 2
+    }
   },
   {
     "id": "folder",
@@ -382,7 +507,9 @@
     "rarity": "rare",
     "maxStack": 2,
     "baseValue": 0,
-    "description": "Kann Storyhinweise freischalten."
+    "description": "Kann Storyhinweise freischalten.",
+    "buyable": false,
+    "slot": "none"
   },
   {
     "id": "wrench",
@@ -393,72 +520,91 @@
     "rarity": "common",
     "maxStack": 1,
     "baseValue": 55,
-    "description": "Werkstattgegenstand."
+    "description": "Werkstattgegenstand.",
+    "slot": "none"
   },
   {
     "id": "training_drone",
     "name": "Übungsdrohne",
     "category": "gadgets",
-    "icon": "camera",
+    "icon": "drone",
     "weightGrams": 950,
     "rarity": "rare",
     "maxStack": 1,
     "baseValue": 2200,
-    "description": "Taktische Ausbildung und Aufklärung."
+    "description": "Taktische Ausbildung und Aufklärung.",
+    "slot": "gadget",
+    "minRank": 4,
+    "bonuses": {
+      "perception": 5
+    }
   },
   {
     "id": "mission_order",
     "name": "Einsatzbefehl",
     "category": "documents",
-    "icon": "folder",
+    "icon": "mission_order",
     "weightGrams": 40,
     "rarity": "common",
     "maxStack": 3,
     "baseValue": 0,
-    "description": "Verknüpft einen Storyauftrag."
+    "description": "Verknüpft einen Storyauftrag.",
+    "buyable": false,
+    "slot": "none"
   },
   {
     "id": "ammo_pack",
-    "name": "Trainingsmunition",
+    "name": "Markierungskartuschen",
     "category": "weapons",
-    "icon": "pistol",
+    "icon": "marker_pack",
     "weightGrams": 400,
     "rarity": "common",
     "maxStack": 5,
     "baseValue": 50,
-    "description": "Abstrakte Ressource für Trainingsbegegnungen."
+    "description": "Farbmarkierungen für Trainingsszenarien.",
+    "slot": "none"
   },
   {
     "id": "recovery_kit",
     "name": "Regenerationspaket",
     "category": "medical",
-    "icon": "medkit",
+    "icon": "recovery_kit",
     "weightGrams": 800,
     "rarity": "uncommon",
     "maxStack": 3,
     "baseValue": 260,
-    "description": "Reduziert Nachwirkungen von Einsätzen."
+    "description": "Reduziert Nachwirkungen von Einsätzen.",
+    "effect": {
+      "health": 20,
+      "energy": 30,
+      "stress": -15
+    },
+    "slot": "none"
   },
   {
     "id": "phoenix_token",
     "name": "PHOENIX-Marke",
     "category": "documents",
-    "icon": "id_card",
+    "icon": "phoenix_token",
     "weightGrams": 50,
     "rarity": "legendary",
     "maxStack": 1,
     "baseValue": 0,
-    "description": "Beweis einer verborgenen Identität."
+    "description": "Beweis einer verborgenen Identität.",
+    "buyable": false,
+    "slot": "none"
   },
   {
     "id": "research_drive",
     "name": "Verschlüsseltes Archiv",
     "category": "documents",
-    "icon": "usb",
+    "icon": "encrypted_drive",
     "weightGrams": 25,
     "rarity": "epic",
     "maxStack": 2,
     "baseValue": 0,
-    "description": "Questgegenstand zur PHOENIX-Verschwörung."
+    "description": "Questgegenstand zur PHOENIX-Verschwörung.",
+    "buyable": false,
+    "slot": "none"
   }
 ]
