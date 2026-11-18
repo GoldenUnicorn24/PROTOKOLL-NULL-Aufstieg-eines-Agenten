@@ -1,0 +1,29 @@
+name: Import licensed cast portraits
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "assets/CAST_IMAGES.json"
+      - "tools/fetch_cast_photos.py"
+      - ".github/workflows/import-cast-assets.yml"
+permissions:
+  contents: write
+jobs:
+  import-portraits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check licenses and download photos
+        run: python tools/fetch_cast_photos.py
+      - name: Commit photos and attribution manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/cast assets/CAST_IMAGE_CREDITS.json
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: add licensed cast photographs"
+            git push
+          fi
