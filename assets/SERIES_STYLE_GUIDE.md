@@ -6,7 +6,7 @@ Das öffentliche Repository darf keine ungeklärten ©-The-CW-Stills enthalten. 
 
 ## Implementationshinweis für Claude
 - `agents.json` bleibt bei `portraitAsset: cast/<id>.jpg`, solange keine lizenzierte Show-Aufnahme vorliegt.
-- Optional beim Build auf `cast/show_<id>.jpg` umschalten, *nur wenn* Asset verfügbar und `assets/SERIES_IMAGE_LICENSES.json` einen überprüften Lizenzbeleg enthält.
+- **Umgesetzt:** Die App zeigt `cast/show_<id>.jpg` *nur*, wenn die Datei existiert **und** `app/src/main/assets/licenses/series_image_licenses.json` einen Eintrag mit `verified: true`, `license` und `proof` enthält (Vorlage/Spiegel: `assets/SERIES_IMAGE_LICENSES.json`). Ein Unit-Test lässt den Build scheitern, wenn ein Still ohne Nachweis eingecheckt wird. Derzeit ist kein Still lizenziert.
 - Keine Hotlinks aus IMDb, Acsta, TMDb oder TVLine zur Laufzeit: das widerspricht dem Offline-Konzept und Bilder-URLs können ausfallen.
 - Bei selbst erstellten fiktiven NPCs hochwertige eigenständige Portraits einsetzen; damit sind diese von TV-Look-Referenzen sauber getrennt.
 - Kein `photoCredit` erfinden; konkrete Serien-Fotocredits vom Rechteinhaber klären.
