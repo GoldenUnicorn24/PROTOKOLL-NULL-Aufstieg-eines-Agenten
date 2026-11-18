@@ -1,0 +1,137 @@
+{
+  "images": [
+    {
+      "id": "michael",
+      "fileTitle": "Shane West (Nikita) Comic-Con 2012.jpg",
+      "path": "app/src/main/assets/cast/michael.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Shane_West_(Nikita)_Comic-Con_2012.jpg",
+      "author": "Thibault",
+      "attribution": "Thibault",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "85834b07e3def7d3c3d790533751b02efac8b56e204d4d76d4b808af767509d6"
+    },
+    {
+      "id": "nikita",
+      "fileTitle": "MaggieQSDCCJuly10.jpg",
+      "path": "app/src/main/assets/cast/nikita.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MaggieQSDCCJuly10.jpg",
+      "author": "Cameron Yee at https://www.flickr.com/photos/ygx/",
+      "attribution": "Cameron Yee",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "d2bef09701849e3d6b1c7a804944f4468ada7aed6c1bd683997883966fabee8f"
+    },
+    {
+      "id": "alex",
+      "fileTitle": "LyndsyFonescaSDCCJuly10.jpg",
+      "path": "app/src/main/assets/cast/alex.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:LyndsyFonescaSDCCJuly10.jpg",
+      "author": "Cameron Yee at https://www.flickr.com/photos/ygx/",
+      "attribution": "Cameron Yee",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "be9cc3edd1726b7c788910ac2d0f44ff028cea1b2053ba4c0b167d40d0c5f615"
+    },
+    {
+      "id": "birkhoff",
+      "fileTitle": "Aaron Stanford - Nikita (cropped).jpg",
+      "path": "app/src/main/assets/cast/birkhoff.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Aaron_Stanford_-_Nikita_(cropped).jpg",
+      "author": "Thibault",
+      "attribution": "Thibault",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "4791a47cdcf83b3741096f5f5eff71679d161ece133d0b8c52b3373435c75a64"
+    },
+    {
+      "id": "amanda",
+      "fileTitle": "MelindaClarkeTIFFSept2011.jpg",
+      "path": "app/src/main/assets/cast/amanda.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:MelindaClarkeTIFFSept2011.jpg",
+      "author": "gdcgraphics",
+      "attribution": "gdcgraphics",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "3d19d44f95c3bc03a0dfef71b85630c2c75547d4466a6baed213b10173d5a875"
+    },
+    {
+      "id": "percy",
+      "fileTitle": "Xander Berkeley 2016.jpg",
+      "path": "app/src/main/assets/cast/percy.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Xander_Berkeley_2016.jpg",
+      "author": "dwhartwig",
+      "attribution": "dwhartwig",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "90446df30c3ed3f8ba3ef227aa77e72d536f0f06a2fc4b96d3fc2843d54225bc"
+    },
+    {
+      "id": "thom",
+      "fileTitle": "Ashton Holmes 2010.jpg",
+      "path": "app/src/main/assets/cast/thom.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ashton_Holmes_2010.jpg",
+      "author": "Miguel_Velilla,_Ashton_Homes,_Tara_(2010).jpg: ealflyer2004\nderivative work: RanZag",
+      "attribution": "Miguel_Velilla,_Ashton_Homes,_Tara_(2010).jpg: ealflyer2004\nderivative work: RanZag",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "590e78380461cee7b41d57e903651cdf1cc42a255ab9015472b2b62b28e8478c"
+    },
+    {
+      "id": "jaden",
+      "fileTitle": "Tiffany Hines LF.jpg",
+      "path": "app/src/main/assets/cast/jaden.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Tiffany_Hines_LF.jpg",
+      "author": "lukeford.net",
+      "attribution": "lukeford.net",
+      "license": "CC BY 2.5",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "2f83944c3812742a5cdfe67f8d750e00f0ce3f9e5f19dd4b71eca4bee81da013"
+    },
+    {
+      "id": "owen",
+      "fileTitle": "Devon Sawa by Gage Skidmore.jpg",
+      "path": "app/src/main/assets/cast/owen.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Devon_Sawa_by_Gage_Skidmore.jpg",
+      "author": "Gage Skidmore",
+      "attribution": "Gage Skidmore",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "fc32ad1b23b17401aca5fa8bb115c0e6c876009fabca4774558188b7a2097d88"
+    },
+    {
+      "id": "sonya",
+      "fileTitle": "Lyndie Greenwood by Gage Skidmore.jpg",
+      "path": "app/src/main/assets/cast/sonya.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Lyndie_Greenwood_by_Gage_Skidmore.jpg",
+      "author": "Gage Skidmore",
+      "attribution": "Gage Skidmore",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "c68f9bbbfd4254a9884d6a67260ae58988c7045e5f111bd1bacfaa2e379bbbef"
+    },
+    {
+      "id": "ryan",
+      "fileTitle": "Noah Bean 2013 (cropped).jpg",
+      "path": "app/src/main/assets/cast/ryan.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Noah_Bean_2013_(cropped).jpg",
+      "author": "Thibault",
+      "attribution": "Thibault",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "changes": "Wikimedia thumbnail, 640 px",
+      "sha256": "8c0cf241bdb4794b76877319dad4e5ca84feed74463f2433ded6e1e9138fe30f"
+    }
+  ],
+  "failed": []
+}
