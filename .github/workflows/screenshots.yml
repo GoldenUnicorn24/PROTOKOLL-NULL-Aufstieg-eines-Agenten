@@ -1,0 +1,43 @@
+name: Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "app/src/main/**"
+      - "app/src/test/java/de/protokollnull/agent/ScreenshotTest.kt"
+      - ".github/workflows/screenshots.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: screenshots
+  cancel-in-progress: true
+
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Screenshots mit Roborazzi aufnehmen
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon recordRoborazziDebug --tests "de.protokollnull.agent.ScreenshotTest" 2>&1 | tee shots.log; exit ${PIPESTATUS[0]}
+      - name: Screenshots committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/screenshots
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: Screenshots der Kernscreens aktualisiert [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
