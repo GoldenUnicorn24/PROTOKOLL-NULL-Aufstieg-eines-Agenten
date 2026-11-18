@@ -1,0 +1,288 @@
+[
+  {
+    "id": "ev_michael_train",
+    "title": "Zusatztraining",
+    "locationId": "training",
+    "npcId": "michael",
+    "minAge": 16,
+    "description": "Michael bietet dir eine freiwillige Übungsstunde an.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_alex_lunch",
+    "title": "Mittagspause",
+    "locationId": "canteen",
+    "npcId": "alex",
+    "minAge": 16,
+    "description": "Alex fragt, ob du dich zu ihr setzen möchtest.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_birkhoff_help",
+    "title": "Technikproblem",
+    "locationId": "tech",
+    "npcId": "birkhoff",
+    "minAge": 16,
+    "description": "Birkhoff braucht Hilfe bei einer Datenanalyse.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_amanda_interview",
+    "title": "Einzelgespräch",
+    "locationId": "director",
+    "npcId": "amanda",
+    "minAge": 16,
+    "description": "Amanda möchte deine neue Identität besprechen.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_percy_check",
+    "title": "Direktorengespräch",
+    "locationId": "director",
+    "npcId": "percy",
+    "minAge": 16,
+    "description": "Percy erkundigt sich auffällig genau nach deiner Herkunft.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_thom_friend",
+    "title": "Trainingspartner",
+    "locationId": "training",
+    "npcId": "thom",
+    "minAge": 16,
+    "description": "Thom schlägt gemeinsames Training vor.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_jaden_rival",
+    "title": "Ranglistenstreit",
+    "locationId": "training",
+    "npcId": "jaden",
+    "minAge": 16,
+    "description": "Jaden fordert dich zu einem fairen Wettkampf heraus.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_maya_walk",
+    "title": "Gespräch am Abend",
+    "locationId": "dorm",
+    "npcId": "maya",
+    "minAge": 16,
+    "description": "Maya möchte dich besser kennenlernen.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_ethan_challenge",
+    "title": "Herausforderung",
+    "locationId": "training",
+    "npcId": "ethan",
+    "minAge": 16,
+    "description": "Ethan möchte seine Leistungen mit dir vergleichen.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_owen_tip",
+    "title": "Ein Rat",
+    "locationId": "hq",
+    "npcId": "owen",
+    "minAge": 18,
+    "description": "Owen gibt einen ungewöhnlichen Hinweis.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_nikita_signal",
+    "title": "Anonyme Nachricht",
+    "locationId": "city",
+    "npcId": "nikita",
+    "minAge": 18,
+    "description": "Eine Nachricht stellt die Motive der Division infrage.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_ryan_file",
+    "title": "Datenlücke",
+    "locationId": "tech",
+    "npcId": "ryan",
+    "minAge": 18,
+    "description": "Ein Aktenwiderspruch weist auf PHOENIX hin.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  },
+  {
+    "id": "ev_sonya_debug",
+    "title": "Verschlüsselte Anfrage",
+    "locationId": "tech",
+    "npcId": "sonya",
+    "minAge": 18,
+    "description": "Sonya bittet um Unterstützung bei einem Rätsel.",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Zustimmen",
+        "trustDelta": 3,
+        "xp": 45
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "trustDelta": -1,
+        "xp": 0
+      }
+    ]
+  }
+]

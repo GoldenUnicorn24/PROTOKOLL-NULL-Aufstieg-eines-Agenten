@@ -1,0 +1,38 @@
+[
+  {
+    "id": "division",
+    "name": "Division",
+    "stance": "neutral",
+    "description": "Die geheime Behörde und Heimat deiner neuen Ausbildung."
+  },
+  {
+    "id": "phoenix",
+    "name": "Projekt PHOENIX",
+    "stance": "hidden",
+    "description": "Schattenprogramm aus deiner Vergangenheit."
+  },
+  {
+    "id": "independent",
+    "name": "Abtrünnige Agenten",
+    "stance": "neutral",
+    "description": "Ehemalige Division-Mitarbeiter."
+  },
+  {
+    "id": "government",
+    "name": "Regierungsaufsicht",
+    "stance": "ally",
+    "description": "Wenige Entscheidungsträger wissen um deine Herkunft."
+  },
+  {
+    "id": "syndicate",
+    "name": "Black Meridian",
+    "stance": "hostile",
+    "description": "Fiktives Netzwerk für die Hauptkampagne."
+  },
+  {
+    "id": "civilian",
+    "name": "Zivilbevölkerung",
+    "stance": "neutral",
+    "description": "Informanten, Familie und Alltag außerhalb der Division."
+  }
+]

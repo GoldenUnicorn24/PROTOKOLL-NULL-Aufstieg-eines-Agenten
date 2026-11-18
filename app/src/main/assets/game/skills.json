@@ -1,0 +1,218 @@
+[
+  {
+    "id": "defense",
+    "name": "Defensive Haltung",
+    "tree": "kampf",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+  },
+  {
+    "id": "focus",
+    "name": "Konzentration",
+    "tree": "kampf",
+    "maxRank": 5,
+    "prerequisite": "defense",
+    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+  },
+  {
+    "id": "weapon_handling",
+    "name": "Waffenbeherrschung",
+    "tree": "kampf",
+    "maxRank": 5,
+    "prerequisite": "focus",
+    "description": "Aktive und passive Verbesserungen im Bereich kampf."
+  },
+  {
+    "id": "disguise",
+    "name": "Legende aufbauen",
+    "tree": "tarnung",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+  },
+  {
+    "id": "blend_in",
+    "name": "Unauffällig bleiben",
+    "tree": "tarnung",
+    "maxRank": 5,
+    "prerequisite": "disguise",
+    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+  },
+  {
+    "id": "shadowstep",
+    "name": "Bewegung im Schatten",
+    "tree": "tarnung",
+    "maxRank": 5,
+    "prerequisite": "blend_in",
+    "description": "Aktive und passive Verbesserungen im Bereich tarnung."
+  },
+  {
+    "id": "empathy",
+    "name": "Empathie",
+    "tree": "psychologie",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+  },
+  {
+    "id": "interview",
+    "name": "Gesprächsführung",
+    "tree": "psychologie",
+    "maxRank": 5,
+    "prerequisite": "empathy",
+    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+  },
+  {
+    "id": "lie_detector",
+    "name": "Widersprüche erkennen",
+    "tree": "psychologie",
+    "maxRank": 5,
+    "prerequisite": "interview",
+    "description": "Aktive und passive Verbesserungen im Bereich psychologie."
+  },
+  {
+    "id": "analysis",
+    "name": "Datenanalyse",
+    "tree": "technik",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich technik."
+  },
+  {
+    "id": "electronics",
+    "name": "Elektronik",
+    "tree": "technik",
+    "maxRank": 5,
+    "prerequisite": "analysis",
+    "description": "Aktive und passive Verbesserungen im Bereich technik."
+  },
+  {
+    "id": "systems",
+    "name": "Systemverständnis",
+    "tree": "technik",
+    "maxRank": 5,
+    "prerequisite": "electronics",
+    "description": "Aktive und passive Verbesserungen im Bereich technik."
+  },
+  {
+    "id": "negotiation",
+    "name": "Verhandeln",
+    "tree": "diplomatie",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+  },
+  {
+    "id": "language",
+    "name": "Sprachen",
+    "tree": "diplomatie",
+    "maxRank": 5,
+    "prerequisite": "negotiation",
+    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+  },
+  {
+    "id": "persuasion",
+    "name": "Überzeugen",
+    "tree": "diplomatie",
+    "maxRank": 5,
+    "prerequisite": "language",
+    "description": "Aktive und passive Verbesserungen im Bereich diplomatie."
+  },
+  {
+    "id": "inspire",
+    "name": "Motivieren",
+    "tree": "fuehrung",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+  },
+  {
+    "id": "planning",
+    "name": "Teamplanung",
+    "tree": "fuehrung",
+    "maxRank": 5,
+    "prerequisite": "inspire",
+    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+  },
+  {
+    "id": "logistics",
+    "name": "Einsatzlogistik",
+    "tree": "fuehrung",
+    "maxRank": 5,
+    "prerequisite": "planning",
+    "description": "Aktive und passive Verbesserungen im Bereich fuehrung."
+  },
+  {
+    "id": "first_aid",
+    "name": "Erste Hilfe",
+    "tree": "medizin",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+  },
+  {
+    "id": "stabilize",
+    "name": "Stabilisierung",
+    "tree": "medizin",
+    "maxRank": 5,
+    "prerequisite": "first_aid",
+    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+  },
+  {
+    "id": "rehab",
+    "name": "Regeneration",
+    "tree": "medizin",
+    "maxRank": 5,
+    "prerequisite": "stabilize",
+    "description": "Aktive und passive Verbesserungen im Bereich medizin."
+  },
+  {
+    "id": "observe",
+    "name": "Beobachtung",
+    "tree": "aufklaerung",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+  },
+  {
+    "id": "evidence",
+    "name": "Beweissicherung",
+    "tree": "aufklaerung",
+    "maxRank": 5,
+    "prerequisite": "observe",
+    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+  },
+  {
+    "id": "profiling",
+    "name": "Fallanalyse",
+    "tree": "aufklaerung",
+    "maxRank": 5,
+    "prerequisite": "evidence",
+    "description": "Aktive und passive Verbesserungen im Bereich aufklaerung."
+  },
+  {
+    "id": "stamina",
+    "name": "Ausdauer",
+    "tree": "ueberleben",
+    "maxRank": 5,
+    "prerequisite": null,
+    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+  },
+  {
+    "id": "orientation",
+    "name": "Orientierung",
+    "tree": "ueberleben",
+    "maxRank": 5,
+    "prerequisite": "stamina",
+    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+  },
+  {
+    "id": "resilience",
+    "name": "Belastbarkeit",
+    "tree": "ueberleben",
+    "maxRank": 5,
+    "prerequisite": "orientation",
+    "description": "Aktive und passive Verbesserungen im Bereich ueberleben."
+  }
+]

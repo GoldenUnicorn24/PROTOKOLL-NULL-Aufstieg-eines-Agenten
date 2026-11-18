@@ -1,0 +1,274 @@
+[
+  {
+    "id": "M001",
+    "title": "Erster Dienstantritt",
+    "locationId": "training",
+    "type": "training",
+    "minRank": 1,
+    "minAge": 16,
+    "threat": 1,
+    "xp": 120,
+    "description": "Mission 1 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M002",
+    "title": "Die verschwundene Akte",
+    "locationId": "archives",
+    "type": "investigation",
+    "minRank": 1,
+    "minAge": 16,
+    "threat": 1,
+    "xp": 160,
+    "description": "Mission 2 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M003",
+    "title": "Schichtwechsel",
+    "locationId": "hq",
+    "type": "social",
+    "minRank": 1,
+    "minAge": 16,
+    "threat": 1,
+    "xp": 130,
+    "description": "Mission 3 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M004",
+    "title": "Training unter Michael",
+    "locationId": "training",
+    "type": "training",
+    "minRank": 1,
+    "minAge": 16,
+    "threat": 2,
+    "xp": 220,
+    "description": "Mission 4 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M005",
+    "title": "Die Spur im Archiv",
+    "locationId": "archives",
+    "type": "investigation",
+    "minRank": 2,
+    "minAge": 16,
+    "threat": 2,
+    "xp": 280,
+    "description": "Mission 5 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M006",
+    "title": "Probealarm",
+    "locationId": "training",
+    "type": "tactical",
+    "minRank": 2,
+    "minAge": 16,
+    "threat": 2,
+    "xp": 300,
+    "description": "Mission 6 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": "arrival_001"
+  },
+  {
+    "id": "M007",
+    "title": "Gespräch mit Amanda",
+    "locationId": "director",
+    "type": "dialogue",
+    "minRank": 2,
+    "minAge": 16,
+    "threat": 2,
+    "xp": 240,
+    "description": "Mission 7 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M008",
+    "title": "Der erste Informant",
+    "locationId": "city",
+    "type": "undercover",
+    "minRank": 3,
+    "minAge": 17,
+    "threat": 2,
+    "xp": 350,
+    "description": "Mission 8 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M009",
+    "title": "Verschlüsselter Hinweis",
+    "locationId": "tech",
+    "type": "investigation",
+    "minRank": 3,
+    "minAge": 17,
+    "threat": 2,
+    "xp": 380,
+    "description": "Mission 9 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M010",
+    "title": "Beweisaufnahme am Hafen",
+    "locationId": "harbor",
+    "type": "investigation",
+    "minRank": 3,
+    "minAge": 17,
+    "threat": 3,
+    "xp": 420,
+    "description": "Mission 10 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M011",
+    "title": "Ausbildung zum Junior-Agenten",
+    "locationId": "training",
+    "type": "training",
+    "minRank": 4,
+    "minAge": 18,
+    "threat": 3,
+    "xp": 500,
+    "description": "Mission 11 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M012",
+    "title": "Operation Nachtfall",
+    "locationId": "harbor",
+    "type": "tactical",
+    "minRank": 4,
+    "minAge": 18,
+    "threat": 4,
+    "xp": 800,
+    "description": "Mission 12 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M013",
+    "title": "Verlorener Kontakt",
+    "locationId": "safehouse",
+    "type": "rescue",
+    "minRank": 4,
+    "minAge": 18,
+    "threat": 4,
+    "xp": 750,
+    "description": "Mission 13 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M014",
+    "title": "Falsche Identität",
+    "locationId": "embassy",
+    "type": "undercover",
+    "minRank": 5,
+    "minAge": 18,
+    "threat": 4,
+    "xp": 900,
+    "description": "Mission 14 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M015",
+    "title": "Die Wahrheit über PHOENIX",
+    "locationId": "archives",
+    "type": "story",
+    "minRank": 5,
+    "minAge": 18,
+    "threat": 5,
+    "xp": 1200,
+    "description": "Mission 15 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  },
+  {
+    "id": "M016",
+    "title": "Abstimmung im Direktorat",
+    "locationId": "director",
+    "type": "management",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 4,
+    "xp": 1400,
+    "description": "Mission 16 mit verbundenen Story- und NPC-Entscheidungen.",
+    "steps": [
+      "Briefing prüfen",
+      "Vorgehen wählen",
+      "Konsequenzen auswerten"
+    ],
+    "storyNodeId": null
+  }
+]

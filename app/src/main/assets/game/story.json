@@ -1,0 +1,227 @@
+[
+  {
+    "id": "arrival_001",
+    "chapter": "Ankunft",
+    "speakerId": "michael",
+    "text": "Willkommen bei Division. Deine Akte ist ungewöhnlich kurz. Erzählst du mir, wer du wirklich bist?",
+    "choices": [
+      {
+        "id": "quiet",
+        "text": "Meine Vergangenheit spielt keine Rolle.",
+        "nextNode": "arrival_002",
+        "trustDelta": 1
+      },
+      {
+        "id": "truth",
+        "text": "Ich wurde von der Regierung ausgebildet.",
+        "nextNode": "arrival_003",
+        "trustDelta": 2
+      }
+    ]
+  },
+  {
+    "id": "arrival_002",
+    "chapter": "Ankunft",
+    "speakerId": "michael",
+    "text": "Du behältst deine Geheimnisse. Das ist dein gutes Recht. Hier musst du trotzdem deinen Platz finden.",
+    "choices": [
+      {
+        "id": "follow",
+        "text": "Zum Ausbildungszentrum gehen.",
+        "nextNode": "training_001",
+        "xp": 50
+      }
+    ]
+  },
+  {
+    "id": "arrival_003",
+    "chapter": "Ankunft",
+    "speakerId": "michael",
+    "text": "Interessant. Dann solltest du wissen, dass du hier wieder ganz von vorn anfängst.",
+    "choices": [
+      {
+        "id": "follow",
+        "text": "Anweisung bestätigen.",
+        "nextNode": "training_001",
+        "xp": 50
+      }
+    ]
+  },
+  {
+    "id": "training_001",
+    "chapter": "Die ersten Tage",
+    "speakerId": "thom",
+    "text": "Du bist der Neue, oder? Ich bin Thom. Hast du heute schon den Trainingsplan gesehen?",
+    "choices": [
+      {
+        "id": "friend",
+        "text": "Danke, wir können zusammen trainieren.",
+        "nextNode": "training_002",
+        "trustDelta": 5,
+        "xp": 40
+      },
+      {
+        "id": "solo",
+        "text": "Ich komme alleine klar.",
+        "nextNode": "training_002",
+        "trustDelta": -2,
+        "xp": 25
+      }
+    ]
+  },
+  {
+    "id": "training_002",
+    "chapter": "Die ersten Tage",
+    "speakerId": "michael",
+    "text": "Die erste Beurteilung steht an. Deine Entscheidungen zählen mindestens so viel wie dein Können.",
+    "choices": [
+      {
+        "id": "proceed",
+        "text": "Prüfung beginnen.",
+        "nextNode": "assessment_001"
+      }
+    ]
+  },
+  {
+    "id": "assessment_001",
+    "chapter": "Die Beurteilung",
+    "speakerId": "michael",
+    "text": "Ein Teamkollege gerät im Training in Schwierigkeiten. Was ist dir wichtiger?",
+    "choices": [
+      {
+        "id": "help",
+        "text": "Dem Teamkollegen helfen.",
+        "nextNode": "assessment_team",
+        "trustDelta": 8,
+        "xp": 80
+      },
+      {
+        "id": "finish",
+        "text": "Prüfung zuerst zu Ende führen.",
+        "nextNode": "assessment_solo",
+        "trustDelta": -3,
+        "xp": 80
+      }
+    ]
+  },
+  {
+    "id": "assessment_team",
+    "chapter": "Die Beurteilung",
+    "speakerId": "michael",
+    "text": "Du hast eine richtige Priorität erkannt: Du bist nur so gut wie dein Team.",
+    "choices": [
+      {
+        "id": "next",
+        "text": "Weiter.",
+        "nextNode": "social_001"
+      }
+    ]
+  },
+  {
+    "id": "assessment_solo",
+    "chapter": "Die Beurteilung",
+    "speakerId": "michael",
+    "text": "Schnell warst du. Aber das allein macht noch keinen Division-Agenten.",
+    "choices": [
+      {
+        "id": "next",
+        "text": "Weiter.",
+        "nextNode": "social_001"
+      }
+    ]
+  },
+  {
+    "id": "social_001",
+    "chapter": "Das neue Zuhause",
+    "speakerId": "alex",
+    "text": "Man sagt, niemand habe deine Akte gesehen. Vielleicht sind wir uns ähnlicher, als du denkst.",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Nach ihrer Geschichte fragen.",
+        "nextNode": "social_002",
+        "trustDelta": 4
+      },
+      {
+        "id": "end",
+        "text": "Mich verabschieden.",
+        "nextNode": "phoenix_001"
+      }
+    ]
+  },
+  {
+    "id": "social_002",
+    "chapter": "Das neue Zuhause",
+    "speakerId": "alex",
+    "text": "Manchmal ist es besser, nicht alles zu wissen. Aber vielleicht können wir einander helfen.",
+    "choices": [
+      {
+        "id": "continue",
+        "text": "Zusammen nach Antworten suchen.",
+        "nextNode": "phoenix_001",
+        "trustDelta": 5
+      }
+    ]
+  },
+  {
+    "id": "phoenix_001",
+    "chapter": "Die Akte",
+    "speakerId": "voss",
+    "text": "Eine unbekannte Nummer meldet sich: Es gibt Dinge, die niemand in Division über dich erfahren darf.",
+    "choices": [
+      {
+        "id": "answer",
+        "text": "Wer spricht da?",
+        "nextNode": "phoenix_002"
+      },
+      {
+        "id": "ignore",
+        "text": "Verbindung abbrechen.",
+        "nextNode": "phoenix_003"
+      }
+    ]
+  },
+  {
+    "id": "phoenix_002",
+    "chapter": "Die Akte",
+    "speakerId": "voss",
+    "text": "Du kennst meine Stimme. Vergiss nicht, woher du kommst.",
+    "choices": [
+      {
+        "id": "continue",
+        "text": "Nach dem Geheimprogramm recherchieren.",
+        "nextNode": "phoenix_003",
+        "xp": 100
+      }
+    ]
+  },
+  {
+    "id": "phoenix_003",
+    "chapter": "Die Akte",
+    "speakerId": "birkhoff",
+    "text": "Seltsam. Ein Teil deiner Personaldatei wurde mit einer Sicherheitsfreigabe versehen, die ich noch nie gesehen habe.",
+    "choices": [
+      {
+        "id": "investigate",
+        "text": "Um Hilfe bitten.",
+        "nextNode": "chapter_end",
+        "trustDelta": 5,
+        "xp": 100
+      },
+      {
+        "id": "hide",
+        "text": "Die Spur verwischen lassen.",
+        "nextNode": "chapter_end",
+        "trustDelta": -2,
+        "xp": 60
+      }
+    ]
+  },
+  {
+    "id": "chapter_end",
+    "chapter": "Die Akte",
+    "speakerId": null,
+    "text": "Kapitel 1 abgeschlossen. Die offene Spielwelt und weitere Missionen warten.",
+    "choices": []
+  }
+]

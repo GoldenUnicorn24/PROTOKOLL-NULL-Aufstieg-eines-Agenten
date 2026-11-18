@@ -1,0 +1,219 @@
+[
+  {
+    "id": "michael",
+    "name": "Michael",
+    "role": "Leitender Ausbilder",
+    "factionId": "division",
+    "ageAtStart": 35,
+    "actorName": "Shane West",
+    "portraitAsset": "cast/michael.jpg",
+    "seriesCharacter": true,
+    "description": "Mentor. Misstraut Aktenlücken und legt Wert auf Disziplin.",
+    "initialTrust": 65,
+    "tags": [
+      "michael",
+      "mentor"
+    ]
+  },
+  {
+    "id": "nikita",
+    "name": "Nikita Mears",
+    "role": "Abtrünnige Spezialagentin",
+    "factionId": "independent",
+    "ageAtStart": 29,
+    "actorName": "Maggie Q",
+    "portraitAsset": "cast/nikita.jpg",
+    "seriesCharacter": true,
+    "description": "Eine legendäre Agentin. Ihre Loyalität ist komplex.",
+    "initialTrust": 20,
+    "tags": [
+      "nikita mears",
+      "npc"
+    ]
+  },
+  {
+    "id": "alex",
+    "name": "Alex Udinov",
+    "role": "Rekrutin",
+    "factionId": "division",
+    "ageAtStart": 17,
+    "actorName": "Lyndsy Fonseca",
+    "portraitAsset": "cast/alex.jpg",
+    "seriesCharacter": true,
+    "description": "Wachsame junge Rekrutin mit eigener Vergangenheit.",
+    "initialTrust": 45,
+    "tags": [
+      "alex udinov",
+      "npc"
+    ]
+  },
+  {
+    "id": "birkhoff",
+    "name": "Seymour Birkhoff",
+    "role": "Technischer Leiter",
+    "factionId": "division",
+    "ageAtStart": 28,
+    "actorName": "Aaron Stanford",
+    "portraitAsset": "cast/birkhoff.jpg",
+    "seriesCharacter": true,
+    "description": "Genialer Technikexperte mit sarkastischem Humor.",
+    "initialTrust": 50,
+    "tags": [
+      "seymour birkhoff",
+      "npc"
+    ]
+  },
+  {
+    "id": "amanda",
+    "name": "Amanda",
+    "role": "Psychologische Leiterin",
+    "factionId": "division",
+    "ageAtStart": 42,
+    "actorName": "Melinda Clarke",
+    "portraitAsset": "cast/amanda.jpg",
+    "seriesCharacter": true,
+    "description": "Liest Menschen wie offene Bücher und manipuliert geschickt.",
+    "initialTrust": 35,
+    "tags": [
+      "amanda",
+      "npc"
+    ]
+  },
+  {
+    "id": "percy",
+    "name": "Percy",
+    "role": "Direktor",
+    "factionId": "division",
+    "ageAtStart": 55,
+    "actorName": "Xander Berkeley",
+    "portraitAsset": "cast/percy.jpg",
+    "seriesCharacter": true,
+    "description": "Kontrolliert Division und ihre verborgenen Interessen.",
+    "initialTrust": 30,
+    "tags": [
+      "percy",
+      "npc"
+    ]
+  },
+  {
+    "id": "thom",
+    "name": "Thom",
+    "role": "Fortgeschrittener Rekrut",
+    "factionId": "division",
+    "ageAtStart": 19,
+    "actorName": "Ashton Holmes",
+    "portraitAsset": "cast/thom.jpg",
+    "seriesCharacter": true,
+    "description": "Diszipliniert, empathisch und ambitioniert.",
+    "initialTrust": 50,
+    "tags": [
+      "thom",
+      "npc"
+    ]
+  },
+  {
+    "id": "jaden",
+    "name": "Jaden",
+    "role": "Rekrutin",
+    "factionId": "division",
+    "ageAtStart": 18,
+    "actorName": "Tiffany Hines",
+    "portraitAsset": "cast/jaden.jpg",
+    "seriesCharacter": true,
+    "description": "Wettbewerbsorientiert, scharfzüngig und ehrgeizig.",
+    "initialTrust": 40,
+    "tags": [
+      "jaden",
+      "npc"
+    ]
+  },
+  {
+    "id": "owen",
+    "name": "Owen Elliot",
+    "role": "Ehemaliger Wächter",
+    "factionId": "division",
+    "ageAtStart": 33,
+    "actorName": "Devon Sawa",
+    "portraitAsset": "cast/owen.jpg",
+    "seriesCharacter": true,
+    "description": "Hält sich an einen eigenen Ehrenkodex.",
+    "initialTrust": 45,
+    "tags": [
+      "owen elliot",
+      "npc"
+    ]
+  },
+  {
+    "id": "sonya",
+    "name": "Sonya",
+    "role": "Technikspezialistin",
+    "factionId": "division",
+    "ageAtStart": 27,
+    "actorName": "Lyndie Greenwood",
+    "portraitAsset": "cast/sonya.jpg",
+    "seriesCharacter": true,
+    "description": "Zuverlässige Analystin mit verschlüsselter Vergangenheit.",
+    "initialTrust": 50,
+    "tags": [
+      "sonya",
+      "npc"
+    ]
+  },
+  {
+    "id": "ryan",
+    "name": "Ryan Fletcher",
+    "role": "Geheimdienstanalyst",
+    "factionId": "division",
+    "ageAtStart": 35,
+    "actorName": "Noah Bean",
+    "portraitAsset": "cast/ryan.jpg",
+    "seriesCharacter": true,
+    "description": "Verbindet Informationen und betrachtet Konsequenzen.",
+    "initialTrust": 55,
+    "tags": [
+      "ryan fletcher",
+      "npc"
+    ]
+  },
+  {
+    "id": "voss",
+    "name": "Adrian Voss",
+    "role": "Leitender PHOENIX-Ausbilder",
+    "factionId": "phoenix",
+    "ageAtStart": 48,
+    "portraitAsset": "cast/placeholder.svg",
+    "description": "Kennt deine verborgene Vergangenheit.",
+    "initialTrust": 65,
+    "tags": [
+      "mentor",
+      "phoenix"
+    ]
+  },
+  {
+    "id": "maya",
+    "name": "Maya Winters",
+    "role": "Rekrutin",
+    "factionId": "division",
+    "ageAtStart": 17,
+    "portraitAsset": "cast/placeholder.svg",
+    "description": "Loyale und ambitionierte Rekrutin; Freundschaft oder altersgerechte Romanze möglich.",
+    "initialTrust": 45,
+    "tags": [
+      "friend",
+      "romance"
+    ]
+  },
+  {
+    "id": "ethan",
+    "name": "Ethan Cole",
+    "role": "Rekrut",
+    "factionId": "division",
+    "ageAtStart": 18,
+    "portraitAsset": "cast/placeholder.svg",
+    "description": "Begabter Rivale; kann zum Freund werden.",
+    "initialTrust": 35,
+    "tags": [
+      "rival"
+    ]
+  }
+]

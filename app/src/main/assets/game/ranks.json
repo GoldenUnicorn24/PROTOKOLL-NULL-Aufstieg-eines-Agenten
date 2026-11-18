@@ -1,0 +1,98 @@
+[
+  {
+    "rank": 1,
+    "name": "Rekrut",
+    "minLevel": 1,
+    "minAge": 16,
+    "minReputation": 0,
+    "description": "Beförderungsstufe 1 in der Geheimorganisation."
+  },
+  {
+    "rank": 2,
+    "name": "Fortgeschrittener Rekrut",
+    "minLevel": 3,
+    "minAge": 16,
+    "minReputation": 10,
+    "description": "Beförderungsstufe 2 in der Geheimorganisation."
+  },
+  {
+    "rank": 3,
+    "name": "Operativer Anwärter",
+    "minLevel": 5,
+    "minAge": 17,
+    "minReputation": 25,
+    "description": "Beförderungsstufe 3 in der Geheimorganisation."
+  },
+  {
+    "rank": 4,
+    "name": "Junior-Agent",
+    "minLevel": 8,
+    "minAge": 18,
+    "minReputation": 50,
+    "description": "Beförderungsstufe 4 in der Geheimorganisation."
+  },
+  {
+    "rank": 5,
+    "name": "Division-Agent",
+    "minLevel": 12,
+    "minAge": 18,
+    "minReputation": 80,
+    "description": "Beförderungsstufe 5 in der Geheimorganisation."
+  },
+  {
+    "rank": 6,
+    "name": "Senior-Agent",
+    "minLevel": 18,
+    "minAge": 20,
+    "minReputation": 150,
+    "description": "Beförderungsstufe 6 in der Geheimorganisation."
+  },
+  {
+    "rank": 7,
+    "name": "Spezialagent",
+    "minLevel": 26,
+    "minAge": 21,
+    "minReputation": 250,
+    "description": "Beförderungsstufe 7 in der Geheimorganisation."
+  },
+  {
+    "rank": 8,
+    "name": "Teamleiter",
+    "minLevel": 34,
+    "minAge": 22,
+    "minReputation": 350,
+    "description": "Beförderungsstufe 8 in der Geheimorganisation."
+  },
+  {
+    "rank": 9,
+    "name": "Einsatzkommandant",
+    "minLevel": 44,
+    "minAge": 24,
+    "minReputation": 500,
+    "description": "Beförderungsstufe 9 in der Geheimorganisation."
+  },
+  {
+    "rank": 10,
+    "name": "Sektionsleiter",
+    "minLevel": 56,
+    "minAge": 25,
+    "minReputation": 650,
+    "description": "Beförderungsstufe 10 in der Geheimorganisation."
+  },
+  {
+    "rank": 11,
+    "name": "Stellvertretender Direktor",
+    "minLevel": 70,
+    "minAge": 27,
+    "minReputation": 800,
+    "description": "Beförderungsstufe 11 in der Geheimorganisation."
+  },
+  {
+    "rank": 12,
+    "name": "Direktor",
+    "minLevel": 85,
+    "minAge": 30,
+    "minReputation": 1000,
+    "description": "Beförderungsstufe 12 in der Geheimorganisation."
+  }
+]

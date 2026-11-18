@@ -1,0 +1,92 @@
+[
+  {
+    "id": "hq",
+    "name": "Division-Hauptquartier",
+    "type": "base",
+    "description": "Verdeckte Zentrale."
+  },
+  {
+    "id": "training",
+    "name": "Ausbildungszentrum",
+    "type": "training",
+    "description": "Fitness, Prüfungen und taktisches Training."
+  },
+  {
+    "id": "dorm",
+    "name": "Rekrutenquartier",
+    "type": "social",
+    "description": "Schlafplätze, Briefe und Tagespläne."
+  },
+  {
+    "id": "canteen",
+    "name": "Aufenthaltsbereich",
+    "type": "social",
+    "description": "Gespräche, Freundschaften und Freizeit."
+  },
+  {
+    "id": "armory",
+    "name": "Ausrüstungskammer",
+    "type": "equipment",
+    "description": "Ausrüstung und Wartung."
+  },
+  {
+    "id": "medical",
+    "name": "Krankenstation",
+    "type": "medical",
+    "description": "Heilung und Regeneration."
+  },
+  {
+    "id": "tech",
+    "name": "Techniklabor",
+    "type": "research",
+    "description": "Birkhoffs Arbeitsplatz."
+  },
+  {
+    "id": "director",
+    "name": "Direktorat",
+    "type": "management",
+    "description": "Percys geschütztes Büro."
+  },
+  {
+    "id": "archives",
+    "name": "Geheimarchiv",
+    "type": "story",
+    "description": "Streng gesicherte Akten."
+  },
+  {
+    "id": "city",
+    "name": "Innenstadt",
+    "type": "city",
+    "description": "Ziviles Doppelleben und verdeckte Treffen."
+  },
+  {
+    "id": "harbor",
+    "name": "Industriehafen",
+    "type": "mission",
+    "description": "Frachtgelände und Observierung."
+  },
+  {
+    "id": "airport",
+    "name": "Internationaler Flughafen",
+    "type": "mission",
+    "description": "Transit und Spurensuche."
+  },
+  {
+    "id": "safehouse",
+    "name": "Konspirative Wohnung",
+    "type": "mission",
+    "description": "Versteck und Kontaktpunkt."
+  },
+  {
+    "id": "hospital",
+    "name": "Städtisches Krankenhaus",
+    "type": "mission",
+    "description": "Schutz und Rettungsoperationen."
+  },
+  {
+    "id": "embassy",
+    "name": "Diplomatenviertel",
+    "type": "mission",
+    "description": "Soziale Undercovereinsätze."
+  }
+]
