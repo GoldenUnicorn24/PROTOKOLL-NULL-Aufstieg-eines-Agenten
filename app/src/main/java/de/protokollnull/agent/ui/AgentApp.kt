@@ -77,8 +77,11 @@ fun FullOverlay(content: @Composable () -> Unit) {
 
 @Composable
 private fun ToastHost(toast: Toast?, onDismiss: () -> Unit, modifier: Modifier = Modifier) {
+    val haptics = androidx.compose.ui.platform.LocalHapticFeedback.current
+    val hapticsOn = LocalSettings.current.haptics
     LaunchedEffect(toast?.id) {
-        if (toast != null) { delay(if (toast.lines.size > 2) 5200 else 3400); onDismiss() }
+        if (toast != null) {
+            if (hapticsOn) haptics.performHapticFeedback(if (toast.error) androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress else androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove) delay(if (toast.lines.size > 2) 5200 else 3400); onDismiss() }
     }
     AnimatedVisibility(visible = toast != null, enter = fadeIn() + slideInVertically { it / 2 }, exit = fadeOut() + slideOutVertically { it / 2 }, modifier = modifier) {
         val t = toast ?: return@AnimatedVisibility

@@ -85,7 +85,9 @@ fun ProtokollTheme(settings: Settings, content: @Composable () -> Unit) {
         LocalSettings provides settings,
         LocalDensity provides Density(density.density, density.fontScale * settings.fontScale)
     ) {
-        MaterialTheme(colorScheme = scheme, typography = typography, content = content)
+        MaterialTheme(colorScheme = scheme, typography = typography) {
+            CompositionLocalProvider(LocalContentColor provides Pn.Text, content = content)
+        }
     }
 }
 
