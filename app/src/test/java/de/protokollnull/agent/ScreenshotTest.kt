@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.assertExists
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -49,6 +51,8 @@ class ScreenshotTest {
             .dispatcher(Dispatchers.Unconfined).allowHardware(false).crossfade(false).build()
         compose.setContent { AgentApp(vm, loader) }
         shot("01_start")
+        // Prevent stale hard-coded version captions on the start screen.
+        compose.onNodeWithText("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v${BuildConfig.VERSION_NAME}").assertExists()
 
         vm.newGame(); shot("02_charaktereditor")
         vm.startGame(PlayerCharacter(firstName = "Lena", lastName = "Berg", codename = "Null", gender = "female",

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.protokollnull.agent.BuildConfig
 import de.protokollnull.agent.ui.GameViewModel
 import de.protokollnull.agent.ui.Overlay
 import de.protokollnull.agent.ui.theme.*
@@ -65,7 +66,7 @@ fun StartScreen(vm: GameViewModel) {
             ActionButton("Credits", Modifier.weight(1f), secondary = true, icon = PnIcons.Star) { vm.open(Overlay.Credits) }
         }
         Spacer(Modifier.height(8.dp))
-        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v0.4",
+        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v${BuildConfig.VERSION_NAME}",
             style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
 }
