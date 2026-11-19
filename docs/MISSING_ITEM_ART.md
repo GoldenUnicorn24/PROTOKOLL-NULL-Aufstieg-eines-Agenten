@@ -24,3 +24,15 @@ Optional wünschenswert (nicht erforderlich, ein Mensch kann sie später mit gek
 | `ui/status_mission.svg`, `status_injured.svg`, `status_vacation.svg`, `status_transferred.svg` | Eigene Statussymbole statt farbiger Plaketten |
 | `scenes/hq_rooftop.jpg` | Hintergrund für Dach-Szenen der Alex-Route |
 | `scenes/hq_medical.jpg` | Hintergrund für Krankenstation-Ereignisse |
+
+## v0.7 „Shadow Operations“
+
+Es wurden keine Bilder erzeugt oder heruntergeladen. Taktikkarten, Weltlage und Akten bestehen aus Compose-Grafik und vorhandenen Ortshintergründen. Optional wünschenswert (zum späteren Erstellen mit geklärten Rechten):
+
+| Dateiname (Vorschlag) | Format | Motiv | Zielauflösung |
+|---|---|---|---|
+| `scenes/ops_mission_control.webp` | WebP | Dunkler Einsatzraum mit Bildschirmwand, ohne Personen | 1440×600 |
+| `scenes/ops_case_board.webp` | WebP | Ermittlungswand mit Fotos (gesichtslos), Fäden, Notizen | 1440×600 |
+| `ui/faction_meridian.svg` | SVG | Abstraktes Emblem „Black Meridian“ (fiktiv) | 96×96 |
+| `ui/faction_oversight.svg` | SVG | Abstraktes Emblem Regierungsaufsicht (fiktiv) | 96×96 |
+| `ui/tactical_tiles.svg` | SVG | Kachelset Wand/Tür/Wasser/Glas/Deckung im Dark-Spy-Stil | je 64×64 |

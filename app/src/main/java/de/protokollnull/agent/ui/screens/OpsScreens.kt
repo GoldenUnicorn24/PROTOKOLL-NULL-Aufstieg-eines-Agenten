@@ -2,6 +2,7 @@ package de.protokollnull.agent.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -76,6 +77,7 @@ fun filterContracts(s: GameState, f: BoardFilter): List<Contract> = s.ops.contra
     }
 }.sortedWith(compareBy({ -it.urgency }, { it.expiresDay }, { it.id }))
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BoardFilters(vm: GameViewModel, s: GameState) {
     val data = vm.data
@@ -83,16 +85,25 @@ private fun BoardFilters(vm: GameViewModel, s: GameState) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         val staff = Life.presenceSummary(data, s)
         val avail = Missions.teamCandidates(data, s, MissionDefinition("probe", "", "hq", "x", threat = 1)).size
+        var open by remember { mutableStateOf(false) }
         GlassPanel(padding = 12.dp) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("LAGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent, modifier = Modifier.weight(1f))
+            Text("LAGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Pill("${s.ops.contracts.size} Aufträge")
                 Pill("Team verfügbar $avail", Pn.Ok)
                 (staff[LifeStatus.INJURED]?.size ?: 0).takeIf { it > 0 }?.let { Pill("Verletzt $it", Pn.Danger) }
+                (staff[LifeStatus.MISSION]?.size ?: 0).takeIf { it > 0 }?.let { Pill("Im Einsatz $it", Pn.Warn) }
             }
-            ChipRow(listOf("all" to "Alle Orte") + Ops.regions.filter { r -> s.ops.contracts.any { it.regionId == r } }.map { it to Ops.regionLabel(data, it) }, f.region) { f = f.copy(region = it) }
-            ChipRow(listOf("all" to "Alle Arten") + Ops.archetypes.filter { a -> s.ops.contracts.any { it.archetype == a.id } }.map { it.id to it.label }, f.type) { f = f.copy(type = it) }
-            ChipRow(listOf("all" to "Alles", "urgent" to "Dringend", "short" to "Frist ≤ 2 T.", "multi" to "Mehrtägig", "team" to "Teamauftrag", "easy" to "Gefahr ≤ 2", "hard" to "Gefahr ≥ 4", "chain" to "Kette"), f.tag) { f = f.copy(tag = it) }
+            CompactChips(listOf("all" to "Alles", "urgent" to "Dringend", "short" to "Frist ≤ 2 T.", "multi" to "Mehrtägig", "team" to "Teamauftrag", "easy" to "Gefahr ≤ 2", "hard" to "Gefahr ≥ 4", "chain" to "Kette"), f.tag) { f = f.copy(tag = it) }
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable { open = !open }.padding(vertical = 4.dp)) {
+                val active = listOfNotNull(f.region.takeIf { it != "all" }?.let { Ops.regionLabel(data, it) }, f.type.takeIf { it != "all" }?.let { Ops.archetypeById[it]?.label })
+                Text(if (active.isEmpty()) "Ort & Einsatzart filtern" else "Filter: " + active.joinToString(" · "), style = MaterialTheme.typography.labelMedium, color = Pn.Accent, modifier = Modifier.weight(1f))
+                Text(if (open) "▲" else "▼", color = Pn.Accent)
+            }
+            if (open) {
+                CompactChips(listOf("all" to "Alle Orte") + Ops.regions.filter { r -> s.ops.contracts.any { it.regionId == r } }.map { it to Ops.regionLabel(data, it) }, f.region) { f = f.copy(region = it) }
+                CompactChips(listOf("all" to "Alle Arten") + Ops.archetypes.filter { a -> s.ops.contracts.any { it.archetype == a.id } }.map { it.id to it.label }, f.type) { f = f.copy(type = it) }
+            }
         }
         val list = filterContracts(s, f)
         if (list.isEmpty()) SmallNote(if (s.ops.contracts.isEmpty()) "Keine offenen Aufträge. Neue Aufträge treffen täglich ein." else "Kein Auftrag passt zu diesen Filtern.")
@@ -312,8 +323,8 @@ fun ContractBriefingPanel(vm: GameViewModel, s: GameState, c: Contract) {
         KeyValue("Dringlichkeit", when (c.urgency) { 3 -> "Kritisch"; 2 -> "Dringend"; else -> "Routine" }, if (c.urgency >= 3) Pn.Danger else Pn.Text)
         KeyValue("Frist", Clock.dateLabel(c.expiresDay) + " (noch ${(c.expiresDay - s.clock.day).coerceAtLeast(0)} T.)")
         KeyValue("Dauer", if (c.phases > 1) "${c.phases} Einsatztage · aktuell Tag ${c.phase + 1}" else "1 Einsatztag")
-        entry?.let { KeyValue("Einstieg", it.text) }
-        comp?.takeIf { it.id != "none" }?.let { KeyValue("Auflage", it.label + " – " + it.text, Pn.Warn) }
+        entry?.let { Text("Einstieg: ${it.text}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        comp?.takeIf { it.id != "none" }?.let { Text("Auflage „${it.label}“: ${it.text}", style = MaterialTheme.typography.bodySmall, color = Pn.Warn) }
         c.caseId?.let { KeyValue("Ermittlung", Cases.byId[it]?.title ?: it, Pn.Violet) }
     }
     SectionLabel("Vorgehensweisen")
@@ -375,5 +386,18 @@ fun OpsHqCard(vm: GameViewModel, s: GameState) {
         }
         StatBar("Einfluss Black Meridian", Ops.faction(s, "syndicate").influence, 100, Pn.Danger)
         s.ops.worldLog.lastOrNull()?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2) }
+    }
+}
+
+/** Kompakte, horizontal scrollbare Auswahlchips (spart Platz im Hochformat). */
+@Composable
+fun CompactChips(options: List<Pair<String, String>>, selected: String, onSelect: (String) -> Unit) {
+    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        options.forEach { (id, label) ->
+            val sel = id == selected
+            Text(label, style = MaterialTheme.typography.labelMedium, color = if (sel) Pn.Navy else Pn.Text,
+                modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (sel) Pn.Accent else Color(0x14FFFFFF))
+                    .clickable { onSelect(id) }.padding(horizontal = 10.dp, vertical = 6.dp))
+        }
     }
 }

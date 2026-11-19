@@ -47,11 +47,11 @@ object Ops {
 
     val archetypes: List<Archetype> = listOf(
         Archetype("observation", "Observation", true, listOf("intel", "tech"), listOf(
-            Objective("meeting", "Treffen dokumentieren", "Ein Treffen zwischen {target} und einem Unbekannten im Bereich {region} soll lückenlos dokumentiert werden.", null, "",
+            Objective("meeting", "Treffen dokumentieren", "{Target} trifft im Bereich {region} einen Unbekannten. Das Treffen soll lückenlos dokumentiert werden.", null, "",
                 "Fotos sichern und abziehen" to "Saubere Beweislage, die Zielperson bleibt ahnungslos.", "Dem Unbekannten folgen" to "Mehr Erkenntnisse, aber höheres Risiko, entdeckt zu werden."),
             Objective("courier", "Kurierroute", "Ein Kurier von {faction} pendelt durch {region}. Finde heraus, wem er die Umschläge übergibt.", null, "",
                 "Route melden" to "Die Division kann die Route später überwachen.", "Übergabeort markieren" to "Der Ort wird zur Falle – wenn niemand Verdacht schöpft."),
-            Objective("contact", "Kontaktperson identifizieren", "{target} trifft sich regelmäßig mit jemandem im Bereich {region}. Wer ist die Kontaktperson?", null, "",
+            Objective("contact", "Kontaktperson identifizieren", "{Target} trifft sich regelmäßig mit jemandem im Bereich {region}. Wer ist die Kontaktperson?", null, "",
                 "Identität bestätigen" to "Ein Name für die Akten.", "Kontaktperson ansprechen" to "Eine mögliche Quelle – oder ein Warnsignal für die Gegenseite.")
         ), listOf(
             ap("static", "Feste Position", "Aus einem Versteck beobachten. Geduld statt Bewegung.", Attr.PERCEPTION, "observe", "stealth", risk = "Zeitdruck, wenn sich die Lage ändert"),
@@ -63,7 +63,7 @@ object Ops {
                 "Legende pflegen" to "Ein Zugang für künftige Einsätze bleibt bestehen.", "Information abschöpfen und verschwinden" to "Schnelles Ergebnis, die Legende ist verbrannt."),
             Objective("job", "Aushilfsstelle", "Als Aushilfe im Bereich {region} sollst du herausfinden, wer bei {faction} die Lieferlisten führt.", null, "",
                 "Unauffällig bleiben" to "Die Stelle kann weiter genutzt werden.", "Listen kopieren" to "Wertvolle Daten, aber der Verdacht steigt."),
-            Objective("swap", "Datenträger tauschen", "{target} trägt einen Datenträger mit Kontaktlisten. Tausche ihn unbemerkt aus.", "intel", "",
+            Objective("swap", "Datenträger tauschen", "{Target} trägt einen Datenträger mit Kontaktlisten. Tausche ihn unbemerkt aus.", "intel", "",
                 "Austausch unbemerkt abschließen" to "Die Gegenseite arbeitet mit falschen Daten weiter.", "Original behalten, keine Attrappe" to "Mehr Daten, aber der Diebstahl fällt auf.")
         ), listOf(
             ap("legend", "Ausgearbeitete Legende", "Eine durchdachte Rolle mit Lebenslauf.", Attr.CHARISMA, "disguise", "social", risk = "Detailfragen"),
@@ -85,9 +85,9 @@ object Ops {
         Archetype("negotiation", "Verhandlung", true, listOf("social"), listOf(
             Objective("mediate", "Streit schlichten", "Zwei Informanten im Bereich {region} sind zerstritten. Ohne Einigung verliert die Division beide.", null, "",
                 "Kompromiss vermitteln" to "Beide bleiben Quellen.", "Eine Seite bevorzugen" to "Eine starke Quelle, ein neuer Gegner."),
-            Objective("buy", "Information kaufen", "{target} bietet Wissen über {faction} an – zu einem Preis.", null, "",
+            Objective("buy", "Information kaufen", "{Target} bietet Wissen über {faction} an – zu einem Preis.", null, "",
                 "Fairen Preis zahlen" to "Ein verlässlicher Kontakt.", "Hart verhandeln" to "Günstiger, aber der Kontakt fühlt sich ausgenutzt."),
-            Objective("turn", "Informant gewinnen", "{target} arbeitet für {faction} und zweifelt. Überzeuge die Person, die Seiten zu wechseln.", null, "",
+            Objective("turn", "Informant gewinnen", "{Target} arbeitet für {faction} und zweifelt. Überzeuge die Person, die Seiten zu wechseln.", null, "",
                 "Schutz zusichern" to "Eine wertvolle Quelle – und eine Verantwortung.", "Druck aufbauen" to "Schnelles Ergebnis, brüchiges Vertrauen.")
         ), listOf(
             ap("empathy", "Zuhören", "Bedürfnisse verstehen, Vertrauen aufbauen.", Attr.CHARISMA, "empathy", "social", risk = "Zeitaufwand"),
@@ -107,7 +107,7 @@ object Ops {
             ap("evidence", "Beweissicherung", "Jedes Detail wie für ein Verfahren dokumentieren.", Attr.PERCEPTION, "evidence", "balanced")
         ), "search", maxTeam = 1),
         Archetype("rescue", "Rettung", false, listOf("combat", "medic"), listOf(
-            Objective("hostage", "Festgehaltene Person befreien", "{target} wird im Bereich {region} von {faction} festgehalten.", "extract", "Festgehaltene Person",
+            Objective("hostage", "Festgehaltene Person befreien", "{Target} wird im Bereich {region} von {faction} festgehalten.", "extract", "Festgehaltene Person",
                 "Sofort zur Versorgung bringen" to "Die Person ist in Sicherheit und dankbar.", "Erst befragen, dann versorgen" to "Wertvolle Hinweise, aber Unmut."),
             Objective("agent", "Agentin zurückholen", "Eine Agentin der Division ist im Bereich {region} aufgeflogen und sitzt fest.", "extract", "Agentin",
                 "Legende der Agentin retten" to "Sie kann später weiterarbeiten.", "Alles abbrechen, Hauptsache raus" to "Sicher, aber die Operation ist verloren."),
@@ -123,7 +123,7 @@ object Ops {
                 "Kopien unbemerkt sichern" to "Die Gegenseite ahnt nichts.", "Originale mitnehmen" to "Stärkere Beweise, aber offener Bruch."),
             Objective("drive", "Laufwerk spiegeln", "Ein Rechner im Bereich {region} enthält Kontaktlisten von {faction}.", "intel", "",
                 "Nur spiegeln" to "Unbemerkte Langzeitquelle.", "Spiegeln und Hintertür lassen" to "Mehr Daten später – Birkhoff wird es lieben, Percy weniger."),
-            Objective("source", "Quelle befragen", "{target} kennt Abläufe bei {faction}, will aber nur persönlich reden.", null, "",
+            Objective("source", "Quelle befragen", "{Target} kennt Abläufe bei {faction}, will aber nur persönlich reden.", null, "",
                 "Quelle schützen" to "Die Person bleibt verfügbar.", "Alles sofort aufschreiben" to "Mehr Details, die Quelle ist nervös.")
         ), listOf(
             ap("infiltrate", "Eindringen", "Zu den Infopunkten vordringen.", Attr.PERCEPTION, "blend_in", "stealth", tactical = true, risk = "Wachen"),
@@ -147,7 +147,7 @@ object Ops {
                 "Diskret im Hintergrund" to "Das Treffen bleibt geheim.", "Sichtbare Präsenz" to "Abschreckend, aber Aufmerksamkeit erregend."),
             Objective("witness", "Zeugin bewachen", "Eine Zeugin gegen {faction} wird im Bereich {region} vermutet. Halte die Stellung, bis Verstärkung kommt.", "protect", "Zeugin",
                 "Zeugin beruhigen" to "Sie sagt aus.", "Zeugin sofort verlegen" to "Sicherer Ort, aber sie fühlt sich als Spielfigur."),
-            Objective("conference", "Konferenz sichern", "{target} spricht auf einer Konferenz im Bereich {region}. {faction} hat Interesse an einer Störung.", "protect", "Rednerin",
+            Objective("conference", "Konferenz sichern", "{Target} spricht auf einer Konferenz im Bereich {region}. {faction} hat Interesse an einer Störung.", "protect", "Rednerin",
                 "Unauffällig eingreifen" to "Keine Schlagzeilen.", "Störer festsetzen lassen" to "Ein klares Signal an {faction}.")
         ), listOf(
             ap("perimeter", "Sicherheitsring", "Zugänge planen und besetzen.", Attr.WILLPOWER, "planning", "balanced", tactical = true, risk = "Lücke im Plan"),
@@ -210,7 +210,8 @@ object Ops {
     )
     val clientById = clients.associateBy { it.id }
 
-    private val targets = listOf("einen Kurier", "eine Buchhalterin", "einen Zollbeamten", "eine Journalistin", "einen Ex-Agenten", "einen IT-Dienstleister", "eine Übersetzerin", "einen Spediteur", "eine Laborleiterin")
+    /** Zielpersonen im Nominativ (Satzanfang wird über {Target} großgeschrieben). */
+    private val targets = listOf("ein Kurier", "eine Buchhalterin", "ein Zollbeamter", "eine Journalistin", "ein Ex-Agent", "ein IT-Dienstleister", "eine Übersetzerin", "ein Spediteur", "eine Laborleiterin")
     private val codewords = listOf("Nachtfalke", "Graufeld", "Eisvogel", "Kupferdraht", "Leuchtturm", "Scherbe", "Morgenrot", "Sandsturm", "Glasherz", "Kranich", "Nordlicht", "Basalt", "Fernglas", "Seidenfaden", "Ankerplatz", "Schiefer", "Mondsichel", "Rauchzeichen")
     val regions = listOf("harbor", "airport", "hospital", "embassy", "safehouse", "city")
 
@@ -386,7 +387,7 @@ object Ops {
         val phases = if (difficulty >= 3 && arch.id in setOf("observation", "undercover", "joint", "recon") && rng.percent() <= 45) 2 else 1
         val code = rng.pick(codewords)
         val who = rng.pick(targets)
-        val fill = { t: String -> t.replace("{target}", who).replace("{region}", regionLabel(data, region)).replace("{faction}", factionName(data, target)) }
+        val fill = { t: String -> t.replace("{Target}", who.replaceFirstChar { it.uppercase() }).replace("{target}", who).replace("{region}", regionLabel(data, region)).replace("{faction}", factionName(data, target)) }
         val map = TacticalMaps.forRegion(region).let { rng.pick(it) }
         val usesTactical = obj.tactical != null && approaches.any { it.tactical }
         val factor = creditFactor(state) * entry.creditFactor / 100
@@ -520,7 +521,11 @@ object Ops {
         return MissionDefinition(
             id = c.id, title = title, locationId = c.regionId, type = typeFor(arch.id), minRank = 1, minAge = c.minAge,
             threat = d, xp = if (lastPhase) c.xp else c.xp / 3, description = c.briefing, factionId = c.targetFaction,
-            briefing = "Dringlichkeit ${"!".repeat(c.urgency)} · Frist ${Clock.dateLabel(c.expiresDay)} · ${complicationById[c.complicationId]?.label ?: ""}",
+            briefing = listOfNotNull(
+                when (c.urgency) { 3 -> "Kritisch"; 2 -> "Dringend"; else -> "Routine" },
+                "Frist ${Clock.dateLabel(c.expiresDay)}",
+                complicationById[c.complicationId]?.takeIf { it.id != "none" }?.label
+            ).joinToString(" · "),
             giverId = c.clientNpc?.takeIf { Relations.isKnownNpc(data, state, it) }, credits = if (lastPhase) c.credits else 0,
             reputation = if (lastPhase) c.reputation else 0, rewardItems = if (lastPhase) c.rewardItems else emptyMap(),
             stages = stages, witnesses = if (entry.id == "crowd" || c.complicationId == "civilians") 2 else 0, risk = d, repeatable = false,

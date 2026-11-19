@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.6.0 „Living Division“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.6: Alle Figuren führen ein eigenes Leben mit Laufbahn, Einsätzen, Verletzungen und Freundschaften untereinander; die Gefährtin bzw. der Gefährte wird zur zweiten Hauptfigur; HQ-Ereignisse mit Folgen; Beziehungen 2.0 und zehn neue Alex-Szenen (Details unten und in [docs/LIVING_DIVISION.md](docs/LIVING_DIVISION.md)).
+**Stand: Beta 0.7.0 „Shadow Operations“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.7: Missionsdirektor 2.0 mit zehn Auftragsarten und langfristigen Konsequenzen, 14 neue 2D-Taktikkarten mit Sichtlinien und neuen Einsatzzielen, Fraktionen mit Weltlage, Ermittlungsakten und zehn optionale Einsatzketten – verzahnt mit der lebendigen Division (Details unten und in [docs/SHADOW_OPERATIONS.md](docs/SHADOW_OPERATIONS.md)).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -17,6 +17,32 @@ Das Spiel unterstützt künftig einen **zentralen privaten ZIP-Import** für bis
 
 Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
 
+
+## Neu in v0.7 – Shadow Operations
+
+### Missionsdirektor 2.0
+- **Aufträge aus Bausteinen** statt Vorlagen: Ort, Einstiegssituation, Auftraggeber, Ziel, Auflage, Konsequenzen – deterministisch aus Seed und Spielzustand, ohne Duplikate beim Öffnen oder Laden.
+- **Zehn Auftragsarten**: Observation, Undercover, Aufklärung, Verhandlung, Datenauswertung, Rettung, Informationsbeschaffung, Eskorte, Schutz, koordinierter Einsatz – je drei Ziele, drei Vorgehensweisen mit eigenen Risiken, eigene Belohnungen und eine Abschlussentscheidung mit Folgen.
+- **Mehrtägige Aufträge**, Vertagen, Ablehnen, Fristablauf und Abbruch – jeweils mit Begründung im Verlauf. Folgeaufträge entstehen aus Erfolgen und harten Entscheidungen.
+- **Missionsboard mit Filtern** nach Ort, Art, Dringlichkeit, Frist, Dauer, Teamauftrag und Gefahrenstufe.
+- Unter 18 unverändert nur ungefährliche Aufträge ohne Taktikbrett (Gefahr ≤ 2).
+
+### 2D-Taktik 2.0
+- **14 Karten in 6 Umgebungen** (Stadt, Industrie, Gebäude, Klinik, Verkehr, Natur) mit Wänden, Türen, Wasser, Glas und Deckung.
+- **Sichtlinien** – keine Angriffe durch Wände, auch nicht für Gegner – und **Deckung nach Schussrichtung**.
+- **Neue Ziele**: Evakuierung, Eskorte, Infopunkte sichern, Aufklärungspunkte, Treffpunkt, Schutzposition halten.
+- **Gegnerrollen** (Wachposten, Flankierer, Überwachung, Stoßtrupp), Patt-Erkennung, Zusatzgegner bei hoher Gefahr.
+- **Teammitglieder** kämpfen mit ihren Werten aus der Lebenssimulation; wer ausfällt, liegt danach auf der Krankenstation.
+
+### Fraktionen, Akten und Ketten
+- **Weltlage**: Haltung, Einfluss und Ressourcen von Black Meridian, PHOENIX, Abtrünnigen, Regierungsaufsicht und Zivilbevölkerung; Konfliktbögen wie Meridians Gegenoffensive oder Budgetkürzungen der Aufsicht.
+- **Ermittlungsjournal** mit vier Fällen, Quellenqualität, Widersprüchen und drei Lösungswegen (Beweislage, Konfrontation, Falle).
+- **Zehn optionale Einsatzketten** – PHOENIX, Divisionspolitik mit Percy und Amanda, Michaels Mentoring, Black Meridian, Nikitas Signal, Alex' Vergangenheit, Birkhoffs Geist im Netz – mit schwierigen Entscheidungen.
+
+### Lebendige Division im Einsatz
+- Teamwahl nach Anwesenheit, Verletzung, Urlaub, Alter und Rang – mit Begründung für Nicht-Verfügbare und Passung der Kompetenzen.
+- Einsätze verändern Missionsbilanz, Verletzungen, Vertrauen und Erinnerungen genau einmal.
+- Michael, Birkhoff, Amanda, Percy, Alex und Nikita erteilen Aufträge nur, wenn sie laut Lebenssimulation und Story verfügbar sind.
 
 ## Neu in v0.6 – Living Division
 
@@ -95,6 +121,10 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/29_ausruestungsprofile.png) | ![](docs/screenshots/30_kontakte_status.png) | ![](docs/screenshots/31_personalakte_laufbahn.png) | ![](docs/screenshots/32_beziehung_erinnerungen.png) |
 | **Umfeld (v0.6)** | **Heute in der Division (v0.6)** | **HQ-Ereignis (v0.6)** | |
 | ![](docs/screenshots/33_umfeld.png) | ![](docs/screenshots/34_hq_division_heute.png) | ![](docs/screenshots/35_hq_ereignis.png) | |
+| **Mission Control (v0.7)** | **Weltlage (v0.7)** | **Einsatzketten (v0.7)** | **Ermittlungsakte (v0.7)** |
+| ![](docs/screenshots/36_mission_control.png) | ![](docs/screenshots/37_weltlage.png) | ![](docs/screenshots/38_einsatzketten.png) | ![](docs/screenshots/39_ermittlungsakte.png) |
+| **Auftragsbriefing (v0.7)** | **Taktik 2.0 (v0.7)** | | |
+| ![](docs/screenshots/40_auftrag_briefing.png) | ![](docs/screenshots/41_taktik_botschaft.png) | | |
 
 ## Was ist spielbar? (ehrlicher Stand)
 
@@ -158,9 +188,17 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - `RulesTest`: Level-100-Grenze, Editor ab 18, altersgerechte 16/17- und 18/16-Romanzen, Alex-Route ab 16, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
 - `V05SystemsTest`: Simulation 1/7/30/90/365 Tage deterministisch, Fortschritt nur aus Tätigkeiten, Beziehungen nur mit bekannten/anwesenden Figuren, Wundheilung, Stopp beim 18. Geburtstag mit einmaliger Gefährtenankunft, Story-Ereignisse bleiben erhalten, kein Rang 12 per Zeitraffer, **10-Jahres-Spielverlauf** mit Invarianten (Kalender, Geld, Beziehungen, Geburtstage genau einmal, Ereignisidentitäten, Save-Roundtrip), Beurteilung, Prüfungsphasen/Auflagen/Wartezeit, Tageslimit/Ausbilderbonus, Mentoring, Ausrüstungsprofile mit Rangsperre, Kauf/Rückgabe ohne Gewinn, Vergleich, Missionsboni, Archiv ab Rang 7, v0.4-Spielstand ohne neue Felder.
 - `LivingDivisionTest` (v0.6): Lebenssimulation deterministisch, idempotent und persistent; **10 Jahre Divisionsleben** (Beförderungen, Durchfallen, Einsätze, Verletzungen, Urlaub/Versetzung, NPC-Freundschaften, Paare nur unter Erwachsenen, keine automatische Romanze, Gefährten-Laufbahn, verdichtete Erinnerungen, Save-Roundtrip); Laufbahn hängt vom Charakter ab; Laufbahn-Rat; Anwesenheit nach Status; Rückkehr nach Urlaub; Erinnerungs-Zusammenfassung und Migration aus Schema 2; v0.5-Spielstand ohne Lebensdaten; HQ-Ereignisse mit Folgen, Ablauf mit „ignore“, Wissens-/Ankunftsprüfung; Geschenke nach Interessen; bewusste feste Beziehung, Nur-Freunde, Trennung; Aussprache; Passung; Altersregel; Alex-Szenen; Katalogvalidierung.
-- `ScreenshotTest`: rendert 35 Kernscreens mit echtem Spielzustand (Robolectric).
+- `ShadowOpsTest` (v0.7, 27 Tests): Kartenbibliothek (Validität, Erreichbarkeit, keine Duplikate), BFS, Sichtlinien, keine Angriffe durch Wände, Deckung nach Richtung, Ziele Infopunkte/Aufklärung/Treffpunkt/Evakuierung/Schutzposition, Patt-Erkennung, Reproduzierbarkeit, Teamwerte aus Life; deterministischer Pool ohne Duplikate, zehn Archetypen mit Alternativen und gültigen Stage-Verweisen, sichere Aufträge unter 18, Teamstatus/Alter/Rang, einmalige Verbuchung, mehrtägige Aufträge, Vertagen/Ablehnen/Ablauf, Teamauflage, Fraktionsbögen, Akten mit Widersprüchen, Falle, Ketten mit Entscheidungen, Katalogprüfung, v0.6-Spielstand ohne Ops-Daten, **10 Jahre Shadow Operations**.
+- `ScreenshotTest`: rendert 41 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.7.0-beta „Shadow Operations“
+- Missionsdirektor 2.0 mit zehn Auftragsarten, modularen Bausteinen, mehrtägigen Aufträgen, Filtern und langfristigen Konsequenzen.
+- Taktik 2.0: 14 Karten, 6 Umgebungen, Sichtlinien, Richtungsdeckung, neue Ziele, Gegnerrollen, Patt-Erkennung.
+- Fraktionen mit Weltlage und Konfliktbögen, Ermittlungsjournal mit vier Fällen, zehn optionale Einsatzketten.
+- Teamwahl und Einsatzfolgen verzahnt mit der Lebenssimulation.
+- Mission Control, Auftragsbriefing, Weltlage, Akte, Ketten, Taktik-HUD; Schema 4.
 
 ### 0.6.0-beta „Living Division“
 - Lebenssimulation aller Figuren mit eigenen Laufbahnen, Einsätzen, Verletzungen, Abwesenheiten, Versetzungen und Sozialleben.
