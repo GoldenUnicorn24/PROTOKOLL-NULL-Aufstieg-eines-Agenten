@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import de.protokollnull.agent.data.ImportedPortraits
 import de.protokollnull.agent.data.PrivateCastPortraits
@@ -165,13 +167,21 @@ fun ItemIcon(icon: String, size: Dp, modifier: Modifier = Modifier, tint: Color 
             .border(1.dp, tint.copy(alpha = 0.35f), RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center
     ) {
-        if (loader != null) {
+        var missing by androidx.compose.runtime.remember(icon) { androidx.compose.runtime.mutableStateOf(false) }
+        if (loader != null && !missing) {
             AsyncImage(
                 model = "file:///android_asset/items/$icon.svg", imageLoader = loader, contentDescription = null,
                 contentScale = ContentScale.Fit,
                 colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(androidx.compose.ui.graphics.lerp(Color.White, tint, 0.35f), androidx.compose.ui.graphics.BlendMode.Modulate),
+                onError = { missing = true },
                 modifier = Modifier.fillMaxSize().padding(size * 0.16f)
             )
-        } else Text("▣", style = MaterialTheme.typography.titleLarge)
+        } else {
+            // Neutraler Platzhalter: Bild fehlt (Asset-ID sichtbar, siehe docs/MISSING_ITEM_ART.md)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("▣", style = MaterialTheme.typography.titleLarge, color = Pn.Muted)
+                if (size >= 56.dp) Text(icon, style = MaterialTheme.typography.labelSmall, color = Pn.Muted, maxLines = 1)
+            }
+        }
     }
 }

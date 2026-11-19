@@ -61,9 +61,9 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
             Spacer(Modifier.height(6.dp))
             val buttons = listOf(
                 Triple("Skilltree", "${p.skills.values.sum()} Stufen gelernt", Overlay.Skills),
-                Triple("Ränge & Beförderung", next?.let { "Nächster: ${it.rank.name}" } ?: "Höchster Rang", Overlay.Ranks),
+                Triple("Karriere & Prüfungen", next?.let { "Nächster: ${it.rank.name}" } ?: "Höchster Rang", Overlay.Ranks),
                 Triple("Questlog", "${Quests.active(data, s).size} aktiv · ${Quests.completed(data, s).size} erledigt", Overlay.Quests),
-                Triple("Kalender & Routine", Clock.dateLabel(s.clock.day), Overlay.Calendar),
+                Triple("Zeitplan & Kalender", Clock.dateLabel(s.clock.day), Overlay.Calendar),
                 Triple("Einsatzberichte", "${s.reports.size} Berichte", Overlay.Reports),
                 Triple("Team", "${s.team.size}/${Progression.teamSize(data, s)} Plätze", Overlay.Team),
                 Triple("Neuer Agent (Editor)", if (Social.canCreateRecruit(s)) "freigeschaltet" else if (Ages.player(s) < 18) "ab 18 (noch ${Clock.daysUntilAge(s.clock.day, 18)} Tage)" else "max. 3", Overlay.Recruit),
@@ -152,42 +152,6 @@ private fun SkillNode(vm: GameViewModel, s: GameState, sk: SkillDefinition) {
 }
 
 @Composable
-fun RanksScreen(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    val check = Progression.nextRankCheck(data, s)
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader("Ränge", "Rang ${s.player.rank}/12", onBack = { vm.back() })
-        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            if (check != null) item {
-                GlassPanel(accent = if (check.ready) Pn.Ok else Pn.Warn) {
-                    Text("NÄCHSTE BEFÖRDERUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-                    Text(check.rank.name, style = MaterialTheme.typography.titleLarge)
-                    Text(check.rank.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    check.requirements.forEach { (t, ok) -> Text((if (ok) "✓ " else "✗ ") + t, color = if (ok) Pn.Ok else Pn.Danger, style = MaterialTheme.typography.bodySmall) }
-                    Text("Prüfung: ${if (check.rank.rank >= 8) "Ausstrahlung" else "Willenskraft"} + Teamplanung gegen Schwierigkeit ${check.rank.examDifficulty}", style = MaterialTheme.typography.labelSmall)
-                    ActionButton("Prüfung ablegen (Direktorat)", Modifier.fillMaxWidth(), enabled = check.ready && s.location == "director", subtitle = if (s.location != "director") "Gehe ins Direktorat (Ebene −3)" else "2 Zeitslots, 20 Energie") {
-                        vm.act { d, x -> Progression.attemptPromotion(d, x) }
-                    }
-                }
-            }
-            items(data.ranks) { r ->
-                val reached = s.player.rank >= r.rank
-                GlassPanel(accent = if (reached) Pn.Accent else Pn.Muted, padding = 12.dp) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("${r.rank}", style = MaterialTheme.typography.titleLarge, color = if (reached) Pn.Accent else Pn.Muted, modifier = Modifier.width(36.dp))
-                        Column(Modifier.weight(1f)) {
-                            Text(r.name, style = MaterialTheme.typography.titleSmall)
-                            Text("Lv ${r.minLevel} · ab ${r.minAge} J. · Ruf ${r.minReputation} · Sold ${r.salaryPerWeek} Cr/Woche · Team ${r.teamSize}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        if (reached) Pill("✓")
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun QuestLogScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     Column(Modifier.fillMaxSize()) {
@@ -208,54 +172,6 @@ fun QuestLogScreen(vm: GameViewModel, s: GameState) {
             item { SectionLabel("Zeitleiste") }
             items(s.log.reversed().take(40)) { e ->
                 Row { Text(Clock.dateLabel(e.day).substringAfter(", ") + " " + Clock.slotTimes[e.slot], style = MaterialTheme.typography.labelSmall, color = Pn.Accent, modifier = Modifier.width(120.dp)); Text(e.text, style = MaterialTheme.typography.bodySmall) }
-            }
-        }
-    }
-}
-
-@Composable
-fun CalendarScreen(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader("Kalender & Routine", Clock.dateLabel(s.clock.day), onBack = { vm.back() })
-        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            item {
-                GlassPanel {
-                    Text("Heute", style = MaterialTheme.typography.titleSmall)
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Clock.slotNames.forEachIndexed { i, n ->
-                            Column(Modifier.weight(1f).clip(RoundedCornerShape(8.dp)).background(if (i == s.clock.slot) Color(0x443FD6C4) else if (i < s.clock.slot) Color(0x10FFFFFF) else Color(0x22182839)).padding(4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(Clock.slotTimes[i], style = MaterialTheme.typography.labelSmall, color = if (i == s.clock.slot) Pn.Accent else Pn.Muted)
-                                Text(n.take(4), style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
-                            }
-                        }
-                    }
-                    KeyValue("Wochentag", if (Clock.isWeekend(s.clock.day)) "Wochenende" else "Dienst")
-                    KeyValue("Bis zum 18. Geburtstag", if (Ages.player(s) >= 18) "volljährig" else "${Clock.daysUntilAge(s.clock.day, 18)} Tage")
-                    SmallNote("Jede Aktion kostet Zeitslots. Nach der Nacht beginnt automatisch ein neuer Tag – ohne Schlaf mit Erschöpfung.")
-                }
-            }
-            item {
-                SectionLabel("Routine für den Zeitraffer")
-                Spacer(Modifier.height(6.dp))
-                World.routines.forEach { r ->
-                    ChoiceButton(r.name + if (s.routine == r.id) "  ✓" else "", r.description) { vm.update { it.copy(routine = r.id) } }
-                    Spacer(Modifier.height(6.dp))
-                }
-            }
-            item {
-                GlassPanel {
-                    Text("Zeitraffer", style = MaterialTheme.typography.titleSmall)
-                    Text("Überspringt Tage in einem Schritt (wochenweise berechnet). Fortschritt, Sold und Beziehungen folgen deiner Routine.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        ActionButton("1 Woche", Modifier.weight(1f), secondary = true) { vm.act { d, x -> World.timeSkip(d, x, 7) } }
-                        ActionButton("1 Monat", Modifier.weight(1f), secondary = true) { vm.act { d, x -> World.timeSkip(d, x, 30) } }
-                        ActionButton("3 Monate", Modifier.weight(1f), secondary = true) { vm.act { d, x -> World.timeSkip(d, x, 91) } }
-                    }
-                    if (Ages.player(s) < 18) ActionButton("Bis zum 18. Geburtstag", Modifier.fillMaxWidth(), subtitle = "${Clock.daysUntilAge(s.clock.day, 18)} Tage") {
-                        vm.act { d, x -> World.timeSkip(d, x, Clock.daysUntilAge(x.clock.day, 18)) }
-                    }
-                }
             }
         }
     }

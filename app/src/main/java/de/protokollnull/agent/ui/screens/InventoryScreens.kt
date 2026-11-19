@@ -60,6 +60,7 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
                         }
                     }
                 }
+                LoadoutPanel(vm, s)
                 ChipRow(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ActionButton("Spind-Lager (${p.storage.size})", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Storage) }
@@ -110,6 +111,20 @@ fun ItemDetailScreen(vm: GameViewModel, s: GameState, uid: Long) {
                 if (def.capacityBonusGrams > 0) KeyValue("Tragkraft", "+${def.capacityBonusGrams / 1000} kg")
                 def.effect?.let { e -> KeyValue("Wirkung", listOfNotNull(if (e.health != 0) "Gesundheit ${Effs.signed(e.health)}" else null, if (e.energy != 0) "Energie ${Effs.signed(e.energy)}" else null, if (e.stress != 0) "Stress ${Effs.signed(e.stress)}" else null).joinToString()) }
             }
+            val cmp = Inventory.compare(data, s, uid)
+            if (cmp.isNotEmpty() && !equipped) {
+                GlassPanel(accent = Pn.Violet) {
+                    Text("VERGLEICH · ${Slots.label(def.slot).uppercase()}", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+                    Row { Text("", Modifier.weight(1f)); Text(Inventory.equippedName(data, s, def.slot) ?: "leer", Modifier.width(96.dp), style = MaterialTheme.typography.labelSmall, color = Pn.Muted, maxLines = 1); Text(def.name, Modifier.width(96.dp), style = MaterialTheme.typography.labelSmall, color = Pn.Accent, maxLines = 1) }
+                    cmp.forEach { c ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(c.label, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(c.current, Modifier.width(96.dp), style = MaterialTheme.typography.bodySmall)
+                            Text(c.candidate, Modifier.width(96.dp), style = MaterialTheme.typography.bodySmall, color = when { c.delta > 0 -> Pn.Ok; c.delta < 0 -> Pn.Danger; else -> Pn.Text })
+                        }
+                    }
+                }
+            }
             val reason = Inventory.canEquip(data, s, st)
             if (def.slot != "none") {
                 if (equipped) ActionButton("Ablegen", Modifier.fillMaxWidth(), secondary = true) { vm.act { d, x -> Inventory.unequip(d, x, def.slot) } }
@@ -138,7 +153,7 @@ fun ShopScreen(vm: GameViewModel, s: GameState) {
             item { ChipRow(categoryLabels.entries.filter { it.key != "equipped" }.map { it.key to it.value }, filter) { filter = it } }
             item { SmallNote("Anforderung gegen Credits. Freigaben richten sich nach deinem Rang. Wartung und Rückgabe in der Detailansicht eines Gegenstands.") }
             items(items, key = { it.id }) { def ->
-                val price = Inventory.price(def)
+                val price = Inventory.price(def, s)
                 val locked = s.player.rank < def.minRank
                 val color = Pn.rarity[def.rarity] ?: Pn.Accent
                 GlassPanel(accent = color, padding = 12.dp) {
@@ -183,6 +198,27 @@ fun StorageScreen(vm: GameViewModel, s: GameState) {
                         ActionButton("Nehmen", secondary = true) { vm.act { d, x -> Inventory.fromStorage(d, x, st.uid) } }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadoutPanel(vm: GameViewModel, s: GameState) {
+    val data = vm.data
+    GlassPanel(padding = 12.dp, accent = Pn.Violet) {
+        Text("AUSRÜSTUNGSPROFILE", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+        s.loadouts.forEach { lo ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(lo.name, style = MaterialTheme.typography.titleSmall)
+                    Text(if (lo.items.isEmpty()) "leer – aktuelle Ausrüstung speichern" else lo.items.values.joinToString { data.itemById[it]?.name ?: it },
+                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                }
+                Spacer(Modifier.width(6.dp))
+                ActionButton("Anlegen", enabled = lo.items.isNotEmpty(), secondary = true) { vm.act { d, x -> Inventory.applyLoadout(d, x, lo.id) } }
+                Spacer(Modifier.width(6.dp))
+                ActionButton("Speichern", secondary = true) { vm.act { d, x -> Inventory.saveLoadout(d, x, lo.id) } }
             }
         }
     }

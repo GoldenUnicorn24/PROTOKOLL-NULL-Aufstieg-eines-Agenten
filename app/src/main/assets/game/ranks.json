@@ -12,7 +12,12 @@
     "requiredMissions": [],
     "examDifficulty": 30,
     "salaryPerWeek": 60,
-    "teamSize": 1
+    "teamSize": 1,
+    "unlocks": [
+      "HQ-Ebenen 0 bis −3 (ohne Geheimarchiv)",
+      "Trainingsplaner und Zeitplan",
+      "Ausbildungsmissionen ab Kapitel 1"
+    ]
   },
   {
     "rank": 2,
@@ -29,7 +34,11 @@
     ],
     "examDifficulty": 35,
     "salaryPerWeek": 80,
-    "teamSize": 1
+    "teamSize": 1,
+    "unlocks": [
+      "Simulationen und Teamtraining",
+      "Monatliche Leistungsbeurteilung zählt für Beförderungen"
+    ]
   },
   {
     "rank": 3,
@@ -46,7 +55,12 @@
     ],
     "examDifficulty": 40,
     "salaryPerWeek": 100,
-    "teamSize": 2
+    "teamSize": 2,
+    "unlocks": [
+      "Begleitete Einsätze unter Aufsicht",
+      "Freigabe Rang-3-Ausrüstung (Verschlüsselter Funk, Laptop, großer Rucksack, Dietriche, Gasmaske)",
+      "Teamgröße 2"
+    ]
   },
   {
     "rank": 4,
@@ -63,7 +77,12 @@
     "requiredMissions": [],
     "examDifficulty": 45,
     "salaryPerWeek": 140,
-    "teamSize": 2
+    "teamSize": 2,
+    "unlocks": [
+      "Operative Missionen ab 18",
+      "Freigabe Dienstausrüstung und Reisepass",
+      "Generierte Aufträge bis Gefahrenstufe 3+"
+    ]
   },
   {
     "rank": 5,
@@ -80,7 +99,11 @@
     ],
     "examDifficulty": 50,
     "salaryPerWeek": 180,
-    "teamSize": 2
+    "teamSize": 2,
+    "unlocks": [
+      "Vier Aufträge pro Woche auf dem Einsatzboard",
+      "Freigabe Nachtsichtgerät"
+    ]
   },
   {
     "rank": 6,
@@ -97,7 +120,11 @@
     ],
     "examDifficulty": 55,
     "salaryPerWeek": 230,
-    "teamSize": 2
+    "teamSize": 2,
+    "unlocks": [
+      "Rabatt in der Ausrüstungskammer: −10 %",
+      "Freigabe schwere Schutzweste"
+    ]
   },
   {
     "rank": 7,
@@ -114,7 +141,11 @@
     ],
     "examDifficulty": 58,
     "salaryPerWeek": 290,
-    "teamSize": 3
+    "teamSize": 3,
+    "unlocks": [
+      "Geheimarchiv ohne Sicherheitskarte",
+      "Teamgröße 3"
+    ]
   },
   {
     "rank": 8,
@@ -133,7 +164,11 @@
     ],
     "examDifficulty": 60,
     "salaryPerWeek": 360,
-    "teamSize": 3
+    "teamSize": 3,
+    "unlocks": [
+      "Teamkommando „Teambefehl“ im Taktikmodus (+1 AP für alle)",
+      "Eigene Teamzusammenstellung"
+    ]
   },
   {
     "rank": 9,
@@ -150,7 +185,11 @@
     ],
     "examDifficulty": 62,
     "salaryPerWeek": 440,
-    "teamSize": 4
+    "teamSize": 4,
+    "unlocks": [
+      "Aufträge an das Team delegieren",
+      "Teamgröße 4"
+    ]
   },
   {
     "rank": 10,
@@ -167,7 +206,10 @@
     ],
     "examDifficulty": 65,
     "salaryPerWeek": 520,
-    "teamSize": 4
+    "teamSize": 4,
+    "unlocks": [
+      "Sitz in der Sektionsleitung: Zugang zur Mission „Abstimmung im Direktorat“"
+    ]
   },
   {
     "rank": 11,
@@ -184,7 +226,10 @@
     ],
     "examDifficulty": 70,
     "salaryPerWeek": 620,
-    "teamSize": 4
+    "teamSize": 4,
+    "unlocks": [
+      "Vertretung der Direktion"
+    ]
   },
   {
     "rank": 12,
@@ -199,6 +244,10 @@
     "requiredMissions": [],
     "examDifficulty": 75,
     "salaryPerWeek": 800,
-    "teamSize": 4
+    "teamSize": 4,
+    "unlocks": [
+      "Direktorat: Budget, Abteilungen, Leitlinien",
+      "Finale Entscheidung über Protokoll Null"
+    ]
   }
 ]

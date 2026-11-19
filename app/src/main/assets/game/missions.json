@@ -53,6 +53,10 @@
                   "michael": 2
                 }
               }
+            },
+            "itemBonus": {
+              "bandage": 10,
+              "medkit": 15
             }
           },
           {
@@ -210,6 +214,9 @@
             "failure": {
               "text": "Du stößt einen Ordner um. Die Wache stutzt, geht aber weiter.",
               "alarm": 1
+            },
+            "itemBonus": {
+              "flashlight": 8
             }
           },
           {
@@ -1051,6 +1058,10 @@
             },
             "failure": {
               "text": "Du bist dir nicht sicher."
+            },
+            "itemBonus": {
+              "smartphone": 10,
+              "camera": 8
             }
           }
         ]
@@ -1169,6 +1180,10 @@
             "failure": {
               "text": "Zu viel Rauschen.",
               "stress": 5
+            },
+            "itemBonus": {
+              "laptop": 15,
+              "smartphone": 6
             }
           },
           {
@@ -1329,6 +1344,9 @@
             "failure": {
               "text": "Ein Hafenarbeiter läuft vorbei.",
               "alarm": 1
+            },
+            "itemBonus": {
+              "binoculars": 10
             }
           }
         ]
@@ -1395,6 +1413,10 @@
               "text": "Der Blitz! Ihr rennt.",
               "next": "END_FAIL",
               "alarm": 2
+            },
+            "itemBonus": {
+              "camera": 15,
+              "binoculars": 8
             }
           },
           {
@@ -1569,6 +1591,9 @@
             "failure": {
               "text": "Ein Wachmann sieht das Boot.",
               "alarm": 1
+            },
+            "itemBonus": {
+              "night_vision": 12
             }
           },
           {
@@ -1774,6 +1799,10 @@
               "text": "Er hält durch – knapp.",
               "next": "END_SUCCESS",
               "stress": 10
+            },
+            "itemBonus": {
+              "medkit": 15,
+              "bandage": 6
             }
           },
           {
@@ -1932,6 +1961,10 @@
             "failure": {
               "text": "Die Kopie bricht ab.",
               "next": "END_FAIL"
+            },
+            "itemBonus": {
+              "laptop": 12,
+              "usb": 8
             }
           }
         ]
@@ -2474,6 +2507,9 @@
               "text": "Zu viel Zeit verloren – Rückzug unter Beschuss.",
               "next": "END_FAIL",
               "alarm": 2
+            },
+            "itemBonus": {
+              "medkit": 15
             }
           }
         ]

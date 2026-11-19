@@ -55,9 +55,13 @@ object World {
         var s = state.copy(clock = GameClock(day = day, slot = 0))
         val msgs = mutableListOf<String>()
         msgs += "— " + Clock.dateLabel(day) + " —"
-        // Wunden heilen langsam
+        // Wunden heilen langsam (7 Heiltage pro Wunde, guter Schlaf zählt doppelt)
         val p = s.player
-        if (p.wounds > 0 && day % 3 == 0) s = s.copy(player = p.copy(wounds = p.wounds - 1))
+        if (p.wounds > 0) {
+            val prog = p.woundProgress + if (sleptWell) 2 else 1
+            s = s.copy(player = if (prog >= 7) p.copy(wounds = p.wounds - 1, woundProgress = 0) else p.copy(woundProgress = prog))
+            if (prog >= 7) msgs += "Eine Verletzung ist verheilt."
+        }
         val newAge = Ages.player(s)
         if (newAge > oldAge) {
             msgs += "Geburtstag! Du bist jetzt $newAge."
@@ -89,98 +93,18 @@ object World {
 
     // --- Zeitraffer -----------------------------------------------------------
 
-    data class Routine(val id: String, val name: String, val description: String, val attributes: List<String>, val social: Boolean)
-
-    val routines = listOf(
-        Routine("balanced", "Ausgewogen", "Etwas von allem – kein Bereich wird vernachlässigt.", Attr.all, true),
-        Routine("physical", "Körperliches Training", "Fitness und Präzision, mehr Stress.", listOf(Attr.FITNESS, Attr.PRECISION), false),
-        Routine("academic", "Theorie & Technik", "Intellekt und Wahrnehmung.", listOf(Attr.INTELLECT, Attr.PERCEPTION), false),
-        Routine("social", "Kontakte pflegen", "Ausstrahlung, Willenskraft, Beziehungen.", listOf(Attr.CHARISMA, Attr.WILLPOWER), true)
-    )
-
     /**
-     * Überspringt [days] Tage in geschlossener Form (wochenweise, keine
-     * Tagesschleife über Jahre). Die gewählte Routine bestimmt den Fortschritt.
+     * Zeitsprung über die Zeitplan-Simulation (v0.5). Ohne Anhalten bei
+     * Ereignissen; Story-Ereignisse bleiben als ausstehend erhalten.
      */
-    fun timeSkip(data: GameData, state: GameState, days: Int): Result {
-        if (state.activeMission != null) return state.fail("Erst den laufenden Einsatz beenden.")
-        val d = days.coerceIn(1, 730)
-        val routine = routines.firstOrNull { it.id == state.routine } ?: routines.first()
-        val oldAge = Ages.player(state)
-        val weeks = d / 7.0
-        val rng = Rng(Rng.mix(state.seed, state.clock.day.toLong(), d.toLong(), 4242))
-        var p = state.player
-        val cap = Stats.attributeCap(p.level)
-        // Attributfortschritt mit abnehmendem Ertrag
-        val gains = mutableMapOf<String, Int>()
-        routine.attributes.forEach { a ->
-            val cur = p.attributes[a] ?: 30
-            val speed = if (routine.id == "balanced") 0.45 else 0.9
-            val raw = (weeks * speed * (1.0 - (cur - 20).coerceAtLeast(0) / 100.0)).toInt()
-            val next = (cur + raw).coerceAtMost(cap).coerceAtLeast(cur)
-            if (next > cur) gains[a] = next - cur
-            p = p.copy(attributes = p.attributes + (a to next))
-        }
-        val weekCount = (d / 7).coerceAtLeast(0)
-        var s = state.copy(player = p)
-        val msgs = mutableListOf("Zeitraffer: $d Tage mit Routine „${routine.name}“.")
-        gains.forEach { (a, g) -> msgs += Attr.label(a) + " +" + g }
-        // XP: Ausbildungsalltag
-        val xp = (d * (18 + p.level)).coerceAtMost(200000)
-        val xr = Progression.grantXp(data, s, xp)
-        s = xr.state
-        msgs += xr.messages.filter { it.contains("Level") }.takeLast(3)
-        msgs += "+$xp XP aus Ausbildung und Dienst"
-        // Ruf & Beziehungen
-        s = s.copy(player = s.player.copy(reputation = s.player.reputation + weekCount * 2))
-        if (routine.social) {
-            val known = (data.agents.map { it.id } + s.customNpcs.map { it.id })
-            known.forEach { id ->
-                s = Relations.update(data, s, id) { it.copy(friendship = it.friendship + (weekCount / 4).coerceAtMost(15), trust = it.trust + (weekCount / 6).coerceAtMost(10)) }
-            }
-            msgs += "Beziehungen vertieft (Freundschaft bis +${(weekCount / 4).coerceAtMost(15)})"
-        }
-        // Wöchentliche Abrechnung in geschlossener Form
-        val rank = data.rank(s.player.rank)
-        val salary = (rank.salaryPerWeek + (if (s.player.coverJob != null) 120 else 0) - (if (s.player.apartment) 150 else 0)) * weekCount
-        s = s.copy(player = s.player.copy(credits = (s.player.credits + salary).coerceAtLeast(0)))
-        if (weekCount > 0) msgs += "Sold abzüglich Miete: ${Effs.signed(salary)} Cr"
-        s.director?.let {
-            repeat(weekCount.coerceAtMost(104)) { s = Director.weekly(data, s).state }
-            msgs += "Direktorat: Budget jetzt ${s.director?.budget} Cr"
-        }
-        // Zufallsereignis-Zusammenfassung
-        val events = listOf(
-            "Eine Sicherheitsübung in der Nacht hielt das Quartier wach.",
-            "Birkhoff hat das Netzwerk umgebaut – niemand findet mehr etwas.",
-            "Ein Rekrut wurde \"abgeschaltet\". Niemand spricht darüber.",
-            "Amanda führte Einzelgespräche mit allen Rekruten.",
-            "Michael verschärfte den Trainingsplan.",
-            "Gerüchte über einen Maulwurf machten die Runde."
-        )
-        msgs += rng.pick(events)
-        val newDay = s.clock.day + d
-        s = s.copy(
-            clock = GameClock(day = newDay, slot = 0),
-            player = s.player.copy(energy = 90, stress = (s.player.stress - 10).coerceIn(5, 100), health = 100, wounds = 0)
-        )
-        val newAge = Ages.player(s)
-        for (a in (oldAge + 1)..newAge) {
-            s = s.copy(flags = s.flags + "age_$a")
-            msgs += "Geburtstag: $a Jahre."
-            if (a == 18) msgs += "Volljährig: Operative Einsätze und der Rekrutierungseditor sind freigeschaltet."
-        }
-        s = MissionGenerator.refreshBoard(data, s)
-        msgs += "— " + Clock.dateLabel(newDay) + " —"
-        return Result(CompanionAssignment.arrive(data, s), msgs)
-    }
+    fun timeSkip(data: GameData, state: GameState, days: Int): Result = Simulation.run(data, state, days, stopOnEvents = false)
 
     // --- HQ, Räume und NPCs ---------------------------------------------------
 
     fun roomLocked(data: GameData, state: GameState, room: RoomDefinition): String? {
         if (state.player.rank < room.minRank) return "Zutritt ab Rang ${room.minRank} (${data.rank(room.minRank).name})"
         if (Ages.player(state) < room.minAge) return "Zutritt ab ${room.minAge} Jahren"
-        if (room.requiredItem != null && state.player.inventory.none { it.itemId == room.requiredItem }) return "Benötigt: " + (data.itemById[room.requiredItem]?.name ?: room.requiredItem)
+        if (room.requiredItem != null && state.player.rank < 7 && state.player.inventory.none { it.itemId == room.requiredItem }) return "Benötigt: " + (data.itemById[room.requiredItem]?.name ?: room.requiredItem)
         if (room.requiredFlag != null && room.requiredFlag !in state.flags) return "Noch nicht freigegeben"
         return null
     }
@@ -269,7 +193,11 @@ object World {
     fun treat(data: GameData, state: GameState): Result {
         val p = state.player
         val med = (state.director?.departments?.get("medical") ?: 1) * 5
-        val s = state.copy(player = p.copy(health = (p.health + 30 + med).coerceAtMost(100), wounds = (p.wounds - 1).coerceAtLeast(0), stress = (p.stress - 5).pct()))
+        // Klinik: Gesundheit sofort, Wunden nur über Heilfortschritt (+3 Tage pro Behandlung)
+        val prog = p.woundProgress + if (p.wounds > 0) 3 else 0
+        val healed = p.wounds > 0 && prog >= 7
+        val s = state.copy(player = p.copy(health = (p.health + 30 + med).coerceAtMost(100), wounds = if (healed) p.wounds - 1 else p.wounds,
+            woundProgress = if (healed) 0 else prog, stress = (p.stress - 5).pct()))
         val t = passTime(data, s, 2)
         return Result(t.state, listOf("Die Krankenstation versorgt dich. Gesundheit +${30 + med}") + t.messages)
     }

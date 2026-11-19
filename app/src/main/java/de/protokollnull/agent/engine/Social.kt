@@ -115,6 +115,13 @@ object Social {
         list += Interaction("time", "Zeit verbringen", "Freundschaft & Stressabbau, 1 Zeitslot, 10 Energie", energy >= 10, if (energy < 10) "Zu erschöpft" else "")
         list += Interaction("advice", "Um Rat fragen", "Respekt +, Tipp für deine Laufbahn", r.trust >= 40, if (r.trust < 40) "Vertrauen ≥ 40" else "")
         list += Interaction("gift", "Etwas schenken", "Gegenstand aus deinem Inventar (Notizbuch, Uhr, Kamera …)", giftable(data, state).isNotEmpty(), "Kein passendes Geschenk im Inventar")
+        if (npcId == "michael") {
+            val lock = Career.mentorAvailable(data, state)
+            list += Interaction("m_eval", "Leistungsbeurteilung anfordern", "Note A–E aus Training, Einsätzen und Entwicklung der letzten 30 Tage",
+                Career.canRequestEvaluation(state), "Nächste Beurteilung frühestens 30 Tage nach der letzten")
+            list += Interaction("m_train", "Einzeltraining mit Michael", "Gezielt an deiner Schwäche, Prüfungsvorbereitung +8, 1 Slot, 25 Energie", lock == null && energy >= 25, lock ?: "Zu erschöpft")
+            list += Interaction("m_prep", "Prüfungsvorbereitung", "Szenarien & Theorie, Prüfungsvorbereitung +15, 2 Slots", lock == null && energy >= 20, lock ?: "Zu erschöpft")
+        }
         val custom = state.customNpcs.firstOrNull { it.id == npcId }
         if (custom != null) list += Interaction("mentor", "Mentoring", "Gemeinsam lernen: Vertrauen +, Fähigkeiten der Figur wachsen", energy >= 15, "Zu erschöpft")
         if (r.rivalry >= 20) list += Interaction("challenge", "Zum Wettkampf herausfordern", "Fitness-Probe, Respekt oder Rivalität ändern sich", energy >= 20, "Zu erschöpft")
@@ -130,6 +137,9 @@ object Social {
         val traits = def?.traits ?: state.customNpcs.firstOrNull { it.id == npcId }?.traits ?: emptyList()
         val day = state.clock.day
         when (id) {
+            "m_eval" -> return Career.evaluate(data, state)
+            "m_train" -> return Career.mentorTraining(data, state)
+            "m_prep" -> return Career.mentorExamPrep(data, state)
             "smalltalk" -> {
                 val r = Relations.get(data, state, npcId)
                 if (r.lastTalkDay == day) return state.fail("Ihr habt heute schon gesprochen.")

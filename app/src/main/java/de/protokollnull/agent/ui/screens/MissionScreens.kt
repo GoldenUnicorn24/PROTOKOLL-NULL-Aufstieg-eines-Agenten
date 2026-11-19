@@ -218,7 +218,9 @@ private fun ChoiceStage(vm: GameViewModel, s: GameState, st: StageDefinition, ru
         if (st.options.isEmpty()) ActionButton("Weiter", Modifier.fillMaxWidth()) { vm.act(silent = true) { d, x -> Missions.continueNarrative(d, x) } }
         st.options.forEach { o ->
             val ok = Conds.met(o.requires, data, s)
-            val detail = o.check?.let { Attr.label(it.attribute) + (it.skill?.let { sk -> " · " + (data.skillById[sk]?.name ?: sk) } ?: "") }
+            val ib = Missions.itemBonus(data, s, o)
+            val itemHint = if (o.itemBonus.isNotEmpty()) " · " + o.itemBonus.keys.joinToString("/") { data.itemById[it]?.name ?: it } + (if (ib > 0) " +$ib" else " (fehlt)") else ""
+            val detail = o.check?.let { Attr.label(it.attribute) + (it.skill?.let { sk -> " · " + (data.skillById[sk]?.name ?: sk) } ?: "") + itemHint }
             ChoiceButton(o.text, detail ?: if (!ok) Conds.describe(o.requires, data).joinToString() else null, Missions.optionChance(data, s, o), enabled = ok) {
                 vm.act(silent = true) { d, x -> Missions.choose(d, x, o.id) }
             }

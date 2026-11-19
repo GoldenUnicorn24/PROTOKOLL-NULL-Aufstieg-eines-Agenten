@@ -103,6 +103,8 @@ data class RankDefinition(
     val requiredFlags: List<String> = emptyList(),
     val requiredMissions: List<String> = emptyList(),
     val examDifficulty: Int = 40,
+    /** Was dieser Rang tatsächlich freischaltet (Anzeige in der Karriereübersicht). */
+    val unlocks: List<String> = emptyList(),
     val salaryPerWeek: Int = 100,
     val teamSize: Int = 1
 )
@@ -278,7 +280,9 @@ data class StageOption(
     val check: CheckDef? = null,
     val requires: Conditions? = null,
     val success: Outcome = Outcome(),
-    val failure: Outcome? = null
+    val failure: Outcome? = null,
+    /** Situative Gegenstandsboni: itemId -> Bonus, wenn ausgerüstet (halber Bonus im Inventar). */
+    val itemBonus: Map<String, Int> = emptyMap()
 )
 
 @Serializable

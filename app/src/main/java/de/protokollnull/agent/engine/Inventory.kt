@@ -153,6 +153,9 @@ object Inventory {
 
     fun price(def: ItemDefinition): Int = (def.baseValue.coerceAtLeast(10) * 0.6).toInt()
 
+    /** Preis nach Rangrabatt (ab Rang 6: −10 %). Rückgabe bleibt immer darunter. */
+    fun price(def: ItemDefinition, state: GameState): Int = price(def) * (100 - Career.shopDiscount(state)) / 100
+
     fun shopItems(data: GameData, state: GameState): List<ItemDefinition> =
         data.items.filter { it.buyable && it.baseValue > 0 }
 
@@ -160,7 +163,7 @@ object Inventory {
         val def = data.itemById[itemId] ?: return state.fail("Unbekannt")
         if (!def.buyable) return state.fail("Nicht über die Ausrüstungskammer erhältlich")
         if (state.player.rank < def.minRank) return state.fail("Freigabe ab Rang ${def.minRank}")
-        val price = price(def)
+        val price = price(def, state)
         if (state.player.credits < price) return state.fail("Nicht genug Credits ($price benötigt)")
         val s = state.copy(player = state.player.copy(credits = state.player.credits - price))
         val r = add(data, s, itemId, 1)
@@ -197,4 +200,73 @@ object Inventory {
             if (it.uid in eq) it.copy(condition = (it.condition - amount).coerceAtLeast(0)) else it
         }))
     }
+
+    // --- Ausrüstungsprofile (v0.5) -------------------------------------------------
+
+    fun saveLoadout(data: GameData, state: GameState, loadoutId: String): Result {
+        val p = state.player
+        val items = p.equipment.mapNotNull { (slot, uid) -> p.inventory.firstOrNull { it.uid == uid }?.let { slot to it.itemId } }.toMap()
+        if (items.isEmpty()) return state.fail("Nichts ausgerüstet – Profil bleibt leer.")
+        val list = state.loadouts.map { if (it.id == loadoutId) it.copy(items = items) else it }
+        val name = list.firstOrNull { it.id == loadoutId }?.name ?: loadoutId
+        return Result(state.copy(loadouts = list), listOf("Profil „$name“ gespeichert (${items.size} Slots)."))
+    }
+
+    /**
+     * Profil anlegen: Gegenstände aus Inventar oder Spind (sofern tragbar),
+     * Freigaben werden geprüft; fehlende Teile werden gemeldet.
+     */
+    fun applyLoadout(data: GameData, state: GameState, loadoutId: String): Result {
+        val lo = state.loadouts.firstOrNull { it.id == loadoutId } ?: return state.fail("Profil unbekannt")
+        if (lo.items.isEmpty()) return state.fail("Profil „${lo.name}“ ist noch leer. Erst Ausrüstung anlegen und speichern.")
+        if (state.activeMission != null) return state.fail("Während eines Einsatzes kann das Profil nicht gewechselt werden.")
+        var s = state.copy(player = state.player.copy(equipment = emptyMap()))
+        val msgs = mutableListOf<String>()
+        val used = mutableSetOf<Long>()
+        lo.items.forEach { (slot, itemId) ->
+            val name = data.itemById[itemId]?.name ?: itemId
+            var st = s.player.inventory.firstOrNull { it.itemId == itemId && it.uid !in used }
+            if (st == null) {
+                val stored = s.player.storage.firstOrNull { it.itemId == itemId }
+                if (stored != null) {
+                    val r = fromStorage(data, s, stored.uid)
+                    if (r.ok) { s = r.state; st = s.player.inventory.firstOrNull { it.uid == stored.uid } } else msgs += "$name: ${r.messages.first()}"
+                } else msgs += "$name fehlt (weder Inventar noch Spind)."
+            }
+            if (st != null) {
+                val reason = canEquip(data, s, st)
+                if (reason != null) msgs += "$name: $reason"
+                else { s = s.copy(player = s.player.copy(equipment = s.player.equipment + (slot to st.uid))); used += st.uid }
+            }
+        }
+        val ok = s.player.equipment.size
+        return Result(s, listOf("Profil „${lo.name}“ angelegt: $ok/${lo.items.size} Slots.") + msgs)
+    }
+
+    data class Comparison(val label: String, val current: String, val candidate: String, val delta: Int)
+
+    /** Direkter Vergleich mit dem aktuell ausgerüsteten Gegenstand im selben Slot. */
+    fun compare(data: GameData, state: GameState, uid: Long): List<Comparison> {
+        val p = state.player
+        val st = p.inventory.firstOrNull { it.uid == uid } ?: p.storage.firstOrNull { it.uid == uid } ?: return emptyList()
+        val def = data.itemById[st.itemId] ?: return emptyList()
+        if (def.slot == "none") return emptyList()
+        val curUid = p.equipment[def.slot]
+        val curSt = p.inventory.firstOrNull { it.uid == curUid }
+        val cur = curSt?.let { data.itemById[it.itemId] }
+        val out = mutableListOf<Comparison>()
+        Attr.all.forEach { a ->
+            val c = cur?.bonuses?.get(a) ?: 0; val n = def.bonuses[a] ?: 0
+            if (c != 0 || n != 0) out += Comparison(Attr.label(a), Effs.signed(c), Effs.signed(n), n - c)
+        }
+        if ((cur?.armor ?: 0) != 0 || def.armor != 0) out += Comparison("Schutz", "${cur?.armor ?: 0}", "${def.armor}", def.armor - (cur?.armor ?: 0))
+        if ((cur?.damage ?: 0) != 0 || def.damage != 0) out += Comparison("Wirkung", "${cur?.damage ?: 0}", "${def.damage}", def.damage - (cur?.damage ?: 0))
+        if ((cur?.capacityBonusGrams ?: 0) != 0 || def.capacityBonusGrams != 0) out += Comparison("Tragkraft (g)", "${cur?.capacityBonusGrams ?: 0}", "${def.capacityBonusGrams}", (def.capacityBonusGrams - (cur?.capacityBonusGrams ?: 0)) / 500)
+        out += Comparison("Gewicht (g)", "${cur?.weightGrams ?: 0}", "${def.weightGrams}", ((cur?.weightGrams ?: 0) - def.weightGrams) / 200)
+        out += Comparison("Zustand", "${curSt?.condition ?: 0}%", "${st.condition}%", (st.condition - (curSt?.condition ?: 0)) / 10)
+        return out
+    }
+
+    fun equippedName(data: GameData, state: GameState, slot: String): String? =
+        state.player.equipment[slot]?.let { uid -> state.player.inventory.firstOrNull { it.uid == uid } }?.let { data.itemById[it.itemId]?.name }
 }

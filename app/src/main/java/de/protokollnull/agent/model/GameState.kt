@@ -98,6 +98,8 @@ data class PlayerCharacter(
     val equipment: Map<String, Long> = emptyMap(),
     val nextUid: Long = 1,
     val apartment: Boolean = false,
+    /** Heilfortschritt der aktuellen Wunde in Tagen (7 = verheilt, Ruhe/Klinik beschleunigt). */
+    val woundProgress: Int = 0,
     val coverJob: String? = null
 ) {
     val displayName: String get() = "$firstName $lastName"
@@ -292,5 +294,85 @@ data class GameState(
     val board: List<MissionDefinition> = emptyList(),
     val rolls: Int = 0,
     val lastAutosave: Long = 0,
-    val pendingCompanion: CustomNpc? = null
+    val pendingCompanion: CustomNpc? = null,
+    // --- v0.5: Zeitplan, Karriere, Ausrüstungsprofile (alle mit Defaults → v0.4-kompatibel)
+    val weekPlan: List<String> = listOf("combat", "tech", "recon", "duty", "exam", "social", "rest"),
+    val simReports: List<SimReport> = emptyList(),
+    val simEventCounts: Map<String, Int> = emptyMap(),
+    val career: CareerState = CareerState(),
+    val journal: List<JournalEntry> = emptyList(),
+    val activeExam: ExamRun? = null,
+    val loadouts: List<Loadout> = Loadout.defaults()
 )
+
+@Serializable
+data class SimReport(
+    val startDay: Int,
+    val endDay: Int,
+    val plannedDays: Int,
+    val stopReason: String = "",
+    val attributeGains: Map<String, Int> = emptyMap(),
+    val activityDays: Map<String, Int> = emptyMap(),
+    val failedSessions: Int = 0,
+    val xp: Int = 0,
+    val levelBefore: Int = 1,
+    val levelAfter: Int = 1,
+    val income: Int = 0,
+    val expenses: Int = 0,
+    val reputation: Int = 0,
+    val examPrep: Int = 0,
+    val woundsBefore: Int = 0,
+    val woundsAfter: Int = 0,
+    val healthBefore: Int = 100,
+    val healthAfter: Int = 100,
+    val stressBefore: Int = 0,
+    val stressAfter: Int = 0,
+    val relationChanges: Map<String, Int> = emptyMap(),
+    val trainerSessions: Map<String, Int> = emptyMap(),
+    val events: List<String> = emptyList()
+)
+
+@Serializable
+data class Evaluation(val day: Int, val grade: String, val score: Int, val comment: String, val auto: Boolean = false)
+
+@Serializable
+data class CareerState(
+    /** Prüfungsvorbereitung 0..100, wird bei einem Prüfungsversuch verbraucht. */
+    val examPrep: Int = 0,
+    val examCooldownUntil: Int = -1,
+    /** Auflage nach nicht bestandener Prüfung: benötigte Vorbereitung. */
+    val examPrepRequired: Int = 0,
+    val failedExams: Int = 0,
+    val evaluations: List<Evaluation> = emptyList(),
+    val attrSumAtLastEval: Int = 0,
+    /** Tage, an denen erfolgreich trainiert wurde (letzte 90 Tage). */
+    val trainingDays: List<Int> = emptyList(),
+    val sessionsDay: Int = -1,
+    val sessionsToday: Int = 0,
+    val lastMentorDay: Int = -1,
+    val goals: Map<String, Int> = emptyMap(),
+    val awards: Set<String> = emptySet()
+)
+
+@Serializable
+data class JournalEntry(val day: Int, val type: String, val title: String, val text: String)
+
+@Serializable
+data class ExamRun(
+    val rank: Int,
+    val phase: Int = 0,
+    val score: Int = 0,
+    val notes: List<String> = emptyList(),
+    val finished: Boolean = false,
+    val passed: Boolean = false
+)
+
+@Serializable
+data class Loadout(val id: String, val name: String, val items: Map<String, String> = emptyMap()) {
+    companion object {
+        fun defaults() = listOf(
+            Loadout("recon", "Aufklärung"), Loadout("analysis", "Analyse"),
+            Loadout("medic", "Erste Hilfe"), Loadout("tactical", "Taktische Unterstützung")
+        )
+    }
+}
