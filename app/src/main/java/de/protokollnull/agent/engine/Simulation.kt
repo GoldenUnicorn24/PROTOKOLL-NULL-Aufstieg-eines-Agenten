@@ -133,7 +133,9 @@ object Simulation {
                 s = w.state
                 val diff = s.player.credits - before
                 if (diff >= 0) income += diff else expenses -= diff
+                s = Ops.weeklyFactions(data, s)
             }
+            s = Cases.daily(data, s)
             if (s.clock.day % Career.EVAL_INTERVAL == 0 && "met_michael" in s.flags) {
                 val ev = Career.evaluate(data, s, auto = true)
                 if (ev.ok) { s = ev.state; log += "${Clock.dateLabel(s.clock.day)}: Monatsbeurteilung durch Michael – Note ${s.career.evaluations.last().grade}" }
@@ -154,6 +156,10 @@ object Simulation {
         s = Quests.update(data, s).state
         s = Career.checkAwards(s)
         s = MissionGenerator.refreshBoard(data, s)
+        // v0.7: Missionsboard nach dem Zeitraffer – abgelaufene Aufträge werden verbucht, neue nicht dupliziert
+        val opsBefore = s.ops.history.size
+        s = Ops.refresh(data, s)
+        s.ops.history.drop(opsBefore).forEach { log += "Auftrag ${ContractStatus.label(it.status).lowercase()}: ${it.title}" }
         val p = s.player
         val gains = Attr.all.associateWith { (p.attributes[it] ?: 0) - (attrsBefore[it] ?: 0) }.filterValues { it != 0 }
         val relChanges = s.relations.mapValues { (k, v) -> v.friendship - (relBefore[k] ?: Relations.get(data, state, k).friendship) }.filterValues { it != 0 }

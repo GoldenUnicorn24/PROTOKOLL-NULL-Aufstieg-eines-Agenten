@@ -163,6 +163,8 @@ object Inventory {
         val def = data.itemById[itemId] ?: return state.fail("Unbekannt")
         if (!def.buyable) return state.fail("Nicht über die Ausrüstungskammer erhältlich")
         if (state.player.rank < def.minRank) return state.fail("Freigabe ab Rang ${def.minRank}")
+        if (def.category == "weapons" && Ages.player(state) < 18 && def.id != "pistol_training")
+            return state.fail("Bewaffnung kann erst ab 18 angefordert werden.")
         val price = price(def, state)
         if (state.player.credits < price) return state.fail("Nicht genug Credits ($price benötigt)")
         val s = state.copy(player = state.player.copy(credits = state.player.credits - price))

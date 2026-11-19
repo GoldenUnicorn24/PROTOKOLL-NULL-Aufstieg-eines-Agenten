@@ -24,37 +24,7 @@ import de.protokollnull.agent.ui.*
 import de.protokollnull.agent.ui.theme.*
 
 @Composable
-fun MissionBoardScreen(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    var filter by remember { mutableStateOf("story") }
-    val story = data.missions
-    LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        item {
-            Text("EINSATZZENTRALE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-            Text("MISSIONEN & AUFTRÄGE", style = MaterialTheme.typography.titleLarge)
-            Spacer(Modifier.height(6.dp))
-            ChipRow(listOf("story" to "Kampagne", "board" to "Einsatzboard (Woche ${Clock.week(s.clock.day) + 1})", "reports" to "Berichte"), filter) { filter = it }
-        }
-        when (filter) {
-            "story" -> story.groupBy { it.chapter }.forEach { (chapter, list) ->
-                item(key = "h_$chapter") {
-                    val done = list.count { it.id in s.completedMissions }
-                    SectionLabel(chapter.ifBlank { "Aufträge" }, trailing = "$done/${list.size}", icon = PnIcons.Flag)
-                }
-                items(list, key = { it.id }) { m -> MissionCard(vm, s, m) }
-            }
-            "board" -> {
-                item { SmallNote("Generierte Aufträge (Seed-basiert), wöchentlich neu. Unter 18 nur Gespräche, Untersuchungen und Observationen mit Gefahrenstufe ≤ 2.") }
-                items(s.board, key = { it.id }) { m -> MissionCard(vm, s, m) }
-                if (s.board.isEmpty()) item { ActionButton("Board laden", Modifier.fillMaxWidth()) { vm.update { MissionGenerator.refreshBoard(data, it) } } }
-            }
-            else -> {
-                if (s.reports.isEmpty()) item { SmallNote("Noch keine Einsatzberichte.") }
-                items(s.reports.reversed()) { r -> ReportCard(r) }
-            }
-        }
-    }
-}
+fun MissionBoardScreen(vm: GameViewModel, s: GameState) = MissionControlScreen(vm, s)
 
 @Composable
 fun ReportCard(r: MissionReport) {
@@ -105,6 +75,7 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
     val maxTeam = minOf(m.maxTeam, Progression.teamSize(data, s))
     var team by remember { mutableStateOf(s.team.filter { it in candidates }.take(maxTeam)) }
     val lock = Missions.lockReason(data, s, m)
+    val contract = if (Ops.isContract(m.id)) Ops.contract(s, m.id) else null
     Column(Modifier.fillMaxSize()) {
         ScreenHeader(m.title, "Briefing · " + (MissionGenerator.typeLabels[m.type] ?: m.type), onBack = { vm.back() })
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -117,13 +88,16 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
                 }
                 Text(m.description, style = MaterialTheme.typography.bodyMedium)
                 if (m.briefing.isNotBlank()) Text(m.briefing, style = MaterialTheme.typography.bodySmall, color = Pn.Accent)
-                KeyValue("Fraktion", data.factionById[m.factionId]?.name ?: m.factionId)
-                KeyValue("Gefahrenstufe", "${m.threat}/5")
-                KeyValue("Zeugen", m.witnesses.toString())
-                KeyValue("Phasen", m.stages.joinToString(" → ") { MissionGenerator.typeLabels[it.type] ?: when (it.type) { "choice" -> "Entscheidung"; "search" -> "Suche"; "observe" -> "Beobachtung"; "tactical" -> "Taktik"; else -> it.type } })
+                if (contract == null) {
+                    KeyValue("Fraktion", data.factionById[m.factionId]?.name ?: m.factionId)
+                    KeyValue("Gefahrenstufe", "${m.threat}/5")
+                    KeyValue("Zeugen", m.witnesses.toString())
+                    KeyValue("Phasen", m.stages.joinToString(" → ") { MissionGenerator.typeLabels[it.type] ?: when (it.type) { "choice" -> "Entscheidung"; "search" -> "Suche"; "observe" -> "Beobachtung"; "tactical" -> "Taktik"; else -> it.type } })
+                } else KeyValue("Gefahrenstufe", "${m.threat}/5")
                 KeyValue("Belohnung", "${m.xp} XP · ${m.credits} Cr · Ruf +${m.reputation}")
             }
-            SectionLabel("Vorgehen")
+            if (contract != null) ContractBriefingPanel(vm, s, contract)
+            SectionLabel(if (contract != null) "Einsatzstil" else "Vorgehen")
             Missions.approaches.forEach { a -> ChoiceButton(a.name + if (approach == a.id) "  ✓" else "", a.description) { approach = a.id } }
             SectionLabel("Team", trailing = "${team.size}/$maxTeam")
             if (maxTeam <= 0 || candidates.isEmpty()) SmallNote(if (candidates.isEmpty()) "Keine verfügbaren Teammitglieder (Vertrauen ≥ 30, bei Gefahr ≥ 3 nur Volljährige)." else "Einzeleinsatz.")
@@ -137,12 +111,15 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
                     NpcPortrait(data, s, id, 44.dp)
                     Column(Modifier.weight(1f)) {
                         Text(Relations.displayName(data, s, id), style = MaterialTheme.typography.titleSmall)
-                        val ab = data.agentById[id]?.teamAbility
-                        Text("Fähigkeit: " + (Tactical.abilities[ab]?.name ?: "Koordiniertes Vorgehen") + " · Loyalität " + Relations.get(data, s, id).loyalty, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        val unit = Tactical.allyUnit(data, s, id, 0, 0)
+                        val life = Life.life(data, s, id)
+                        Text("Fähigkeit: " + (Tactical.abilities[unit.ability]?.name ?: "–") + " · Treffer ${unit.accuracy} · LP ${unit.maxHp}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(Life.focusLabel(life.focus) + " · " + data.rank(life.rank).name + (contract?.let { " · Passung ${Ops.fit(data, s, it, id)}/10" } ?: ""), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
                     }
                     if (sel) Pill("Im Team")
                 }
             }
+            UnavailableTeamNote(vm, s, m, candidates)
             SectionLabel("Ausrüstung")
             GlassPanel {
                 val carried = s.player.inventory.map { it.itemId }.toSet()

@@ -309,7 +309,12 @@ data class TacticalSetup(
     val enemyAccuracy: Int = 55,
     val objective: String = "eliminate",
     val maxTurns: Int = 14,
-    val nonLethal: Boolean = true
+    val nonLethal: Boolean = true,
+    // --- v0.7: Kartenbibliothek und Missionsziele
+    val mapId: String = "",
+    val vipName: String = "",
+    val requiredSecured: Int = 0,
+    val holdTurns: Int = 0
 )
 
 @Serializable

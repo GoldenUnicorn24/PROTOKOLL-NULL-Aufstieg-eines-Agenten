@@ -75,6 +75,12 @@ object World {
         s = CompanionAssignment.arrive(data, s)
         val feedBefore = s.living.feed.size
         s = Life.advance(data, s)
+        // v0.7: Weltlage, Ermittlungen und Missionsboard fortschreiben
+        if (s.clock.day % 7 == 0) s = Ops.weeklyFactions(data, s)
+        s = Cases.daily(data, s)
+        val opsBefore = s.ops.history.size
+        s = Ops.refresh(data, s)
+        s.ops.history.drop(opsBefore).forEach { msgs += "Auftrag ${ContractStatus.label(it.status).lowercase()}: ${it.title}" }
         // Wichtige Neuigkeiten über bekannte Figuren als Tagesmeldung
         s.living.feed.drop(feedBefore.coerceAtMost(s.living.feed.size)).filter { it.type in setOf("promoted", "injured", "transferred", "couple", "returned") }
             .takeLast(3).forEach { msgs += it.text }

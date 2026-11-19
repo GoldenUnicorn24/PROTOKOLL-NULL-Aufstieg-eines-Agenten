@@ -23,7 +23,7 @@ class ContentValidationTest {
     }
 
     @Test fun catalogSizes() {
-        assertTrue(d.items.size >= 42)
+        assertTrue(d.items.size >= 102)
         assertTrue(d.agents.size >= 14)
         assertTrue(d.skills.size >= 27)
         assertEquals(12, d.ranks.size)

@@ -2,7 +2,7 @@ package de.protokollnull.agent.model
 
 import kotlinx.serialization.Serializable
 
-const val CURRENT_SCHEMA = 3
+const val CURRENT_SCHEMA = 4
 
 /** Attribute des Spielercharakters (0..100). */
 object Attr {
@@ -156,7 +156,16 @@ data class TacticalUnit(
     val abilityCooldown: Int = 0,
     val guarding: Boolean = false,
     val stunned: Int = 0,
-    val isPlayer: Boolean = false
+    val isPlayer: Boolean = false,
+    // --- v0.7
+    /** Gegnerrolle: guard, flanker, overwatch, rusher; Verbündete: Kompetenz-Schwerpunkt */
+    val role: String = "",
+    /** Schutzperson: muss überleben bzw. evakuiert werden, greift nicht an. */
+    val vip: Boolean = false,
+    val range: Int = 6,
+    val homeX: Int = -1,
+    val homeY: Int = -1,
+    val evacuated: Boolean = false
 ) {
     val down: Boolean get() = hp <= 0
 }
@@ -178,7 +187,18 @@ data class TacticalState(
     val seed: Long = 0,
     val rolls: Int = 0,
     val enemyName: String = "Gegner",
-    val nonLethal: Boolean = true
+    val nonLethal: Boolean = true,
+    // --- v0.7
+    val mapId: String = "",
+    val environment: String = "",
+    val mapName: String = "",
+    /** Gesicherte Infopunkte / besuchte Aufklärungspunkte als „x,y“. */
+    val secured: Set<String> = emptySet(),
+    val requiredSecured: Int = 0,
+    val holdTurns: Int = 0,
+    val held: Int = 0,
+    val stalemate: Int = 0,
+    val progressMark: Int = 0
 ) {
     fun tile(x: Int, y: Int): Char =
         if (y in tiles.indices && x in 0 until tiles[y].length) tiles[y][x] else '#'
@@ -310,7 +330,9 @@ data class GameState(
     val activeExam: ExamRun? = null,
     val loadouts: List<Loadout> = Loadout.defaults(),
     // --- v0.6: Living Division (Default → v0.4/v0.5-kompatibel)
-    val living: LivingState = LivingState()
+    val living: LivingState = LivingState(),
+    // --- v0.7: Shadow Operations (Default → v0.4–v0.6-kompatibel)
+    val ops: OpsState = OpsState()
 )
 
 @Serializable
