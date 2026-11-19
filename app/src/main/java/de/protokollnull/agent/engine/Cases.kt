@@ -122,7 +122,8 @@ object Cases {
         val open = all.filter { isOpen(s, it) }.sortedBy { if (it.faction == c.targetFaction) 0 else 1 }
         val case = open.firstOrNull() ?: return s to notes
         val missing = case.clues.filter { cl -> s.ops.clues.none { it.id == cl.id } }
-        val count = if (run.intel >= 4) 2 else 1
+        val extra = Sites.siteLevel(data, s, "analysis") >= 2 || Sites.moduleLevel(s, "analysis_room") >= 3 || ("proj_pattern_lab" in s.flags && (c.seed and 1L) == 0L)
+        val count = (if (run.intel >= 4) 2 else 1) + if (extra) 1 else 0
         missing.take(count).forEach { cl -> addClue(s, cl.id, c.title).let { (ns, n) -> s = ns; n?.let { notes += it } } }
         return s to notes
     }

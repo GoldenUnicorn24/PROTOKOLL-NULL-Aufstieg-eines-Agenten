@@ -69,32 +69,6 @@ object Director {
         return Result(state.copy(director = nd), msgs)
     }
 
-    /** Ab Einsatzkommandant: Generierte Missionen an Teams delegieren. */
-    fun delegate(data: GameData, state: GameState, mission: MissionDefinition, team: List<String>): Result {
-        if (state.player.rank < 9) return state.fail("Delegieren ab Rang 9 (Einsatzkommandant).")
-        if (team.isEmpty()) return state.fail("Kein Team ausgewählt.")
-        if (team.any { Ages.npc(data, state, it) < 18 } && mission.threat >= 3) return state.fail("Minderjährige nicht für Gefahrenstufe ≥ 3.")
-        val power = team.sumOf { (data.agentById[it]?.combat ?: 45) + Relations.get(data, state, it).loyalty / 4 } / team.size
-        val intel = (state.director?.departments?.get("intel") ?: 1) * 4
-        val chance = (40 + power / 2 + intel + team.size * 6 - mission.threat * 10).coerceIn(10, 95)
-        val rng = Rng(Rng.mix(state.seed, state.rolls.toLong(), mission.id.hashCode().toLong()))
-        val roll = rng.percent()
-        var s = state.copy(rolls = state.rolls + 1, board = state.board.filter { it.id != mission.id })
-        val msgs = mutableListOf<String>()
-        if (roll <= chance) {
-            val credits = mission.credits / 2
-            s = s.copy(player = s.player.copy(credits = s.player.credits + credits, reputation = s.player.reputation + mission.reputation / 2), completedMissions = s.completedMissions + mission.id)
-            team.forEach { id -> s = Relations.update(data, s, id) { it.copy(loyalty = it.loyalty + 3, respect = it.respect + 2) } }
-            val xp = Progression.grantXp(data, s, mission.xp / 3)
-            s = xp.state
-            msgs += "Delegiert: „${mission.title}“ erfolgreich ($roll/$chance). +$credits Cr" ; msgs += xp.messages
-        } else {
-            team.forEach { id -> s = Relations.update(data, s, id) { it.copy(trust = it.trust - 3) } }
-            s = s.copy(player = s.player.copy(reputation = (s.player.reputation - 5).coerceAtLeast(0)))
-            msgs += "Delegiert: „${mission.title}“ gescheitert ($roll/$chance). Das Team ist verletzt, aber am Leben. Ruf −5"
-        }
-        s = s.copy(reports = (s.reports + MissionReport(mission.id, mission.title, if (roll <= chance) "Delegiert – Erfolg" else "Delegiert – Fehlschlag", s.clock.day, 0, 0, 0, msgs)).takeLast(40))
-        val t = World.passTime(data, s, 1)
-        return Result(t.state, msgs + t.messages)
-    }
+    // v0.8: Die frühere Delegation über das alte Wochenboard wurde durch [Delegations]
+    // (OpsState.contracts) ersetzt – es gibt nur noch eine Missionsquelle.
 }

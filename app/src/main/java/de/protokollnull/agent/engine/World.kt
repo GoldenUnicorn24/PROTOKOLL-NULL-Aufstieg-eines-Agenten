@@ -32,11 +32,12 @@ object World {
     fun sleep(data: GameData, state: GameState): Result {
         if (state.clock.slot < 3) return state.fail("Zum Schlafen ist es noch zu früh. Nutze „Ausruhen“.")
         val p = state.player
-        val bonus = if (p.apartment) 10 else 0
+        // v0.8: Unterkunft, Einrichtung und HQ-Ausbauten bestimmen die Erholung
+        val bonus = Home.sleepEnergyBonus(state)
         var s = state.copy(player = p.copy(
             energy = (p.energy + 70 + bonus).pct(),
-            stress = (p.stress - 12 - bonus / 2).pct(),
-            health = (p.health + 6 + (if (p.wounds == 0) 4 else 0)).coerceAtMost(100)
+            stress = (p.stress - 12 - Home.sleepStressBonus(state)).pct(),
+            health = (p.health + 6 + (if (p.wounds == 0) 4 else 0) + 2 * Sites.moduleLevel(state, "med_ward")).coerceAtMost(100)
         ))
         val r = newDay(data, s, sleptWell = true)
         return Result(r.state, listOf("Du schläfst bis zum Morgen. Energie aufgefüllt.") + r.messages)
@@ -75,6 +76,9 @@ object World {
         s = CompanionAssignment.arrive(data, s)
         val feedBefore = s.living.feed.size
         s = Life.advance(data, s)
+        // v0.8: Führung, Delegationen, Standorte, Privatleben, Spätfolgen
+        s = Directorate.ensure(data, s)
+        s = daily08(data, s, msgs)
         // v0.7: Weltlage, Ermittlungen und Missionsboard fortschreiben
         if (s.clock.day % 7 == 0) s = Ops.weeklyFactions(data, s)
         s = Cases.daily(data, s)
@@ -92,16 +96,33 @@ object World {
         var s = state
         val msgs = mutableListOf<String>()
         val rank = data.rank(s.player.rank)
-        val salary = rank.salaryPerWeek + (if (s.player.coverJob != null) 120 else 0)
-        val rent = if (s.player.apartment) 150 else 0
-        s = s.copy(player = s.player.copy(credits = (s.player.credits + salary - rent).coerceAtLeast(0)))
-        msgs += "Wochensold: +$salary Cr" + if (rent > 0) ", Miete −$rent Cr" else ""
+        val salary = rank.salaryPerWeek
+        s = s.copy(player = s.player.copy(credits = (s.player.credits + salary).coerceAtLeast(0)))
+        msgs += "Wochensold: +$salary Cr"
+        // v0.8: Miete und Tarnjob genau einmal pro Woche
+        Home.weekly(data, s).let { (ns, m) -> s = ns; msgs += m }
         s = MissionGenerator.refreshBoard(data, s)
-        s.director?.let {
-            val r = Director.weekly(data, s)
-            s = r.state; msgs += r.messages
-        }
+        // v0.8: Team-/Organisationsabrechnung (ersetzt Director.weekly, genau einmal pro Woche)
+        val r = Directorate.weekly(data, s)
+        s = r.state; msgs += r.messages
         return Result(s, msgs)
+    }
+
+    /** v0.8: tägliche Fortschreibung der Führungs- und Privatlebenssysteme (auch im Zeitraffer). */
+    fun daily08(data: GameData, state: GameState, msgs: MutableList<String>? = null): GameState {
+        var s = state
+        val delBefore = s.lead.delegations.count { DelegationStatus.closed(it.status) }
+        s = Command.daily(data, s)
+        s = Delegations.daily(data, s)
+        s = Sites.daily(data, s)
+        s = Home.daily(s)
+        val (ns, fallout) = Directorate.dailyFallout(data, s)
+        s = ns
+        if (msgs != null) {
+            msgs += fallout
+            s.lead.delegations.filter { DelegationStatus.closed(it.status) }.drop(delBefore).forEach { msgs += "Delegation „${it.title}“: ${DelegationStatus.label(it.status)}" }
+        }
+        return s
     }
 
     // --- Zeitraffer -----------------------------------------------------------
@@ -193,8 +214,10 @@ object World {
         "research" -> RoomAction(id, "Akten durchsuchen", "Hinweise zu PHOENIX")
         "team" -> RoomAction(id, "Team zusammenstellen", "Einsatzteam verwalten")
         "cafe" -> RoomAction(id, "Café in der Stadt", "Stress −15, 1 Slot, 8 Cr")
-        "apartment" -> RoomAction(id, "Eigene Wohnung", "Mieten ab 18 (150 Cr/Woche)")
-        "cover_job" -> RoomAction(id, "Tarnjob", "Ziviles Doppelleben, +120 Cr/Woche")
+        "apartment" -> RoomAction(id, "Wohnen & Einrichtung", "Unterkunft, Möbel, Miete")
+        "cover_job" -> RoomAction(id, "Tarnjob", "Ziviles Doppelleben ab 17, Schichten")
+        "city" -> RoomAction(id, "Stadt & Freizeit", "Hobbys, Treffen, Alltag")
+        "command" -> RoomAction(id, "Führungscockpit", "Team, Delegation, Standorte")
         "study" -> RoomAction(id, "Lernen", "Theorie & Sprachen")
         else -> RoomAction(id, id, "")
     }
@@ -218,7 +241,7 @@ object World {
 
     fun treat(data: GameData, state: GameState): Result {
         val p = state.player
-        val med = (state.director?.departments?.get("medical") ?: 1) * 5
+        val med = Directorate.power(data, state, "medical") * 5
         // Klinik: Gesundheit sofort, Wunden nur über Heilfortschritt (+3 Tage pro Behandlung)
         val prog = p.woundProgress + if (p.wounds > 0) 3 else 0
         val healed = p.wounds > 0 && prog >= 7
@@ -244,7 +267,9 @@ object World {
         return Result(t.state, listOf("Ein normaler Kaffee unter normalen Menschen. Stress −15") + t.messages)
     }
 
-    fun rentApartment(data: GameData, state: GameState): Result {
+    fun rentApartment(data: GameData, state: GameState): Result = Home.move(data, state, "small")
+
+    fun rentApartmentLegacy(data: GameData, state: GameState): Result {
         if (Ages.player(state) < 18) return state.fail("Eine eigene Wohnung gibt es erst ab 18.")
         if (state.player.apartment) return state.fail("Du hast bereits eine Wohnung.")
         if (state.player.credits < 450) return state.fail("Kaution 450 Cr benötigt.")
@@ -254,9 +279,7 @@ object World {
 
     fun takeCoverJob(data: GameData, state: GameState): Result {
         if (Ages.player(state) < 17) return state.fail("Ab 17 genehmigt die Division einen Tarnjob.")
-        val p = state.player
-        return if (p.coverJob == null) Result(state.copy(player = p.copy(coverJob = "Fahrradkurier")), listOf("Tarnjob: Fahrradkurier. +120 Cr/Woche und eine glaubwürdige zivile Identität."))
-        else Result(state.copy(player = p.copy(coverJob = null)), listOf("Tarnjob gekündigt."))
+        return Home.takeJob(data, state, if (state.life.coverJob == null) "courier" else null)
     }
 
     fun research(data: GameData, state: GameState): Result {

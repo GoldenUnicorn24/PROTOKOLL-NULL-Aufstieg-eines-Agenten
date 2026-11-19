@@ -47,6 +47,7 @@ object Missions {
             val custom = state.customNpcs.firstOrNull { it.id == id }
             trust >= 30 && (m.threat < 3 || age >= 18) && (m.minAge < 18 || age >= 18) &&
                 Ops.available(data, state, id) && (custom == null || state.clock.day >= custom.createdDay) &&
+                Personnel.assignmentOf(data, state, id) == null && state.lead.tasks.none { it.npcId == id && !it.done } &&
                 (m.threat < 4 || Life.rank(data, state, id) >= 2)
         }
     }
@@ -68,7 +69,7 @@ object Missions {
             generated = if (data.missionById.containsKey(m.id)) null else m,
             approach = approach, team = validTeam,
             alarm = (if (approach == "direct") 1 else 0) + m.witnesses / 2,
-            intel = (state.director?.departments?.get("intel") ?: 1) - 1,
+            intel = Directorate.power(data, state, "intel") - 1 + Sites.startIntel(data, state) + state.lead.prepReady.coerceAtMost(1),
             log = listOf("Einsatz begonnen: ${m.title}")
         )
         if (contract != null) {
@@ -76,8 +77,10 @@ object Missions {
             run = run.copy(intel = (run.intel + contract.carriedIntel + (entry?.intel ?: 0)).coerceAtLeast(0), alarm = run.alarm + (entry?.alarm ?: 0).coerceAtLeast(0),
                 cover = (run.cover + (entry?.cover ?: 0)).coerceIn(1, 5))
         }
+        run = run.copy(alarm = (run.alarm - Sites.startAlarmReduction(data, state)).coerceAtLeast(0))
         run = enterStage(data, state, m, run, first)
-        val deployed = Ops.deployTeam(data, state, m, validTeam)
+        var deployed = Ops.deployTeam(data, state, m, validTeam)
+        if (deployed.lead.prepReady > 0) deployed = deployed.copy(lead = deployed.lead.copy(prepReady = deployed.lead.prepReady - 1))
         return Result(deployed.copy(activeMission = run, rolls = state.rolls + 1), listOf("Briefing abgeschlossen – Einsatz läuft."))
     }
 
@@ -127,6 +130,9 @@ object Missions {
         var bonus = if (approach != null && check.attribute in approach.attributes) 10 else 0
         val radio = if (Ops.contract(state, run.missionId)?.complicationId == "no_radio") 2 else 1
         bonus += run.team.size * 3 / radio
+        // v0.8: Teamführung (Rollen, Kohäsion) und Standorte
+        bonus += Command.missionBonus(data, state, run.team)
+        bonus += Sites.checkBonus(data, state, m?.locationId, check.attribute)
         bonus += run.intel.coerceAtMost(5) * 3
         bonus -= run.alarm * 3
         if (m != null) {
@@ -170,7 +176,7 @@ object Missions {
         val run = state.activeMission!!
         val noWitness = Ops.contract(state, run.missionId)?.complicationId == "no_witnesses"
         val alarmMult = if ((run.approach == "stealth" || noWitness) && o.alarm > 0) 2 else 1
-        val securityBonus = if ((state.director?.departments?.get("security") ?: 1) >= 3 && o.alarm > 0) 1 else 0
+        val securityBonus = if (Directorate.power(data, state, "security") >= 3 && o.alarm > 0) 1 else 0
         var r = run.copy(
             intel = (run.intel + o.intel).coerceAtLeast(0),
             alarm = (run.alarm + o.alarm * alarmMult - securityBonus).coerceAtLeast(0),

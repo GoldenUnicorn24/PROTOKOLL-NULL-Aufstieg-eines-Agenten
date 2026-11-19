@@ -43,7 +43,7 @@ object Simulation {
 
     fun forecast(state: GameState): Forecast {
         val plan = normalizedPlan(state).map { activity(it) }
-        val recovery = 55 + (if (state.player.apartment) 10 else 0)
+        val recovery = 55 + maxOf(if (state.player.apartment) 10 else 0, Home.sleepEnergyBonus(state))
         val energy = plan.sumOf { recovery - it.energy - 45 }
         val stress = plan.sumOf { it.stress } - 7 * 2
         val training = plan.count { it.attributes.isNotEmpty() && it.id != "social" }
@@ -143,6 +143,8 @@ object Simulation {
             s = Career.checkGoals(s, log)
             // Lebenssimulation läuft mit; HQ-Ereignisse entstehen nur im Tagesspiel
             s = Life.advance(data, s, log, hqEvents = false)
+            s = Directorate.ensure(data, s)
+            s = World.daily08(data, s, log)
             if (stopOnEvents) {
                 val story = Dialogues.pendingStory(data, s)
                 if (story != null && story.id != storyBefore) { stopReason = "Neues Ereignis: ${story.title}"; break }
@@ -189,7 +191,7 @@ object Simulation {
         if (p.wounds > 0 && act.id == "combat") { act = activity("rest"); if (rng.nextInt(4) == 0) log += "${Clock.dateLabel(day)}: Verletzung – Kampftraining durch Erholung ersetzt." }
         if (p.stress >= 85 || p.health < 35) act = activity("rest")
         // Morgendliche Energie aus der Nacht
-        val recovery = 55 + (if (p.apartment) 10 else 0) - p.stress / 5 - p.wounds * 5
+        val recovery = 55 + maxOf(if (p.apartment) 10 else 0, Home.sleepEnergyBonus(state)) - p.stress / 5 - p.wounds * 5
         var energy = (p.energy + recovery).coerceIn(10, 100)
         var stress = p.stress
         var health = p.health
@@ -211,7 +213,7 @@ object Simulation {
                         (1..3).any { slot -> World.npcLocation(data, s.copy(clock = GameClock(day, slot)), id) in trainerRoom }
                 }
                 val trainer = candidates.maxByOrNull { Progression.trainerBonus(data, s, it, attr) }
-                val bonus = Progression.trainerBonus(data, s, trainer, attr) + ((s.director?.departments?.get("training") ?: 1) - 1) * 6
+                val bonus = Progression.trainerBonus(data, s, trainer, attr) + (Directorate.power(data, s, "training") - 1) * 6
                 val cur = attrs[attr] ?: 30
                 val (nv, prog) = Progression.attributeProgress(cur, partial[attr] ?: 0, cap, rng.nextInt(25), bonus, 0.9)
                 attrs = attrs + (attr to nv); partial = partial + (attr to prog)

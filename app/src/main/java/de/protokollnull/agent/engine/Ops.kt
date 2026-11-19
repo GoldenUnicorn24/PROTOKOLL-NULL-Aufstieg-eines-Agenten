@@ -382,7 +382,7 @@ object Ops {
         val comp = rng.pick(complications.filter { c -> !(minor && c.id == "warned") && !(c.id == "team_only" && arch.maxTeam < 2) })
         val bm = faction(state, "syndicate")
         val base = if (minor) rng.range(1, 2) else (state.player.rank / 2 + rng.range(0, 2) + (if (target == "syndicate" && bm.arc == 1) 1 else 0)).coerceIn(1, 5)
-        val difficulty = if (minor) base.coerceAtMost(2) else base
+        val difficulty = (if (minor) base.coerceAtMost(2) else base) - (if (Sites.siteLevel(data, state, "analysis") >= 3 && base > 1) 1 else 0)
         val urgency = when (rng.percent()) { in 1..55 -> 1; in 56..88 -> 2; else -> 3 } + (if (target == "syndicate" && bm.arc == 1) 1 else 0)
         val phases = if (difficulty >= 3 && arch.id in setOf("observation", "undercover", "joint", "recon") && rng.percent() <= 45) 2 else 1
         val used = state.ops.contracts.map { it.title.substringAfter("„").substringBefore("“") }.toSet()
@@ -437,7 +437,7 @@ object Ops {
 
     fun expire(data: GameData, state: GameState, today: Int): GameState {
         var s = state
-        s.ops.contracts.filter { !ContractStatus.closed(it.status) && it.expiresDay < today && s.activeMission?.missionId != it.id }.forEach { c ->
+        s.ops.contracts.filter { !ContractStatus.closed(it.status) && it.status != ContractStatus.DELEGATED && it.expiresDay < today && s.activeMission?.missionId != it.id }.forEach { c ->
             val running = c.status == ContractStatus.IN_PROGRESS
             s = shiftInfluence(s, c.targetFaction, if (running) 4 else 3)
             s = shiftAttitude(s, clientById[c.clientId]?.faction ?: "division", -2)
@@ -481,6 +481,7 @@ object Ops {
 
     fun lockReason(data: GameData, state: GameState, c: Contract): String? {
         if (ContractStatus.closed(c.status)) return ContractStatus.label(c.status)
+        if (c.status == ContractStatus.DELEGATED) return "An ein Team delegiert"
         if (c.status == ContractStatus.IN_PROGRESS && state.clock.day < c.nextPhaseDay) return "Nächste Phase ab ${Clock.dateLabel(c.nextPhaseDay)}"
         return null
     }
@@ -638,6 +639,19 @@ object Ops {
             s = s.copy(living = s.living.copy(lives = s.living.lives + (id to nl)))
         }
         val c = contract(s, m.id) ?: return s to notes
+        s = Command.recordMission(s, run.team, result == "success" && c.phase >= c.phases - 1)
+        val (ns, n2) = settleContract(data, s, c, result, run)
+        return ns to (notes + n2)
+    }
+
+    /**
+     * Verbucht die Konsequenzen eines Auftrags (eigener Einsatz oder delegiert).
+     * Wird pro Abschluss genau einmal aufgerufen; der Auftrag verlässt danach den Pool.
+     */
+    fun settleContract(data: GameData, state: GameState, c: Contract, result: String, run0: MissionRun?): Pair<GameState, List<String>> {
+        var s = state
+        val notes = mutableListOf<String>()
+        val run = run0 ?: MissionRun(c.id, c.seed, "settle")
         val clientFaction = clientById[c.clientId]?.faction ?: "division"
         val lastPhase = c.phase >= c.phases - 1
         when {
@@ -680,6 +694,7 @@ object Ops {
         s = s.copy(flags = s.flags - "op_close_a" - "op_close_b")
         return s to notes
     }
+
 
     /** Folgeauftrag: Erfolge öffnen neue Türen, harte Abschlüsse provozieren Gegenreaktionen. */
     private fun followUp(data: GameData, state: GameState, c: Contract, hard: Boolean): GameState {
