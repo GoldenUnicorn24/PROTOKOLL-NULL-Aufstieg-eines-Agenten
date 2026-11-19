@@ -3,6 +3,7 @@ package de.protokollnull.agent
 import de.protokollnull.agent.data.SaveMigration
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.*
+import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -245,7 +246,7 @@ class DirectorsLegacyTest {
     @Test fun financeRunsOncePerWeekAndKeepsPersonalCreditsSeparate() {
         val s = leader(12).copy(clock = GameClock(day = 805))
         val r1 = Directorate.weekly(d, s)
-        assertEquals(1, r1.state.lead.reports.size)
+        assertEquals(1, r1.state.lead.reports.count { it.kind == "week" })
         assertEquals(s.player.credits, r1.state.player.credits)
         val r2 = Directorate.weekly(d, r1.state)
         assertEquals("zweiter Aufruf in derselben Woche ändert nichts", r1.state, r2.state)
@@ -535,6 +536,60 @@ class DirectorsLegacyTest {
         }
         val director = SaveMigration.decode("""{"schemaVersion":4,"phase":"game","clock":{"day":900},"player":{"rank":12},"director":{"budget":42000}}""")
         assertEquals(42000, director.director!!.budget)
+    }
+
+    @Test fun richV07SaveKeepsTeamOpsInventoryAndApartment() {
+        var s = leader(9)
+        s = Ops.refresh(d, s).copy(team = listOf("alex", "birkhoff"))
+        s = s.copy(player = s.player.copy(apartment = true, coverJob = "Fahrradkurier",
+            inventory = d.items.mapIndexed { i, it -> ItemStack(i + 1L, it.id) }))
+        val obj = kotlinx.serialization.json.Json.parseToJsonElement(SaveMigration.encode(s)).jsonObject
+        val v07 = kotlinx.serialization.json.JsonObject(obj.filterKeys { it != "lead" && it != "life" } +
+            ("schemaVersion" to kotlinx.serialization.json.JsonPrimitive(4)))
+        val loaded = SaveMigration.decode(v07)
+        assertEquals(s.team, loaded.team)
+        assertEquals(s.ops, loaded.ops)
+        assertEquals(s.living, loaded.living)
+        assertEquals(s.relations, loaded.relations)
+        assertEquals(102, loaded.player.inventory.size)
+        assertEquals("small", loaded.life.housing)
+        assertEquals("courier", loaded.life.coverJob)
+        assertEquals(LeadershipState(), loaded.lead)
+        val next = Simulation.run(d, loaded, 14, stopOnEvents = false).state
+        assertEquals("Miete einmal pro Woche", 2, next.life.lastRentWeek - loaded.life.lastRentWeek)
+        invariants(next)
+    }
+
+    @Test fun reloadMidProjectAndDelegationDoesNotDoubleCount() {
+        val (s0, c, team) = delegationSetup()
+        var s = Directorate.ensure(d, s0.copy(player = s0.player.copy(rank = 10)))
+        s = Directorate.chooseSection(d, s, "training").state
+        s = Directorate.startProject(d, s, "sim_course").state
+        s = Delegations.start(d, Delegations.prepare(d, s, c.id, team, null).state, "D0").state
+        s = Directorate.weekly(d, s.copy(clock = GameClock(805))).state
+        val reloaded = SaveMigration.decode(SaveMigration.encode(s))
+        assertEquals(s, reloaded)
+        assertEquals("gleiche Woche nach dem Laden", reloaded, Directorate.weekly(d, reloaded).state)
+        assertEquals(1, reloaded.lead.projects.single().weeksDone)
+        val back = reloaded.lead.delegations.single().returnDay
+        var t = reloaded
+        for (day in back..back + 3) t = Delegations.daily(d, SaveMigration.decode(SaveMigration.encode(t.copy(clock = GameClock(day)))))
+        assertEquals(1, t.ops.history.count { it.id == c.id })
+        assertEquals(1, t.reports.count { it.missionId == c.id })
+    }
+
+    @Test fun leadershipQualityChangesMissionChecks() {
+        val base = leader(8)
+        val team = adults(base).take(3)
+        var s = ready(base, team).copy(team = team)
+        assertEquals(0, Command.missionBonus(d, s.copy(player = s.player.copy(rank = 7)), team))
+        val bad = s.copy(lead = s.lead.copy(cohesion = 0))
+        assertTrue("schlechte Führung erschwert", Command.missionBonus(d, bad, team) < 0)
+        assertTrue("aber nicht unmöglich", Command.missionBonus(d, bad, team) >= -8)
+        team.forEachIndexed { i, id -> s = Command.setRole(d, s, id, Command.roles[i].id).state }
+        val good = s.copy(lead = s.lead.copy(cohesion = 90))
+        assertTrue(Command.missionBonus(d, good, team) > Command.missionBonus(d, bad, team))
+        assertTrue(Command.missionBonus(d, good, team) <= 12)
     }
 
     @Test fun teenRomanceRulesRemainUnchanged() {
