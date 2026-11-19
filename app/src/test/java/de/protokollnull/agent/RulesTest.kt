@@ -46,30 +46,61 @@ class RulesTest {
         assertEquals(0, Relations.get(d, r.state, npc.id).romanceStage)
     }
 
-    @Test fun teenRomanceAllowedBetweenMinorsOnly() {
+    @Test fun teenRomanceHasTwoStagesAndAlexIsOptional() {
         val s16 = gameStart()
-        // Maya ist 17, Spieler 16 -> altersgerechte Teen-Romanze erlaubt
         assertEquals(17, Ages.npc(d, s16, "maya"))
         assertTrue(Romance.allowed(d, s16, "maya"))
         assertEquals(2, Romance.maxStage(d, s16, "maya"))
-        // Serienfiguren sind nicht romantisch spielbar
+        // Alex bleibt Freundin, bis die Spielerfigur sich im Dialog annähert.
         assertFalse(Romance.allowed(d, s16, "alex"))
+        val unlocked = s16.copy(flags = s16.flags + "alex_romance_unlocked")
+        assertTrue(Romance.allowed(d, unlocked, "alex"))
+        assertEquals(2, Romance.maxStage(d, unlocked, "alex"))
     }
 
-    @Test fun ageGapBetweenAdultAndMinorIsBlocked() {
+    @Test fun adultEighteenAndNewRecruitSixteenCanDateAgeAppropriately() {
         val s18 = atAge(gameStart(), 18)
-        val r = Social.createRecruit(d, s18, "Jonas", "K", "male", AvatarSpec(), emptyList(), "", "tech", emptyList(), emptyMap())
+        val r = Social.createRecruit(d, s18, "Mira", "K", "female", AvatarSpec(), emptyList(), "", "tech", emptyList(), emptyMap())
         var s = r.state
         val id = s.customNpcs.single().id
-        assertFalse("Erwachsener + 16-Jährige/r", Romance.allowed(d, s, id))
-        // Zuneigung steigt nicht, solange es nicht erlaubt ist
+        assertEquals(16, Ages.npc(d, s, id))
+        assertTrue(Romance.allowed(d, s, id))
+        assertEquals(2, Romance.maxStage(d, s, id))
         s = Effs.apply(Effects(affection = 30), d, s, id).state
-        assertEquals(0, Relations.get(d, s, id).affection)
+        assertEquals(30, Relations.get(d, s, id).affection)
+        // Kein Zusammenziehen, keine Ehe oder Familie solange minderjährig.
+        s = Relations.update(d, s, id) { it.copy(romanceStage = 2, romanceSinceDay = s.clock.day - 60, affection = 100, trust = 100) }
+        s = s.copy(player = s.player.copy(apartment = true))
         assertNull(Romance.nextStep(d, s, id))
-        // zwei Jahre später sind beide volljährig
+        // Beide volljährig: weitere Schritte wieder freigeschaltet.
         s = s.copy(clock = GameClock(day = s.clock.day + 2 * 365))
         assertEquals(18, Ages.npc(d, s, id))
-        assertTrue(Romance.allowed(d, s, id))
+        assertEquals(5, Romance.maxStage(d, s, id))
+        assertEquals("move_in", Romance.nextStep(d, s, id)?.id)
+    }
+
+    @Test fun tooLargeAgeGapStillBlocksRomanceWithMinor() {
+        val s19 = atAge(gameStart(), 19)
+        val recruit = Social.createRecruit(d, s19, "Mira", "K", "female", AvatarSpec(), emptyList(), "", "tech", emptyList(), emptyMap()).state
+        val id = recruit.customNpcs.single().id
+        assertFalse(Romance.allowed(d, recruit, id))
+        assertNull(Romance.nextStep(d, recruit, id))
+        val after = Effs.apply(Effects(affection = 30), d, recruit, id).state
+        assertEquals(0, Relations.get(d, after, id).affection)
+    }
+
+    @Test fun alexDialogueUnlocksOnlyWhenChosen() {
+        val s16 = gameStart()
+        val ready = Relations.update(d, s16.copy(flags = s16.flags + "met_alex"), "alex") {
+            it.copy(friendship = 65, trust = 70)
+        }
+        val dialog = Dialogues.start(d, ready, "dlg_alex_choice").state
+        val heard = Dialogues.choose(d, dialog, "listen").state
+        val chosen = Dialogues.choose(d, heard, "interest").state
+        assertTrue("alex_romance_unlocked" in chosen.flags)
+        assertTrue(Romance.allowed(d, chosen, "alex"))
+        val friendly = Dialogues.choose(d, dialog, "friendship").state
+        assertFalse(Romance.allowed(d, friendly, "alex"))
     }
 
     @Test fun trustIsClamped() {

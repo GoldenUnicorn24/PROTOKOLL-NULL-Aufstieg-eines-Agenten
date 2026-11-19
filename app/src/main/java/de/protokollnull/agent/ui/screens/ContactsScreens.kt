@@ -126,9 +126,11 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String) {
                     if (step != null) {
                         SectionLabel("Beziehung")
                         ChoiceButton(step.label, step.requirement, enabled = here && step.available) { vm.act { dd, x -> Romance.advance(dd, x, id) } }
-                        if (Romance.teen(data, s, id)) SmallNote("Altersgerechte Teen-Beziehung: gemeinsame Zeit, Vertrauen, Gespräche – keine sexualisierten Inhalte.")
+                    }
+                    if (Romance.romanceable(data, s, id) && Romance.teen(data, s, id) && Romance.allowed(data, s, id)) {
+                        SmallNote("Altersgerechte Beziehung (mindestens 16 Jahre, höchstens zwei Jahre Altersunterschied): Gespräche, gemeinsame Zeit, Dates ohne sexualisierte Inhalte. Zusammenziehen, Heirat und Familie erst als Volljährige.")
                     } else if (Romance.romanceable(data, s, id) && !Romance.allowed(data, s, id)) {
-                        SmallNote("Romantische Optionen sind gesperrt, solange eine der beiden Figuren minderjährig ist und die andere volljährig. Freundschaft und Mentoring sind möglich.")
+                        SmallNote("Romantische Optionen aktuell nicht verfügbar: Bei minderjährigen Figuren müssen beide mindestens 16 Jahre alt sein und dürfen höchstens zwei Jahre auseinanderliegen. Freundschaft bleibt möglich.")
                     }
                     if (id in Missions.teamCandidates(data, s, MissionDefinition(id = "x", title = "", locationId = "hq", type = "x"))) {
                         val inTeam = id in s.team

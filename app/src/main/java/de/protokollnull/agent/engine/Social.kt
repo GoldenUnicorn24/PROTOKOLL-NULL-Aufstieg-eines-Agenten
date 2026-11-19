@@ -7,21 +7,27 @@ object Romance {
     val stageNames = listOf("—", "Gegenseitiges Interesse", "Ein Paar", "Zusammengezogen", "Verheiratet", "Familie")
     val teenStageNames = listOf("—", "Schwärmerei", "Fest zusammen (altersgerecht)")
 
-    fun romanceable(data: GameData, state: GameState, npcId: String): Boolean =
-        state.customNpcs.any { it.id == npcId } || (data.agentById[npcId]?.romanceable == true)
+    /** Alex ist in dieser alternativen Nikita-Handlung eine optionale Romanze.
+     *  Ohne ausdrückliche Annäherung im Dialog bleibt sie ausschließlich Freundin. */
+    fun romanceable(data: GameData, state: GameState, npcId: String): Boolean {
+        if (npcId == "alex") return data.agentById[npcId]?.romanceable == true &&
+            "alex_romance_unlocked" in state.flags
+        return state.customNpcs.any { it.id == npcId } ||
+            (data.agentById[npcId]?.romanceable == true)
+    }
 
     /**
-     * Altersregeln: Romanzen nur unter Volljährigen ODER zwischen zwei
-     * Minderjährigen (16/17) mit höchstens zwei Jahren Altersabstand. Niemals
-     * zwischen einem Erwachsenen und einer minderjährigen Figur.
+     * Altersgerechte, nicht-sexualisierte Romanzen: beide mindestens 16 und
+     * höchstens zwei Jahre auseinander (auch 18/16), oder beide 18+.
+     * Zusammenziehen/Heirat/Familiengründung erst bei Volljährigkeit beider
+     * und mit den bestehenden zusätzlichen Voraussetzungen.
      */
     fun allowed(data: GameData, state: GameState, npcId: String): Boolean {
         if (!romanceable(data, state, npcId)) return false
         val a = Ages.player(state)
         val b = Ages.npc(data, state, npcId)
         if (a >= 18 && b >= 18) return true
-        if (a < 18 && b < 18 && kotlin.math.abs(a - b) <= 2 && a >= 16 && b >= 16) return true
-        return false
+        return a >= 16 && b >= 16 && kotlin.math.abs(a - b) <= 2
     }
 
     fun teen(data: GameData, state: GameState, npcId: String): Boolean =
@@ -42,7 +48,7 @@ object Romance {
         val r = Relations.get(data, state, npcId)
         if (!romanceable(data, state, npcId)) return null
         if (!allowed(data, state, npcId)) {
-            return if (r.romanceStage > 0) Step("pause", "Beziehung pausiert", "Ihr bleibt Freunde, bis beide volljährig sind.", false)
+            return if (r.romanceStage > 0) Step("pause", "Beziehung pausiert", "Die Altersvoraussetzungen sind momentan nicht erfüllt.", false)
             else null
         }
         val other = partnerId(data, state)

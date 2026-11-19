@@ -3117,5 +3117,187 @@
       ]
     },
     "completeFlag": "ending_reached"
+  },
+  {
+    "id": "dlg_alex_choice",
+    "npcId": "alex",
+    "title": "Mehr als nur Kollegen?",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 1,
+    "startNode": "alex_choice_01",
+    "nodes": [
+      {
+        "id": "alex_choice_01",
+        "speakerId": "alex",
+        "text": "Nach dem Abendtraining sitzt Alex allein auf einer Bank. Sie faltet einen Zettel zusammen, als du näherkommst. „Ich weiß noch immer nicht, wem ich hier vertrauen soll. Aber mit dir muss ich mich wenigstens nicht verstellen.“",
+        "choices": [
+          {
+            "id": "listen",
+            "text": "„Du kannst mir sagen, was dir auf dem Herzen liegt.“",
+            "nextNode": "alex_choice_02",
+            "effects": {
+              "friendship": 3,
+              "trust": 3
+            }
+          },
+          {
+            "id": "friendship",
+            "text": "„Ich bin froh, dass wir Freunde geworden sind.“",
+            "nextNode": "alex_choice_friend",
+            "effects": {
+              "friendship": 5,
+              "setFlags": [
+                "alex_friendship_chosen"
+              ],
+              "memory": "Eine aufrichtige Freundschaft mit Alex"
+            }
+          }
+        ]
+      },
+      {
+        "id": "alex_choice_02",
+        "speakerId": "alex",
+        "text": "„Manchmal frage ich mich, wie das alles außerhalb der Division wäre.“ Sie schaut dich vorsichtig an. „Ob du dann trotzdem Zeit mit mir verbringen würdest?“",
+        "choices": [
+          {
+            "id": "interest",
+            "text": "„Ja. Und ich würde dich gern näher kennenlernen – ganz in unserem Tempo.“",
+            "nextNode": "alex_choice_interest",
+            "effects": {
+              "setFlags": [
+                "alex_romance_unlocked"
+              ],
+              "trust": 3,
+              "memory": "Alex und du habt offen über eine mögliche Beziehung gesprochen"
+            }
+          },
+          {
+            "id": "friends",
+            "text": "„Auf jeden Fall. Unsere Freundschaft bedeutet mir viel.“",
+            "nextNode": "alex_choice_friend",
+            "effects": {
+              "friendship": 4,
+              "setFlags": [
+                "alex_friendship_chosen"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "alex_choice_interest",
+        "speakerId": "alex",
+        "text": "Alex lächelt zum ersten Mal an diesem Tag ganz unbeschwert. „Gut. Ohne Druck und ohne Versprechen, die wir noch nicht geben können.“ Ihr verabredet euch für einen Spaziergang nach dem Dienst.",
+        "choices": [
+          {
+            "id": "agree",
+            "text": "„Abgemacht.“",
+            "effects": {
+              "friendship": 4,
+              "trust": 2,
+              "xp": 60
+            }
+          }
+        ]
+      },
+      {
+        "id": "alex_choice_friend",
+        "speakerId": "alex",
+        "text": "„Darauf kann ich mich verlassen“, sagt Alex. Sie legt den Zettel beiseite und bleibt noch eine Weile bei dir sitzen. Eure Freundschaft ist ihr wichtig.",
+        "choices": [
+          {
+            "id": "stay",
+            "text": "Noch ein bisschen zusammen reden.",
+            "effects": {
+              "friendship": 5,
+              "xp": 50
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minFriendship": 40,
+      "minTrust": 45
+    }
+  },
+  {
+    "id": "dlg_alex_evening",
+    "npcId": "alex",
+    "title": "Ein Abend ohne Akten",
+    "chapter": "Beziehungen",
+    "once": true,
+    "priority": 1,
+    "startNode": "alex_evening_01",
+    "nodes": [
+      {
+        "id": "alex_evening_01",
+        "speakerId": "alex",
+        "text": "Alex wartet in der Cafeteria, zwei Becher Tee vor sich. „Ich habe es tatsächlich geschafft, heute an etwas anderes als die nächste Mission zu denken.“",
+        "choices": [
+          {
+            "id": "walk",
+            "text": "Mit ihr draußen spazieren gehen.",
+            "nextNode": "alex_evening_walk",
+            "effects": {
+              "affection": 6,
+              "friendship": 4
+            }
+          },
+          {
+            "id": "tea",
+            "text": "Bleiben und über eure Zukunft reden.",
+            "nextNode": "alex_evening_talk",
+            "effects": {
+              "affection": 4,
+              "trust": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "alex_evening_walk",
+        "speakerId": "alex",
+        "text": "Draußen zieht der Wind durch die Bäume. Alex hält kurz inne. „Seltsam. Mit dir fühlt sich selbst ein ganz gewöhnlicher Abend besonders an.“ Sie wartet auf deine Antwort.",
+        "choices": [
+          {
+            "id": "gentle",
+            "text": "„Ich mag unsere Zeit zusammen. Ohne Eile.“",
+            "effects": {
+              "affection": 5,
+              "memory": "Ein Abendspaziergang mit Alex",
+              "xp": 45
+            }
+          }
+        ]
+      },
+      {
+        "id": "alex_evening_talk",
+        "speakerId": "alex",
+        "text": "Alex erzählt von einer Zukunft, die vielleicht nicht von Division bestimmt sein muss. Ihr verabredet euch, solche Abende zu wiederholen.",
+        "choices": [
+          {
+            "id": "promise",
+            "text": "„Darauf freue ich mich.“",
+            "effects": {
+              "affection": 4,
+              "memory": "Alex und du sprecht über die Zukunft",
+              "xp": 45
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": {
+      "flagsAll": [
+        "alex_romance_unlocked"
+      ],
+      "minFriendship": 50,
+      "minTrust": 45
+    }
   }
 ]
