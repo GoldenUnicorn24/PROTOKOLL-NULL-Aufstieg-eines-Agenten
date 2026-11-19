@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.4.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Danach freies Spiel (Details unten).
+**Stand: Beta 0.5.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.5: Karriere & Ausbildung mit Michael, mehrphasige Beförderungsprüfungen, tagesgenaue Zeitplan-Simulation mit Bericht und Ausrüstungsprofile (Details unten).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -14,10 +14,34 @@ Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, mi
 Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
 
 
-## Neue Entwicklung – private Serienporträts und v0.5
+## Neu in v0.5 – Karriere, Zeitplan, Ausrüstung
 
-- Private Serienbilder können optional direkt in der App pro Serienfigur über den Android-Fotopicker ausgewählt werden, ohne die Bilder nach GitHub hochzuladen. Optionaler lokaler Build-Asset-Ordner wird ignoriert; siehe [private Serienporträts](docs/PRIVATE_CAST_PORTRAITS.md).
-- Der vollständige Entwicklungsauftrag für Claude ist [CLAUDE_V0_5_MASTER_PROMPT.md](docs/CLAUDE_V0_5_MASTER_PROMPT.md). Die laufende v0.4 bleibt bis zum geprüften v0.5-Release erhalten.
+### Karriere & Ausbildung
+- **Leistungsbeurteilung durch Michael** (Note A–E) aus tatsächlichen Leistungen der letzten 30 Tage: Trainingseinheiten, Einsätze, Entwicklung der Attribute, Prüfungsvorbereitung, Verfassung. Anforderbar alle 30 Tage, im Zeitplan automatisch monatlich.
+- **Beförderungen zu Rang 2–7 erfordern eine aktuelle Beurteilung ≥ C.** Ränge 5–11 bleiben zusätzlich an Story-Missionen gebunden.
+- **Mehrphasige Beförderungsprüfung** im Direktorat: Theorie → Praxis → Lageentscheidung (drei Antworten, eine fachlich beste) → Urteil (Michaels Vertrauen + Beurteilung). Bestanden ab 60 Punkten. Nicht bestanden: Auflage zur Prüfungsvorbereitung und 14 Tage Wartezeit – nie eine Sackgasse.
+- **Michael als Mentor**: Einzeltraining an deiner Schwäche, Prüfungsvorbereitung (je einmal pro Tag, Vertrauen ≥ 45, nur wenn er anwesend ist).
+- **Trainingsplaner**: Ausbilder (Michael, Owen, Birkhoff, Sonya, Amanda, Ryan – nur wenn anwesend, Bonus nach Vertrauen und Kompetenz), Intensität (Leicht/Normal/Intensiv mit Verletzungsrisiko), Tageslimit (danach Ermüdung), persönliche Trainingsziele.
+- **Karrierejournal** (Beurteilungen, Prüfungen, Beförderungen, Ziele, Geburtstage, Auszeichnungen) und **Freischaltungen je Dienstgrad** (z. B. Rabatt ab Rang 6, Geheimarchiv ab Rang 7, Teambefehl ab Rang 8, Delegieren ab Rang 9).
+
+### Zeitplan & Simulation
+- Ersetzt den alten Zeitraffer. Du legst für jeden Wochentag eine Tätigkeit fest (Kampftraining, Technik, Aufklärung, Sozialleben, Erholung, Dienst, Prüfungsvorbereitung) und simulierst 1/7/30/90/365 Tage oder bis zum 18. Geburtstag.
+- Tag für Tag: Energie, Stress, Erfolg der Einheit, Ausbilder vor Ort, Attributfortschritt mit abnehmendem Ertrag, XP sinkend mit Level, Wundheilung (7 Heiltage pro Wunde, Erholung schneller), Sold/Miete wöchentlich, Dienstzulagen, Ruf aus Dienst gedeckelt.
+- Beziehungen ändern sich nur durch tatsächliche Begegnungen mit bekannten, anwesenden Figuren; lange ohne Kontakt schläft eine Freundschaft leicht ein. Zufallsbegegnungen höchstens dreimal je Ereignis.
+- **Anhalten bei wichtigen Ereignissen**: 18. Geburtstag (inkl. Gefährtenankunft), neue Story-Ereignisse, kritische Gesundheit, erfüllte Prüfungsauflage. Story-Ereignisse gehen nie verloren.
+- Ausführlicher **Bericht** (Training, Attribute, XP/Level, Gesundheit/Wunden/Stress, Einnahmen/Ausgaben, Begegnungen, Ereignisprotokoll). Deterministisch: gleicher Seed + gleicher Plan = gleicher Spielstand.
+
+### Inventar & Ausrüstung
+- **Vier speicherbare Ausrüstungsprofile** (Aufklärung, Analyse, Erste Hilfe, Taktische Unterstützung); Anlegen holt Teile aus dem Spind und prüft Rangfreigaben und Gewicht.
+- **Direkter Vergleich** mit dem ausgerüsteten Gegenstand (Boni, Schutz, Wirkung, Tragkraft, Gewicht, Zustand).
+- **Situative Gegenstandsboni in zehn Missionsoptionen** (z. B. Kamera beim Beweisfoto am Hafen, Erste-Hilfe-Set bei Versorgung, Laptop bei der Entschlüsselung); ausgerüstet voller, im Inventar halber Bonus.
+- Kein Kauf-/Rückgabe-Gewinn möglich (getestet), Rangrabatt ab Rang 6. Alle 42 Gegenstände haben ein vorhandenes Bild; ein neutraler Platzhalter mit Asset-ID erscheint nur, falls eine Datei fehlt (siehe `docs/MISSING_ITEM_ART.md`).
+
+### Beziehungen
+- **Romantische Optionen gibt es ab v0.5 nur, wenn beide Figuren volljährig sind.** Die 18/16-Regel aus v0.4 wurde nicht übernommen. Alex-Route (ab 18), Gefährtenakte und alle Erwachsenen-Stufen bleiben erhalten; frühere Beziehungsstufen aus alten Spielständen werden als „pausiert“ angezeigt.
+
+### Private Serienporträts
+- Lokale Bildauswahl pro Serienfigur über den Android-Fotopicker (PR #2), ohne Upload; wird in Dialogen, Personalakten und allen NPC-Porträts verwendet. Details: [private Serienporträts](docs/PRIVATE_CAST_PORTRAITS.md).
 
 ## Screenshots
 
@@ -32,10 +56,14 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/09_taktikbrett.png) | ![](docs/screenshots/10_nachbesprechung.png) | ![](docs/screenshots/11_untersuchung.png) | ![](docs/screenshots/12_inventar.png) |
 | **Gegenstand** | **Ausrüstungskammer** | **Kontakte** | **Personalakte** |
 | ![](docs/screenshots/13_gegenstand.png) | ![](docs/screenshots/14_ausruestungskammer.png) | ![](docs/screenshots/15_kontakte.png) | ![](docs/screenshots/16_personalakte.png) |
-| **Profil** | **Skilltree** | **Ränge** | **Kalender** |
+| **Profil** | **Skilltree** | **Karriere/Ränge** | **Zeitplan** |
 | ![](docs/screenshots/17_profil.png) | ![](docs/screenshots/18_skilltree.png) | ![](docs/screenshots/19_raenge.png) | ![](docs/screenshots/20_kalender.png) |
 | **Rekrutierungseditor (ab 18)** | **Direktorat** | **Spielstände** | **Epilog** |
 | ![](docs/screenshots/21_rekrutierungseditor.png) | ![](docs/screenshots/22_direktorat.png) | ![](docs/screenshots/23_spielstaende.png) | ![](docs/screenshots/24_epilog.png) |
+| **Zeitplan-Bericht (v0.5)** | **Karriere (v0.5)** | **Trainingsplaner (v0.5)** | **Prüfung (v0.5)** |
+| ![](docs/screenshots/25_zeitplan_bericht.png) | ![](docs/screenshots/26_karriere.png) | ![](docs/screenshots/27_trainingsplaner.png) | ![](docs/screenshots/28_pruefung.png) |
+| **Ausrüstungsprofile (v0.5)** | | | |
+| ![](docs/screenshots/29_ausruestungsprofile.png) | | | |
 
 ## Was ist spielbar? (ehrlicher Stand)
 
@@ -96,10 +124,19 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 
 ### Tests
 - `ContentValidationTest`: Kataloggrößen, eindeutige IDs, alle Asset-Pfade, Serienstill-Lizenzregel, Missions-/Dialog-/Quest-Referenzen, unerreichbare Dialogknoten, Prolog-Graph, Kapitel 1 = 10 Missionen.
-- `RulesTest`: Level-100-Grenze, Editor ab 18, Teen-Romanze, Altersabstand, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
-- `ScreenshotTest`: rendert 24 Kernscreens mit echtem Spielzustand (Robolectric).
+- `RulesTest`: Level-100-Grenze, Editor ab 18, Romanzen nur unter Volljährigen, Alex-Route ab 18, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
+- `V05SystemsTest`: Simulation 1/7/30/90/365 Tage deterministisch, Fortschritt nur aus Tätigkeiten, Beziehungen nur mit bekannten/anwesenden Figuren, Wundheilung, Stopp beim 18. Geburtstag mit einmaliger Gefährtenankunft, Story-Ereignisse bleiben erhalten, kein Rang 12 per Zeitraffer, **10-Jahres-Spielverlauf** mit Invarianten (Kalender, Geld, Beziehungen, Geburtstage genau einmal, Ereignisidentitäten, Save-Roundtrip), Beurteilung, Prüfungsphasen/Auflagen/Wartezeit, Tageslimit/Ausbilderbonus, Mentoring, Ausrüstungsprofile mit Rangsperre, Kauf/Rückgabe ohne Gewinn, Vergleich, Missionsboni, Archiv ab Rang 7, v0.4-Spielstand ohne neue Felder.
+- `ScreenshotTest`: rendert 29 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.5.0-beta
+- Karriere 2.0 (Beurteilungen, Mentoring, dreiphasige Prüfungen mit Auflagen, Ziele, Journal, Auszeichnungen, Rangfreigaben).
+- Zeitplan-Simulation statt pauschalem Zeitraffer, mit Bericht und Ereignis-Stopps.
+- Ausrüstungsprofile, Gegenstandsvergleich, situative Missionsboni, Rangrabatt.
+- Neue Screens: Zeitplan-Assistent, Karriereübersicht, Prüfung, Trainingsplaner.
+- Romanzen nur unter Volljährigen; private Serienporträts (PR #2) integriert; Robolectric-Tests auf SDK 34 fixiert.
+
 
 ### 0.4.0-beta
 - Ein Fundstück vom Bahnhof begleitet dich durch die PHOENIX-Jahre. Entscheidungen über Beweise, Erinnerung und Kira eröffnen spätere Gesprächsoptionen und prägen den Epilog.

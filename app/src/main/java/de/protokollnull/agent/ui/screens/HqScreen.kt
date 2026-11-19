@@ -199,36 +199,3 @@ private fun roomAction(vm: GameViewModel, s: GameState, a: String) {
         "cover_job" -> vm.act { d, st -> World.takeCoverJob(d, st) }
     }
 }
-
-@Composable
-fun TrainingScreen(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    val present = World.npcsIn(data, s, s.location).filter { id -> Relations.get(data, s, id).friendship >= 25 }
-    var partner by remember { mutableStateOf<String?>(null) }
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader("Training", data.roomById[s.location]?.name ?: "", onBack = { vm.back() })
-        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            item {
-                GlassPanel {
-                    Text("Attributlimit bei Level ${s.player.level}: ${Stats.attributeCap(s.player.level)}", style = MaterialTheme.typography.titleSmall)
-                    de.protokollnull.agent.model.Attr.all.forEach { a ->
-                        StatBar(de.protokollnull.agent.model.Attr.label(a), s.player.attributes[a] ?: 30, 100)
-                    }
-                }
-            }
-            if (present.isNotEmpty()) item {
-                GlassPanel {
-                    Text("Trainingspartner (Freundschaft + Bonus)", style = MaterialTheme.typography.titleSmall)
-                    ChipRow(listOf("" to "Allein") + present.map { it to Relations.displayName(data, s, it).substringBefore(" ") }, partner ?: "") { partner = it.ifBlank { null } }
-                }
-            }
-            Progression.trainings.forEach { t ->
-                item {
-                    ChoiceButton(t.name, "${de.protokollnull.agent.model.Attr.label(t.attribute)} · Energie −${t.energy} · Stress ${Effs.signed(t.stress)} · +${t.xp} XP · 1 Slot", enabled = s.player.energy >= t.energy) {
-                        vm.act { d, st -> Progression.train(d, st, t.id, partner) }
-                    }
-                }
-            }
-        }
-    }
-}

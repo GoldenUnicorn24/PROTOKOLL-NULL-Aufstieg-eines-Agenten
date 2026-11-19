@@ -131,16 +131,16 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
                 Overlay.Shop -> ShopScreen(vm, s)
                 Overlay.Storage -> StorageScreen(vm, s)
                 Overlay.Skills -> SkillTreeScreen(vm, s)
-                Overlay.Ranks -> RanksScreen(vm, s)
+                Overlay.Ranks -> CareerScreen(vm, s)
                 Overlay.Quests -> QuestLogScreen(vm, s)
-                Overlay.Calendar -> CalendarScreen(vm, s)
+                Overlay.Calendar -> SimulationScreen(vm, s)
                 Overlay.Recruit -> RecruitEditorScreen(vm, s)
                 Overlay.Team -> TeamScreen(vm, s)
                 Overlay.Director -> DirectorScreen(vm, s)
                 Overlay.Settings -> SettingsScreen(vm)
                 Overlay.Saves -> SavesScreen(vm, inGame = true)
                 Overlay.Credits -> CreditsScreen(vm)
-                Overlay.Training -> TrainingScreen(vm, s)
+                Overlay.Training -> TrainingPlannerScreen(vm, s)
                 Overlay.Reports -> ReportsScreen(vm, s)
                 is Overlay.Npc -> NpcDetailScreen(vm, s, o.id)
                 is Overlay.Briefing -> BriefingScreen(vm, s, o.missionId)
@@ -150,6 +150,7 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
     }
     // Laufender Einsatz und Dialoge haben Vorrang
     if (s.activeMission != null) FullOverlay { MissionRunScreen(vm, s) }
+    if (s.activeExam != null) FullOverlay { ExamScreen(vm, s) }
     if (s.activeDialogue != null) FullOverlay { DialogueScreen(vm, s) }
     if (s.activeDialogue == null && s.activeMission == null) {
         val introduction = de.protokollnull.agent.engine.CompanionAssignment.awaitingIntroduction(s)

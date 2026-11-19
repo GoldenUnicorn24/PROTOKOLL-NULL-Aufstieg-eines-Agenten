@@ -93,6 +93,19 @@ class ScreenshotTest {
         vm.closeOverlays(); vm.open(Overlay.Ranks); shot("19_raenge")
         vm.closeOverlays(); vm.open(Overlay.Calendar); shot("20_kalender")
 
+        // v0.5: Zeitplan-Bericht, Karriere, Trainingsplaner, Prüfung, Ausrüstungsprofile
+        vm.closeOverlays(); compose.waitForIdle()
+        vm.act { d, s -> Simulation.run(d, s, 30) }
+        vm.dismissToast(); vm.open(Overlay.Calendar); shot("25_zeitplan_bericht")
+        vm.closeOverlays(); vm.open(Overlay.Ranks); shot("26_karriere")
+        vm.update { it.copy(location = "training", clock = GameClock(it.clock.day + (8 - Clock.weekday(it.clock.day)) % 7, 1)) }
+        vm.closeOverlays(); vm.open(Overlay.Training); shot("27_trainingsplaner")
+        vm.closeOverlays()
+        vm.update { it.copy(activeExam = ExamRun(rank = 2, phase = 2, score = 41, notes = listOf("Theorie: bestanden (31/58) → +31", "Praxis: schwach (70/52) → +10"))) }
+        shot("28_pruefung")
+        vm.update { it.copy(activeExam = null) }
+        vm.update { s -> Inventory.saveLoadout(vm.data, s, "recon").state }
+        vm.setTab(2); vm.dismissToast(); shot("29_ausruestungsprofile")
         vm.act { d, s -> World.timeSkip(d, s, 730) }
         vm.dismissToast()
         vm.closeOverlays(); vm.open(Overlay.Recruit); shot("21_rekrutierungseditor")

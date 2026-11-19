@@ -118,8 +118,17 @@ object Missions {
         return bonus
     }
 
+    /** Bonus durch passende Gegenstände für eine konkrete Option. */
+    fun itemBonus(data: GameData, state: GameState, option: StageOption): Int {
+        if (option.itemBonus.isEmpty()) return 0
+        val p = state.player
+        val equipped = Stats.equipped(data, p).map { it.id }.toSet()
+        val carried = p.inventory.map { it.itemId }.toSet()
+        return option.itemBonus.entries.sumOf { (id, b) -> if (id in equipped) b else if (id in carried) b / 2 else 0 }
+    }
+
     fun optionChance(data: GameData, state: GameState, option: StageOption): Int? =
-        option.check?.let { Stats.checkChance(data, state, it, checkBonus(data, state, it)) }
+        option.check?.let { Stats.checkChance(data, state, it, checkBonus(data, state, it) + itemBonus(data, state, option)) }
 
     fun choose(data: GameData, state: GameState, optionId: String): Result {
         val run = state.activeMission ?: return state.fail("Kein Einsatz aktiv")
@@ -131,7 +140,7 @@ object Missions {
         var outcome = opt.success
         var rollText = ""
         if (opt.check != null) {
-            val (s1, roll) = Checks.roll(data, s, opt.check, checkBonus(data, s, opt.check), salt = run.seed + st.id.hashCode())
+            val (s1, roll) = Checks.roll(data, s, opt.check, checkBonus(data, s, opt.check) + itemBonus(data, s, opt), salt = run.seed + st.id.hashCode())
             s = s1
             if (!roll.success) outcome = opt.failure ?: Outcome("Es gelingt nicht.", alarm = 1)
             rollText = if (roll.success) " ✓ (${roll.roll}/${roll.chance})" else " ✗ (${roll.roll}/${roll.chance})"

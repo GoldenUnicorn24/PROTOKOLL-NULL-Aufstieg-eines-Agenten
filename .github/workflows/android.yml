@@ -33,6 +33,25 @@ jobs:
       - name: Gradle-Wrapper ausführbar machen
         run: chmod +x gradlew
 
+      - name: Robolectric-Laufzeit cachen
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: robolectric-android-all-14-10818077-i6
+
+      - name: Robolectric-Laufzeit vorab laden (mit Wiederholungen)
+        run: |
+          V=14-robolectric-10818077-i6
+          D=~/.m2/repository/org/robolectric/android-all-instrumented/$V
+          mkdir -p $D
+          for f in android-all-instrumented-$V.pom android-all-instrumented-$V.jar; do
+            for ext in "" ".sha512" ".sha1"; do
+              [ -s "$D/$f$ext" ] && continue
+              curl -fsSL --retry 8 --retry-delay 15 --retry-all-errors -o "$D/$f$ext" "https://repo1.maven.org/maven2/org/robolectric/android-all-instrumented/$V/$f$ext" || rm -f "$D/$f$ext"
+            done
+          done
+          ls -la $D
+
       - name: Unit-Tests & Datenvalidierung
         run: ./gradlew --no-daemon --stacktrace testDebugUnitTest 2>&1 | tee test.log; exit ${PIPESTATUS[0]}
 

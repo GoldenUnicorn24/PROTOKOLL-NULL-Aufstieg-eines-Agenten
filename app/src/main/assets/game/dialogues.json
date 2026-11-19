@@ -1239,7 +1239,8 @@
       "minFriendship": 40,
       "flagsAll": [
         "met_maya"
-      ]
+      ],
+      "minAge": 18
     }
   },
   {
@@ -1310,7 +1311,8 @@
       "minFriendship": 40,
       "flagsAll": [
         "met_ethan"
-      ]
+      ],
+      "minAge": 18
     }
   },
   {
@@ -3222,7 +3224,8 @@
         "met_alex"
       ],
       "minFriendship": 40,
-      "minTrust": 45
+      "minTrust": 45,
+      "minAge": 18
     }
   },
   {
@@ -3297,7 +3300,8 @@
         "alex_romance_unlocked"
       ],
       "minFriendship": 50,
-      "minTrust": 45
+      "minTrust": 45,
+      "minAge": 18
     }
   }
 ]
