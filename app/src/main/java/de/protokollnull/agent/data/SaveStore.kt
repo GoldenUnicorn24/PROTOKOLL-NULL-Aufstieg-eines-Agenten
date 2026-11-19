@@ -39,7 +39,11 @@ object SaveMigration {
 
     fun encode(state: GameState): String = json.encodeToString(state)
 
-    private fun migrateForward(s: GameState): GameState = s.copy(schemaVersion = CURRENT_SCHEMA)
+    private fun migrateForward(s: GameState): GameState {
+        // Schema 3 (v0.6): Erinnerungen strukturiert übernehmen
+        val withMemories = if (s.schemaVersion < 3) de.protokollnull.agent.engine.Memories.migrate(s) else s
+        return withMemories.copy(schemaVersion = CURRENT_SCHEMA)
+    }
 
     /** Schema 1 (Foundation) → Schema 2. */
     fun fromV1(old: LegacyGameSave): GameState {

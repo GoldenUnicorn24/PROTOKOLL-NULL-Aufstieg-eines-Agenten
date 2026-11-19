@@ -142,7 +142,8 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
                 Overlay.Credits -> CreditsScreen(vm)
                 Overlay.Training -> TrainingPlannerScreen(vm, s)
                 Overlay.Reports -> ReportsScreen(vm, s)
-                is Overlay.Npc -> NpcDetailScreen(vm, s, o.id)
+                Overlay.HqEvent -> HqEventScreen(vm, s)
+                is Overlay.Npc -> NpcDetailScreen(vm, s, o.id, o.tab)
                 is Overlay.Briefing -> BriefingScreen(vm, s, o.missionId)
                 is Overlay.Item -> ItemDetailScreen(vm, s, o.uid)
             }

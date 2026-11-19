@@ -20,6 +20,7 @@ class GameData(
     val hq: HqDefinition,
     val dialogues: List<DialogueDefinition>,
     val quests: List<QuestDefinition>,
+    val hqEvents: List<HqEventDefinition> = emptyList(),
     /** Dateinamen, die unter assets/ existieren (z. B. "items/radio.svg"). */
     val assetFiles: Set<String> = emptySet(),
     /** Verifizierte Lizenznachweise für Serienstills (show_<id>.jpg). */
@@ -35,6 +36,7 @@ class GameData(
     val roomById = hq.rooms.associateBy { it.id }
     val dialogueById = dialogues.associateBy { it.id }
     val questById = quests.associateBy { it.id }
+    val hqEventById = hqEvents.associateBy { it.id }
     fun rank(rank: Int): RankDefinition = ranks.firstOrNull { it.rank == rank } ?: ranks.first()
 
     /**
@@ -72,6 +74,7 @@ class GameData(
                 hq = json.decodeFromString(read("game/rooms.json")),
                 dialogues = json.decodeFromString(read("game/dialogues.json")),
                 quests = json.decodeFromString(read("game/quests.json")),
+                hqEvents = json.decodeFromString(read("game/hq_events.json")),
                 assetFiles = assetFiles,
                 licensedSeriesStills = licenses
             )

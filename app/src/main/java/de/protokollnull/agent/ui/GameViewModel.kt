@@ -35,7 +35,8 @@ sealed interface Overlay {
     data object Credits : Overlay
     data object Training : Overlay
     data object Reports : Overlay
-    data class Npc(val id: String) : Overlay
+    data object HqEvent : Overlay
+    data class Npc(val id: String, val tab: String = "profile") : Overlay
     data class Briefing(val missionId: String) : Overlay
     data class Item(val uid: Long) : Overlay
 }

@@ -1,0 +1,1498 @@
+[
+  {
+    "id": "hq_alex_injured",
+    "title": "Alex auf der Krankenstation",
+    "npcId": "alex",
+    "requireStatus": {
+      "alex": "injured"
+    },
+    "repeatDays": 45,
+    "weight": 30,
+    "text": "Durch das Glasfenster der Krankenstation siehst du Alex. Ein Verband am Unterarm, der Blick an die Decke. Sie hat niemandem erzählt, was beim Einsatz schiefgelaufen ist.",
+    "choices": [
+      {
+        "id": "visit",
+        "text": "Hingehen und einfach bleiben",
+        "result": "Du setzt dich ans Bett und redest über alles außer den Einsatz. Nach einer Weile lacht Alex zum ersten Mal an diesem Tag.",
+        "effects": {
+          "friendship": 5,
+          "trust": 3
+        },
+        "memories": {
+          "alex": "Du warst an meinem Krankenbett, als niemand sonst kam"
+        }
+      },
+      {
+        "id": "debrief",
+        "text": "Nach dem Einsatz fragen",
+        "result": "„Willst du wirklich die Akte oder mich?“ Sie erzählt trotzdem – knapp, sachlich. Du verstehst jetzt, warum sie wütend ist.",
+        "effects": {
+          "trust": 4,
+          "respect": 2,
+          "xp": 20
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "Weitergehen",
+        "result": "Du gehst weiter. Später erfährst du, dass Alex nach dir gefragt hat.",
+        "npcEffects": {
+          "alex": {
+            "friendship": -3
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_michael_injured",
+    "title": "Michael fällt aus",
+    "npcId": "michael",
+    "requireStatus": {
+      "michael": "injured"
+    },
+    "repeatDays": 90,
+    "weight": 30,
+    "text": "Michael kam mit genähter Schulter von einem Einsatz zurück. Die Frühgruppe steht ohne Ausbilder in der Halle, und alle sehen dich an.",
+    "choices": [
+      {
+        "id": "take_over",
+        "text": "Das Aufwärmen der Gruppe leiten",
+        "result": "Du leitest die Gruppe durch das Programm. Als Michael es erfährt, nickt er nur – bei ihm ist das ein Lob.",
+        "check": {
+          "attribute": "willpower",
+          "skill": "inspire",
+          "difficulty": 40
+        },
+        "effects": {
+          "respect": 6,
+          "xp": 50,
+          "stress": 5,
+          "reputation": 5
+        },
+        "failResult": "Die Gruppe tanzt dir auf der Nase herum. Michael hört davon und sagt nichts – das ist schlimmer.",
+        "failEffects": {
+          "stress": 10,
+          "respect": -2
+        }
+      },
+      {
+        "id": "visit",
+        "text": "Michael auf der Krankenstation besuchen",
+        "result": "„Ich liege hier nicht zum Vergnügen.“ Trotzdem schickt er dich nicht weg. Ihr redet über die Gruppe.",
+        "effects": {
+          "trust": 4,
+          "friendship": 3
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "Nicht einmischen",
+        "result": "Die Halle bleibt leer. Michael wird das bemerken.",
+        "npcEffects": {
+          "michael": {
+            "respect": -2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_michael_failed",
+    "title": "Ein Einsatz, über den keiner spricht",
+    "npcId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "lf_michael_mission_failed"
+      ]
+    },
+    "repeatDays": 60,
+    "weight": 20,
+    "text": "Michael ist zurück. Er schlägt seit einer Stunde auf den Sandsack ein. Der Einsatz ist gescheitert, mehr steht nicht im Dienstplan.",
+    "choices": [
+      {
+        "id": "talk",
+        "text": "Danebenstellen und warten, bis er redet",
+        "result": "Irgendwann hört er auf. „Ein Fehler in der Planung. Meiner.“ Mehr sagt er nicht, aber es ist mehr als sonst.",
+        "effects": {
+          "trust": 5,
+          "clearFlags": [
+            "lf_michael_mission_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "michael",
+            "mood": 12
+          }
+        ],
+        "memories": {
+          "michael": "Nach dem gescheiterten Einsatz hast du mich nicht allein gelassen"
+        }
+      },
+      {
+        "id": "spar",
+        "text": "Sparring anbieten",
+        "result": "Er nimmt an. Du verlierst dreimal und lernst mehr als in einer Woche.",
+        "effects": {
+          "respect": 4,
+          "xp": 40,
+          "energy": -15,
+          "clearFlags": [
+            "lf_michael_mission_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "michael",
+            "mood": 6
+          }
+        ]
+      },
+      {
+        "id": "ignore",
+        "text": "Ihn in Ruhe lassen",
+        "result": "Manche Dinge muss man allein verarbeiten. Hoffst du.",
+        "effects": {
+          "clearFlags": [
+            "lf_michael_mission_failed"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_michael_doubt",
+    "title": "Michaels Frage",
+    "npcId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "nikita_contact"
+      ],
+      "minDay": 200
+    },
+    "weight": 15,
+    "text": "Michael fängt dich vor der Einsatzzentrale ab. „Jemand hat Nikitas Signatur auf einem unserer Kanäle gesehen. Weißt du etwas darüber?“",
+    "choices": [
+      {
+        "id": "truth",
+        "text": "Ehrlich sein",
+        "result": "Michael schweigt lange. „Danke. Das bleibt erst mal zwischen uns.“",
+        "effects": {
+          "trust": 7
+        },
+        "npcEffects": {
+          "nikita": {
+            "trust": -6
+          }
+        },
+        "arcs": {
+          "nikita_exposed": 1
+        }
+      },
+      {
+        "id": "lie",
+        "text": "Abstreiten",
+        "result": "Er glaubt dir – zumindest heute.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "persuasion",
+          "difficulty": 50
+        },
+        "npcEffects": {
+          "nikita": {
+            "trust": 4
+          }
+        },
+        "failResult": "Er merkt die Lüge sofort. „Ich dachte, wir wären weiter.“",
+        "failEffects": {
+          "trust": -6
+        },
+        "conflicts": {
+          "michael": "Du hast mich angelogen"
+        }
+      },
+      {
+        "id": "deflect",
+        "text": "„Frag mich, wenn du Beweise hast.“",
+        "result": "Michael nickt knapp. Das Gespräch ist nicht vorbei, nur vertagt.",
+        "effects": {
+          "respect": 2,
+          "trust": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_nikita_drop",
+    "title": "Ein toter Briefkasten",
+    "npcId": "nikita",
+    "conditions": {
+      "flagsAll": [
+        "nikita_contact"
+      ]
+    },
+    "repeatDays": 120,
+    "weight": 15,
+    "text": "Im Spind liegt ein Zettel in Nikitas Handschrift: Sie braucht die Dienstpläne der Wachschicht. Nur eine Seite.",
+    "choices": [
+      {
+        "id": "help",
+        "text": "Die Seite unauffällig kopieren",
+        "result": "Die Seite liegt am nächsten Morgen im Briefkasten. Niemand hat dich gesehen.",
+        "check": {
+          "attribute": "perception",
+          "skill": "blend_in",
+          "difficulty": 45
+        },
+        "effects": {
+          "trust": 6,
+          "loyalty": 4
+        },
+        "arcs": {
+          "percy_pressure": 2
+        },
+        "failResult": "Eine Kamera hat dich erfasst. Birkhoff löscht die Aufnahme – aber Percy hat bereits Fragen.",
+        "failEffects": {
+          "trust": 4,
+          "stress": 10
+        },
+        "failNpcEffects": {
+          "percy": {
+            "trust": -8
+          },
+          "birkhoff": {
+            "loyalty": 3
+          }
+        }
+      },
+      {
+        "id": "refuse",
+        "text": "Ablehnen",
+        "result": "Du verbrennst den Zettel. Nikita meldet sich wochenlang nicht.",
+        "effects": {
+          "trust": -4
+        },
+        "conflicts": {
+          "nikita": "Du hast mich hängen lassen"
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "Den Zettel liegen lassen",
+        "result": "Der Zettel ist am nächsten Tag verschwunden.",
+        "effects": {
+          "trust": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_nikita_warning",
+    "title": "Nikitas Warnung",
+    "npcId": "nikita",
+    "conditions": {
+      "flagsAll": [
+        "nikita_contact"
+      ]
+    },
+    "minArc": {
+      "percy_pressure": 3
+    },
+    "repeatDays": 150,
+    "weight": 12,
+    "text": "Eine Nachricht über einen alten Kanal: „Percy lässt deine Wege protokollieren. Sei langweilig. Ein paar Wochen lang.“",
+    "choices": [
+      {
+        "id": "heed",
+        "text": "Den Rat befolgen",
+        "result": "Du hältst dich an Dienstplan und Routine. Percys Interesse lässt nach.",
+        "effects": {
+          "trust": 3,
+          "stress": -3
+        },
+        "arcs": {
+          "percy_pressure": -2
+        }
+      },
+      {
+        "id": "dismiss",
+        "text": "Weitermachen wie bisher",
+        "result": "Du ignorierst die Warnung. Percys Akte über dich wird dicker.",
+        "arcs": {
+          "percy_pressure": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_birkhoff_backdoor",
+    "title": "Birkhoffs Hintertür",
+    "npcId": "birkhoff",
+    "minDay": 120,
+    "weight": 12,
+    "text": "Birkhoff winkt dich ins Labor. „Ich hab mir einen Notausgang ins Netz gebaut. Falls es hier mal kracht. Wenn jemand fragt – du hast nichts gesehen, okay?“",
+    "choices": [
+      {
+        "id": "cover",
+        "text": "Versprechen, zu schweigen",
+        "result": "„Du bist in Ordnung.“ Birkhoff schiebt dir eine Dose Energydrink hin – sein höchstes Vertrauenszeichen.",
+        "effects": {
+          "loyalty": 8,
+          "trust": 5
+        },
+        "arcs": {
+          "percy_pressure": 1
+        },
+        "memories": {
+          "birkhoff": "Du hast meine Hintertür für dich behalten"
+        }
+      },
+      {
+        "id": "persuade",
+        "text": "Ihn überreden, sie zu schließen",
+        "result": "Er murrt, schließt sie aber. „Wenn wir sterben, ist das deine Schuld.“",
+        "check": {
+          "attribute": "charisma",
+          "skill": "persuasion",
+          "difficulty": 40
+        },
+        "effects": {
+          "trust": 3,
+          "respect": 4
+        },
+        "failResult": "„Vergiss es.“ Birkhoff dreht sich weg. Du weißt jetzt etwas, das du nicht wissen solltest.",
+        "failEffects": {
+          "trust": -2
+        }
+      },
+      {
+        "id": "report",
+        "text": "Percy informieren",
+        "result": "Die Hintertür wird geschlossen, Birkhoff bekommt eine Abmahnung. Er spricht kaum noch mit dir.",
+        "npcEffects": {
+          "percy": {
+            "trust": 6
+          }
+        },
+        "effects": {
+          "trust": -12,
+          "loyalty": -10,
+          "reputation": 8
+        },
+        "conflicts": {
+          "birkhoff": "Du hast mich an Percy verraten"
+        },
+        "life": [
+          {
+            "npcId": "birkhoff",
+            "mood": -20
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hq_birkhoff_sonya",
+    "title": "Birkhoff braucht einen Rat",
+    "npcId": "birkhoff",
+    "requirePresent": [
+      "birkhoff",
+      "sonya"
+    ],
+    "conditions": {
+      "minBond": {
+        "birkhoff|sonya": 40
+      }
+    },
+    "weight": 10,
+    "text": "Birkhoff tut so, als würde er Code lesen, schaut aber ständig zu Sonya. „Rein hypothetisch: Wie fragt man eine Kollegin, ob sie nach Dienstschluss essen gehen will?“",
+    "choices": [
+      {
+        "id": "encourage",
+        "text": "„Frag sie einfach. Ehrlich, ohne Witz.“",
+        "result": "Birkhoff fragt. Sonya lacht – und sagt Ja.",
+        "effects": {
+          "friendship": 4
+        },
+        "life": [
+          {
+            "npcId": "birkhoff",
+            "bondWith": "sonya",
+            "bond": 15,
+            "mood": 10
+          }
+        ]
+      },
+      {
+        "id": "tease",
+        "text": "Ihn ein bisschen aufziehen",
+        "result": "Er wird rot, lacht aber. Ganz vergessen kann er die Frage nicht.",
+        "effects": {
+          "friendship": 2
+        },
+        "life": [
+          {
+            "npcId": "birkhoff",
+            "bondWith": "sonya",
+            "bond": 5
+          }
+        ]
+      },
+      {
+        "id": "stay_out",
+        "text": "„Da halte ich mich raus.“",
+        "result": "Birkhoff seufzt und tippt weiter."
+      }
+    ]
+  },
+  {
+    "id": "hq_sonya_server",
+    "title": "Unerklärlicher Datenverkehr",
+    "npcId": "sonya",
+    "requirePresent": [
+      "sonya"
+    ],
+    "minDay": 60,
+    "repeatDays": 200,
+    "weight": 10,
+    "text": "Sonya zeigt dir ein Protokoll: Jemand kopiert nachts Archivdaten. „Ich will nicht zu Percy, bevor ich weiß, wer es ist.“",
+    "choices": [
+      {
+        "id": "investigate",
+        "text": "Gemeinsam die Spur verfolgen",
+        "result": "Ihr findet die Quelle: ein vergessenes Wartungskonto. Sonya schließt es leise.",
+        "check": {
+          "attribute": "intellect",
+          "skill": "analysis",
+          "difficulty": 45
+        },
+        "effects": {
+          "trust": 5,
+          "xp": 60
+        },
+        "failResult": "Die Spur verliert sich. Immerhin weiß Sonya, dass sie dir vertrauen kann.",
+        "failEffects": {
+          "trust": 3,
+          "stress": 5
+        }
+      },
+      {
+        "id": "tell_percy",
+        "text": "Percy Bescheid geben",
+        "result": "Percy übernimmt. Sonya erfährt, dass du es weitergegeben hast.",
+        "npcEffects": {
+          "percy": {
+            "trust": 4
+          }
+        },
+        "effects": {
+          "trust": -4
+        },
+        "arcs": {
+          "percy_pressure": 1
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "„Nicht mein Bereich.“",
+        "result": "Sonya nickt enttäuscht.",
+        "effects": {
+          "friendship": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_amanda_session",
+    "title": "Amandas Termin",
+    "npcId": "amanda",
+    "minPlayerStress": 65,
+    "minArc": {
+      "amanda_watch": 2
+    },
+    "repeatDays": 90,
+    "weight": 25,
+    "text": "Eine Nachricht auf deinem Terminal: „Psychologische Evaluierung, 15:00. Amanda.“ Keine Begründung, kein Ablehnen-Knopf.",
+    "choices": [
+      {
+        "id": "open",
+        "text": "Offen über den Druck sprechen",
+        "result": "Amanda hört zu, macht Notizen und schreibt dir zwei freie Abende auf.",
+        "effects": {
+          "trust": 5,
+          "stress": -15
+        },
+        "arcs": {
+          "amanda_watch": -2
+        }
+      },
+      {
+        "id": "mask",
+        "text": "Die starke Fassade halten",
+        "result": "Du lieferst die erwarteten Antworten. Amanda lächelt – und glaubt dir.",
+        "check": {
+          "attribute": "willpower",
+          "skill": "lie_detector",
+          "difficulty": 45
+        },
+        "effects": {
+          "respect": 3
+        },
+        "arcs": {
+          "amanda_watch": -1
+        },
+        "failResult": "„Interessant, wie du lächelst, wenn du lügst.“ Amanda verlängert die Beobachtung.",
+        "failEffects": {
+          "trust": -5,
+          "stress": 5
+        }
+      },
+      {
+        "id": "refuse",
+        "text": "Nicht erscheinen",
+        "result": "Amanda vermerkt die Verweigerung. Das wird Folgen haben.",
+        "effects": {
+          "stress": 5,
+          "trust": -4
+        },
+        "conflicts": {
+          "amanda": "Du verweigerst die Evaluierung"
+        },
+        "arcs": {
+          "amanda_watch": 2
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "",
+        "result": "Du verpasst den Termin. Amanda vermerkt es.",
+        "effects": {
+          "trust": -3
+        },
+        "arcs": {
+          "amanda_watch": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_amanda_bench",
+    "title": "Amanda will Thom beurlauben",
+    "npcId": "amanda",
+    "involved": [
+      "thom"
+    ],
+    "requirePresent": [
+      "thom"
+    ],
+    "minDay": 150,
+    "repeatDays": 300,
+    "weight": 10,
+    "text": "Amanda fängt dich ab. „Thom schläft nicht, isst kaum. Ich schreibe ihn zehn Tage krank. Du kennst ihn – sehe ich das falsch?“",
+    "choices": [
+      {
+        "id": "agree",
+        "text": "„Er braucht die Pause.“",
+        "result": "Thom wird beurlaubt. Er weiß, dass du zugestimmt hast.",
+        "effects": {
+          "trust": 4
+        },
+        "life": [
+          {
+            "npcId": "thom",
+            "status": "vacation",
+            "days": 10,
+            "note": "Beurlaubung durch Amanda",
+            "mood": 15
+          }
+        ],
+        "conflicts": {
+          "thom": "Du hast Amanda recht gegeben"
+        }
+      },
+      {
+        "id": "vouch",
+        "text": "„Lass mich mit ihm reden. Er schafft das.“",
+        "result": "Du verbringst den Abend mit Thom. Er schläft danach zum ersten Mal seit Tagen durch.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "empathy",
+          "difficulty": 40
+        },
+        "npcEffects": {
+          "thom": {
+            "friendship": 6,
+            "trust": 4
+          }
+        },
+        "life": [
+          {
+            "npcId": "thom",
+            "mood": 15
+          }
+        ],
+        "failResult": "Thom blockt ab. Amanda schreibt ihn trotzdem krank.",
+        "failLife": [
+          {
+            "npcId": "thom",
+            "status": "vacation",
+            "days": 10,
+            "note": "Beurlaubung durch Amanda"
+          }
+        ]
+      },
+      {
+        "id": "neutral",
+        "text": "„Das ist deine Entscheidung.“",
+        "result": "Amanda notiert sich deine Zurückhaltung.",
+        "life": [
+          {
+            "npcId": "thom",
+            "status": "vacation",
+            "days": 7,
+            "note": "Beurlaubung durch Amanda"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hq_percy_report",
+    "title": "Percy will einen Bericht",
+    "npcId": "percy",
+    "involved": [
+      "alex"
+    ],
+    "minArc": {
+      "percy_pressure": 4
+    },
+    "repeatDays": 150,
+    "weight": 18,
+    "text": "Percy schiebt dir eine leere Akte hin. „Alex. Ihre Loyalität. Ich will wissen, mit wem sie redet. Du stehst ihr nahe – das macht dich wertvoll.“",
+    "choices": [
+      {
+        "id": "protect",
+        "text": "„Da gibt es nichts zu berichten.“",
+        "result": "Percy lächelt dünn. „Wie loyal von dir. Ich merke mir so etwas.“",
+        "npcEffects": {
+          "alex": {
+            "loyalty": 8
+          }
+        },
+        "effects": {
+          "trust": -6
+        },
+        "arcs": {
+          "percy_pressure": 2
+        },
+        "memories": {
+          "alex": "Du hast mich vor Percy gedeckt"
+        }
+      },
+      {
+        "id": "minor",
+        "text": "Nur Belangloses berichten",
+        "result": "Percy blättert durch die Seite und legt sie weg. Fürs Erste reicht ihm das.",
+        "effects": {
+          "trust": 3
+        },
+        "npcEffects": {
+          "alex": {
+            "trust": -2
+          }
+        }
+      },
+      {
+        "id": "betray",
+        "text": "Ausführlich berichten",
+        "result": "Percy ist zufrieden. Alex wird eine Woche lang ständig überprüft – und sie ahnt, woher das kommt.",
+        "effects": {
+          "trust": 8,
+          "reputation": 10
+        },
+        "npcEffects": {
+          "alex": {
+            "trust": -15,
+            "friendship": -10
+          }
+        },
+        "conflicts": {
+          "alex": "Du hast Percy über mich berichtet"
+        },
+        "life": [
+          {
+            "npcId": "alex",
+            "mood": -20
+          }
+        ],
+        "arcs": {
+          "percy_pressure": -3
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_percy_transfer",
+    "title": "Eine Versetzung",
+    "npcId": "percy",
+    "involved": [
+      "jaden"
+    ],
+    "requirePresent": [
+      "jaden"
+    ],
+    "minArc": {
+      "percy_pressure": 6
+    },
+    "minDay": 300,
+    "repeatDays": 365,
+    "weight": 12,
+    "text": "Percy liest eine Liste vor. „Jaden wird an die Außenstelle versetzt. Zu unberechenbar. Es sei denn, jemand bürgt für sie.“",
+    "choices": [
+      {
+        "id": "vouch",
+        "text": "Für Jaden bürgen",
+        "result": "Percy zieht den Antrag zurück. Jaden erfährt davon – und weiß nicht, was sie sagen soll.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "persuasion",
+          "difficulty": 50
+        },
+        "npcEffects": {
+          "jaden": {
+            "friendship": 8,
+            "rivalry": -10,
+            "respect": 6
+          }
+        },
+        "failResult": "Percy hört höflich zu und versetzt Jaden trotzdem.",
+        "failLife": [
+          {
+            "npcId": "jaden",
+            "status": "transferred",
+            "days": 150,
+            "note": "Außenstelle"
+          }
+        ],
+        "failNpcEffects": {
+          "jaden": {
+            "respect": 4
+          }
+        }
+      },
+      {
+        "id": "let_go",
+        "text": "Schweigen",
+        "result": "Jaden packt am Abend ihre Sachen. Die Halle ist leiser ohne sie.",
+        "life": [
+          {
+            "npcId": "jaden",
+            "status": "transferred",
+            "days": 150,
+            "note": "Außenstelle"
+          }
+        ],
+        "effects": {
+          "trust": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_alex_jaden",
+    "title": "Streit in der Trainingshalle",
+    "npcId": "alex",
+    "involved": [
+      "jaden"
+    ],
+    "requirePresent": [
+      "alex",
+      "jaden"
+    ],
+    "conditions": {
+      "maxBond": {
+        "alex|jaden": -15
+      }
+    },
+    "repeatDays": 60,
+    "weight": 15,
+    "text": "Alex und Jaden stehen sich auf der Matte gegenüber, viel zu nah. Ein Wort noch, und aus dem Sparring wird etwas anderes.",
+    "choices": [
+      {
+        "id": "mediate",
+        "text": "Dazwischengehen und schlichten",
+        "result": "Beide funkeln dich an – dann lacht Jaden plötzlich. Die Spannung bricht.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "empathy",
+          "difficulty": 40
+        },
+        "effects": {
+          "friendship": 3
+        },
+        "npcEffects": {
+          "jaden": {
+            "respect": 4
+          }
+        },
+        "life": [
+          {
+            "npcId": "alex",
+            "bondWith": "jaden",
+            "bond": 20
+          }
+        ],
+        "failResult": "Beide gehen wütend auseinander – und sind sich nur einig, dass du dich raushalten sollst.",
+        "failLife": [
+          {
+            "npcId": "alex",
+            "bondWith": "jaden",
+            "bond": -5
+          }
+        ]
+      },
+      {
+        "id": "side_alex",
+        "text": "Alex den Rücken stärken",
+        "result": "Alex nickt dir kaum merklich zu. Jaden merkt sich das.",
+        "effects": {
+          "friendship": 5
+        },
+        "npcEffects": {
+          "jaden": {
+            "rivalry": 8
+          }
+        },
+        "life": [
+          {
+            "npcId": "alex",
+            "bondWith": "jaden",
+            "bond": -10
+          }
+        ]
+      },
+      {
+        "id": "michael",
+        "text": "Michael holen",
+        "result": "Michael beendet das Sparring mit einem Blick. Beide müssen nachsitzen.",
+        "effects": {
+          "trust": -3
+        },
+        "npcEffects": {
+          "michael": {
+            "respect": 3
+          },
+          "jaden": {
+            "rivalry": 3
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_alex_promoted",
+    "title": "Alex wurde befördert",
+    "npcId": "alex",
+    "conditions": {
+      "flagsAll": [
+        "lf_alex_promoted"
+      ]
+    },
+    "repeatDays": 20,
+    "weight": 30,
+    "text": "An der Rangliste steht Alex' Name eine Zeile höher. Sie tut so, als wäre es ihr egal, aber sie hat das Blatt dreimal gelesen.",
+    "choices": [
+      {
+        "id": "celebrate",
+        "text": "Heimlich Kuchen aus der Kantine organisieren",
+        "result": "Ein schiefer Kuchen und eine Kerze. Alex lacht Tränen.",
+        "effects": {
+          "friendship": 5,
+          "stress": -5,
+          "clearFlags": [
+            "lf_alex_promoted"
+          ]
+        },
+        "memories": {
+          "alex": "Wir haben meine Beförderung mit einem schiefen Kuchen gefeiert"
+        }
+      },
+      {
+        "id": "congratulate",
+        "text": "Kurz gratulieren",
+        "result": "„Danke. Du bist die Nächste.“",
+        "effects": {
+          "friendship": 2,
+          "clearFlags": [
+            "lf_alex_promoted"
+          ]
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "",
+        "result": "Du verpasst die Gelegenheit zu gratulieren.",
+        "effects": {
+          "friendship": -2,
+          "clearFlags": [
+            "lf_alex_promoted"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_alex_exam_failed",
+    "title": "Alex ist durchgefallen",
+    "npcId": "alex",
+    "conditions": {
+      "flagsAll": [
+        "lf_alex_exam_failed"
+      ]
+    },
+    "repeatDays": 20,
+    "weight": 30,
+    "text": "Alex sitzt auf der Treppe zum Schießstand, das Prüfungsblatt zerknüllt in der Hand. „Sag jetzt nichts Aufmunterndes.“",
+    "choices": [
+      {
+        "id": "sit",
+        "text": "Schweigend danebensetzen",
+        "result": "Ihr sitzt lange da. Irgendwann lehnt sie die Schulter an deine.",
+        "effects": {
+          "friendship": 4,
+          "trust": 3,
+          "clearFlags": [
+            "lf_alex_exam_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "alex",
+            "mood": 15
+          }
+        ]
+      },
+      {
+        "id": "drill",
+        "text": "Einen Trainingsplan für die Wiederholung vorschlagen",
+        "result": "Ihr trainiert die nächsten zwei Wochen jeden Abend zusammen.",
+        "effects": {
+          "respect": 4,
+          "xp": 30,
+          "energy": -15,
+          "clearFlags": [
+            "lf_alex_exam_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "alex",
+            "careerXp": 25,
+            "mood": 5
+          }
+        ],
+        "memories": {
+          "alex": "Zwei Wochen Abendtraining für meine Wiederholung"
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "",
+        "result": "Alex verarbeitet es allein.",
+        "effects": {
+          "friendship": -1,
+          "clearFlags": [
+            "lf_alex_exam_failed"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_companion_failed",
+    "title": "{name} hat die Prüfung nicht bestanden",
+    "npcId": "assigned_companion",
+    "conditions": {
+      "flagsAll": [
+        "lf_assigned_companion_exam_failed"
+      ]
+    },
+    "repeatDays": 20,
+    "weight": 30,
+    "text": "{name} steht vor dem Direktorat und starrt auf die Tür. „Michael sagt, es lag an der Szenarioübung. Ich hätte schneller entscheiden müssen.“",
+    "choices": [
+      {
+        "id": "comfort",
+        "text": "„Beim zweiten Mal weißt du, was kommt.“",
+        "result": "{name} atmet durch. „Okay. Dreißig Tage. Hilfst du mir?“",
+        "effects": {
+          "friendship": 4,
+          "trust": 3,
+          "clearFlags": [
+            "lf_assigned_companion_exam_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "mood": 15
+          }
+        ]
+      },
+      {
+        "id": "drill",
+        "text": "Gemeinsam Szenarien üben",
+        "result": "Ihr spielt jeden Abend Entscheidungen durch. {name} wird sichtbar schneller.",
+        "effects": {
+          "respect": 4,
+          "xp": 30,
+          "energy": -15,
+          "clearFlags": [
+            "lf_assigned_companion_exam_failed"
+          ]
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "careerXp": 30
+          }
+        ],
+        "memories": {
+          "assigned_companion": "Unsere Abende mit Szenarioübungen"
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "",
+        "result": "{name} bereitet sich allein vor.",
+        "effects": {
+          "clearFlags": [
+            "lf_assigned_companion_exam_failed"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_companion_promoted",
+    "title": "{name} wurde befördert",
+    "npcId": "assigned_companion",
+    "conditions": {
+      "flagsAll": [
+        "lf_assigned_companion_promoted"
+      ]
+    },
+    "repeatDays": 20,
+    "weight": 30,
+    "text": "{name} kommt mit dem neuen Abzeichen in den Aufenthaltsraum und sucht als Erstes deinen Blick.",
+    "choices": [
+      {
+        "id": "celebrate",
+        "text": "Den Abend gemeinsam feiern",
+        "result": "Ihr feiert mit Kantinenpizza und schlechter Musik.",
+        "effects": {
+          "friendship": 5,
+          "stress": -5,
+          "clearFlags": [
+            "lf_assigned_companion_promoted"
+          ]
+        },
+        "memories": {
+          "assigned_companion": "Die Nacht mit Kantinenpizza nach meiner Beförderung"
+        }
+      },
+      {
+        "id": "advice",
+        "text": "Nach den nächsten Zielen fragen",
+        "result": "{name} hat schon einen Plan. Und du bist darin vorgesehen.",
+        "effects": {
+          "respect": 3,
+          "trust": 2,
+          "clearFlags": [
+            "lf_assigned_companion_promoted"
+          ]
+        }
+      },
+      {
+        "id": "ignore",
+        "text": "",
+        "result": "Ihr seht euch erst Tage später.",
+        "effects": {
+          "friendship": -1,
+          "clearFlags": [
+            "lf_assigned_companion_promoted"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_companion_crossroads",
+    "title": "{name} steht vor einer Entscheidung",
+    "npcId": "assigned_companion",
+    "conditions": {
+      "minTrust": 40
+    },
+    "minDay": 760,
+    "weight": 14,
+    "text": "„Michael hat mir einen festen Platz in der Analyse angeboten. Sicher, geregelt. Aber eigentlich wollte ich nie hinter einem Bildschirm sitzen.“ {name} sieht dich an. „Was würdest du tun?“",
+    "choices": [
+      {
+        "id": "own_way",
+        "text": "„Geh den Weg, den du wolltest.“",
+        "result": "{name} lehnt das Angebot ab und meldet sich für das Außentraining.",
+        "effects": {
+          "trust": 4,
+          "friendship": 3
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "careerXp": 20,
+            "mood": 10
+          }
+        ],
+        "memories": {
+          "assigned_companion": "Du hast mir geraten, meinen eigenen Weg zu gehen"
+        }
+      },
+      {
+        "id": "safe",
+        "text": "„Sicherheit ist hier nicht wenig wert.“",
+        "result": "{name} nimmt den Platz an – mit gemischten Gefühlen.",
+        "effects": {
+          "respect": 3
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "mood": -5,
+            "careerXp": 15
+          }
+        ]
+      },
+      {
+        "id": "yours",
+        "text": "„Das ist deine Entscheidung. Ich stehe hinter dir.“",
+        "result": "{name} lächelt. „Das wollte ich hören.“ Die Entscheidung fällt am nächsten Morgen.",
+        "effects": {
+          "trust": 6
+        },
+        "memories": {
+          "assigned_companion": "Du hast mir die Entscheidung selbst überlassen"
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_companion_alex",
+    "title": "Filmabend im Aufenthaltsraum",
+    "npcId": "assigned_companion",
+    "involved": [
+      "alex"
+    ],
+    "requirePresent": [
+      "assigned_companion",
+      "alex"
+    ],
+    "conditions": {
+      "minBond": {
+        "alex|assigned_companion": 30
+      }
+    },
+    "repeatDays": 120,
+    "weight": 12,
+    "text": "{name} und Alex haben einen alten Projektor organisiert. „Wir brauchen eine dritte Stimme für die Filmauswahl“, sagt Alex.",
+    "choices": [
+      {
+        "id": "join",
+        "text": "Mitmachen",
+        "result": "Ihr streitet eine halbe Stunde über den Film und seht dann etwas ganz anderes.",
+        "effects": {
+          "friendship": 3,
+          "stress": -6
+        },
+        "npcEffects": {
+          "alex": {
+            "friendship": 3
+          }
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "bondWith": "alex",
+            "bond": 8
+          }
+        ]
+      },
+      {
+        "id": "decline",
+        "text": "Absagen – du bist zu müde",
+        "result": "„Nächstes Mal“, ruft {name} dir nach."
+      }
+    ]
+  },
+  {
+    "id": "hq_thom_duel",
+    "title": "Thom fordert dich heraus",
+    "npcId": "thom",
+    "requirePresent": [
+      "thom"
+    ],
+    "repeatDays": 90,
+    "weight": 10,
+    "text": "Thom wirft dir Boxhandschuhe zu. „Drei Runden. Wer verliert, putzt eine Woche die Matten.“",
+    "choices": [
+      {
+        "id": "accept",
+        "text": "Annehmen",
+        "result": "Du gewinnst knapp. Thom lacht und putzt trotzdem mit dir.",
+        "check": {
+          "attribute": "fitness",
+          "skill": "defense",
+          "difficulty": 45
+        },
+        "effects": {
+          "respect": 6,
+          "xp": 30,
+          "energy": -15
+        },
+        "failResult": "Thom gewinnt. Eine Woche Matten – aber ihr redet dabei viel.",
+        "failEffects": {
+          "friendship": 3,
+          "rivalry": 3,
+          "energy": -15
+        }
+      },
+      {
+        "id": "decline",
+        "text": "Ablehnen",
+        "result": "„Feigling“, grinst Thom.",
+        "effects": {
+          "rivalry": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_ryan_pattern",
+    "title": "Ryans Theorie",
+    "npcId": "ryan",
+    "requirePresent": [
+      "ryan"
+    ],
+    "minDay": 90,
+    "repeatDays": 180,
+    "weight": 8,
+    "text": "Ryan hat eine Wand voller Notizen. „Die Einsätze der letzten Monate folgen einem Muster. Irgendjemand plant gegen uns – von innen.“",
+    "choices": [
+      {
+        "id": "listen",
+        "text": "Zuhören und mitdenken",
+        "result": "Ihr sitzt bis spät in die Nacht. Seine Theorie hat Lücken, aber auch etwas Wahres.",
+        "effects": {
+          "trust": 5,
+          "xp": 30
+        }
+      },
+      {
+        "id": "dismiss",
+        "text": "„Das klingt nach Verschwörung.“",
+        "result": "Ryan räumt die Notizen schweigend weg.",
+        "effects": {
+          "respect": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_owen_past",
+    "title": "Owen erzählt",
+    "npcId": "owen",
+    "minDay": 300,
+    "weight": 8,
+    "text": "Owen sitzt allein in der Kantine. „Als Wächter habe ich Dinge getan, für die es keine Akte gibt“, sagt er, ohne aufzusehen.",
+    "choices": [
+      {
+        "id": "listen",
+        "text": "Zuhören",
+        "result": "Er erzählt nicht alles, aber genug. Danach sieht er dich anders an.",
+        "effects": {
+          "trust": 6
+        },
+        "memories": {
+          "owen": "Der Abend, an dem ich dir von meiner Zeit als Wächter erzählt habe"
+        }
+      },
+      {
+        "id": "report",
+        "text": "Percy davon berichten",
+        "result": "Owen wird zu einem Gespräch ins Direktorat bestellt. Er weiß, wer geredet hat.",
+        "npcEffects": {
+          "percy": {
+            "trust": 3
+          }
+        },
+        "effects": {
+          "trust": -10
+        },
+        "conflicts": {
+          "owen": "Du hast mein Vertrauen an Percy verkauft"
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_maya_drawing",
+    "title": "Mayas Skizzenbuch",
+    "npcId": "maya",
+    "requirePresent": [
+      "maya"
+    ],
+    "repeatDays": 120,
+    "weight": 8,
+    "text": "Maya hält dir ihr Skizzenbuch hin. Auf einer Seite: du, im Halbprofil, konzentriert. „Darf ich es behalten?“",
+    "choices": [
+      {
+        "id": "yes",
+        "text": "„Klar. Es ist gut.“",
+        "result": "Maya strahlt und zeichnet den ganzen Abend weiter.",
+        "effects": {
+          "friendship": 4
+        }
+      },
+      {
+        "id": "ask",
+        "text": "Nach den anderen Bildern fragen",
+        "result": "Sie zeigt dir die ganze Division – mit Augen, die mehr sehen als die Akten.",
+        "effects": {
+          "trust": 4,
+          "friendship": 2
+        },
+        "memories": {
+          "maya": "Du hast dir mein ganzes Skizzenbuch angesehen"
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_ethan_letter",
+    "title": "Ethans Brief wurde abgefangen",
+    "npcId": "ethan",
+    "requirePresent": [
+      "ethan"
+    ],
+    "minDay": 100,
+    "repeatDays": 200,
+    "weight": 8,
+    "text": "Ethan ist blass. „Mein Brief an meine Schwester kam zurück. Zensiert. Percy hat persönlich unterschrieben.“",
+    "choices": [
+      {
+        "id": "smuggle",
+        "text": "Anbieten, ihn beim nächsten Ausgang mitzunehmen",
+        "result": "Der Brief erreicht die Post. Ethan bedankt sich mit einem Händedruck, der nicht aufhören will.",
+        "check": {
+          "attribute": "perception",
+          "skill": "blend_in",
+          "difficulty": 45
+        },
+        "effects": {
+          "loyalty": 8,
+          "trust": 5
+        },
+        "arcs": {
+          "percy_pressure": 1
+        },
+        "failResult": "Am Ausgang wirst du kontrolliert. Der Brief landet bei Percy.",
+        "failEffects": {
+          "stress": 10,
+          "trust": 2
+        },
+        "failNpcEffects": {
+          "percy": {
+            "trust": -5
+          }
+        }
+      },
+      {
+        "id": "comfort",
+        "text": "Ihn trösten",
+        "result": "Ethan nickt. „Irgendwann sehe ich sie wieder.“",
+        "effects": {
+          "friendship": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_helena_supply",
+    "title": "Engpass in der Ausrüstung",
+    "npcId": "helena",
+    "minDay": 45,
+    "repeatDays": 120,
+    "weight": 8,
+    "text": "Helena zählt zum dritten Mal dieselbe Kiste. „Es fehlen Funkgeräte. Wenn das bis morgen nicht stimmt, fliegt eine Einsatzgruppe ohne.“",
+    "choices": [
+      {
+        "id": "help",
+        "text": "Beim Inventarisieren helfen",
+        "result": "Ihr findet die Geräte in einer falsch etikettierten Kiste. Helena zahlt dir einen Bonus aus.",
+        "effects": {
+          "friendship": 4,
+          "credits": 120,
+          "energy": -10
+        }
+      },
+      {
+        "id": "skip",
+        "text": "Keine Zeit",
+        "result": "Helena seufzt und zählt weiter."
+      }
+    ]
+  },
+  {
+    "id": "hq_night_drill",
+    "title": "Nächtlicher Alarm",
+    "npcId": "michael",
+    "requirePresent": [
+      "michael"
+    ],
+    "minDay": 30,
+    "repeatDays": 60,
+    "weight": 10,
+    "text": "03:12 Uhr. Sirenen. „Übung“, sagt Michael durch den Lautsprecher. „Rekrutin oder Rekrut mit den meisten Punkten übernimmt die Gruppe.“",
+    "choices": [
+      {
+        "id": "lead",
+        "text": "Die Gruppe führen",
+        "result": "Ihr seid als Erste an der Schleuse. Michael schaut auf die Uhr und nickt.",
+        "check": {
+          "attribute": "willpower",
+          "skill": "inspire",
+          "difficulty": 40
+        },
+        "effects": {
+          "respect": 5,
+          "xp": 50,
+          "reputation": 8,
+          "energy": -15
+        },
+        "failResult": "Die Gruppe verliert sich im Treppenhaus. Michael notiert die Zeit.",
+        "failEffects": {
+          "stress": 10,
+          "energy": -15
+        }
+      },
+      {
+        "id": "follow",
+        "text": "Mitlaufen",
+        "result": "Solide, unauffällig. Mehr nicht.",
+        "effects": {
+          "xp": 20,
+          "energy": -10
+        }
+      }
+    ]
+  }
+]

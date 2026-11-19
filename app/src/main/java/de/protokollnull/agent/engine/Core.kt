@@ -137,13 +137,21 @@ object Relations {
     }
 
     fun update(data: GameData, state: GameState, id: String, f: (Relation) -> Relation): GameState {
-        val r = f(get(data, state, id))
+        val before = get(data, state, id)
+        val r = f(before)
         val clamped = r.copy(
             friendship = r.friendship.pct(), trust = r.trust.pct(), loyalty = r.loyalty.pct(),
             respect = r.respect.pct(), affection = r.affection.pct(), rivalry = r.rivalry.pct(),
             memories = r.memories.takeLast(12)
         )
-        return state.copy(relations = state.relations + (id to clamped))
+        var s = state.copy(relations = state.relations + (id to clamped))
+        // v0.6: neue Erinnerungen zusätzlich strukturiert ablegen
+        if (r.memories.size > before.memories.size || r.memories.lastOrNull() != before.memories.lastOrNull()) {
+            val added = if (r.memories.take(before.memories.size) == before.memories) r.memories.drop(before.memories.size)
+                else r.memories.filter { it !in before.memories }
+            added.forEach { s = Memories.record(s, id, it) }
+        }
+        return s
     }
 
     fun displayName(data: GameData, state: GameState, id: String?): String {
@@ -177,6 +185,12 @@ object Conds {
         if (c.minAttribute.any { (k, v) -> Stats.effectiveAttribute(data, state, k) < v }) return false
         if (!state.completedMissions.containsAll(c.missionsDone)) return false
         if (c.hasItem != null && p.inventory.none { it.itemId == c.hasItem }) return false
+        if (c.flagsAny.isNotEmpty() && c.flagsAny.none { it in state.flags }) return false
+        if (c.minNpcAge != null && npcId != null && Ages.npc(data, state, npcId) < c.minNpcAge) return false
+        if (c.minDay != null && state.clock.day < c.minDay) return false
+        if (c.minBond.any { (k, v) -> val (a, b) = k.split("|").let { it[0] to it.getOrElse(1) { "" } }; Life.bond(state, a, b) < v }) return false
+        if (c.maxBond.any { (k, v) -> val (a, b) = k.split("|").let { it[0] to it.getOrElse(1) { "" } }; Life.bond(state, a, b) > v }) return false
+        if (c.noConflict && npcId != null && npcId in state.living.conflicts) return false
         return true
     }
 

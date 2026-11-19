@@ -50,17 +50,56 @@ object Romance {
         val other = partnerId(data, state)
         if (other != null && other != npcId) return Step("busy", "Bereits in einer Beziehung", "Du bist mit ${Relations.displayName(data, state, other)} zusammen.", false)
         val day = state.clock.day
+        val closed = state.living.arcs["closed_$npcId"]
+        if (r.romanceStage == 0 && closed != null && day - closed < 90) return Step("closed", "Ihr seid bewusst Freunde", "Frühestens ${90 - (day - closed)} Tage nach eurer Entscheidung wieder möglich.", false)
+        state.living.conflicts[npcId]?.let { c ->
+            if (r.romanceStage in 0..2) return Step("conflict", "Erst den Konflikt klären", "Ungelöst: ${c.reason}. Nutze „Aussprache“.", false)
+        }
+        val compat = Bonds.compatibility(data, state, npcId).score
         return when (r.romanceStage) {
             0 -> Step("interest", "Interesse zeigen", "Zuneigung ≥ 25, Freundschaft ≥ 40", r.affection >= 25 && r.friendship >= 40)
-            1 -> Step("confess", "Gefühle ansprechen", "Zuneigung ≥ 55, Vertrauen ≥ 55", r.affection >= 55 && r.trust >= 55)
-            2 -> if (teen(data, state, npcId)) null else Step(
-                "move_in", "Zusammenziehen", "Beide 18+, eigene Wohnung, Zuneigung ≥ 75, 60 Tage Beziehung",
+            1 -> Step("confess", "Feste Beziehung eingehen (bewusste Entscheidung)", "Zuneigung ≥ 55, Vertrauen ≥ 55, Passung ≥ 45 · beendet andere Annäherungen",
+                r.affection >= 55 && r.trust >= 55 && compat >= 45)
+            2 -> Step(
+                "move_in", "Zusammenziehen", "Eigene Wohnung, Zuneigung ≥ 75, 60 Tage Beziehung",
                 state.player.apartment && r.affection >= 75 && day - r.romanceSinceDay >= 60
             )
             3 -> Step("propose", "Heiratsantrag", "Zuneigung ≥ 85, Vertrauen ≥ 80, 180 Tage zusammen", r.affection >= 85 && r.trust >= 80 && day - r.romanceSinceDay >= 180)
             4 -> Step("family", "Familie planen", "Beide ≥ 21, ein Jahr verheiratet", Ages.player(state) >= 21 && Ages.npc(data, state, npcId) >= 21 && day - r.romanceSinceDay >= 365)
             else -> null
         }
+    }
+
+    /** Andere Figuren, zu denen gerade Interesse (Stufe 1) besteht. */
+    fun otherInterests(data: GameData, state: GameState, npcId: String): List<String> =
+        state.relations.filter { (id, r) -> id != npcId && r.romanceStage == 1 }.keys.toList()
+
+    /**
+     * „Nur Freunde bleiben“ bzw. Beziehung beenden – immer eine bewusste
+     * Entscheidung des Spielers. Eine Trennung hinterlässt einen Konflikt.
+     */
+    fun stayFriends(data: GameData, state: GameState, npcId: String): Result {
+        val r = Relations.get(data, state, npcId)
+        val name = Relations.displayName(data, state, npcId)
+        val breakup = r.romanceStage >= 2
+        var s = Relations.update(data, state, npcId) {
+            it.copy(romanceStage = 0, romanceSinceDay = -1, affection = it.affection.coerceAtMost(20))
+        }
+        s = s.copy(living = s.living.copy(arcs = s.living.arcs + ("closed_$npcId" to s.clock.day), closedRomances = s.living.closedRomances + npcId))
+        s = Bonds.addMilestone(data, s, npcId, if (breakup) "breakup" else "stay_friends")
+        if (breakup) {
+            s = s.copy(flags = s.flags - "married")
+            s = Bonds.addConflict(data, s, npcId, "Die Trennung", 2, "breakup")
+            s = Relations.update(data, s, npcId) { it.copy(friendship = it.friendship - 10, trust = it.trust - 5) }
+        } else {
+            s = Memories.add(data, s, npcId, "Wir haben entschieden, Freunde zu bleiben", "trust", 4)
+            s = Relations.update(data, s, npcId) { it.copy(trust = it.trust + 3) }
+        }
+        val t = World.passTime(data, s, 1)
+        return Result(t.state, listOf(
+            if (breakup) "Du beendest die Beziehung mit $name. Das wird Zeit brauchen." else "Du sagst $name ehrlich, dass du eure Freundschaft nicht gefährden willst. Es bleibt eine Freundschaft.",
+            if (breakup) "Konflikt: Die Trennung · Freundschaft −10" else "Vertrauen +3"
+        ) + t.messages)
     }
 
     fun advance(data: GameData, state: GameState, npcId: String): Result {
@@ -96,6 +135,16 @@ object Romance {
             "propose" -> "$name sagt Ja. Die Hochzeit findet im kleinen Kreis statt."
             else -> "Ihr beschließt, eine Familie zu gründen. Die Division gewährt Elternzeit – und ein neues Sicherheitsprotokoll."
         }
+        if (step.id == "interest") s = Bonds.addMilestone(data, s, npcId, "interest")
+        if (step.id == "confess") {
+            s = Bonds.addMilestone(data, s, npcId, "partner")
+            // Bewusste Entscheidung: andere Annäherungen enden respektvoll
+            otherInterests(data, s, npcId).forEach { other ->
+                s = Relations.update(data, s, other) { it.copy(romanceStage = 0, affection = it.affection.coerceAtMost(20), friendship = it.friendship - 3) }
+                s = Memories.add(data, s, other, "Du hast dich für ${name.substringBefore(" ")} entschieden", "romance", 3)
+                s = s.copy(living = s.living.copy(arcs = s.living.arcs + ("closed_$other" to day), closedRomances = s.living.closedRomances + other))
+            }
+        }
         if (step.id == "family") s = s.copy(flags = s.flags + "family_started")
         if (step.id == "propose") s = s.copy(flags = s.flags + "married")
         val t = World.passTime(data, s, 1)
@@ -114,7 +163,14 @@ object Social {
         list += Interaction("smalltalk", "Kurzes Gespräch", "Freundschaft +, 1 Zeitslot", !today, if (today) "Heute schon gesprochen" else "")
         list += Interaction("time", "Zeit verbringen", "Freundschaft & Stressabbau, 1 Zeitslot, 10 Energie", energy >= 10, if (energy < 10) "Zu erschöpft" else "")
         list += Interaction("advice", "Um Rat fragen", "Respekt +, Tipp für deine Laufbahn", r.trust >= 40, if (r.trust < 40) "Vertrauen ≥ 40" else "")
-        list += Interaction("gift", "Etwas schenken", "Gegenstand aus deinem Inventar (Notizbuch, Uhr, Kamera …)", giftable(data, state).isNotEmpty(), "Kein passendes Geschenk im Inventar")
+        val conflict = state.living.conflicts[npcId]
+        if (conflict != null) list += Interaction("talk_out", "Aussprache", "Konflikt „${conflict.reason}“ klären · Empathie-Probe, 1 Slot", !today && energy >= 10, if (today) "Heute schon gesprochen" else "Zu erschöpft")
+        val gifts = Bonds.giftOptions(data, state, npcId)
+        if (gifts.isEmpty()) list += Interaction("gift", "Etwas schenken", "Kamera, Headset, Notizbuch, Uhr, Taschenlampe …", false, "Kein passendes Geschenk im Inventar")
+        gifts.forEach { g -> list += Interaction("gift:${g.itemId}", "Schenken: ${g.name}", g.reaction + " · Freundschaft +${g.bonus}", true) }
+        val r0 = Relations.get(data, state, npcId)
+        if (r0.romanceStage >= 1) list += Interaction("stay_friends", if (r0.romanceStage >= 2) "Beziehung beenden" else "Nur Freunde bleiben",
+            if (r0.romanceStage >= 2) "Bewusste Trennung – hinterlässt einen Konflikt" else "Ehrlich bleiben: die Freundschaft behalten", true)
         if (npcId == "michael") {
             val lock = Career.mentorAvailable(data, state)
             list += Interaction("m_eval", "Leistungsbeurteilung anfordern", "Note A–E aus Training, Einsätzen und Entwicklung der letzten 30 Tage",
@@ -123,20 +179,34 @@ object Social {
             list += Interaction("m_prep", "Prüfungsvorbereitung", "Szenarien & Theorie, Prüfungsvorbereitung +15, 2 Slots", lock == null && energy >= 20, lock ?: "Zu erschöpft")
         }
         val custom = state.customNpcs.firstOrNull { it.id == npcId }
-        if (custom != null) list += Interaction("mentor", "Mentoring", "Gemeinsam lernen: Vertrauen +, Fähigkeiten der Figur wachsen", energy >= 15, "Zu erschöpft")
+        if (custom != null) {
+            list += Interaction("mentor", "Mentoring", "Gemeinsam lernen: Vertrauen +, Fähigkeiten der Figur wachsen", energy >= 15, "Zu erschöpft")
+            val last = state.living.arcs["focus_talk_$npcId"] ?: -999
+            val ok = state.clock.day - last >= 14
+            Life.focusAreas.forEach { f ->
+                if (f != Life.life(data, state, npcId).focus) list += Interaction("focus:$f", "Laufbahn-Rat: ${Life.focusLabel(f)}",
+                    "Schwerpunkt des eigenen Trainings ändern (bei abweichendem Berufswunsch Vertrauen ≥ 55)", ok, "Erst in ${14 - (state.clock.day - last)} Tagen wieder")
+            }
+        }
         if (r.rivalry >= 20) list += Interaction("challenge", "Zum Wettkampf herausfordern", "Fitness-Probe, Respekt oder Rivalität ändern sich", energy >= 20, "Zu erschöpft")
         return list
     }
 
-    private val giftItems = listOf("notebook", "watch", "camera", "headset", "flashlight", "smartphone", "wallet")
-    fun giftable(data: GameData, state: GameState) = state.player.inventory.filter { it.itemId in giftItems && it.uid !in state.player.equipment.values }
+    fun giftable(data: GameData, state: GameState) = state.player.inventory.filter { it.itemId in Bonds.giftItems && it.uid !in state.player.equipment.values }
 
     fun interact(data: GameData, state: GameState, npcId: String, id: String): Result {
         val name = Relations.displayName(data, state, npcId)
         val def = data.agentById[npcId]
         val traits = def?.traits ?: state.customNpcs.firstOrNull { it.id == npcId }?.traits ?: emptyList()
         val day = state.clock.day
+        if (id.startsWith("gift:")) return Bonds.give(data, state, npcId, id.removePrefix("gift:"))
+        if (id.startsWith("focus:")) {
+            val r = Life.setFocus(data, state, npcId, id.removePrefix("focus:"))
+            return if (r.ok) r.copy(state = Bonds.addMilestone(data, r.state, npcId, "career_talk")) else r
+        }
         when (id) {
+            "talk_out" -> return Bonds.talkOut(data, state, npcId)
+            "stay_friends" -> return Romance.stayFriends(data, state, npcId)
             "m_eval" -> return Career.evaluate(data, state)
             "m_train" -> return Career.mentorTraining(data, state)
             "m_prep" -> return Career.mentorExamPrep(data, state)
@@ -145,15 +215,19 @@ object Social {
                 if (r.lastTalkDay == day) return state.fail("Ihr habt heute schon gesprochen.")
                 val line = smalltalkLine(data, state, npcId)
                 var s = Relations.update(data, state, npcId) { it.copy(friendship = it.friendship + 2, trust = it.trust + 1, lastTalkDay = day) }
+                s = Bonds.addMilestone(data, s, npcId, "first_talk")
                 val t = World.passTime(data, s, 1)
                 return Result(t.state, listOf("$name: „$line“", "Freundschaft +2, Vertrauen +1") + t.messages)
             }
             "time" -> {
                 if (state.player.energy < 10) return state.fail("Zu erschöpft.")
                 val romance = Romance.allowed(data, state, npcId)
+                val strained = npcId in state.living.conflicts
                 var s = Relations.update(data, state, npcId) {
-                    it.copy(friendship = it.friendship + 4, trust = it.trust + 2, affection = it.affection + if (romance) 4 else 0, lastTalkDay = day)
+                    it.copy(friendship = it.friendship + if (strained) 2 else 4, trust = it.trust + if (strained) 0 else 2,
+                        affection = it.affection + if (romance && !strained) 4 else 0, lastTalkDay = day)
                 }
+                if (!strained && Relations.get(data, s, npcId).memories.size < 3) s = Memories.add(data, s, npcId, sharedMoment(data, s, npcId), "moment", 2)
                 s = s.copy(player = s.player.copy(stress = (s.player.stress - 8).pct(), energy = (s.player.energy - 10).pct()))
                 val what = if (Ages.player(state) < 18) "Ihr spielt Karten im Aufenthaltsraum und redet über alles außer Division."
                 else "Ihr geht nach dem Dienst etwas essen und redet über Dinge jenseits der Arbeit."
@@ -168,13 +242,7 @@ object Social {
             }
             "gift" -> {
                 val st = giftable(data, state).firstOrNull() ?: return state.fail("Kein Geschenk verfügbar.")
-                val item = data.itemById[st.itemId]
-                var s = Inventory.removeById(state, st.itemId, 1)
-                val liked = traits.any { it in listOf("technik", "neugierig", "kreativ") } && st.itemId in listOf("camera", "headset", "smartphone")
-                val bonus = if (liked) 8 else 4
-                val romance = Romance.allowed(data, s, npcId)
-                s = Relations.update(data, s, npcId) { it.copy(friendship = it.friendship + bonus, affection = it.affection + if (romance) bonus / 2 else 0, memories = it.memories + "Geschenk: ${item?.name}") }
-                return Result(s, listOf("Du schenkst $name: ${item?.name}.", if (liked) "$name freut sich sichtlich (Freundschaft +$bonus)." else "Freundschaft +$bonus"))
+                return Bonds.give(data, state, npcId, st.itemId)
             }
             "mentor" -> {
                 val npc = state.customNpcs.firstOrNull { it.id == npcId } ?: return state.fail("Nur für eigene Rekruten")
@@ -183,6 +251,9 @@ object Social {
                 val upgraded = npc.copy(skills = npc.skills + (key to ((npc.skills[key] ?: 0) + 1).coerceAtMost(5)))
                 var s = state.copy(customNpcs = state.customNpcs.map { if (it.id == npcId) upgraded else it })
                 s = Relations.update(data, s, npcId) { it.copy(trust = it.trust + 3, respect = it.respect + 2, friendship = it.friendship + 2, lastTalkDay = day) }
+                s = Bonds.addMilestone(data, s, npcId, "mentor")
+                val lf = Life.life(data, s, npcId)
+                s = s.copy(living = s.living.copy(lives = s.living.lives + (npcId to lf.copy(careerXp = lf.careerXp + 6))))
                 s = s.copy(player = s.player.copy(energy = (s.player.energy - 15).pct()))
                 val t = World.passTime(data, s, 1)
                 return Result(t.state, listOf("Ihr lernt gemeinsam. ${npc.firstName} verbessert ${data.skillById[key]?.name ?: key}.", "Vertrauen +3, Respekt +2") + t.messages)
@@ -200,6 +271,11 @@ object Social {
             }
         }
         return state.fail("Unbekannte Interaktion")
+    }
+
+    private fun sharedMoment(data: GameData, state: GameState, id: String): String {
+        val i = Life.interests(data, state, id)
+        return if (i.isEmpty()) "Ein ruhiger Abend im Aufenthaltsraum" else "Ein Nachmittag über ${i[state.clock.day % i.size]}"
     }
 
     private fun smalltalkLine(data: GameData, state: GameState, id: String): String {
@@ -257,7 +333,8 @@ object Social {
         return Result(s, listOf("${npc.name} (16) trifft als neue/r Rekrut/in in der Division ein. Ihr kennt euch noch nicht – Vertrauen muss wachsen."))
     }
 
-    fun customRank(state: GameState, npc: CustomNpc): Int = (1 + (state.clock.day - npc.createdDay).coerceAtLeast(0) / 450).coerceAtMost(9)
+    /** v0.6: Rang eigener Figuren kommt aus ihrer eigenen Laufbahn (siehe [Life]). */
+    fun customRank(data: GameData, state: GameState, npc: CustomNpc): Int = Life.rank(data, state, npc.id)
 
     fun professionLabel(id: String) = when (id) {
         "field" -> "Außendienst"
