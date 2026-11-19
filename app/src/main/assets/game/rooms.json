@@ -32,7 +32,8 @@
       "h": 1,
       "description": "Biometrische Schleuse. Hier beginnt und endet jeder Weg nach draußen.",
       "actions": [
-        "team"
+        "team",
+        "command"
       ]
     },
     {
@@ -78,6 +79,7 @@
       "minAge": 17,
       "actions": [
         "cafe",
+        "city",
         "cover_job",
         "apartment"
       ]
@@ -148,7 +150,8 @@
       "description": "Bildschirmwände, Karten, Stimmengewirr. Hier werden Einsätze vergeben.",
       "actions": [
         "missions",
-        "team"
+        "team",
+        "command"
       ]
     },
     {

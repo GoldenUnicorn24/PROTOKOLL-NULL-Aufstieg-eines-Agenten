@@ -67,7 +67,10 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                 Triple("Einsatzberichte", "${s.reports.size} Berichte", Overlay.Reports),
                 Triple("Team", "${s.team.size}/${Progression.teamSize(data, s)} Plätze", Overlay.Team),
                 Triple("Neuer Agent (Editor)", if (Social.canCreateRecruit(s)) "freigeschaltet" else if (Ages.player(s) < 18) "ab 18 (noch ${Clock.daysUntilAge(s.clock.day, 18)} Tage)" else "max. 3", Overlay.Recruit),
-                Triple("Direktorat", if (s.director != null) "Budget ${s.director.budget} Cr" else "ab Rang 12", Overlay.Director)
+                Triple("Führungscockpit", if (Command.isLeader(s)) "Kohäsion ${s.lead.cohesion} · Etat ${Directorate.budget(s)} Cr" else "ab Rang 8", Overlay.Command("team")),
+                Triple("Direktorat", if (s.director != null) "${Directorate.tierLabel(Directorate.tier(s))} · ${s.director.budget} Cr" else "ab Rang 10", Overlay.Director),
+                Triple("Stadt & Privatleben", Home.housingName(s.life.housing) + (s.life.coverJob?.let { " · Tarnjob" } ?: ""), Overlay.City("home")),
+                Triple("Wochen- & Monatsberichte", "${s.lead.reports.size} Berichte", Overlay.Command("reports"))
             )
             buttons.chunked(2).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(bottom = 10.dp)) {
@@ -221,65 +224,9 @@ fun TeamScreen(vm: GameViewModel, s: GameState) {
                     }
                 }
             }
-            if (s.player.rank >= 9 && s.board.isNotEmpty() && s.team.isNotEmpty()) {
-                item { SectionLabel("Aufträge delegieren") }
-                items(s.board) { m ->
-                    ChoiceButton("Delegieren: " + m.title, "Gefahr ${m.threat} · Team ${s.team.size}") { vm.act { d, x -> Director.delegate(d, x, m, x.team) } }
-                }
+            if (s.player.rank >= Command.LEAD_RANK) item {
+                ActionButton("Führungscockpit öffnen", Modifier.fillMaxWidth(), subtitle = "Rollen, Aufgaben, Delegation, Personal") { vm.open(Overlay.Command("team")) }
             }
-        }
-    }
-}
-
-@Composable
-fun DirectorScreen(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    val d = s.director
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader("Direktorat", if (d != null) "Budget ${d.budget} Cr" else "gesperrt", onBack = { vm.back() })
-        if (d == null) {
-            Column(Modifier.padding(16.dp)) {
-                GlassPanel {
-                    Text("Das Direktorat wird mit Rang 12 (Direktor) freigeschaltet.", style = MaterialTheme.typography.bodyMedium)
-                    Text("Voraussetzungen: Level 60, Alter 29, Ruf 900, Vertrauen von Percy und die Mission „Abstimmung im Direktorat“.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            }
-            return@Column
-        }
-        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            item {
-                GlassPanel {
-                    StatBar("Moral des Personals", d.morale, 100, Pn.Ok)
-                    StatBar("Rückhalt der Aufsicht", d.oversight, 100, Pn.Violet)
-                    if (d.lastWeekReport.isNotBlank()) SmallNote("Letzte Woche: " + d.lastWeekReport)
-                }
-            }
-            item { SectionLabel("Abteilungen") }
-            items(Director.departments) { (id, name) ->
-                val lvl = d.departments[id] ?: 1
-                GlassPanel(padding = 12.dp) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text("$name · Stufe $lvl/5", style = MaterialTheme.typography.titleSmall)
-                            Text("Leitung: " + (d.heads[id]?.let { Relations.displayName(data, s, it) } ?: "vakant"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        ActionButton(if (lvl >= 5) "Maximal" else "Ausbauen · ${Director.upgradeCost(lvl)}", enabled = lvl < 5 && d.budget >= Director.upgradeCost(lvl), secondary = true) {
-                            vm.act { dd, x -> Director.upgrade(dd, x, id) }
-                        }
-                    }
-                    val heads = Missions.teamCandidates(data, s, MissionDefinition(id = "h", title = "", locationId = "hq", type = "x", threat = 3)).take(6)
-                    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        heads.forEach { h -> FilterChip(selected = d.heads[id] == h, onClick = { vm.act { dd, x -> Director.assignHead(dd, x, id, if (d.heads[id] == h) null else h) } }, label = { Text(Relations.displayName(data, s, h).substringBefore(" ")) }) }
-                    }
-                }
-            }
-            item { SectionLabel("Leitlinie") }
-            items(Director.policies) { (id, name) ->
-                ChoiceButton(name + if (d.policy == id) "  ✓" else "", when (id) { "transparent" -> "Aufsicht +, Geheimnisse riskanter"; "secrecy" -> "Aufsicht −, mehr Spielraum"; "people" -> "Moral +"; else -> "Stabil" }) {
-                    vm.act { _, x -> Director.setPolicy(x, id) }
-                }
-            }
-            item { SmallNote("Direktor-Endgame: Generierte Missionen bleiben frei spielbar; das Einsatzboard zeigt Aufträge höherer Gefahrenstufe.") }
         }
     }
 }

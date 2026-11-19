@@ -151,7 +151,7 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                     if (Romance.romanceable(data, s, id) && r.romanceStage > 0) Pill(Romance.stageName(data, s, id, r.romanceStage), Pn.Violet)
                 }
             }
-            ChipRow(listOf("profile" to "Akte", "career" to "Laufbahn", "relation" to "Beziehung", "circle" to "Umfeld", "talk" to "Interaktion"), tab) { tab = it }
+            ChipRow(listOf("profile" to "Akte", "duty" to "Dienst", "career" to "Laufbahn", "relation" to "Beziehung", "circle" to "Umfeld", "talk" to "Interaktion"), tab) { tab = it }
             when (tab) {
                 "profile" -> {
                     GlassPanel {
@@ -173,6 +173,7 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                         }
                     }
                 }
+                "duty" -> PersonnelFile(vm, s, id)
                 "career" -> CareerFile(vm, s, id)
                 "relation" -> RelationFile(vm, s, id)
                 "circle" -> CircleFile(vm, s, id)
