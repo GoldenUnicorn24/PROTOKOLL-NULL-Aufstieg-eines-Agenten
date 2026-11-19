@@ -13,6 +13,12 @@ Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, mi
 
 Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
 
+
+## Neue Entwicklung – private Serienporträts und v0.5
+
+- Private Serienbilder können optional direkt in der App pro Serienfigur über den Android-Fotopicker ausgewählt werden, ohne die Bilder nach GitHub hochzuladen. Optionaler lokaler Build-Asset-Ordner wird ignoriert; siehe [private Serienporträts](docs/PRIVATE_CAST_PORTRAITS.md).
+- Der vollständige Entwicklungsauftrag für Claude ist [CLAUDE_V0_5_MASTER_PROMPT.md](docs/CLAUDE_V0_5_MASTER_PROMPT.md). Die laufende v0.4 bleibt bis zum geprüften v0.5-Release erhalten.
+
 ## Screenshots
 
 Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflow *Screenshots*, Ordner `docs/screenshots/`). Fotos und Item-Icons werden in der Testumgebung synchron geladen und sind daher sichtbar.
