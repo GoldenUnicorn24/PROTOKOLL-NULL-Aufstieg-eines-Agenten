@@ -20,15 +20,17 @@
 - Zweite persönliche Szene `dlg_alex_evening` nur bei offenem Interesse und ausreichendem Vertrauen.
 - Alex behält eigene Ziele und Freiwilligkeit, keine automatische Partnerschaft durch Entscheidung allein.
 
-## Altersregel für Romanzen (ab v0.5)
-- Romantische Optionen (Interesse, Paar, Zusammenziehen, Heirat, Familie) gibt es **nur, wenn beide Figuren volljährig sind**.
-- Vor dem 18. Geburtstag beider Figuren sind Freundschaft, Vertrauen, Respekt, Loyalität und Mentoring möglich; Zuneigung steigt in dieser Zeit nicht.
-- Die frühere 18/16-Regel aus v0.4 wurde in v0.5 bewusst nicht übernommen. Bestehende v0.4-Spielstände mit einer früheren Beziehungsstufe bleiben lesbar; die Beziehung wird als „pausiert“ angezeigt, bis beide volljährig sind.
-- Alex-Route und Gefährtenakte bleiben erhalten: Die Alex-Dialoge (`dlg_alex_choice`, `dlg_alex_evening`) sind ab 18 verfügbar (Alex ist dann 19). Die 16-jährige zugeteilte Gefährtin bzw. der Gefährte ist bis zur Volljährigkeit Kollegin/Kollege und Freund/in.
+## Altersgerechte Romanzen ab dem ergänzenden v0.6-Patch
+- Freiwillige, ausschließlich nicht-sexuelle Romanzen ab 16 sind möglich, wenn beide Figuren mindestens 16 und maximal zwei Jahre auseinander sind (etwa 16/17 oder 18/16).
+- Für zwei volljährige Figuren gilt die reguläre Erwachsenenregel; der Abstand von zwei Jahren ist nur eine freiwillige Spielregel für Minderjährige.
+- Bis zur Volljährigkeit beider Figuren gibt es nur Stufe 1 (Interesse) und Stufe 2 (feste Beziehung). Zusammenziehen, Heirat und Familienplanung sind gesperrt; Familienplanung setzt ohnehin 21 Jahre bei beiden voraus.
+- Alex bleibt freiwillig: Erst die Dialogentscheidung `alex_romance_unlocked` eröffnet ihre Romanzenroute. `dlg_alex_choice`, `dlg_alex_evening` und `dlg_alexv6_rooftop` sind ab 16 verfügbar, sofern die weiteren Bedingungen erfüllt sind.
+- Die 16-jährige neu zugeteilte Gefährtin bzw. der Gefährte kann mit dem 18-jährigen Spieler eine gleichberechtigte altersgerechte Beziehung entwickeln, aber nicht automatisch durch Rekrutierung. Keine Ausnutzung der dienstlichen Position.
+- Alle Romanzen der NPC-Lebenssimulation, die nicht den Spieler betreffen, bleiben auf volljährige NPCs begrenzt. Alte Spielstände mit Stufe 1–2 bleiben gültig.
 
 ## Beziehungen in v0.6 „Living Division“
-- Die Altersregel gilt unverändert: Romantik nur, wenn beide Figuren volljährig sind. Die Lebenssimulation verändert die Romanzenstufe zwischen Spieler und Figur nie. NPC-Paare entstehen nur zwischen volljährigen Figuren, die keine Spielerromanze sein können.
-- Neue Alex-Szenen (`dlg_alexv6_*`): Vor dem 18. Geburtstag gibt es ausschließlich Freundschaftsszenen. Der Freundschaftsweg (`alex_friendship_chosen`) ist vollständig spielbar, auch über `dlg_alexv6_friend_oath` und `dlg_alexv6_reconsider` (ab 19, mit bewusster zweiter Entscheidung). Die Romanzenszene `dlg_alexv6_rooftop` ist erst ab 18 und nur mit `alex_romance_unlocked` verfügbar.
+- Die v0.6-Spielerromanzenregel erlaubt auch altersgerechte 16/17- und 18/16-Beziehungen. Die Lebenssimulation verändert die Spielerromanzenstufe nie; eigenständig gebildete NPC-Paare bleiben auf Volljährige beschränkt.
+- Neue Alex-Szenen (`dlg_alexv6_*`): Vor dem 16. Geburtstag gibt es keine Romanze; ab 16 sind auch altersgerechte romantische Szenen möglich. Der Freundschaftsweg (`alex_friendship_chosen`) ist vollständig spielbar, auch über `dlg_alexv6_friend_oath` und `dlg_alexv6_reconsider` (ab 19, mit bewusster zweiter Entscheidung). Die Romanzenszene `dlg_alexv6_rooftop` ist erst ab 18 und nur mit `alex_romance_unlocked` verfügbar.
 - Eine feste Beziehung entsteht nur durch eine bewusste Entscheidung mit Bestätigung. Sie beendet andere Annäherungen respektvoll. „Nur Freunde bleiben“ und Trennung sind eigene Entscheidungen.
 
 ## Entwicklungs- und Qualitätsschutz
