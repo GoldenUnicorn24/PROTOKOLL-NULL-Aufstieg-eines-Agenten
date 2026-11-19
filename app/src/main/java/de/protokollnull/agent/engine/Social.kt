@@ -17,17 +17,13 @@ object Romance {
     }
 
     /**
-     * Altersgerechte, nicht-sexualisierte Romanzen: beide mindestens 16 und
-     * höchstens zwei Jahre auseinander (auch 18/16), oder beide 18+.
-     * Zusammenziehen/Heirat/Familiengründung erst bei Volljährigkeit beider
-     * und mit den bestehenden zusätzlichen Voraussetzungen.
+     * Romantische Optionen gibt es ausschließlich, wenn beide Figuren
+     * volljährig sind. Bis dahin sind nur Freundschaft, Vertrauen und
+     * Mentoring möglich (bewusste Entscheidung ab v0.5).
      */
     fun allowed(data: GameData, state: GameState, npcId: String): Boolean {
         if (!romanceable(data, state, npcId)) return false
-        val a = Ages.player(state)
-        val b = Ages.npc(data, state, npcId)
-        if (a >= 18 && b >= 18) return true
-        return a >= 16 && b >= 16 && kotlin.math.abs(a - b) <= 2
+        return Ages.player(state) >= 18 && Ages.npc(data, state, npcId) >= 18
     }
 
     fun teen(data: GameData, state: GameState, npcId: String): Boolean =

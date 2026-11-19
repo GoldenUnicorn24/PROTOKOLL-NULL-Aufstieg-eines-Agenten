@@ -20,13 +20,11 @@
 - Zweite persönliche Szene `dlg_alex_evening` nur bei offenem Interesse und ausreichendem Vertrauen.
 - Alex behält eigene Ziele und Freiwilligkeit, keine automatische Partnerschaft durch Entscheidung allein.
 
-## Altersgerechte Romanze 18/16
-- Romantische **nicht-sexuelle** Beziehung zwischen 18- und 16-jährigen Figuren ist im Spiel nun möglich, auch bei der individuell erstellten Gefährtin/dem Gefährten.
-- Regel: beide >=16 und Altersabstand höchstens 2 Jahre; oder beide volljährig.
-- Solange eine Person minderjährig ist, maximal Stufe 2 (Interesse, Paar). Nur Gespräche, Freizeit, Dates und emotionale Nähe; kein expliziter Inhalt.
-- **Zusammenziehen, Heirat und Familienplanung erst, wenn beide erwachsen sind**, weitere Voraussetzungen gelten unverändert.
-- Keine Abhängigkeit oder Zwang durch den Ausbildungsstatus. Auswahl ist für beide Charaktere freiwillig und kann durch Konflikte unterbrochen werden.
-- Testfälle: 16/17 erlaubt; 18/16 erlaubt bis Stufe 2; 19/16 gesperrt; bei 20/18 Erwachsene-Stufen freigeschaltet.
+## Altersregel für Romanzen (ab v0.5)
+- Romantische Optionen (Interesse, Paar, Zusammenziehen, Heirat, Familie) gibt es **nur, wenn beide Figuren volljährig sind**.
+- Vor dem 18. Geburtstag beider Figuren sind Freundschaft, Vertrauen, Respekt, Loyalität und Mentoring möglich; Zuneigung steigt in dieser Zeit nicht.
+- Die frühere 18/16-Regel aus v0.4 wurde in v0.5 bewusst nicht übernommen. Bestehende v0.4-Spielstände mit einer früheren Beziehungsstufe bleiben lesbar; die Beziehung wird als „pausiert“ angezeigt, bis beide volljährig sind.
+- Alex-Route und Gefährtenakte bleiben erhalten: Die Alex-Dialoge (`dlg_alex_choice`, `dlg_alex_evening`) sind ab 18 verfügbar (Alex ist dann 19). Die 16-jährige zugeteilte Gefährtin bzw. der Gefährte ist bis zur Volljährigkeit Kollegin/Kollege und Freund/in.
 
 ## Entwicklungs- und Qualitätsschutz
 - `main` bleibt stabil; Code über Featurebranch & Pull Request mit CI.
