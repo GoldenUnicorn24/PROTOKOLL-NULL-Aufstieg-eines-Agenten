@@ -155,6 +155,7 @@ fun ShopScreen(vm: GameViewModel, s: GameState) {
             items(items, key = { it.id }) { def ->
                 val price = Inventory.price(def, s)
                 val locked = s.player.rank < def.minRank
+                val ageLocked = def.category == "weapons" && Ages.player(s) < 18 && def.id != "pistol_training"
                 val color = Pn.rarity[def.rarity] ?: Pn.Accent
                 GlassPanel(accent = color, padding = 12.dp) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -169,7 +170,7 @@ fun ShopScreen(vm: GameViewModel, s: GameState) {
                             }
                         }
                     }
-                    ActionButton(if (locked) "Ab Rang ${def.minRank}" else "Anfordern · $price Cr", Modifier.fillMaxWidth(), enabled = !locked && s.player.credits >= price, secondary = true) {
+                    ActionButton(if (locked) "Ab Rang ${def.minRank}" else if (ageLocked) "Erst ab 18" else "Anfordern · $price Cr", Modifier.fillMaxWidth(), enabled = !locked && !ageLocked && s.player.credits >= price, secondary = true) {
                         vm.act { d, x -> Inventory.buy(d, x, def.id) }
                     }
                 }
