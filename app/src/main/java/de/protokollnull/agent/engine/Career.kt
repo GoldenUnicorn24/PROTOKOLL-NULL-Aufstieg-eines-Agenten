@@ -16,7 +16,7 @@ object Career {
     // --- Journal ------------------------------------------------------------
 
     fun journal(state: GameState, type: String, title: String, text: String): GameState =
-        state.copy(journal = (state.journal + JournalEntry(state.clock.day, type, title, text)).takeLast(120))
+        state.copy(journal = (state.journal + JournalEntry(state.clock.day, type, title, text)).takeLast(250))
 
     // --- Leistungsbeurteilung -----------------------------------------------
 
@@ -67,7 +67,8 @@ object Career {
         var s = state.copy(career = state.career.copy(evaluations = (state.career.evaluations + ev).takeLast(24), attrSumAtLastEval = attrSum(state)))
         val trust = when (g) { "A" -> 3; "B" -> 1; "D" -> -1; "E" -> -3; else -> 0 }
         s = Relations.update(data, s, "michael") { it.copy(trust = it.trust + trust, respect = it.respect + if (g <= "B") 1 else 0) }
-        s = journal(s, "evaluation", "Leistungsbeurteilung: Note $g", "Michael: ${ev.comment} (Training ${b.training}, Einsätze ${b.missions}, Entwicklung ${b.development}, Vorbereitung ${b.prep}, Verfassung ${b.stress})")
+        val prev = state.career.evaluations.lastOrNull()?.grade
+        if (!auto || prev != g) s = journal(s, "evaluation", "Leistungsbeurteilung: Note $g", "Michael: ${ev.comment} (Training ${b.training}, Einsätze ${b.missions}, Entwicklung ${b.development}, Vorbereitung ${b.prep}, Verfassung ${b.stress})")
         if (g == "A") s = award(s, "grade_a", "Bestnote", "Erste Leistungsbeurteilung mit Note A.")
         return Result(s, listOf("Leistungsbeurteilung: Note $g (${b.total}/100)", ev.comment) + if (trust != 0) listOf("Michael: Vertrauen ${Effs.signed(trust)}") else emptyList())
     }

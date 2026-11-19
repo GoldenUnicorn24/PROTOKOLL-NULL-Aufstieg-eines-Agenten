@@ -78,7 +78,8 @@ object Simulation {
     // --- Simulation -----------------------------------------------------------------
 
     private fun known(data: GameData, s: GameState, id: String): Boolean =
-        World.revealed(data, s, id) && ("met_$id" in s.flags || s.relations.containsKey(id))
+        World.revealed(data, s, id) && ("met_$id" in s.flags || s.relations.containsKey(id)) &&
+            CompanionAssignment.awaitingIntroduction(s)?.id != id
 
     /**
      * Simuliert bis zu [days] Tage. [stopOnEvents] hält bei Geburtstag 18,

@@ -238,7 +238,7 @@ class V05SystemsTest {
     }
 
     @Test fun buyAndReturnNeverProfits() {
-        var s = start().let { it.copy(player = it.player.copy(credits = 5000, rank = 6)) }
+        var s = start().let { it.copy(player = it.player.copy(credits = 100000, rank = 6)) }
         d.items.filter { it.buyable && it.baseValue > 0 && it.minRank <= 6 }.forEach { item ->
             val before = s.player.credits
             val b = Inventory.buy(d, s, item.id)
