@@ -161,8 +161,10 @@ data class PrivateLife(
     val eventsSeen: Map<String, Int> = emptyMap(),
     val meetings: List<String> = emptyList(),
     val log: List<String> = emptyList(),
-    /** Individuelle Wochenmarker für Gehalt, Tarnjob und Wohnungen. */
+    /** Wochensold: zuletzt tatsächlich verbuchte Kalenderwoche. */
     val lastSalaryWeek: Int = -1,
+    /** Tarnjob-Auszahlung, unabhängig von shiftWeek und Dienstbeginn. */
     val lastJobPayWeek: Int = -1,
+    /** Privatereignis auch nach dem Auflösen in derselben Woche nur einmal ziehen. */
     val lastHomeEventWeek: Int = -1
 )

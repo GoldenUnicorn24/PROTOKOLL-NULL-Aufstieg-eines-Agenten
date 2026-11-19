@@ -609,6 +609,11 @@ class DirectorsLegacyTest {
         var s = leader(3).copy(clock = GameClock(800, 0))
         s = Home.takeJob(d, s, "courier").state
         val week = Clock.week(s.clock.day)
+        assertEquals("Neue Anstellung ist noch keine gearbeitete Schicht", -1, s.life.shiftWeek)
+        val shift = Home.workShift(d, s)
+        assertTrue("Die Schicht kann nach Einstellung gearbeitet werden", shift.ok)
+        s = shift.state
+        assertEquals(week, s.life.shiftWeek)
         val tick = s.copy(clock = GameClock((week + 1) * 7))
         val paid = Home.weekly(d, tick).first
         assertEquals(s.player.credits + 120, paid.player.credits)
