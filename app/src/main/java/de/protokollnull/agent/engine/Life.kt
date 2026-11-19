@@ -143,7 +143,7 @@ object Life {
         LifeStatus.inHq(state.living.lives[id]?.status ?: LifeStatus.DUTY)
 
     /** Beförderungsschwelle in Karrierepunkten. */
-    fun examThreshold(rank: Int) = 160 + rank * 130
+    fun examThreshold(rank: Int) = 250 + rank * 200
 
     fun rankCap(data: GameData, state: GameState, id: String): Int {
         val adult = Ages.npc(data, state, id) >= 18
