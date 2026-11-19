@@ -605,4 +605,44 @@ class DirectorsLegacyTest {
         assertEquals(2, Romance.maxStage(d, start(), "maya"))
         assertTrue(Home.meetings.none { it.description.contains("Kuss", true) || it.description.contains("Date", true) })
     }
+    @Test fun coverJobWeeklyCannotBePaidTwiceAndNewWeekResets() {
+        var s = leader(3).copy(clock = GameClock(800, 0))
+        s = Home.takeJob(d, s, "courier").state
+        val week = Clock.week(s.clock.day)
+        val tick = s.copy(clock = GameClock((week + 1) * 7))
+        val paid = Home.weekly(d, tick).first
+        assertEquals(s.player.credits + 120, paid.player.credits)
+        assertEquals(paid.player.credits, Home.weekly(d, paid).first.player.credits)
+        assertEquals(paid.life.coverJobWeeks, Home.weekly(d, paid).first.life.coverJobWeeks)
+        val saved = SaveMigration.decode(SaveMigration.encode(paid))
+        assertEquals(saved.player.credits, Home.weekly(d, saved).first.player.credits)
+        val next = Home.weekly(d, saved.copy(clock = GameClock((week + 2) * 7))).first
+        assertEquals(saved.player.credits + 60, next.player.credits)
+        assertEquals(1, next.life.jobWarnings)
+    }
+
+    @Test fun salaryIsNotPaidTwiceInOneCalendarWeek() {
+        val s = start().copy(clock = GameClock(day = 812), player = start().player.copy(credits = 500))
+        val first = World.weeklyTick(d, s).state
+        assertTrue(first.player.credits > s.player.credits)
+        val second = World.weeklyTick(d, first).state
+        assertEquals("Doppelter Wochensold verhindert", first.player.credits, second.player.credits)
+        assertEquals(first.life.lastSalaryWeek, second.life.lastSalaryWeek)
+        val restored = SaveMigration.decode(SaveMigration.encode(first))
+        assertEquals(first.player.credits, World.weeklyTick(d, restored).state.player.credits)
+        val future = World.weeklyTick(d, restored.copy(clock = GameClock(day = 819))).state
+        assertEquals(first.player.credits + d.rank(s.player.rank).salaryPerWeek, future.player.credits)
+    }
+
+    @Test fun noSecondHomeEventInSameWeekAfterResolving() {
+        val s = leader(8).copy(player = leader(8).player.copy(credits = 10000))
+        val moved = Home.move(d, s, "small").state
+        val week = Clock.week(moved.clock.day)
+        val first = Home.weekly(d, moved.copy(clock = GameClock((week + 1) * 7))).first
+        assertEquals(week + 1, first.life.lastHomeEventWeek)
+        val cleared = first.copy(life = first.life.copy(pendingEvent = null))
+        val twice = Home.weekly(d, cleared).first
+        assertEquals(first.life.eventsSeen, twice.life.eventsSeen)
+        assertEquals(first.life.lastHomeEventWeek, twice.life.lastHomeEventWeek)
+    }
 }

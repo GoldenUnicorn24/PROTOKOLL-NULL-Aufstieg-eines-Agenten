@@ -133,7 +133,11 @@ data class LeadershipState(
     val prepReady: Int = 0,
     /** Absagen: Figur → Tag, ab dem wieder gefragt werden kann. */
     val refusals: Map<String, Int> = emptyMap(),
-    val log: List<String> = emptyList()
+    val log: List<String> = emptyList(),
+    /** Individuelle Wochenmarker verhindern doppelte Auszahlungen nach Reload/Wiederholung. */
+    val lastSalaryWeek: Int = -1,
+    val lastJobPayWeek: Int = -1,
+    val lastHomeEventWeek: Int = -1
 )
 
 // --- Privatleben -------------------------------------------------------------------
