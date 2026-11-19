@@ -86,7 +86,8 @@
     "initialTrust": 45,
     "tags": [
       "alex udinov",
-      "npc"
+      "npc",
+      "optional_romance"
     ],
     "gender": "female",
     "bio": "Rekrutin mit einer Vergangenheit, die sie hütet wie ein Staatsgeheimnis. Schnell, klug, und sie beobachtet dich genauer als die Kameras.",
@@ -105,7 +106,7 @@
       "evening": "dorm",
       "night": "dorm"
     },
-    "romanceable": false,
+    "romanceable": true,
     "portraitFocus": [
       -0.1,
       -0.55
@@ -185,7 +186,7 @@
     },
     "romanceable": false,
     "portraitFocus": [
-      0.0,
+      0,
       -0.55
     ],
     "look": "Gepflegte lange braune Haare, dunkle elegante Kleidung, strenge souveräne Körpersprache."
@@ -263,7 +264,7 @@
     },
     "romanceable": false,
     "portraitFocus": [
-      0.0,
+      0,
       -0.5
     ],
     "look": "Junger Rekrut, kurzes dunkles Haar, schlichte Trainingskleidung."
@@ -302,7 +303,7 @@
     },
     "romanceable": false,
     "portraitFocus": [
-      0.0,
+      0,
       -0.5
     ],
     "look": "Junge Rekrutin, Trainingskleidung der Division, konkurrenzbetonter Auftritt."
@@ -380,7 +381,7 @@
     },
     "romanceable": false,
     "portraitFocus": [
-      0.0,
+      0,
       -0.55
     ],
     "look": "Technikexpertin in Division-Umgebung, funktionaler Bürostil."
