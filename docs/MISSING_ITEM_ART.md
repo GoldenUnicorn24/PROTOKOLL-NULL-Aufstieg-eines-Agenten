@@ -36,3 +36,16 @@ Es wurden keine Bilder erzeugt oder heruntergeladen. Taktikkarten, Weltlage und 
 | `ui/faction_meridian.svg` | SVG | Abstraktes Emblem „Black Meridian“ (fiktiv) | 96×96 |
 | `ui/faction_oversight.svg` | SVG | Abstraktes Emblem Regierungsaufsicht (fiktiv) | 96×96 |
 | `ui/tactical_tiles.svg` | SVG | Kachelset Wand/Tür/Wasser/Glas/Deckung im Dark-Spy-Stil | je 64×64 |
+
+## v0.8 „Director's Legacy“
+
+Es wurden keine Bilder erzeugt oder heruntergeladen. Führungscockpit, Stadtkarte, Direktorat und Privatleben nutzen Compose-Grafik, vorhandene Porträts (inklusive Cast-ZIP) und Ortshintergründe. Optional wünschenswert (zum späteren Erstellen mit geklärten Rechten):
+
+| Dateiname (Vorschlag) | Format | Motiv | Zielauflösung |
+|---|---|---|---|
+| `scenes/home_quarters.webp` | WebP | Mehrbettzimmer im HQ, ohne Personen | 1440×600 |
+| `scenes/home_small.webp` | WebP | Kleine Stadtwohnung mit Küchenzeile, abends | 1440×600 |
+| `scenes/home_upscale.webp` | WebP | Altbauwohnung mit hohen Fenstern | 1440×600 |
+| `scenes/city_outpost_safehouse.webp` | WebP | Unauffälliger Hinterhofeingang bei Nacht | 1440×600 |
+| `ui/site_*.svg` | SVG | Symbole für Safehouse, Analysezentrum, Stützpunkt, Hafenposten | 96×96 |
+| `ui/furniture_*.svg` | SVG | Acht Möbelsymbole (Bett, Musik, Pflanzen, Küche, Schreibtisch, Training, Schloss, Tisch) | 64×64 |

@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.7.0 „Shadow Operations“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.7: Missionsdirektor 2.0 mit zehn Auftragsarten und langfristigen Konsequenzen, 14 neue 2D-Taktikkarten mit Sichtlinien und neuen Einsatzzielen, Fraktionen mit Weltlage, Ermittlungsakten und zehn optionale Einsatzketten – verzahnt mit der lebendigen Division (Details unten und in [docs/SHADOW_OPERATIONS.md](docs/SHADOW_OPERATIONS.md)).
+**Stand: Beta 0.8.0 „Director's Legacy“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.8: Führungscockpit ab Rang 8, Delegation echter Aufträge ab Rang 9, abgestufte Sektionsleitung/stellvertretende Direktion/Direktion mit Wochen- und Monatsabrechnung, Projekten und Führungsdilemmata, HQ-Module und vier Außenstellen sowie ein echtes Privatleben mit Wohnstufen, Möbeln, Stadtkalender, Treffen, Tarnjobs und Alltagsereignissen (Details unten und in [docs/DIRECTORS_LEGACY.md](docs/DIRECTORS_LEGACY.md)). v0.7 „Shadow Operations“ bleibt vollständig erhalten ([docs/SHADOW_OPERATIONS.md](docs/SHADOW_OPERATIONS.md)).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -17,6 +17,29 @@ Das Spiel unterstützt künftig einen **zentralen privaten ZIP-Import** für bis
 
 Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
 
+
+## Neu in v0.8 – Director's Legacy
+
+### Führungscockpit (ab Rang 8)
+- Teamrollen (Aufklärung, Technik, Sanität, Kommunikation, Unterstützung) nach echter Kompetenz, Bereitschaft und Kohäsion; Status aus der Lebenssimulation (verletzt, im Einsatz, freigestellt, versetzt, minderjährig …).
+- Aufgaben mit Zeit-, Energie- und Etatkosten: Training, Vorbereitung, Aufklärung, Mentoring, Dienstplanung, Nachbereitung, Erholung, Weiterbildung – genau einmal ausgewertet.
+- Spannungen im Team, Aussprache, Erfolgsbilanz; Führung wirkt auf Einsatzproben (−8 bis +12), macht nichts unmöglich.
+
+### Delegation echter Aufträge (ab Rang 9)
+- Delegation von v0.7-Aufträgen aus dem Missionsboard: vorbereitet → läuft → abgeschlossen/gescheitert/abgebrochen, Rückkehrtag mit möglicher Verzögerung, einmalige Abrechnung über Fraktionen, Auftraggeber, Verletzungen, Erinnerungen und Einsatzbericht. Keine Doppelbelegung, kein Sofortabschluss.
+
+### Direktorat (Rang 10–12)
+- Sektionsleitung (eine Abteilung), stellvertretende Direktion (alle Abteilungen, Leitlinien mit Teilfreigabe, Haushaltsanträge) und Direktion (alles, inklusive Geheimhaltung) auf Basis des bestehenden DirectorState.
+- Transparente Wochenrechnung (Einnahmen, Fixkosten, Personal, Unterhalt, Projekte, Fraktionslage, Aufsicht) und Monatsbericht; Organisationsbudget strikt getrennt von persönlichen Credits; genau einmal pro Woche, auch im Zeitraffer.
+- 10 Abteilungsprojekte, 8 handgeschriebene Führungsdilemmata mit Proben und Spätfolgen.
+
+### Standorte
+- Sechs HQ-Module (Stufe 1–3) und vier Außenstellen (Stadtsafehouse, Analysezentrum, Sanitäts-/Ausbildungsstützpunkt, Hafenposten) mit Personalbedarf, Unterhalt und Wirkung auf Einsätze, Akten, Erholung und Weltlage; Compose-Stadtkarte. Alle 13 HQ-Räume bleiben.
+
+### Personalakte 2.0 und Privatleben
+- Reiter „Dienst“: Kompetenzen, Beurteilung (A–E), Weiterbildung, Beförderungsempfehlung, Versetzung. Figuren können Posten ablehnen; die eigene Begleitung entscheidet selbst.
+- Vier Wohnstufen mit Miete und Räumung, acht Möbel mit Wirkung, 13 Stadtaktivitäten mit Tageszeit und Tageslimit, freundschaftliche Treffen, Tarnjobs mit Schichten, 15 Alltagsereignisse.
+- **Romanzenregeln unverändert**: 16/17- und 18/16-Romanze freiwillig, unter 18 höchstens Stufe 2 und nicht sexuell, Alex optional. Neue Inhalte sind ausschließlich freundschaftlich.
 
 ## Neu in v0.7 – Shadow Operations
 
@@ -123,8 +146,12 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/33_umfeld.png) | ![](docs/screenshots/34_hq_division_heute.png) | ![](docs/screenshots/35_hq_ereignis.png) | |
 | **Mission Control (v0.7)** | **Weltlage (v0.7)** | **Einsatzketten (v0.7)** | **Ermittlungsakte (v0.7)** |
 | ![](docs/screenshots/36_mission_control.png) | ![](docs/screenshots/37_weltlage.png) | ![](docs/screenshots/38_einsatzketten.png) | ![](docs/screenshots/39_ermittlungsakte.png) |
-| **Auftragsbriefing (v0.7)** | **Taktik 2.0 (v0.7)** | | |
-| ![](docs/screenshots/40_auftrag_briefing.png) | ![](docs/screenshots/41_taktik_botschaft.png) | | |
+| **Auftragsbriefing (v0.7)** | **Taktik 2.0 (v0.7)** | **Führungscockpit (v0.8)** | **Delegation (v0.8)** |
+| ![](docs/screenshots/40_auftrag_briefing.png) | ![](docs/screenshots/41_taktik_botschaft.png) | ![](docs/screenshots/42_fuehrungscockpit.png) | ![](docs/screenshots/43_delegation.png) |
+| **Standorte (v0.8)** | **Führungsentscheidung (v0.8)** | **Wochenbericht (v0.8)** | **Stadt & Privatleben (v0.8)** |
+| ![](docs/screenshots/44_standorte.png) | ![](docs/screenshots/45_direktorat_dilemma.png) | ![](docs/screenshots/46_wochenbericht.png) | ![](docs/screenshots/47_stadt_privatleben.png) |
+| **Alltagsereignis (v0.8)** | **Personalakte · Dienst (v0.8)** | | |
+| ![](docs/screenshots/48_alltagsereignis.png) | ![](docs/screenshots/49_personalakte_dienst.png) | | |
 
 ## Was ist spielbar? (ehrlicher Stand)
 
@@ -189,9 +216,19 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - `V05SystemsTest`: Simulation 1/7/30/90/365 Tage deterministisch, Fortschritt nur aus Tätigkeiten, Beziehungen nur mit bekannten/anwesenden Figuren, Wundheilung, Stopp beim 18. Geburtstag mit einmaliger Gefährtenankunft, Story-Ereignisse bleiben erhalten, kein Rang 12 per Zeitraffer, **10-Jahres-Spielverlauf** mit Invarianten (Kalender, Geld, Beziehungen, Geburtstage genau einmal, Ereignisidentitäten, Save-Roundtrip), Beurteilung, Prüfungsphasen/Auflagen/Wartezeit, Tageslimit/Ausbilderbonus, Mentoring, Ausrüstungsprofile mit Rangsperre, Kauf/Rückgabe ohne Gewinn, Vergleich, Missionsboni, Archiv ab Rang 7, v0.4-Spielstand ohne neue Felder.
 - `LivingDivisionTest` (v0.6): Lebenssimulation deterministisch, idempotent und persistent; **10 Jahre Divisionsleben** (Beförderungen, Durchfallen, Einsätze, Verletzungen, Urlaub/Versetzung, NPC-Freundschaften, Paare nur unter Erwachsenen, keine automatische Romanze, Gefährten-Laufbahn, verdichtete Erinnerungen, Save-Roundtrip); Laufbahn hängt vom Charakter ab; Laufbahn-Rat; Anwesenheit nach Status; Rückkehr nach Urlaub; Erinnerungs-Zusammenfassung und Migration aus Schema 2; v0.5-Spielstand ohne Lebensdaten; HQ-Ereignisse mit Folgen, Ablauf mit „ignore“, Wissens-/Ankunftsprüfung; Geschenke nach Interessen; bewusste feste Beziehung, Nur-Freunde, Trennung; Aussprache; Passung; Altersregel; Alex-Szenen; Katalogvalidierung.
 - `ShadowOpsTest` (v0.7, 27 Tests): Kartenbibliothek (Validität, Erreichbarkeit, keine Duplikate), BFS, Sichtlinien, keine Angriffe durch Wände, Deckung nach Richtung, Ziele Infopunkte/Aufklärung/Treffpunkt/Evakuierung/Schutzposition, Patt-Erkennung, Reproduzierbarkeit, Teamwerte aus Life; deterministischer Pool ohne Duplikate, zehn Archetypen mit Alternativen und gültigen Stage-Verweisen, sichere Aufträge unter 18, Teamstatus/Alter/Rang, einmalige Verbuchung, mehrtägige Aufträge, Vertagen/Ablehnen/Ablauf, Teamauflage, Fraktionsbögen, Akten mit Widersprüchen, Falle, Ketten mit Entscheidungen, Katalogprüfung, v0.6-Spielstand ohne Ops-Daten, **10 Jahre Shadow Operations**.
-- `ScreenshotTest`: rendert 41 Kernscreens mit echtem Spielzustand (Robolectric).
+- `DirectorsLegacyTest` (v0.8, 33 Tests): Ranggrenzen 7/8/9/10/11/12, Sektionsbefugnis, Minderjährigenschutz (nur Training, keine Posten/Delegation), Aufgaben und Mentoren genau einmal, Ablehnung und Eigenständigkeit der Begleitung, Beurteilung/Versetzung, Delegation ohne Sofortabschluss, einmalige Abrechnung, Abbruch, keine Doppelbelegung, Finanzen einmal pro Woche und im Zeitraffer, getrennte Credits, Projekte nur bei Deckung, Haushaltsantrag, Dilemmata mit Spätfolgen, Außenstellen mit Personal/Schließen/Wiedereröffnen, HQ-Module, Migration der v0.7-Wohnung, Miete/Räumung, Möbel, Freizeitgrenzen, Treffen ohne Romanzenänderung, Tarnjob-Schichten, Alltagsereignisse, vollständiger v0.7-Spielstand (Team, Aufträge, 102 Gegenstände), Neuladen mitten in Projekt und Delegation, Führungsbonus, **1/7/30/90/365/3650 Tage** mit Invarianten, Determinismus, Spielstände Schema 2–4, unveränderte Romanzenregeln.
+- `ScreenshotTest`: rendert 49 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.8.0-beta „Director's Legacy“
+- Führungscockpit ab Rang 8: Rollen, Aufgaben, Kohäsion, Aussprache, Bereitschaft, Führungsbonus.
+- Delegation echter v0.7-Aufträge ab Rang 9 mit Status, Rückkehr, Verzögerung, Abbruch und einmaliger Abrechnung.
+- Direktorat in drei Stufen (Rang 10/11/12) auf dem bestehenden DirectorState: Abteilungen mit wirksamer Stärke, Leitungen, ausgebaute Leitlinien, Wochen- und Monatsrechnung, 10 Projekte, Haushaltsanträge, 8 Führungsdilemmata mit Spätfolgen.
+- Sechs HQ-Module und vier Außenstellen mit Personal, Unterhalt und Wirkung.
+- Personalakte 2.0: Beurteilung, Weiterbildung, Beförderungsempfehlung, Versetzung; Annahme oder Ablehnung von Posten.
+- Privatleben: Wohnstufen, Möbel, Stadtkalender, Hobbys, Treffen, Tarnjobs mit Schichten, 15 Alltagsereignisse.
+- Schema 5 mit Migration der v0.7-Wohnung und des Tarnjobs; 33 neue Unit-Tests, 8 neue Screenshots. Romanzenregeln unverändert.
 
 ### 0.7.0-beta „Shadow Operations“
 - Missionsdirektor 2.0 mit zehn Auftragsarten, modularen Bausteinen, mehrtägigen Aufträgen, Filtern und langfristigen Konsequenzen.
