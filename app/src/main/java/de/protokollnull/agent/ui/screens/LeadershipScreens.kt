@@ -26,7 +26,7 @@ import de.protokollnull.agent.ui.theme.*
 
 @Composable
 fun CommandScreen(vm: GameViewModel, s: GameState, initialTab: String = "team") {
-    var tab by remember { mutableStateOf(initialTab) }
+    var tab by remember(initialTab) { mutableStateOf(initialTab) }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Führungscockpit", Directorate.tierLabel(Directorate.tier(s)) + " · " + vm.data.rank(s.player.rank).name, onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -63,7 +63,7 @@ private fun TeamPanel(vm: GameViewModel, s: GameState) {
             Text("TEAMLAGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
             StatBar("Teamkohäsion", s.lead.cohesion, 100, Pn.Ok)
             StatBar("Bereitschaft", Command.teamReadiness(data, s), 100, Pn.Accent)
-            KeyValue("Bilanz", "${s.lead.teamWins} Erfolge · ${s.lead.teamLosses} Fehlschläge")
+            KeyValue("Bilanz", "${s.lead.teamWins} Erfolg${if (s.lead.teamWins == 1) "" else "e"} · ${s.lead.teamLosses} Fehlschl${if (s.lead.teamLosses == 1) "ag" else "äge"}")
             KeyValue("Einsatzbonus aus Führung", Effs.signed(Command.missionBonus(data, s, s.team)))
             KeyValue("Vorbereitung bereit", "${s.lead.prepReady}")
             SmallNote("Rollen mit passender Kompetenz (≥ 4) und hohe Kohäsion erleichtern Proben im Einsatz; schlechte Stimmung im Team erschwert sie (höchstens −8).")
@@ -378,7 +378,7 @@ fun DirectorateScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     val d = s.director
     val tier = Directorate.tier(s)
-    var tab by remember { mutableStateOf(if (s.lead.pendingDilemma != null) "decide" else "depts") }
+    var tab by remember(s.lead.pendingDilemma) { mutableStateOf(if (s.lead.pendingDilemma != null) "decide" else "depts") }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Direktorat", if (d != null) "${Directorate.tierLabel(tier)} · Budget ${d.budget} Cr" else "ab Rang 10", onBack = { vm.back() })
         if (d == null) {
@@ -556,7 +556,7 @@ private fun DilemmaPanel(vm: GameViewModel, s: GameState) {
 @Composable
 fun CityScreen(vm: GameViewModel, s: GameState, initialTab: String = "home") {
     val data = vm.data
-    var tab by remember { mutableStateOf(if (s.life.pendingEvent != null) "event" else initialTab) }
+    var tab by remember(initialTab, s.life.pendingEvent) { mutableStateOf(if (s.life.pendingEvent != null) "event" else initialTab) }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Stadt & Privatleben", "${Home.housingName(s.life.housing)} · ${s.player.credits} Cr · ${Clock.slotNames[s.clock.slot]}", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -565,7 +565,7 @@ fun CityScreen(vm: GameViewModel, s: GameState, initialTab: String = "home") {
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Pill("Energie ${s.player.energy}")
                         Pill("Stress ${s.player.stress}", if (s.player.stress > 60) Pn.Danger else Pn.Warn)
-                        Pill("Freizeit heute ${if (s.life.leisureDay == s.clock.day) s.life.leisureToday else 0}/${Home.LEISURE_PER_DAY}", Pn.Violet)
+                        Pill("Freizeit ${if (s.life.leisureDay == s.clock.day) s.life.leisureToday else 0}/${Home.LEISURE_PER_DAY}", Pn.Violet)
                     }
                     SmallNote("Freizeit kostet Zeit, Energie und Geld – und konkurriert mit Training, Einsätzen und Führungsaufgaben.")
                 }
