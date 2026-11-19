@@ -17,6 +17,8 @@ object ContractStatus {
     const val EXPIRED = "expired"
     const val ABORTED = "aborted"
     const val DECLINED = "declined"
+    /** v0.8: an ein Team delegiert */
+    const val DELEGATED = "delegated"
     fun label(id: String) = when (id) {
         OPEN -> "Offen"
         POSTPONED -> "Vertagt"
@@ -26,6 +28,7 @@ object ContractStatus {
         EXPIRED -> "Abgelaufen"
         ABORTED -> "Abgebrochen"
         DECLINED -> "Abgelehnt"
+        DELEGATED -> "An Team delegiert"
         else -> id
     }
     fun closed(id: String) = id in setOf(DONE, FAILED, EXPIRED, ABORTED, DECLINED)
