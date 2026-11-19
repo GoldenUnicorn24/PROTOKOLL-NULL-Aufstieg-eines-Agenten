@@ -143,6 +143,11 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
                 Overlay.Training -> TrainingPlannerScreen(vm, s)
                 Overlay.Reports -> ReportsScreen(vm, s)
                 Overlay.HqEvent -> HqEventScreen(vm, s)
+                is Overlay.Case -> CaseScreen(vm, s, o.id)
+                is Overlay.MissionControl -> Column(Modifier.fillMaxSize()) {
+                    ScreenHeader("Mission Control", "Weltlage · Akten · Ketten", onBack = { vm.back() })
+                    Box(Modifier.weight(1f)) { MissionControlScreen(vm, s, o.tab) }
+                }
                 is Overlay.Npc -> NpcDetailScreen(vm, s, o.id, o.tab)
                 is Overlay.Briefing -> BriefingScreen(vm, s, o.missionId)
                 is Overlay.Item -> ItemDetailScreen(vm, s, o.uid)

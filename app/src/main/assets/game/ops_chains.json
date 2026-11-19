@@ -1,0 +1,950 @@
+[
+  {
+    "id": "phoenix_echo",
+    "title": "Echo aus PHOENIX",
+    "summary": "Akten aus der Klinik führen zu den Leuten, die dich einst geformt haben.",
+    "faction": "phoenix",
+    "strand": "PHOENIX",
+    "conditions": {
+      "flagsAll": [
+        "phoenix_truth"
+      ]
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Verschlüsselte Gutachten",
+        "archetype": "data",
+        "objective": "files",
+        "regionId": "hospital",
+        "briefing": "Birkhoff hat aus einem Klinikserver Gutachten geborgen, die nach PHOENIX-Methoden aussehen. Er braucht jemanden, der weiß, worauf man achten muss – dich.",
+        "difficulty": 2,
+        "clientNpc": "birkhoff"
+      },
+      {
+        "title": "Der Gutachter",
+        "archetype": "observation",
+        "objective": "contact",
+        "regionId": "hospital",
+        "briefing": "Ein Name taucht in allen Gutachten auf. Beobachte, mit wem der Gutachter sich nach Dienstschluss trifft.",
+        "difficulty": 2
+      },
+      {
+        "title": "Die Assistentin",
+        "archetype": "negotiation",
+        "objective": "turn",
+        "regionId": "city",
+        "briefing": "Die Assistentin des Gutachters will reden, aber nur mit jemandem, der selbst aus dem Programm kommt.",
+        "difficulty": 2,
+        "decisionTitle": "Was geschieht mit der Assistentin?",
+        "decisionText": "Sie hat Angst und weiß viel. Ihre Zukunft hängt von deiner Entscheidung ab.",
+        "decisions": [
+          {
+            "id": "protect",
+            "text": "Sie als eigene Quelle schützen",
+            "result": "Sie vertraut dir. Was sie weiß, gehört vorerst dir allein.",
+            "effects": {
+              "setFlags": [
+                "phoenix_source_private"
+              ],
+              "xp": 60
+            },
+            "factionInfluence": {
+              "phoenix": -6
+            },
+            "clue": "pt4"
+          },
+          {
+            "id": "percy",
+            "text": "An das Direktorat übergeben",
+            "result": "Percy bedankt sich knapp. Die Assistentin verschwindet in einem Programm, von dem du nie wieder hörst.",
+            "npcEffects": {
+              "percy": {
+                "trust": 5
+              }
+            },
+            "factionInfluence": {
+              "phoenix": -3
+            },
+            "effects": {
+              "setFlags": [
+                "phoenix_source_percy"
+              ]
+            }
+          },
+          {
+            "id": "michael",
+            "text": "Michael einweihen",
+            "result": "Michael hört zu und sagt dann nur: „Wir machen das richtig.“ Die Assistentin kommt in ein sicheres Haus der Einsatzleitung.",
+            "npcEffects": {
+              "michael": {
+                "trust": 5,
+                "respect": 3
+              }
+            },
+            "factionInfluence": {
+              "phoenix": -4
+            },
+            "effects": {
+              "setFlags": [
+                "phoenix_source_michael"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phoenix_ward",
+    "title": "Station 7",
+    "summary": "Eine geschlossene Station, die offiziell nicht existiert.",
+    "faction": "phoenix",
+    "strand": "PHOENIX",
+    "conditions": {
+      "flagsAll": [
+        "phoenix_truth"
+      ]
+    },
+    "minAge": 18,
+    "steps": [
+      {
+        "title": "Lageplan",
+        "archetype": "recon",
+        "objective": "site",
+        "regionId": "hospital",
+        "briefing": "Station 7 steht in keinem Bauplan. Kartiere das Gelände, bevor jemand merkt, dass du fragst.",
+        "difficulty": 3
+      },
+      {
+        "title": "Die Patientin",
+        "archetype": "rescue",
+        "objective": "witness",
+        "regionId": "hospital",
+        "briefing": "Auf Station 7 wird eine junge Frau festgehalten, die wie du aus dem Programm stammt. Bring sie heraus.",
+        "difficulty": 4
+      },
+      {
+        "title": "Eskorte ins Ungewisse",
+        "archetype": "escort",
+        "objective": "defector",
+        "regionId": "airport",
+        "briefing": "Die Befreite will das Land verlassen. Michael bietet Schutz an, Percy will sie verhören.",
+        "difficulty": 4,
+        "clientNpc": "michael",
+        "decisionTitle": "Wohin bringst du sie?",
+        "decisionText": "Am Flughafen wartet ein Fluggast-Ticket. Die Division wartet auch.",
+        "decisions": [
+          {
+            "id": "fly",
+            "text": "Sie fliegen lassen",
+            "result": "Sie umarmt dich am Gate. Du wirst nie erfahren, wohin sie geht – und das ist gut so.",
+            "effects": {
+              "setFlags": [
+                "station7_freed"
+              ],
+              "reputation": -3
+            },
+            "factionInfluence": {
+              "phoenix": -5
+            },
+            "npcEffects": {
+              "michael": {
+                "respect": 4
+              }
+            }
+          },
+          {
+            "id": "division",
+            "text": "Der Division übergeben",
+            "result": "Sie geht mit gesenktem Kopf. Percy erhält, was er wollte.",
+            "npcEffects": {
+              "percy": {
+                "trust": 6
+              },
+              "michael": {
+                "trust": -3
+              }
+            },
+            "factionInfluence": {
+              "phoenix": -8
+            },
+            "effects": {
+              "setFlags": [
+                "station7_division"
+              ]
+            }
+          },
+          {
+            "id": "together",
+            "text": "Mit ihr gegen PHOENIX arbeiten",
+            "result": "Sie bleibt in der Stadt, als deine stille Verbündete.",
+            "effects": {
+              "setFlags": [
+                "station7_ally"
+              ]
+            },
+            "factionInfluence": {
+              "phoenix": -6
+            },
+            "clue": "pt6"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "percy_ledger",
+    "title": "Percys Hauptbuch",
+    "summary": "Percy will Akten der Regierungsaufsicht – und du entscheidest, wem du dienst.",
+    "faction": "government",
+    "strand": "Divisionspolitik",
+    "conditions": {
+      "minDay": 120
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Ein Auftrag ohne Akte",
+        "archetype": "intel",
+        "objective": "source",
+        "regionId": "embassy",
+        "briefing": "Percy bittet dich persönlich: Eine Referentin der Aufsicht soll ausgehorcht werden. „Diskret“, sagt er, „und nur für meine Augen.“",
+        "difficulty": 2,
+        "clientNpc": "percy"
+      },
+      {
+        "title": "Spur des Geldes",
+        "archetype": "data",
+        "objective": "payments",
+        "regionId": "embassy",
+        "briefing": "Die Referentin hat Zahlungen erwähnt. Prüfe, wohin die Gelder der Aufsicht fließen.",
+        "difficulty": 2,
+        "clientNpc": "percy"
+      },
+      {
+        "title": "Das Hauptbuch",
+        "archetype": "data",
+        "objective": "files",
+        "regionId": "embassy",
+        "briefing": "Du hältst ein Hauptbuch der Aufsicht in den Händen. Es enthält auch Notizen über Percy.",
+        "difficulty": 3,
+        "clientNpc": "percy",
+        "decisionTitle": "Wem gehört das Hauptbuch?",
+        "decisionText": "Mit diesen Unterlagen kann man die Division schützen – oder Percy stürzen.",
+        "decisions": [
+          {
+            "id": "percy",
+            "text": "Percy übergeben",
+            "result": "Percy liest schweigend, dann lächelt er. „Du weißt, wo dein Platz ist.“",
+            "npcEffects": {
+              "percy": {
+                "trust": 8
+              }
+            },
+            "effects": {
+              "reputation": 6,
+              "setFlags": [
+                "ledger_percy"
+              ],
+              "faction": {
+                "government": -8
+              }
+            },
+            "factionInfluence": {
+              "government": -4
+            }
+          },
+          {
+            "id": "oversight",
+            "text": "Der Aufsicht zurückspielen",
+            "result": "Die Aufsicht erfährt, wie weit Percy geht. Du hast dir einen mächtigen Feind gemacht.",
+            "npcEffects": {
+              "percy": {
+                "trust": -10
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "ledger_oversight"
+              ],
+              "faction": {
+                "government": 10
+              }
+            },
+            "factionInfluence": {
+              "government": 3
+            },
+            "clue": "dl5"
+          },
+          {
+            "id": "keep",
+            "text": "Eine Kopie behalten",
+            "result": "Percy bekommt das Original. Die Kopie liegt in deinem Spind – für den Tag, an dem du sie brauchst.",
+            "npcEffects": {
+              "percy": {
+                "trust": 3
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "ledger_copy"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "amanda_profile",
+    "title": "Amandas Profil",
+    "summary": "Amanda vermutet einen Loyalitätsbruch und braucht deine Augen.",
+    "faction": "independent",
+    "strand": "Divisionspolitik",
+    "conditions": {
+      "minDay": 90
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Muster im Verhalten",
+        "archetype": "observation",
+        "objective": "contact",
+        "regionId": "city",
+        "briefing": "Amanda zeigt dir ein Profil: Ein Agent trifft sich mit Unbekannten in der Innenstadt. „Ich will Fakten, keine Gefühle.“",
+        "difficulty": 2,
+        "clientNpc": "amanda"
+      },
+      {
+        "title": "Das Gespräch",
+        "archetype": "negotiation",
+        "objective": "mediate",
+        "regionId": "safehouse",
+        "briefing": "Der Agent ist Owen – und er hat Gründe. Hör dir beide Seiten an.",
+        "difficulty": 2,
+        "clientNpc": "amanda",
+        "decisionTitle": "Was erfährt Amanda?",
+        "decisionText": "Owen trifft frühere Wächter, um sie zum Aussteigen zu bewegen. Gegen die Regeln, nicht gegen die Division.",
+        "decisions": [
+          {
+            "id": "truth",
+            "text": "Amanda die ganze Wahrheit sagen",
+            "result": "Amanda notiert alles. Owen wird versetzt, nicht bestraft. Er spricht nicht mehr mit dir.",
+            "npcEffects": {
+              "amanda": {
+                "trust": 6
+              },
+              "owen": {
+                "trust": -10
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "owen_reported"
+              ]
+            }
+          },
+          {
+            "id": "protect",
+            "text": "Owen decken",
+            "result": "Amanda sieht dich lange an. „Interessant.“ Owen nickt dir später im Flur zu.",
+            "npcEffects": {
+              "amanda": {
+                "trust": -5
+              },
+              "owen": {
+                "trust": 8,
+                "loyalty": 6
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "owen_protected"
+              ]
+            },
+            "factionInfluence": {
+              "independent": -3
+            }
+          },
+          {
+            "id": "middle",
+            "text": "Eine entschärfte Fassung liefern",
+            "result": "Amanda bekommt Fakten ohne Namen. Sie weiß, dass etwas fehlt.",
+            "npcEffects": {
+              "amanda": {
+                "trust": 1
+              },
+              "owen": {
+                "trust": 3
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "michael_lesson",
+    "title": "Michaels Lektion",
+    "summary": "Michael nimmt dich mit in den Außendienst – und zeigt dir, was im Handbuch fehlt.",
+    "faction": "syndicate",
+    "strand": "Mentoring",
+    "conditions": {
+      "minDay": 45
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Erste Schritte draußen",
+        "archetype": "recon",
+        "objective": "route",
+        "regionId": "harbor",
+        "briefing": "Michael fährt mit dir zum Hafen. „Heute schaust du nur zu. Und du sagst mir, was du siehst.“",
+        "difficulty": 1,
+        "clientNpc": "michael"
+      },
+      {
+        "title": "Lesen, was Menschen nicht sagen",
+        "archetype": "negotiation",
+        "objective": "buy",
+        "regionId": "harbor",
+        "briefing": "Ein Hafenarbeiter verkauft Informationen. Michael lässt dich verhandeln und greift nur ein, wenn es brennt.",
+        "difficulty": 2,
+        "clientNpc": "michael"
+      },
+      {
+        "title": "Die eigene Entscheidung",
+        "archetype": "observation",
+        "objective": "courier",
+        "regionId": "city",
+        "briefing": "Michael übergibt dir die Leitung. „Ich bin nur Beobachter. Entscheide du.“",
+        "difficulty": 2,
+        "clientNpc": "michael",
+        "decisionTitle": "Was hast du gelernt?",
+        "decisionText": "Der Kurier entpuppt sich als Jugendlicher, der für Meridian Botengänge macht.",
+        "decisions": [
+          {
+            "id": "rules",
+            "text": "Nach Vorschrift melden",
+            "result": "Michael nickt. „Sauber.“ Der Junge wird befragt und kommt in ein Programm.",
+            "npcEffects": {
+              "michael": {
+                "respect": 5
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "mentor_rules"
+              ],
+              "xp": 80
+            },
+            "factionInfluence": {
+              "syndicate": -3
+            }
+          },
+          {
+            "id": "chance",
+            "text": "Dem Jungen eine Chance geben",
+            "result": "Michael schweigt lange. „Das hätte ich früher auch getan.“",
+            "npcEffects": {
+              "michael": {
+                "trust": 6
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "mentor_heart"
+              ],
+              "xp": 80,
+              "faction": {
+                "civilian": 4
+              }
+            }
+          },
+          {
+            "id": "use",
+            "text": "Den Jungen als Quelle führen",
+            "result": "Michael runzelt die Stirn, lässt dich aber gewähren.",
+            "npcEffects": {
+              "michael": {
+                "trust": -2
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "mentor_source"
+              ],
+              "xp": 80
+            },
+            "clue": "hm7"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "meridian_docks",
+    "title": "Schatten über den Docks",
+    "summary": "Black Meridian baut den Hafen zu seinem Umschlagplatz aus.",
+    "faction": "syndicate",
+    "strand": "Black Meridian",
+    "minAge": 18,
+    "steps": [
+      {
+        "title": "Wer kontrolliert die Kräne?",
+        "archetype": "observation",
+        "objective": "meeting",
+        "regionId": "harbor",
+        "briefing": "Nachts treffen sich Kranführer mit Leuten in dunklen Jacken. Dokumentiere, wer das Sagen hat.",
+        "difficulty": 3,
+        "clientNpc": "michael"
+      },
+      {
+        "title": "Die Ladelisten",
+        "archetype": "intel",
+        "objective": "ledger",
+        "regionId": "harbor",
+        "briefing": "Die Ladelisten verraten, welche Container Meridian gehören. Sichere Kopien.",
+        "difficulty": 3
+      },
+      {
+        "title": "Das Depot",
+        "archetype": "joint",
+        "objective": "depot",
+        "regionId": "harbor",
+        "briefing": "Mit zwei Teams wird das Depot ausgehoben. Danach kommt die Frage, wem das Ergebnis gehört.",
+        "difficulty": 4,
+        "clientNpc": "michael",
+        "decisionTitle": "Wem übergibst du die Beweise?",
+        "decisionText": "Die Container enthalten genug, um Meridian im Hafen zu brechen.",
+        "decisions": [
+          {
+            "id": "oversight",
+            "text": "Der Regierungsaufsicht",
+            "result": "Ein offizielles Verfahren beginnt. Die Aufsicht ist beeindruckt.",
+            "effects": {
+              "faction": {
+                "government": 8
+              },
+              "setFlags": [
+                "docks_oversight"
+              ]
+            },
+            "factionInfluence": {
+              "syndicate": -12
+            }
+          },
+          {
+            "id": "division",
+            "text": "Dem Direktorat",
+            "result": "Percy nutzt die Beweise als Druckmittel. Meridian zahlt – an die Division.",
+            "npcEffects": {
+              "percy": {
+                "trust": 6
+              }
+            },
+            "effects": {
+              "credits": 300,
+              "setFlags": [
+                "docks_division"
+              ]
+            },
+            "factionInfluence": {
+              "syndicate": -6
+            }
+          },
+          {
+            "id": "burn",
+            "text": "Alles vernichten lassen",
+            "result": "Keine Spuren, kein Verfahren. Meridian verliert die Ware, aber niemand wird belangt.",
+            "effects": {
+              "setFlags": [
+                "docks_burned"
+              ]
+            },
+            "factionInfluence": {
+              "syndicate": -9
+            },
+            "clue": "hm5"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "meridian_money",
+    "title": "Meridians Geldwäsche",
+    "summary": "Spuren von Geld, das nie gezählt werden sollte.",
+    "faction": "syndicate",
+    "strand": "Black Meridian",
+    "conditions": {
+      "minDay": 30
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Auffällige Quittungen",
+        "archetype": "data",
+        "objective": "payments",
+        "regionId": "city",
+        "briefing": "Ein Café in der Innenstadt macht unmöglich hohe Umsätze. Birkhoff hat die Kassendaten.",
+        "difficulty": 1,
+        "clientNpc": "birkhoff"
+      },
+      {
+        "title": "Der Buchhalter",
+        "archetype": "negotiation",
+        "objective": "buy",
+        "regionId": "airport",
+        "briefing": "Ein Buchhalter will gegen Meridian aussagen – gegen eine neue Identität.",
+        "difficulty": 2
+      },
+      {
+        "title": "Gesichter im Terminal",
+        "archetype": "data",
+        "objective": "photos",
+        "regionId": "airport",
+        "briefing": "Überwachungsbilder vom Flughafen zeigen, wer das Geld abholt.",
+        "difficulty": 2,
+        "clientNpc": "birkhoff",
+        "decisionTitle": "Was geschieht mit dem Buchhalter?",
+        "decisionText": "Er hat geliefert. Jetzt will er seinen Preis.",
+        "decisions": [
+          {
+            "id": "keep_word",
+            "text": "Wort halten",
+            "result": "Er bekommt seine neue Identität. Andere Informanten hören davon.",
+            "effects": {
+              "faction": {
+                "civilian": 5
+              },
+              "setFlags": [
+                "money_word_kept"
+              ]
+            },
+            "factionInfluence": {
+              "syndicate": -6
+            }
+          },
+          {
+            "id": "squeeze",
+            "text": "Mehr verlangen",
+            "result": "Er liefert noch eine Liste – und hasst dich dafür.",
+            "effects": {
+              "credits": 150,
+              "setFlags": [
+                "money_squeezed"
+              ],
+              "faction": {
+                "civilian": -4
+              }
+            },
+            "factionInfluence": {
+              "syndicate": -8
+            },
+            "clue": "hm2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "nikita_signal",
+    "title": "Nikitas Signal",
+    "summary": "Nikita meldet sich – mit einer Warnung, die niemand hören will.",
+    "faction": "syndicate",
+    "strand": "Abtrünnige",
+    "conditions": {
+      "flagsAll": [
+        "nikita_contact"
+      ]
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Ein Signal im Rauschen",
+        "archetype": "data",
+        "objective": "files",
+        "regionId": "safehouse",
+        "briefing": "Auf einem alten Kanal liegt eine Datei: Nikita warnt vor einer Meridian-Lieferung, die die Division ignoriert.",
+        "difficulty": 2,
+        "clientNpc": "nikita"
+      },
+      {
+        "title": "Bestätigung",
+        "archetype": "observation",
+        "objective": "courier",
+        "regionId": "harbor",
+        "briefing": "Wenn Nikita recht hat, fährt heute Nacht ein Kurier durch den Hafen. Sieh selbst nach.",
+        "difficulty": 2,
+        "clientNpc": "nikita"
+      },
+      {
+        "title": "Wem glaubst du?",
+        "archetype": "negotiation",
+        "objective": "mediate",
+        "regionId": "safehouse",
+        "briefing": "Nikita will, dass du die Information an der Division vorbei an die Aufsicht gibst.",
+        "difficulty": 2,
+        "clientNpc": "nikita",
+        "decisionTitle": "Was tust du mit Nikitas Warnung?",
+        "decisionText": "Die Lieferung ist echt. Die Frage ist, wem du vertraust.",
+        "decisions": [
+          {
+            "id": "michael",
+            "text": "Michael informieren",
+            "result": "Michael handelt sofort – und fragt, woher du das weißt.",
+            "npcEffects": {
+              "michael": {
+                "trust": 4
+              },
+              "nikita": {
+                "trust": -4
+              }
+            },
+            "factionInfluence": {
+              "syndicate": -6
+            },
+            "effects": {
+              "setFlags": [
+                "signal_michael"
+              ]
+            }
+          },
+          {
+            "id": "nikita",
+            "text": "Nikitas Weg gehen",
+            "result": "Die Aufsicht greift zu. Nikita schickt eine einzige Zeile: „Danke.“",
+            "npcEffects": {
+              "nikita": {
+                "trust": 8,
+                "loyalty": 5
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "signal_nikita"
+              ],
+              "faction": {
+                "government": 5,
+                "independent": 6
+              }
+            },
+            "factionInfluence": {
+              "syndicate": -8
+            }
+          },
+          {
+            "id": "silent",
+            "text": "Schweigen",
+            "result": "Die Lieferung geht durch. Niemand erfährt, dass du davon wusstest.",
+            "npcEffects": {
+              "nikita": {
+                "trust": -6
+              }
+            },
+            "factionInfluence": {
+              "syndicate": 4
+            },
+            "effects": {
+              "setFlags": [
+                "signal_silent"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "alex_past",
+    "title": "Alex' Vergangenheit",
+    "summary": "Alex bittet dich, etwas über ihre Familie herauszufinden.",
+    "faction": "syndicate",
+    "strand": "Alex",
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minDay": 60
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Ein alter Name",
+        "archetype": "data",
+        "objective": "files",
+        "regionId": "city",
+        "briefing": "Alex hat einen Namen aus ihrer Kindheit gefunden. „Kannst du nachsehen, ohne dass es jemand merkt?“",
+        "difficulty": 1,
+        "clientNpc": "alex"
+      },
+      {
+        "title": "Das Haus am Hafen",
+        "archetype": "observation",
+        "objective": "contact",
+        "regionId": "harbor",
+        "briefing": "Der Name führt zu einem Mann, der früher für Alex' Familie arbeitete. Beobachte ihn, bevor Alex ihn trifft.",
+        "difficulty": 2,
+        "clientNpc": "alex"
+      },
+      {
+        "title": "Was Alex wissen soll",
+        "archetype": "negotiation",
+        "objective": "mediate",
+        "regionId": "safehouse",
+        "briefing": "Der Mann redet – und was er sagt, wird Alex wehtun.",
+        "difficulty": 2,
+        "clientNpc": "alex",
+        "decisionTitle": "Wie gehst du mit der Wahrheit um?",
+        "decisionText": "Du weißt jetzt mehr über Alex' Familie als sie selbst.",
+        "decisions": [
+          {
+            "id": "tell",
+            "text": "Alex alles erzählen",
+            "result": "Alex hört schweigend zu. Dann sagt sie: „Danke, dass du es mir nicht erspart hast.“",
+            "npcEffects": {
+              "alex": {
+                "trust": 8,
+                "friendship": 5
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "alex_past_told"
+              ],
+              "memory": "Du hast mir die Wahrheit über meine Familie gesagt"
+            }
+          },
+          {
+            "id": "gentle",
+            "text": "Es ihr behutsam und schrittweise sagen",
+            "result": "Ihr redet an mehreren Abenden. Es wird nicht leichter, aber erträglicher.",
+            "npcEffects": {
+              "alex": {
+                "trust": 5,
+                "friendship": 6
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "alex_past_gentle"
+              ]
+            }
+          },
+          {
+            "id": "michael",
+            "text": "Erst Michael fragen",
+            "result": "Michael rät, Alex nichts zu verschweigen. Alex erfährt, dass du zuerst zu ihm gegangen bist.",
+            "npcEffects": {
+              "alex": {
+                "trust": -3
+              },
+              "michael": {
+                "trust": 3
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "alex_past_michael"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "birkhoff_ghost",
+    "title": "Geist im Netz",
+    "summary": "Jemand bewegt sich unsichtbar durch die Systeme der Division.",
+    "faction": "independent",
+    "strand": "Divisionspolitik",
+    "conditions": {
+      "minDay": 60
+    },
+    "minAge": 16,
+    "steps": [
+      {
+        "title": "Unmögliche Logins",
+        "archetype": "data",
+        "objective": "files",
+        "regionId": "safehouse",
+        "briefing": "Birkhoff findet Logins zu Zeiten, in denen niemand im Labor war. „Entweder Geister – oder jemand Gutes.“",
+        "difficulty": 2,
+        "clientNpc": "birkhoff"
+      },
+      {
+        "title": "Der Spiegel",
+        "archetype": "intel",
+        "objective": "drive",
+        "regionId": "city",
+        "briefing": "Der Eindringling nutzt einen Rechner in einem Internetcafé. Spiegel das Laufwerk, ohne ihn zu warnen.",
+        "difficulty": 2,
+        "clientNpc": "birkhoff",
+        "decisionTitle": "Was geschieht mit dem Zugang?",
+        "decisionText": "Der Eindringling ist ein ehemaliger Division-Techniker. Birkhoff kennt ihn.",
+        "decisions": [
+          {
+            "id": "keep",
+            "text": "Birkhoff den Zugang überwachen lassen",
+            "result": "Birkhoff grinst. „Jetzt haben wir einen Spiegel in seinem Spiegel.“",
+            "npcEffects": {
+              "birkhoff": {
+                "trust": 6,
+                "loyalty": 4
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "ghost_watched"
+              ]
+            }
+          },
+          {
+            "id": "report",
+            "text": "Percy melden",
+            "result": "Der Zugang wird gekappt, der Techniker gejagt. Birkhoff schweigt eine Woche lang.",
+            "npcEffects": {
+              "percy": {
+                "trust": 5
+              },
+              "birkhoff": {
+                "trust": -6
+              }
+            },
+            "factionInfluence": {
+              "independent": -4
+            },
+            "effects": {
+              "setFlags": [
+                "ghost_reported"
+              ]
+            },
+            "clue": "dl1"
+          },
+          {
+            "id": "talk",
+            "text": "Mit dem Techniker reden",
+            "result": "Er erklärt sich: Er sucht Beweise gegen Percy. Er verspricht, die Division in Ruhe zu lassen.",
+            "npcEffects": {
+              "birkhoff": {
+                "trust": 3
+              }
+            },
+            "effects": {
+              "setFlags": [
+                "ghost_talked"
+              ],
+              "faction": {
+                "independent": 5
+              }
+            },
+            "clue": "ga4"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -123,6 +123,27 @@ class ScreenshotTest {
         vm.closeOverlays(); vm.open(Overlay.Npc("alex", "circle")); shot("33_umfeld")
         vm.closeOverlays(); vm.setTab(0); shot("34_hq_division_heute")
         vm.open(Overlay.HqEvent); shot("35_hq_ereignis")
+        // v0.7: Shadow Operations – Mission Control, Weltlage, Ketten, Akte, Auftragsbriefing, Taktik 2.0
+        vm.update { s ->
+            var x = Cases.daily(vm.data, s.copy(living = s.living.copy(pendingHqEvent = null)))
+            x = Ops.refresh(vm.data, x)
+            listOf("hm1", "hm2", "hm4", "hm7").forEach { x = Cases.addClue(x, it, "Observation „Kranich“").first }
+            Ops.worldLog(Ops.shiftInfluence(x, "syndicate", -8), "„Datenauswertung: Basalt“ erfüllt – Black Meridian verliert Boden im Bereich Industriehafen.")
+        }
+        vm.closeOverlays(); vm.setTab(1); shot("36_mission_control")
+        vm.open(Overlay.MissionControl("world")); shot("37_weltlage")
+        vm.closeOverlays(); vm.open(Overlay.MissionControl("chains")); shot("38_einsatzketten")
+        vm.closeOverlays(); vm.open(Overlay.Case("harbor_mole")); shot("39_ermittlungsakte")
+        val rescue = Ops.generate(vm.data, vm.state.value!!, vm.state.value!!.clock.day, 990, 4242L, forced = Ops.archetypeById.getValue("rescue"))!!.copy(mapId = "embassy", complicationId = "none")
+        vm.update { it.copy(ops = it.ops.copy(contracts = it.ops.contracts + rescue)) }
+        vm.closeOverlays(); vm.open(Overlay.Briefing(rescue.id)); shot("40_auftrag_briefing")
+        vm.update { s ->
+            val def = Ops.toMission(vm.data, s, rescue)
+            val tac = def.stages.first { it.id == "tac" }
+            s.copy(activeMission = MissionRun(rescue.id, 1L, "tac", generated = def, tactical = Tactical.setup(vm.data, s, tac.tactical!!, emptyList(), 1L, rescue.difficulty)))
+        }
+        vm.closeOverlays(); shot("41_taktik_botschaft")
+        vm.update { it.copy(activeMission = null, ops = it.ops.copy(contracts = it.ops.contracts.filter { c -> c.id != rescue.id })) }
         vm.closeOverlays(); vm.open(Overlay.Recruit); shot("21_rekrutierungseditor")
         vm.update { it.copy(player = it.player.copy(rank = 12), director = DirectorState()) }
         vm.closeOverlays(); vm.open(Overlay.Director); shot("22_direktorat")

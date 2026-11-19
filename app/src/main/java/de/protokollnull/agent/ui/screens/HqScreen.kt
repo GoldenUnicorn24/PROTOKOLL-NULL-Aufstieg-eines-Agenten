@@ -41,6 +41,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item { LivingHqCards(vm, s) }
+        item { OpsHqCard(vm, s) }
         if (quest != null) item {
             GlassPanel(onClick = { vm.open(Overlay.Quests) }) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
