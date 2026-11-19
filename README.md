@@ -5,6 +5,10 @@ Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, mi
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
+## Neues: Serienbild-Pakete
+
+Das Spiel unterstützt künftig einen **zentralen privaten ZIP-Import** für bis zu elf Serienfiguren unter Einstellungen. Beschreibung, zulässige Dateinamen und Bildquellen stehen in [CAST_BUNDLE_GUIDE.md](docs/CAST_BUNDLE_GUIDE.md). Das ZIP enthält keine urheberrechtlich geschützten Bilder im öffentlichen Repository.
+
 ## Installation (Debug-APK)
 
 1. Im Repository auf **Actions → Android CI** gehen und den neuesten grünen Lauf öffnen.
