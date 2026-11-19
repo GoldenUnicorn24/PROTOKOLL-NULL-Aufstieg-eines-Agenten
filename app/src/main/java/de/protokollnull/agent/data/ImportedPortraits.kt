@@ -81,6 +81,18 @@ internal object ImportedPortraits {
         )
     }
 
+    /** Used by the bounded ZIP importer. Bytes are staged and normalized like picked photos. */
+    suspend fun importBytes(context: Context, bytes: ByteArray): String = withContext(Dispatchers.IO) {
+        require(bytes.isNotEmpty() && bytes.size <= 12 * 1024 * 1024) { "Bilddatei zu groß oder leer." }
+        val staged = File.createTempFile("cast-", ".source", context.cacheDir)
+        try {
+            staged.writeBytes(bytes)
+            normalize(context, staged)
+        } finally {
+            staged.delete()
+        }
+    }
+
     suspend fun importPortrait(context: Context, uri: Uri): String = withContext(Dispatchers.IO) {
         val source = File.createTempFile("portrait-", ".source", context.cacheDir)
         try {
