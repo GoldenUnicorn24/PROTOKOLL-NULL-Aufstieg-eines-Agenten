@@ -25,8 +25,9 @@ data class SlotInfo(
 object SaveMigration {
     private val json = Json { ignoreUnknownKeys = true; isLenient = true; encodeDefaults = true }
 
-    fun decode(text: String): GameState {
-        val obj = json.parseToJsonElement(text).jsonObject
+    fun decode(text: String): GameState = decode(json.parseToJsonElement(text).jsonObject)
+
+    fun decode(obj: JsonObject): GameState {
         val version = obj["schemaVersion"]?.jsonPrimitive?.int ?: 1
         return when {
             version >= 2 -> migrateForward(json.decodeFromJsonElement(GameState.serializer(), obj))

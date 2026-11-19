@@ -69,7 +69,7 @@ object Dialogues {
 
     fun choose(data: GameData, state: GameState, choiceId: String): Result {
         val (d, n) = current(data, state) ?: return state.fail("Kein Dialog aktiv")
-        val c = n.choices.firstOrNull { it.id == choiceId } ?: return state.fail("Auswahl fehlt")
+        val c = visibleChoices(data, state).firstOrNull { it.id == choiceId } ?: return state.fail("Diese Antwort ist nicht verfügbar.")
         val target = n.speakerId?.takeIf { it != "narrator" && it != "player" } ?: d.npcId
         var s = state
         val msgs = mutableListOf<String>()
@@ -87,7 +87,7 @@ object Dialogues {
         val r1 = Effs.apply(legacy, data, s, target); s = r1.state; msgs += r1.messages
         val r2 = Effs.apply(effects, data, s, target); s = r2.state; msgs += r2.messages
         val run = s.activeDialogue!!
-        val hist = (run.history + ("» " + c.text)).takeLast(20)
+        val hist = (run.history + ("» " + format(c.text, state))).takeLast(20)
         val nextNode = next?.let { id -> d.nodes.firstOrNull { it.id == id } }
         return if (nextNode == null) {
             s = s.copy(
@@ -200,6 +200,19 @@ object Endings {
             })
         }
         if ("kira_rescued" in f) out += Section("Kira", if ("kira_joined" in f) "Kira ist deine Stellvertreterin geworden. Kandidatin 4 und Kandidat 7, am Ende doch frei." else "Kira lebt unter neuem Namen in Skandinavien. Sie schreibt einmal im Jahr.")
+        if ("kira_rescued" in f && ("kira_key" in f || "kira_plums" in f)) {
+            out += Section("Der Brief hinter der Leiste", when {
+                "kira_plums" in f -> "Kira schickt dir einen Kassenzettel. Eine Flasche Milch, ein Glas Pflaumen, Spülmittel. Unten hat sie die Summe zweimal unterstrichen. Auf der Rückseite steht in ihrer kleinen, schiefen Schrift: „Viel zu teuer.“"
+                else -> "Auf Kiras erster Postkarte ist ein Schlüssel abgepaust. Ein paar Kratzer, drei Zähne. „Wohnung im dritten Stock“, steht darunter, „mit einer Tür, die ich von innen zumachen kann.“"
+            })
+        }
+        if ("commission_admitted" in f) {
+            out += Section("Der Abzug", when (id) {
+                "ending_reform", "ending_exit" -> "Unter den ersten Menschen, die vor dem Ausschuss aussagen, ist eine Frau aus der Aufnahmekommission. Sie identifiziert die Bahnhofsfotos und gibt zu Protokoll, wofür die Abzüge bestimmt waren. Die Familien dürfen ihre Exemplare abholen."
+                "ending_order" -> "Du lässt die Abzüge aus den Bewerbungsakten nehmen. Wer sein Foto abholen will, muss am Empfang nur seinen alten Namen nennen. Auf der Liste der Abholberechtigten stehst auch du."
+                else -> "Die Mappe mit den Bahnhofsfotos liegt jetzt in deinem Schreibtisch. Du weißt, wer die Bilder bestellt hat. Auf dem Formular für den nächsten Auftrag ist die Unterschriftszeile noch frei."
+            })
+        }
         if ("nikita_ally" in f) out += Section("Nikita", "Nikita taucht manchmal auf, ungefragt, mit einem Kaffee und einer Warnung. Ihr seid keine Freundinnen oder Freunde. Aber Verbündete.")
         val birkhoff = Relations.get(data, state, "birkhoff")
         if (birkhoff.trust >= 60) out += Section("Birkhoff", "Birkhoff hat dein Büro verwanzt, um zu beweisen, dass er es kann. Dann hat er dir die Wanzen geschenkt. Freundschaft auf seine Art.")

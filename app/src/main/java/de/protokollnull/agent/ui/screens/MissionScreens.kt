@@ -108,6 +108,8 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
     Column(Modifier.fillMaxSize()) {
         ScreenHeader(m.title, "Briefing · " + (MissionGenerator.typeLabels[m.type] ?: m.type), onBack = { vm.back() })
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            ScenePanel(m.locationId, Modifier.fillMaxWidth().aspectRatio(2.5f), "Einsatzgebiet",
+                data.placeById[m.locationId]?.name ?: m.locationId)
             GlassPanel {
                 if (m.giverId != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     NpcPortrait(data, s, m.giverId, 56.dp)
@@ -115,7 +117,6 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
                 }
                 Text(m.description, style = MaterialTheme.typography.bodyMedium)
                 if (m.briefing.isNotBlank()) Text(m.briefing, style = MaterialTheme.typography.bodySmall, color = Pn.Accent)
-                KeyValue("Ort", data.placeById[m.locationId]?.name ?: m.locationId)
                 KeyValue("Fraktion", data.factionById[m.factionId]?.name ?: m.factionId)
                 KeyValue("Gefahrenstufe", "${m.threat}/5")
                 KeyValue("Zeugen", m.witnesses.toString())
@@ -263,16 +264,21 @@ private fun SearchStage(vm: GameViewModel, s: GameState, st: StageDefinition, ru
 @Composable
 private fun ObserveStage(vm: GameViewModel, s: GameState, st: StageDefinition, run: MissionRun) {
     val ob = run.observe ?: return
+    val signal = remember(run.seed, run.stageId, ob.round, ob.correct, ob.targets) { ObservationSignal.forRound(run) } ?: return
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         StageHeader(vm, s, st, run)
         Row { Pill("Runde ${(ob.round + 1).coerceAtMost(ob.rounds)}/${ob.rounds}"); Spacer(Modifier.width(8.dp)); Pill("Treffer ${ob.hits}/${st.intelNeeded}", Pn.Ok) }
         GlassPanel {
-            Text("Wen beobachtest du jetzt?", style = MaterialTheme.typography.titleSmall)
+            Text("Signalabgleich", style = MaterialTheme.typography.titleMedium)
+            Text("Die Aufzeichnung wiederholt sich im Kreis. Welcher Kanal liefert die nächsten zwei Zeichen?", style = MaterialTheme.typography.bodyMedium)
+            Text("TAKTFOLGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Text(signal.reference.joinToString(" · "), style = MaterialTheme.typography.titleSmall)
+            Text("NEUER UMLAUF", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Text(signal.fragment.joinToString(" · ") + " · ? · ?", style = MaterialTheme.typography.titleSmall)
             ob.targets.forEachIndexed { i, t ->
-                val hinted = ob.hintRevealed && ob.round < ob.correct.size && ob.correct[ob.round] == i && run.log.lastOrNull()?.contains("fällt") == true
-                ChoiceButton(t + if (hinted) "  ◆ auffällig" else "", null) { vm.act(silent = true) { d, x -> Missions.observe(d, x, i) } }
+                ChoiceButton(t, signal.channels[i].joinToString(" → ")) { vm.act(silent = true) { d, x -> Missions.observe(d, x, i) } }
             }
-            ActionButton(if (ob.hintRevealed) "Bereits genau hingesehen" else "Genau hinsehen (Wahrnehmungsprobe)", Modifier.fillMaxWidth(), enabled = !ob.hintRevealed, secondary = true) {
+            ActionButton(if (ob.hintRevealed) "Hinweis angefordert" else "Hinweis anfordern (Wahrnehmung)", Modifier.fillMaxWidth(), enabled = !ob.hintRevealed, secondary = true) {
                 vm.act(silent = true) { d, x -> Missions.observeHint(d, x) }
             }
         }

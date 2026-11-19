@@ -151,7 +151,11 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
     // Laufender Einsatz und Dialoge haben Vorrang
     if (s.activeMission != null) FullOverlay { MissionRunScreen(vm, s) }
     if (s.activeDialogue != null) FullOverlay { DialogueScreen(vm, s) }
-    if (s.activeDialogue == null && s.activeMission == null && de.protokollnull.agent.engine.Endings.pending(s)) FullOverlay { EpilogueScreen(vm, s) }
+    if (s.activeDialogue == null && s.activeMission == null) {
+        val introduction = de.protokollnull.agent.engine.CompanionAssignment.awaitingIntroduction(s)
+        if (introduction != null) FullOverlay { CompanionIntroduction(vm, s, introduction) }
+        else if (de.protokollnull.agent.engine.Endings.pending(s)) FullOverlay { EpilogueScreen(vm, s) }
+    }
 }
 
 @Composable

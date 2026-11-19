@@ -42,6 +42,26 @@
             "effects": {
               "trust": 1
             }
+          },
+          {
+            "id": "receipt",
+            "text": "„In meiner ersten Akte stand sogar, wem ein Bleistift gehört. Wer hat all das weggelassen?“",
+            "nextNode": "a_receipt",
+            "conditions": {
+              "flagsAll": [
+                "pencil_recorded"
+              ]
+            }
+          },
+          {
+            "id": "private",
+            "text": "Den Bleistift auf seine Akte legen. „Der ist von meinem Vater. Darf ich den hier behalten?“",
+            "nextNode": "a_pencil",
+            "conditions": {
+              "flagsAll": [
+                "pencil_private"
+              ]
+            }
           }
         ]
       },
@@ -99,6 +119,36 @@
             "effects": {
               "xp": 40,
               "respect": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_receipt",
+        "speakerId": "michael",
+        "text": "Michael dreht dir die Blätter hin. Unten ist auf jeder Seite „Auszug“ eingeprägt. Bis eben hat er das Papier für vollständig gehalten. Jetzt holt er einen Bleistift und schreibt das heutige Datum an den Rand. „Wenn Seiten nachkommen, wissen wir wenigstens, seit wann sie fehlen.“",
+        "choices": [
+          {
+            "id": "agree",
+            "text": "„Eine Kopie von dem Datum für mich.“",
+            "nextNode": "a4",
+            "effects": {
+              "respect": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_pencil",
+        "speakerId": "michael",
+        "text": "Michael nimmt den Stift auf. Die Holzspitze ist so oft mit dem Messer angespitzt worden, dass sein Daumen fast die Mine berührt. Er legt ihn zu dir zurück. „In der Wäsche geht so was verloren. Oben im Spind ist eine kleine Schale.“ Dann wendet er die erste Seite um.",
+        "choices": [
+          {
+            "id": "thanks",
+            "text": "„Danke. Und was steht auf der nächsten Seite?“",
+            "nextNode": "a4",
+            "effects": {
+              "trust": 2
             }
           }
         ]
@@ -386,6 +436,26 @@
               "respect": 8,
               "trust": 4
             }
+          },
+          {
+            "id": "print",
+            "text": "Birkhoff das Foto vom Bahnsteig zeigen. „Wer hat das aufgenommen?“",
+            "nextNode": "b_photo",
+            "conditions": {
+              "flagsAll": [
+                "kept_station_photo"
+              ]
+            }
+          },
+          {
+            "id": "negative",
+            "text": "Ihm das verbrannte Foto beschreiben. „Der Blick kam von oben. Kann das eine Bahnhofskamera gewesen sein?“",
+            "nextNode": "b_ash",
+            "conditions": {
+              "flagsAll": [
+                "burned_past"
+              ]
+            }
           }
         ]
       },
@@ -445,6 +515,40 @@
               "setFlags": [
                 "archive_access",
                 "file_signed_director"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "b_photo",
+        "speakerId": "birkhoff",
+        "text": "Birkhoff hält das Foto gegen das Licht. „Siehst du den schiefen schwarzen Strich? Kein Haar. Ein Sprung im Glas.“ Er zieht eine alte Auskunft des Bahnhofs aus seiner Ablage. Die Scheibe über dem Kiosk wurde erst im Dezember ersetzt. Jetzt weißt du, wo die Kamera hing. Wer den Abzug bestellt hat, steht in einer anderen Akte.",
+        "choices": [
+          {
+            "id": "where",
+            "text": "„An welche Akte komme ich als Nächstes?“",
+            "nextNode": "b2",
+            "effects": {
+              "setFlags": [
+                "station_camera_found"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "b_ash",
+        "speakerId": "birkhoff",
+        "text": "Birkhoff zieht zwei Rechtecke auf einen Block. „Eine Erinnerung vergrößern ist schwierig.“ Er schiebt dir den Block hin. Du zeichnest die Lehne ein, den Kiosk und die Ecke, aus der das Bild aufgenommen wurde. Er reißt die Skizze ab. „Gut genug, um die richtigen Fragen zu stellen.“",
+        "choices": [
+          {
+            "id": "where",
+            "text": "„Wer bewahrt solche Abzüge auf?“",
+            "nextNode": "b2",
+            "effects": {
+              "setFlags": [
+                "station_view_rebuilt"
               ]
             }
           }
@@ -1253,6 +1357,26 @@
                 "voss_traced"
               ]
             }
+          },
+          {
+            "id": "camera",
+            "text": "„Wer hat den Abzug von der Bahnhofskamera bei dem Kiosk bestellt?“",
+            "nextNode": "v_request",
+            "conditions": {
+              "flagsAll": [
+                "station_camera_found"
+              ]
+            }
+          },
+          {
+            "id": "sketch",
+            "text": "„Ich habe den Bahnsteig aufgezeichnet. Sie wissen, welches Foto ich meine.“",
+            "nextNode": "v_request",
+            "conditions": {
+              "flagsAll": [
+                "station_view_rebuilt"
+              ]
+            }
           }
         ]
       },
@@ -1309,6 +1433,23 @@
               "giveItems": {
                 "research_drive": 1
               }
+            }
+          }
+        ]
+      },
+      {
+        "id": "v_request",
+        "speakerId": "voss",
+        "text": "Über Funk hörst du das Klacken seines Brillenbügels. „Ich habe den Abzug bestellt. In den Tagen nach dem Anschlag haben wir Überlebende gesucht, die noch niemand abgeholt hatte.“ Du hörst, wie er einatmet. „Für das Kinderheim brauchte ich kein Bild. Für die Kommission schon.“ Zum ersten Mal benutzt er das Wort Kommission.",
+        "choices": [
+          {
+            "id": "press",
+            "text": "„Geben Sie mir die Namen.“",
+            "nextNode": "v2",
+            "effects": {
+              "setFlags": [
+                "commission_admitted"
+              ]
             }
           }
         ]
@@ -2641,17 +2782,75 @@
             "effects": {
               "respect": 5
             }
+          },
+          {
+            "id": "bus",
+            "text": "„Du hast mir von dem Bus erzählt. Ich hab es Voss gesagt.“",
+            "nextNode": "kr_report",
+            "conditions": {
+              "flagsAll": [
+                "phoenix_obedient"
+              ]
+            }
+          },
+          {
+            "id": "chair",
+            "text": "„Ich saß die ganze Nacht in seinem Büro. Du dachtest, ich hätte dich versetzt.“",
+            "nextNode": "kr_silent",
+            "conditions": {
+              "flagsAll": [
+                "phoenix_defiant"
+              ]
+            }
+          },
+          {
+            "id": "socks",
+            "text": "„Weißt du noch, wie wir in Strümpfen auf den Bus gehört haben?“",
+            "nextNode": "kr_warn",
+            "conditions": {
+              "flagsAll": [
+                "kira_warned"
+              ]
+            }
           }
         ]
       },
       {
         "id": "kr2",
         "speakerId": "kira",
-        "text": "„Du hast mich gewarnt. Oder auch nicht. Ich erinnere mich an beides, je nachdem, wie ich geschlafen habe.“ Sie lächelt schief. „Du bist hier. Das zählt.“",
+        "text": "Kira steht auf und zieht mit dem Daumen eine Linie über den Türrahmen. „So groß war ich damals ungefähr. Und wir dachten beide, wir müssten Entscheidungen für unser ganzes Leben treffen.“ Sie setzt sich wieder. Diesmal lässt sie neben sich Platz.",
         "choices": [
           {
             "id": "ok",
             "text": "Neben sie setzen.",
+            "effects": {
+              "xp": 80,
+              "friendship": 8,
+              "memory": "Wiedersehen mit Kira"
+            }
+          },
+          {
+            "id": "name",
+            "text": "„Hier sagen alle {codename}. Magst du mich wieder {name} nennen?“",
+            "conditions": {
+              "flagsAll": [
+                "kira_knows_name"
+              ]
+            },
+            "effects": {
+              "xp": 80,
+              "friendship": 8,
+              "memory": "Wiedersehen mit Kira"
+            }
+          },
+          {
+            "id": "knock",
+            "text": "Zweimal gegen die Bettkante klopfen. Auf ihre Antwort warten.",
+            "conditions": {
+              "flagsAll": [
+                "kira_knock"
+              ]
+            },
             "effects": {
               "xp": 80,
               "friendship": 8,
@@ -2675,6 +2874,57 @@
                 "kira_joined"
               ]
             }
+          }
+        ]
+      },
+      {
+        "id": "kr_report",
+        "speakerId": "kira",
+        "text": "„Ich weiß. Die Köchin hat mir erzählt, warum das Tor zu war.“ Kira zieht ihren linken Ärmel über die Hand. „Es tut gut, es von dir zu hören. Ich weiß noch nicht, was ich damit mache.“",
+        "choices": [
+          {
+            "id": "sit",
+            "text": "„Wir können erst mal hier sitzen.“",
+            "nextNode": "kr2"
+          },
+          {
+            "id": "offer",
+            "text": "„Du entscheidest selbst, ob du bleiben möchtest.“",
+            "nextNode": "kr3"
+          }
+        ]
+      },
+      {
+        "id": "kr_silent",
+        "speakerId": "kira",
+        "text": "„Ich bin dreimal bis zur Treppe gegangen. Dreimal wieder zurück.“ Kira schüttelt den Kopf. „Eigentlich hätte ich dir am liebsten einen Stuhl vor die Tür gestellt. Dann wären wir wenigstens zu zweit gewesen.“",
+        "choices": [
+          {
+            "id": "sit",
+            "text": "„Wir können erst mal hier sitzen.“",
+            "nextNode": "kr2"
+          },
+          {
+            "id": "offer",
+            "text": "„Du entscheidest selbst, ob du bleiben möchtest.“",
+            "nextNode": "kr3"
+          }
+        ]
+      },
+      {
+        "id": "kr_warn",
+        "speakerId": "kira",
+        "text": "„Ich hab die Schuhe damals so fest ausgezogen, dass mir der Senkel gerissen ist.“ Sie lacht. „Der Bus um sechs nach sieben. Ich weiß die Uhrzeit noch. Von allem, was wir lernen mussten, ist mir ausgerechnet das geblieben.“",
+        "choices": [
+          {
+            "id": "sit",
+            "text": "„Wir können erst mal hier sitzen.“",
+            "nextNode": "kr2"
+          },
+          {
+            "id": "offer",
+            "text": "„Du entscheidest selbst, ob du bleiben möchtest.“",
+            "nextNode": "kr3"
           }
         ]
       }
@@ -2818,7 +3068,7 @@
       {
         "id": "f2",
         "speakerId": null,
-        "text": "Du drückst den ersten Knopf. „Hier spricht die Direktion der Division. Ich habe Ihnen etwas zu zeigen.“",
+        "text": "Zuerst meldet sich die Nachtwache. Du musst den Namen des Programms buchstabieren, bis sie die richtige Zuständigkeit findet. „Bleiben Sie dran“, sagt sie. Vier Minuten lang hörst du nur ein leises Atmen in der Leitung. Dann meldet sich die Vorsitzende der Aufsicht. Du sagst ihr deinen Geburtsnamen und beginnst mit dem Tag am Bahnhof.",
         "choices": [
           {
             "id": "ok",
@@ -2829,7 +3079,7 @@
       {
         "id": "f3",
         "speakerId": null,
-        "text": "Der Tresor schließt sich mit einem schweren Klicken. Morgen früh wirst du die erste Regel der neuen Division verkünden.",
+        "text": "Du verwahrst die Akten im Tresor und rufst die Nachtschicht zusammen. Eine Rekrutin fragt, was aus ihrer Beschwerde über einen Ausbilder geworden ist. Du ziehst einen zweiten Stuhl an den Tisch. Sie bleibt stehen. Erst einmal möchte sie eine Eingangsbestätigung, schriftlich. Du findest Papier und setzt deine Unterschrift darunter.",
         "choices": [
           {
             "id": "ok",
@@ -2840,7 +3090,7 @@
       {
         "id": "f4",
         "speakerId": null,
-        "text": "Du blätterst durch die Namen der Kandidaten. Sieben Leben, sieben Werkzeuge. Du weißt jetzt, wie Voss sich gefühlt hat.",
+        "text": "Sieben Aufnahmebögen. Auf dem dritten hat jemand „Mutter“ durchgestrichen und „Großmutter“ darübergeschrieben. Für einen Augenblick siehst du die Hand, die das getan hat. Dann legst du die Blätter gerade und drückst den Freigabestempel darauf. Im Flur wartet schon die Person, die die Familien besuchen soll.",
         "choices": [
           {
             "id": "ok",
@@ -2851,7 +3101,7 @@
       {
         "id": "f5",
         "speakerId": null,
-        "text": "Ein USB-Stick, ein Umschlag, ein Briefkasten vor einer Redaktion. Dann ein Zug nach Süden, unter einem Namen, den niemand kennt.",
+        "text": "Die Redaktion bestätigt den Eingang in einem einzigen Satz. Du liest ihn auf dem Bahnsteig, steckst das Telefon ein und kaufst eine Fahrkarte am Schalter. „Nur hin?“, fragt die Frau hinter der Scheibe. In deiner Tasche wäre noch Platz für die Rückfahrt. Du schüttelst den Kopf. Der nächste Zug fährt in elf Minuten.",
         "choices": [
           {
             "id": "ok",

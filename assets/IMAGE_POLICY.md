@@ -8,4 +8,5 @@ assets/CAST_IMAGES.json enthält 11 Bildreferenzen zu Schauspielern aus Nikita. 
 
 Die Fotos sind reale Schauspielerfotos (überwiegend von Events), keine Original-Serienstills. Foto-Lizenzen sind KEINE Rechte an den TV-Figuren, Marken oder Logos. Vor einer kommerziellen Veröffentlichung gesondert klären oder eigene fiktionale Charaktere nutzen.
 
-Fiktive NPCs erhalten den neutralen Fallback cast/placeholder.svg. Keine nicht lizenzierten Promotional-Stills automatisch herunterladen.
+## Originalmedien für die PHOENIX-Geschichte
+Die fünf Porträts unter `app/src/main/assets/cast/original_*.jpg` zeigen die fiktiven Figuren Voss, Maya, Ethan, Kira und Helena. Die neun Bilder unter `app/src/main/res/drawable-nodpi/scene_*.webp` zeigen die Schauplätze der Geschichte und die beiden Stifte aus Michaels Zuteilung. Alle vierzehn Motive wurden für dieses Spiel mit OpenAI ImageGen generiert. Eigene Agenten und Rekruten verwenden das gewählte lokale Foto oder einen gezeichneten Avatar.

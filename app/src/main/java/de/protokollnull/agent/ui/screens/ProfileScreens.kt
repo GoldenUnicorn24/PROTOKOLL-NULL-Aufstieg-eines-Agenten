@@ -416,11 +416,8 @@ fun RecruitEditorScreen(vm: GameViewModel, s: GameState) {
                 GlassPanel {
                     Text("Geschlecht (Standard: anderes als deins)", style = MaterialTheme.typography.titleSmall)
                     ChipRow(listOf("female" to "Weiblich", "male" to "Männlich", "diverse" to "Divers"), gender) { gender = it }
-                    OptionStepper("Hautton", AvatarPalette.skinNames, avatar.skin) { avatar = avatar.copy(skin = it) }
-                    OptionStepper("Frisur", AvatarPalette.hairNames, avatar.hairStyle) { avatar = avatar.copy(hairStyle = it) }
-                    OptionStepper("Haarfarbe", AvatarPalette.hairColorNames, avatar.hairColor) { avatar = avatar.copy(hairColor = it) }
-                    OptionStepper("Kleidung", AvatarPalette.outfitNames, avatar.outfit) { avatar = avatar.copy(outfit = it) }
-                    OptionStepper("Zubehör", AvatarPalette.accessoryNames, avatar.accessory) { avatar = avatar.copy(accessory = it) }
+                    PortraitUpload(avatar) { avatar = it }
+                    if (avatar.portraitId == null) AvatarControls(avatar) { avatar = it }
                 }
                 GlassPanel {
                     Text("Charakterzüge (bis 3)", style = MaterialTheme.typography.titleSmall)

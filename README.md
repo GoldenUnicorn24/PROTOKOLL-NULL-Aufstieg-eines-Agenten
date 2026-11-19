@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.3.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Danach freies Spiel (Details unten).
+**Stand: Beta 0.4.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Danach freies Spiel (Details unten).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -35,8 +35,8 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 
 ### ✅ Spielbar
 - **Start-/Fortsetzen-Menü**, 3 Speicherslots + Autosave nach jeder Aktion, atomare Speicherung, Import/Export als JSON, automatische Migration alter Foundation-Spielstände (Schema 1 → 2).
-- **Charaktereditor** in 4 Schritten: Name, Deckname, Geschlecht, Auftreten, prozeduraler Original-Avatar (Hautton, Frisur, Haarfarbe, Augen, Kleidung, Zubehör), PHOENIX-Hintergrund, Stärke/Schwäche, Schwierigkeitsgrad.
-- **Prolog 13–16 Jahre** in 6 erzählten Szenen; Entscheidungen setzen Attribute und Story-Flags (z. B. Gehorsam/Widerstand gegenüber Voss).
+- **Charaktereditor** mit lokalem Fotoimport, Schnellstart über Vorgabewerte und optionaler Gefährtenakte: Name, Deckname, Geschlecht, Auftreten, prozeduraler Original-Avatar (Hautton, Frisur, Haarfarbe, Augen, Kleidung, Zubehör), PHOENIX-Hintergrund, Stärke/Schwäche, Schwierigkeitsgrad.
+- **Prolog 13–16 Jahre** mit 21 Szenen, von denen du pro Durchlauf 13 erlebst; Entscheidungen setzen Attribute und Story-Flags (z. B. Gehorsam/Widerstand gegenüber Voss).
 - **Kapitel 1 „Neues Blut“** komplett: 9 Quests, **10 handgeschriebene Missionen** (M001–M010) mit Briefing, Vorgehenswahl, Team, Ausrüstungsboni, Abbruch-/Fehlpfaden, Nachbesprechung und Konsequenzen; Kapitelabschluss im Direktorat mit mehreren Ausgängen.
 - **Missionstypen**: Entscheidungen mit transparenten Erfolgschancen, Untersuchung (Suchraster mit Hinweisen), Observation (Muster erkennen), Undercover (Tarnungswert), Rettung und **rundenbasiertes abstraktes 2D-Taktikbrett** (Deckung, Bewegung, AP, Status, Teamfähigkeiten, Gegner-KI, deterministische Würfe).
 - **Missionsgenerator**: wöchentliches Einsatzboard aus Seeds (Ort, Fraktion, Zeugen, Risiko, Zielperson). Unter 18 nur Gespräche, Untersuchungen und Observationen mit Gefahr ≤ 2.
@@ -69,7 +69,7 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 
 - **Serienfiguren** (Michael, Nikita, Alex, Birkhoff, Amanda, Percy, Thom, Jaden, Owen, Sonya, Ryan): CC-lizenzierte Fotos der Darsteller von Wikimedia Commons (`app/src/main/assets/cast/`, Credits in `assets/CAST_IMAGE_CREDITS.json`). Das sind keine Serienstills und keine Rechte an den Figuren.
 - **Serienstills**: Die Szenenbilder in `assets/SERIES_LOOK_REFERENCES.json` sind © The CW bzw. Rechteinhaber und dienen nur als Stilreferenz. Sie werden **nicht** heruntergeladen oder verlinkt. Liegt eine Nutzungserlaubnis vor, kann `app/src/main/assets/cast/show_<id>.jpg` ergänzt und in `app/src/main/assets/licenses/series_image_licenses.json` mit `verified: true`, Lizenz und Nachweis eingetragen werden – erst dann zeigt die App das Still. Ein Test bricht den Build ab, wenn ein `show_*.jpg` ohne Lizenznachweis auftaucht.
-- **Fiktive Figuren** (Voss, Maya, Ethan, eigene Rekruten, Spielfigur): prozedural gezeichnete Original-Avatare.
+- **Originalporträts und Schauplätze**: Die fünf Porträts von Voss, Maya, Ethan, Kira und Helena und die neun Szenenbilder wurden für das Spiel mit OpenAI ImageGen erstellt. Für selbst erstellte Figuren stehen ein prozeduraler Avatar und der lokale Fotoimport zur Wahl.
 - **Gegenstände**: 32 Icons von game-icons.net (CC BY 3.0, Hintergrund entfernt), 6 eigene Original-Icons (CC0); siehe `assets/ITEM_IMAGE_CREDITS.json`.
 - **Schriften**: Anton, Inter, Anonymous Pro (SIL OFL 1.1), Lizenztexte in `app/src/main/assets/licenses/fonts/`.
 - **Musik/Icons der Oberfläche**: eigene Erstellung.
@@ -91,9 +91,15 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 ### Tests
 - `ContentValidationTest`: Kataloggrößen, eindeutige IDs, alle Asset-Pfade, Serienstill-Lizenzregel, Missions-/Dialog-/Quest-Referenzen, unerreichbare Dialogknoten, Prolog-Graph, Kapitel 1 = 10 Missionen.
 - `RulesTest`: Level-100-Grenze, Editor ab 18, Teen-Romanze, Altersabstand, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
-- `ScreenshotTest`: rendert 23 Kernscreens mit echtem Spielzustand (Robolectric).
+- `ScreenshotTest`: rendert 24 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.4.0-beta
+- Ein Fundstück vom Bahnhof begleitet dich durch die PHOENIX-Jahre. Entscheidungen über Beweise, Erinnerung und Kira eröffnen spätere Gesprächsoptionen und prägen den Epilog.
+- Eigene Fotos lassen sich für die Hauptfigur und die Gefährtenakte übernehmen. Die App verkleinert die Bilder lokal und nimmt sie beim JSON-Export mit.
+- Eine vor dem Prolog erstellte Gefährtenakte wird an deinem 18. Geburtstag wirksam. Michael stellt euch persönlich vor. Die neue Figur tritt wie im ursprünglichen Entwurf mit 16 ein. Eine Romanze ist eine spätere gemeinsame Entscheidung, sobald beide volljährig sind.
+- Neun eigens generierte Szenenbilder und fünf Originalporträts begleiten Prolog, Einsatzbriefings, Zuteilung und Personalakten. Observationen verwenden erkennbare Zeichenfolgen.
 
 ### 0.3.0-beta
 - Kapitel 2/3, Finale mit vier Enden, Epilog, neue Figuren, Rang-Story-Kopplung.

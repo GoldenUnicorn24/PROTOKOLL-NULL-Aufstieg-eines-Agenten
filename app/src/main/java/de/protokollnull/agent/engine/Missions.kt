@@ -235,12 +235,12 @@ object Missions {
     fun observeHint(data: GameData, state: GameState): Result {
         val run = state.activeMission ?: return Result(state)
         val ob = run.observe ?: return Result(state)
-        if (ob.hintRevealed) return Result(state)
+        if (ob.hintRevealed || run.result != null) return Result(state)
         val (s1, roll) = Checks.roll(data, state, CheckDef(Attr.PERCEPTION, "observe", 45), checkBonus(data, state, CheckDef(Attr.PERCEPTION)), salt = ob.round.toLong())
         val gear = Stats.equipped(data, state.player).map { it.id }
         val ok = roll.success || "binoculars" in gear && roll.roll <= roll.chance + 15
-        val nr = if (ok) run.copy(observe = ob.copy(hintRevealed = true), log = run.log + "Dir fällt etwas auf: ${ob.targets[ob.correct[ob.round]]} verhält sich ungewöhnlich.")
-        else run.copy(observe = ob.copy(hintRevealed = true), alarm = run.alarm + 0, log = run.log + "Zu viel Bewegung – du erkennst kein Muster. (${roll.roll}/${roll.chance})")
+        val nr = if (ok) run.copy(observe = ob.copy(hintRevealed = true), log = run.log + "Muster erkannt. Der passende Kanal gehört zu ${ob.targets[ob.correct[ob.round]]}.")
+        else run.copy(observe = ob.copy(hintRevealed = true), log = run.log + "Die Auswertung liefert keinen zusätzlichen Hinweis. (${roll.roll}/${roll.chance})")
         return Result(s1.copy(activeMission = nr))
     }
 
@@ -249,12 +249,13 @@ object Missions {
         val m = currentMission(data, state) ?: return Result(state)
         val st = currentStage(data, state) ?: return Result(state)
         val ob = run.observe ?: return Result(state)
+        if (run.result != null || target !in ob.targets.indices || ob.round !in ob.correct.indices) return Result(state)
         val correct = ob.correct[ob.round] == target
         val nob = ob.copy(round = ob.round + 1, hintRevealed = false, hits = ob.hits + if (correct) 1 else 0)
         var r = run.copy(
             observe = nob,
             alarm = run.alarm + if (correct) 0 else (if ((ob.round + target) % 2 == 0) 1 else 0),
-            log = run.log + if (correct) "Treffer: ${ob.targets[target]} ist Teil der Übergabe." else "${ob.targets[target]} war eine falsche Spur."
+            log = run.log + if (correct) "Treffer: ${ob.targets[target]} ist Teil der Übergabe." else "Falsche Spur. Die Zeichenfolge passte zu ${ob.targets[ob.correct[ob.round]]}."
         )
         var s = state.copy(activeMission = r)
         if (nob.round >= nob.rounds) {

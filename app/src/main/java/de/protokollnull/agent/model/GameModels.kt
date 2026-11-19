@@ -14,7 +14,8 @@ data class AvatarSpec(
     val hairColor: Int = 0,
     val outfit: Int = 0,
     val eyes: Int = 0,
-    val accessory: Int = 0
+    val accessory: Int = 0,
+    val portraitId: String? = null
 )
 
 @Serializable

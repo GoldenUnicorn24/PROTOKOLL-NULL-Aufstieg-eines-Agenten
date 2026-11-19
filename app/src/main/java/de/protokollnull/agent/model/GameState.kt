@@ -115,7 +115,7 @@ data class CustomNpc(
     val profession: String,
     val interests: List<String>,
     val skills: Map<String, Int>,
-    /** Spieltag, an dem die Figur 16 Jahre alt war. */
+    /** Spieltag des Eintritts in die Division. */
     val createdDay: Int,
     val ageAtCreation: Int = 16,
     val rank: Int = 1
@@ -291,5 +291,6 @@ data class GameState(
     val boardWeek: Int = -1,
     val board: List<MissionDefinition> = emptyList(),
     val rolls: Int = 0,
-    val lastAutosave: Long = 0
+    val lastAutosave: Long = 0,
+    val pendingCompanion: CustomNpc? = null
 )

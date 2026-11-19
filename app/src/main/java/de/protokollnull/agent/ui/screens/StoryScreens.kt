@@ -13,6 +13,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -26,25 +30,37 @@ import de.protokollnull.agent.ui.theme.*
 // Charaktereditor
 // ---------------------------------------------------------------------------
 
+private val avatarSaver = Saver<AvatarSpec, String>(
+    save = { Json.encodeToString(it) }, restore = { Json.decodeFromString<AvatarSpec>(it) }
+)
+private val dossierSaver = Saver<CustomNpc, String>(
+    save = { Json.encodeToString(it) }, restore = { Json.decodeFromString<CustomNpc>(it) }
+)
+
 @Composable
 fun CreatorScreen(vm: GameViewModel) {
-    var step by remember { mutableIntStateOf(0) }
-    var first by remember { mutableStateOf("Lena") }
-    var last by remember { mutableStateOf("Berg") }
-    var code by remember { mutableStateOf("Null") }
-    var gender by remember { mutableStateOf("female") }
-    var avatar by remember { mutableStateOf(AvatarSpec(skin = 1, hairStyle = 4, hairColor = 1, outfit = 0)) }
-    var style by remember { mutableStateOf("sachlich") }
-    var background by remember { mutableStateOf("analyst") }
-    var strength by remember { mutableStateOf(Attr.PERCEPTION) }
-    var weakness by remember { mutableStateOf(Attr.CHARISMA) }
-    var difficulty by remember { mutableStateOf("normal") }
-    val steps = listOf("Identität", "Aussehen", "Hintergrund", "Einsatzprofil")
+    var step by rememberSaveable { mutableIntStateOf(0) }
+    var first by rememberSaveable { mutableStateOf("Lena") }
+    var last by rememberSaveable { mutableStateOf("Berg") }
+    var code by rememberSaveable { mutableStateOf("Null") }
+    var gender by rememberSaveable { mutableStateOf("female") }
+    var avatar by rememberSaveable(stateSaver = avatarSaver) { mutableStateOf(AvatarSpec(skin = 1, hairStyle = 4, hairColor = 1, outfit = 0)) }
+    var style by rememberSaveable { mutableStateOf("sachlich") }
+    var background by rememberSaveable { mutableStateOf("analyst") }
+    var strength by rememberSaveable { mutableStateOf(Attr.PERCEPTION) }
+    var weakness by rememberSaveable { mutableStateOf(Attr.CHARISMA) }
+    var difficulty by rememberSaveable { mutableStateOf("normal") }
+    var includeCompanion by rememberSaveable { mutableStateOf(false) }
+    var dossier by rememberSaveable(stateSaver = dossierSaver) { mutableStateOf(CompanionAssignment.dossier()) }
+    val steps = listOf("Identität", "Aussehen", "Hintergrund", "Einsatzprofil", "Gefährtin oder Gefährte")
 
+    var usedShortcut by rememberSaveable { mutableStateOf(false) }
+    val previous = { step = if (usedShortcut && step == steps.lastIndex) 0 else (step - 1).coerceAtLeast(0) }
+    val scroll = key(step) { rememberScrollState() }
     Column(Modifier.fillMaxSize().systemBarsPadding()) {
-        ScreenHeader("Agent erstellen", "Schritt ${step + 1}/4 · ${steps[step]}", onBack = { if (step > 0) step-- else vm.goToStart() })
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+        ScreenHeader("Agent erstellen", "Schritt ${step + 1}/${steps.size} · ${steps[step]}", onBack = { if (step > 0) previous() else vm.goToStart() })
+        Column(Modifier.weight(1f).verticalScroll(scroll).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (step < steps.lastIndex) Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(width = 96.dp, height = 120.dp)) { AvatarCanvas(avatar, Modifier.fillMaxSize()) }
                 Column {
                     Text(code.ifBlank { "—" }.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
@@ -54,6 +70,7 @@ fun CreatorScreen(vm: GameViewModel) {
             }
             when (step) {
                 0 -> GlassPanel {
+                    PortraitUpload(avatar) { avatar = it }
                     OutlinedTextField(first, { first = it.take(18) }, label = { Text("Vorname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                     OutlinedTextField(last, { last = it.take(18) }, label = { Text("Nachname (Tarnidentität)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                     OutlinedTextField(code, { code = it.take(14) }, label = { Text("Deckname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
@@ -63,12 +80,8 @@ fun CreatorScreen(vm: GameViewModel) {
                     ChipRow(listOf("sachlich" to "Sachlich", "charmant" to "Charmant", "verschlossen" to "Verschlossen", "rebellisch" to "Rebellisch"), style) { style = it }
                 }
                 1 -> GlassPanel {
-                    OptionStepper("Hautton", AvatarPalette.skinNames, avatar.skin) { avatar = avatar.copy(skin = it) }
-                    OptionStepper("Frisur", AvatarPalette.hairNames, avatar.hairStyle) { avatar = avatar.copy(hairStyle = it) }
-                    OptionStepper("Haarfarbe", AvatarPalette.hairColorNames, avatar.hairColor) { avatar = avatar.copy(hairColor = it) }
-                    OptionStepper("Augen", listOf("Braun", "Blau", "Grün"), avatar.eyes) { avatar = avatar.copy(eyes = it) }
-                    OptionStepper("Kleidung", AvatarPalette.outfitNames, avatar.outfit) { avatar = avatar.copy(outfit = it) }
-                    OptionStepper("Zubehör", AvatarPalette.accessoryNames, avatar.accessory) { avatar = avatar.copy(accessory = it) }
+                    PortraitUpload(avatar) { avatar = it }
+                    if (avatar.portraitId == null) AvatarControls(avatar) { avatar = it }
                 }
                 2 -> GlassPanel {
                     Text("Was hat PHOENIX aus dir gemacht?", style = MaterialTheme.typography.titleSmall)
@@ -84,7 +97,7 @@ fun CreatorScreen(vm: GameViewModel) {
                     ChipRow(Attr.all.map { it to Attr.label(it) }, weakness) { if (it != strength) weakness = it }
                     SmallNote("Der PHOENIX-Vorteil zeigt sich nicht als Allmacht, sondern in klaren Stärken – und einer echten Schwäche.")
                 }
-                else -> GlassPanel {
+                3 -> GlassPanel {
                     Text("Schwierigkeit", style = MaterialTheme.typography.titleSmall)
                     ChipRow(listOf("easy" to "Leicht", "normal" to "Normal", "hard" to "Hart"), difficulty) { difficulty = it }
                     SmallNote(when (difficulty) { "easy" -> "Proben +10, mehr XP, 600 Startcredits."; "hard" -> "Proben −10, weniger XP, 150 Startcredits."; else -> "Ausgewogene Proben, 300 Startcredits." })
@@ -95,20 +108,43 @@ fun CreatorScreen(vm: GameViewModel) {
                     KeyValue("Stärke / Schwäche", Attr.label(strength) + " / " + Attr.label(weakness))
                     SmallNote("Der Prolog beginnt mit 13 Jahren. Ab 16 bist du Rekrut/in der Division.")
                 }
+                4 -> {
+                    GlassPanel {
+                        Text("Wen soll Michael dir später zuteilen?", style = MaterialTheme.typography.titleMedium)
+                        SmallNote("An deinem 18. Geburtstag tritt die Person in die Division ein. Bis dahin bleibt die Personalakte versiegelt. Eine Romanze kannst du wählen, wenn ihr beide volljährig seid.")
+                        ChipRow(listOf("no" to "Ohne Gefährten starten", "yes" to "Personalakte anlegen"), if (includeCompanion) "yes" else "no") {
+                            includeCompanion = it == "yes"
+                        }
+                    }
+                    if (includeCompanion) CompanionForm(dossier) { dossier = it }
+                }
             }
         }
+        if (step == 0) TextButton(onClick = { usedShortcut = true; step = steps.lastIndex }, enabled = first.isNotBlank() && code.isNotBlank(), modifier = Modifier.fillMaxWidth()) {
+            Text("Einsatzprofil übernehmen und zur Gefährtenwahl")
+        }
         Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            if (step > 0) ActionButton("Zurück", Modifier.weight(1f), secondary = true) { step-- }
-            if (step < 3) ActionButton("Weiter", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank()) { step++ }
-            else ActionButton("Prolog beginnen", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank()) {
+            if (step > 0) ActionButton("Zurück", Modifier.weight(1f), secondary = true) { previous() }
+            if (step < steps.lastIndex) ActionButton("Weiter", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank()) { usedShortcut = false; step++ }
+            else ActionButton("Prolog beginnen", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank() && (!includeCompanion || dossier.firstName.isNotBlank())) {
                 vm.startGame(PlayerCharacter(
                     firstName = first.trim(), lastName = last.trim(), codename = code.trim(), gender = gender,
                     appearance = Appearance(avatar, style), background = background, strength = strength,
                     weakness = weakness, difficulty = difficulty
-                ))
+                ), if (includeCompanion) dossier.copy(firstName = dossier.firstName.trim(), lastName = dossier.lastName.trim()) else null)
             }
         }
     }
+}
+
+@Composable
+fun AvatarControls(avatar: AvatarSpec, onChange: (AvatarSpec) -> Unit) {
+    OptionStepper("Hautton", AvatarPalette.skinNames, avatar.skin) { onChange(avatar.copy(skin = it)) }
+    OptionStepper("Frisur", AvatarPalette.hairNames, avatar.hairStyle) { onChange(avatar.copy(hairStyle = it)) }
+    OptionStepper("Haarfarbe", AvatarPalette.hairColorNames, avatar.hairColor) { onChange(avatar.copy(hairColor = it)) }
+    OptionStepper("Augen", listOf("Braun", "Blau", "Grün"), avatar.eyes) { onChange(avatar.copy(eyes = it)) }
+    OptionStepper("Kleidung", AvatarPalette.outfitNames, avatar.outfit) { onChange(avatar.copy(outfit = it)) }
+    OptionStepper("Zubehör", AvatarPalette.accessoryNames, avatar.accessory) { onChange(avatar.copy(accessory = it)) }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -135,18 +171,28 @@ fun OptionStepper(label: String, names: List<String>, value: Int, onChange: (Int
 
 @Composable
 fun PrologueScreen(vm: GameViewModel, s: GameState) {
-    val node = Prologue.node(vm.data, s)
+    var confirmSkip by remember { mutableStateOf(false) }
+    if (confirmSkip) AlertDialog(
+        onDismissRequest = { confirmSkip = false },
+        title = { Text("Zur Division wechseln?") },
+        text = { Text("Du beginnst mit 16 bei Michael. Bereits getroffene Entscheidungen bleiben in deiner Akte.") },
+        confirmButton = { TextButton(onClick = { confirmSkip = false; vm.act { d, st -> Prologue.skip(d, st) } }) { Text("Überspringen") } },
+        dismissButton = { TextButton(onClick = { confirmSkip = false }) { Text("Weiterlesen") } }
+    )
     Column(Modifier.fillMaxSize().systemBarsPadding()) {
-        ScreenHeader(node?.chapter ?: "Prolog", "Erinnerung", trailing = {
-            TextButton(onClick = { vm.act { d, st -> Prologue.skip(d, st) } }) { Text("Überspringen") }
+        ScreenHeader("Projekt PHOENIX", "Prolog", trailing = {
+            TextButton(onClick = { confirmSkip = true }) { Text("Überspringen") }
         })
         val anim = animOn()
-        AnimatedContent(targetState = node?.id, transitionSpec = { if (anim) fadeIn() togetherWith fadeOut() else fadeIn(snap()) togetherWith fadeOut(snap()) }, label = "prolog") { _ ->
-            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        AnimatedContent(targetState = s.prologueNode, transitionSpec = { if (anim) fadeIn() togetherWith fadeOut() else fadeIn(snap()) togetherWith fadeOut(snap()) }, label = "prolog") { id ->
+            val node = vm.data.storyById[id]
+            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 if (node == null) {
                     ActionButton("Weiter") { vm.act { d, st -> Prologue.finish(d, st) } }
                     return@Column
                 }
+                ScenePanel(node.image ?: "archives", Modifier.fillMaxWidth().aspectRatio(2.1f),
+                    node.age?.let { "Erinnerung · $it Jahre" } ?: "Erinnerung", node.chapter)
                 if (node.speakerId != null) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         NpcPortrait(vm.data, s, node.speakerId, 64.dp)
@@ -156,9 +202,8 @@ fun PrologueScreen(vm: GameViewModel, s: GameState) {
                         }
                     }
                 }
-                node.age?.let { Pill("Alter: $it") }
                 GlassPanel {
-                    Text(Dialogues.format(node.text, s), style = MaterialTheme.typography.bodyLarge, fontStyle = if (node.speakerId == null) FontStyle.Italic else FontStyle.Normal)
+                    Text(Dialogues.format(node.text, s), style = MaterialTheme.typography.bodyLarge)
                 }
                 node.choices.forEach { c ->
                     val fx = c.effects

@@ -430,7 +430,7 @@
     "role": "Leitender PHOENIX-Ausbilder",
     "factionId": "phoenix",
     "ageAtStart": 48,
-    "portraitAsset": null,
+    "portraitAsset": "cast/original_voss.jpg",
     "description": "Kennt deine verborgene Vergangenheit.",
     "initialTrust": 65,
     "tags": [
@@ -465,7 +465,7 @@
     "role": "Rekrutin",
     "factionId": "division",
     "ageAtStart": 17,
-    "portraitAsset": null,
+    "portraitAsset": "cast/original_maya.jpg",
     "description": "Loyale und ambitionierte Rekrutin; Freundschaft oder altersgerechte Romanze möglich.",
     "initialTrust": 45,
     "tags": [
@@ -506,7 +506,7 @@
     "role": "Rekrut",
     "factionId": "division",
     "ageAtStart": 17,
-    "portraitAsset": null,
+    "portraitAsset": "cast/original_ethan.jpg",
     "description": "Begabter Rivale; kann zum Freund werden.",
     "initialTrust": 35,
     "tags": [
@@ -579,7 +579,8 @@
       "eyes": 1,
       "accessory": 0
     },
-    "revealFlag": "kira_rescued"
+    "revealFlag": "kira_rescued",
+    "portraitAsset": "cast/original_kira.jpg"
   },
   {
     "id": "helena",
@@ -619,6 +620,7 @@
       "outfit": 1,
       "eyes": 0,
       "accessory": 2
-    }
+    },
+    "portraitAsset": "cast/original_helena.jpg"
   }
 ]

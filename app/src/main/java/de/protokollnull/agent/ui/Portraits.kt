@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import de.protokollnull.agent.data.ImportedPortraits
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -45,6 +48,17 @@ object AvatarPalette {
 /** Original, prozedural gezeichnetes Porträt im Akten-Stil (für fiktive Figuren und den Spieler). */
 @Composable
 fun AvatarCanvas(spec: AvatarSpec, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val photo = remember(context, spec.portraitId) { ImportedPortraits.resolve(context, spec.portraitId) }
+    if (photo != null) {
+        AsyncImage(
+            model = photo,
+            contentDescription = "Eigenes Porträt",
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+        )
+        return
+    }
     Canvas(modifier.background(Brush.verticalGradient(listOf(Color(0xFF1A2B40), Color(0xFF0B1422))))) {
         val w = size.width; val h = size.height
         val skin = AvatarPalette.skins[spec.skin.mod(AvatarPalette.skins.size)]

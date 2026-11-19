@@ -68,7 +68,7 @@ object World {
             val w = weeklyTick(data, s)
             s = w.state; msgs += w.messages
         }
-        return Result(s, msgs)
+        return Result(CompanionAssignment.arrive(data, s), msgs)
     }
 
     fun weeklyTick(data: GameData, state: GameState): Result {
@@ -172,7 +172,7 @@ object World {
         }
         s = MissionGenerator.refreshBoard(data, s)
         msgs += "— " + Clock.dateLabel(newDay) + " —"
-        return Result(s, msgs)
+        return Result(CompanionAssignment.arrive(data, s), msgs)
     }
 
     // --- HQ, Räume und NPCs ---------------------------------------------------

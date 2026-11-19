@@ -60,7 +60,8 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String) {
     val def = data.agentById[id]
     val custom = s.customNpcs.firstOrNull { it.id == id }
     val r = Relations.get(data, s, id)
-    val here = World.npcLocation(data, s, id) == s.location
+    val room = World.npcLocation(data, s, id)?.let { data.roomById[it] }
+    val here = room?.id == s.location
     var tab by remember { mutableStateOf("profile") }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader(Relations.displayName(data, s, id), def?.role ?: "Eigene Rekrutierung", onBack = { vm.back() })
@@ -104,7 +105,16 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String) {
                     r.memories.reversed().forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
                 }
                 else -> {
-                    if (!here) GlassPanel(accent = Pn.Warn) { Text("${Relations.displayName(data, s, id)} ist nicht hier. Gehe in den Raum „${World.npcLocation(data, s, id)?.let { data.roomById[it]?.name } ?: "—"}“, um zu interagieren.", style = MaterialTheme.typography.bodySmall) }
+                    if (!here) GlassPanel(accent = Pn.Warn) {
+                        if (room == null) SmallNote("Zurzeit außer Haus. Schau in einem späteren Zeitslot wieder vorbei.")
+                        else {
+                            val lock = World.roomLocked(data, s, room)
+                            ActionButton("In den Raum gehen", Modifier.fillMaxWidth(), secondary = true,
+                                subtitle = lock ?: room.name, enabled = lock == null) {
+                                vm.act(silent = true) { d, st -> World.moveTo(d, st, room.id) }
+                            }
+                        }
+                    }
                     val dialogs = Dialogues.available(data, s, id)
                     dialogs.forEach { d ->
                         ChoiceButton("Gespräch: " + d.title, d.chapter, enabled = here) { vm.back(); vm.act(silent = true) { dd, x -> Dialogues.start(dd, x, d.id) } }

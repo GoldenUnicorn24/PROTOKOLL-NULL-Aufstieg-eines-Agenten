@@ -5,12 +5,17 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import de.protokollnull.agent.data.GameData
-import de.protokollnull.agent.data.SaveMigration
+import de.protokollnull.agent.data.ImportedPortraits
 import de.protokollnull.agent.data.SaveRepository
 import de.protokollnull.agent.data.SettingsStore
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -104,9 +109,9 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     fun newGame() { _screen.value = "creator"; _overlays.value = emptyList() }
 
-    fun startGame(player: PlayerCharacter) {
+    fun startGame(player: PlayerCharacter, companion: CustomNpc? = null) {
         val seed = System.nanoTime() xor player.firstName.hashCode().toLong()
-        val base = GameState(seed = seed, player = player)
+        val base = GameState(seed = seed, player = player, pendingCompanion = companion)
         val withAttrs = applyBackground(base)
         _state.value = withAttrs
         _tab.value = 0
@@ -158,19 +163,42 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     fun exportTo(uri: Uri) {
         val s = _state.value ?: return
-        runCatching {
-            getApplication<Application>().contentResolver.openOutputStream(uri)?.use { it.write(SaveMigration.encode(s).toByteArray()) }
-        }.onSuccess { show(listOf("Spielstand exportiert."), false) }.onFailure { show(listOf("Export fehlgeschlagen."), true) }
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val stream = app.contentResolver.openOutputStream(uri, "wt") ?: error("Datei nicht beschreibbar")
+                    stream.bufferedWriter(Charsets.UTF_8).use { it.write(ImportedPortraits.exportSave(app, s)) }
+                }
+                show(listOf("Spielstand exportiert."), false)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                show(listOf("Export fehlgeschlagen."), true)
+            }
+        }
     }
 
     fun importFrom(uri: Uri) {
-        runCatching {
-            val text = getApplication<Application>().contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } ?: error("leer")
-            SaveMigration.decode(text)
-        }.onSuccess { s ->
-            _state.value = s; _screen.value = "game"; _overlays.value = emptyList(); persist()
-            show(listOf("Spielstand importiert (Schema ${s.schemaVersion})."), false)
-        }.onFailure { show(listOf("Import fehlgeschlagen: Datei ungültig."), true) }
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            try {
+                val s = withContext(Dispatchers.IO) {
+                    val input = app.contentResolver.openInputStream(uri) ?: error("Datei nicht lesbar")
+                    val text = input.bufferedReader().use { it.readText() }
+                    ImportedPortraits.importSave(app, text)
+                }
+                _state.value = s
+                _screen.value = "game"
+                _overlays.value = emptyList()
+                persist()
+                show(listOf("Spielstand importiert (Schema ${s.schemaVersion})."), false)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                show(listOf("Import fehlgeschlagen: Datei ungültig."), true)
+            }
+        }
     }
 
     private fun persist() { _state.value?.let { runCatching { saves.save("auto", it) } } }

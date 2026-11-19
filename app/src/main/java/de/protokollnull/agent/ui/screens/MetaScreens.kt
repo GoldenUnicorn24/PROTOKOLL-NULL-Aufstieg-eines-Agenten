@@ -43,17 +43,8 @@ fun StartScreen(vm: GameViewModel) {
         Modifier.fillMaxSize().systemBarsPadding().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Spacer(Modifier.height(12.dp))
-        Box(Modifier.fillMaxWidth().height(230.dp), contentAlignment = Alignment.Center) {
-            RadarEmblem(Modifier.size(220.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("DIVISION · AKTE 7", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-                Text("PROTOKOLL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 54.sp, lineHeight = 56.sp), color = Pn.Text)
-                Text("NULL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 54.sp, lineHeight = 56.sp, letterSpacing = 12.sp), color = Pn.Accent)
-            }
-        }
-        Text("AUFSTIEG EINES AGENTEN", style = MaterialTheme.typography.labelLarge, color = Pn.Muted, modifier = Modifier.align(Alignment.CenterHorizontally))
-        Spacer(Modifier.height(8.dp))
+        de.protokollnull.agent.ui.ScenePanel("hq", Modifier.fillMaxWidth().height(235.dp),
+            "Aufstieg eines Agenten", "PROTOKOLL NULL", cover = true)
         if (auto != null) {
             GlassPanel(onClick = { vm.load("auto") }) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -74,7 +65,7 @@ fun StartScreen(vm: GameViewModel) {
             ActionButton("Credits", Modifier.weight(1f), secondary = true, icon = PnIcons.Star) { vm.open(Overlay.Credits) }
         }
         Spacer(Modifier.height(8.dp))
-        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v0.3",
+        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v0.4",
             style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
 }
@@ -221,7 +212,7 @@ fun CreditsScreen(vm: GameViewModel) {
             item {
                 GlassPanel {
                     Text("KI-Hinweis", style = MaterialTheme.typography.titleSmall)
-                    Text("Code, Texte und Originalgrafiken wurden mit KI-Unterstützung (ChatGPT für die Grundlage, Claude für die Implementierung) erstellt. Fiktive Figuren (Voss, Maya, Ethan, eigene Rekruten) nutzen prozedural gezeichnete Original-Avatare.", style = MaterialTheme.typography.bodySmall)
+                    Text("Die neun Szenenbilder und die Porträts von Voss, Maya, Ethan, Kira und Helena wurden für dieses Spiel mit OpenAI ImageGen gestaltet. Sie sind offline enthalten. Code, Texte und Originalgrafiken entstanden mit KI-Unterstützung. Eigene Porträts wählst du aus deiner persönlichen Bildersammlung.", style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

@@ -1,15 +1,15 @@
 [
   {
     "id": "prolog_01",
-    "chapter": "Prolog · 13 Jahre",
+    "chapter": "Gleis neun",
     "age": 13,
     "speakerId": null,
-    "text": "Hauptbahnhof, ein grauer Novembermorgen. Deine Eltern streiten liebevoll über den richtigen Bahnsteig, du hältst die Fahrkarten. Dann bricht die Welt in einem einzigen, viel zu lauten Augenblick auseinander. Als der Staub sich legt, ist es still. Zu still.",
+    "text": "Beim Umsteigen spielt ihr immer dasselbe Spiel. Deine Mutter liest die Abfahrtszeiten vor, dein Vater erfindet zu jedem Ziel einen Beruf für sich. „Ulm? Klarinettist.“ Er kann keine Noten lesen. Du malst mit seinem Bleistift eine Klarinette auf die Rückseite der Fahrkarte. Der Zug hat elf Minuten Verspätung. Zeit für einen Kaffee.\n\nAls du vom Kiosk zurückkommst, liegen Glassplitter in beiden Bechern. Die Anzeigetafel ist schwarz. Jemand ruft nach einer Decke. Von der Bank, auf der deine Eltern saßen, siehst du nur noch ein Stück grüne Lehne.",
     "choices": [
       {
         "id": "help",
         "text": "Du kriechst zu einem weinenden Kind unter einer Bank und hältst seine Hand, bis Helfer kommen.",
-        "nextNode": "prolog_02",
+        "nextNode": "gleis_kind",
         "effects": {
           "attributes": {
             "charisma": 3,
@@ -23,7 +23,7 @@
       {
         "id": "run",
         "text": "Du rennst durch den Rauch zum Ausgang und holst die ersten Sanitäter.",
-        "nextNode": "prolog_02",
+        "nextNode": "gleis_hilfe",
         "effects": {
           "attributes": {
             "fitness": 4,
@@ -37,7 +37,7 @@
       {
         "id": "watch",
         "text": "Du siehst einen Mann im grauen Mantel, der viel zu ruhig zum Ausgang geht – und prägst dir sein Gesicht ein.",
-        "nextNode": "prolog_02",
+        "nextNode": "gleis_zeuge",
         "effects": {
           "attributes": {
             "perception": 5
@@ -47,19 +47,95 @@
           ]
         }
       }
-    ]
+    ],
+    "image": "platform"
+  },
+  {
+    "id": "gleis_kind",
+    "chapter": "Eine Hand",
+    "age": 13,
+    "speakerId": null,
+    "text": "Das Kind heißt Emil und kann bis zwölf zählen. Immer wenn ihr bei zwölf seid, fangt ihr wieder an. Als eine Sanitäterin neben euch kniet, hat Emil eine Bitte. „Sag meiner Oma, ich hatte die Mütze auf.“ Du versprichst es. Erst draußen merkst du, dass du gar nicht gefragt hast, wie seine Oma heißt.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Der Sanitäterin Emils Nachricht mitgeben.",
+        "nextNode": "aufnahme"
+      }
+    ],
+    "image": "platform"
+  },
+  {
+    "id": "gleis_hilfe",
+    "chapter": "Ein Platz im Warmen",
+    "age": 13,
+    "speakerId": null,
+    "text": "An der Tür des Bahnhofs steht ein Bus, innen brennt Licht. Du sagst dem Fahrer, dass es drinnen Menschen gibt, die frieren. Er stellt den Motor an und öffnet beide Türen. Zwei Stunden später bringt er dir aus dem Fundbüro eine trockene Jacke. Du hast vergessen, dass dir selbst kalt ist.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Auf den vordersten Sitz steigen und auf die Rückkehr der Helfer warten.",
+        "nextNode": "aufnahme"
+      }
+    ],
+    "image": "platform"
+  },
+  {
+    "id": "gleis_zeuge",
+    "chapter": "Der graue Mantel",
+    "age": 13,
+    "speakerId": null,
+    "text": "Du meldest dich bei der Frau, die Zeugenaussagen aufnimmt. Einen grauen Mantel hast du gesehen, sagst du. Gefragt nach dem Gesicht fallen dir drei verschiedene ein. Die Frau streicht das Wort „Täter“ auf ihrem Block durch. „Ein Mantel reicht fürs Erste.“ Sie lässt dich den Satz selbst noch einmal lesen.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Bei dem bleiben, was du wirklich gesehen hast.",
+        "nextNode": "aufnahme"
+      }
+    ],
+    "image": "platform"
+  },
+  {
+    "id": "aufnahme",
+    "chapter": "Die Fundstelle",
+    "age": 13,
+    "speakerId": null,
+    "text": "Gegen Abend bringt eine Polizeibeamtin dir die Sachen deiner Eltern. Sie sagt „gestorben“ und bleibt sitzen, während du versuchst, den Knoten im Beutel aufzubekommen. Darin liegen ein Schlüsselbund, zwei Portemonnaies und der Bleistift. In der Fundliste fehlt der Stift.\n\n„Wir können ihn nachtragen“, sagt sie. Ihr Kugelschreiber schwebt über dem Durchschlag. Zum ersten Mal heute wartet ein Erwachsener auf deine Antwort.",
+    "choices": [
+      {
+        "id": "record",
+        "text": "„Bitte schreiben Sie ihn dazu. Er hat meinem Vater gehört.“",
+        "nextNode": "prolog_02",
+        "effects": {
+          "setFlags": [
+            "pencil_recorded"
+          ]
+        }
+      },
+      {
+        "id": "keep",
+        "text": "Den Stift in die Jackentasche stecken. „Den behalte ich.“",
+        "nextNode": "prolog_02",
+        "effects": {
+          "setFlags": [
+            "pencil_private"
+          ]
+        }
+      }
+    ],
+    "image": "hospital"
   },
   {
     "id": "prolog_02",
-    "chapter": "Prolog · 13 Jahre",
+    "chapter": "Besuchszeit",
     "age": 13,
     "speakerId": null,
-    "text": "Drei Wochen später. Ein Zimmer im Kinderheim, das nach Desinfektionsmittel riecht. Deine Eltern stehen auf einer Liste mit 41 Namen. Ein Mann mit randloser Brille setzt sich ohne zu fragen an dein Bett. „Mein Name ist Adrian Voss. Die Leute, die das getan haben, werden wieder zuschlagen. Ich kann dir beibringen, sie aufzuhalten.“",
+    "text": "Drei Wochen später im Kinderheim. Im Radio werden die Namen der 41 Menschen vorgelesen, die bei dem Anschlag gestorben sind. Der Sprecher betont euren Nachnamen falsch. Du schaltest aus.\n\nEin Besucher mit randloser Brille wartet im Flur, bis du ihn hereinbittest. Adrian Voss. Er sagt, sein Institut könnte dich aufnehmen. Unterricht, ein Zimmer, eine Aufgabe. „Wir untersuchen Dinge, für die es im Radio nie genug Zeit gibt.“ Er legt einen Aufnahmebogen auf den Tisch. Die Zeile für deine Unterschrift ist noch frei.",
     "choices": [
       {
         "id": "answers",
         "text": "„Ich will wissen, wer es war.“",
-        "nextNode": "prolog_03",
+        "nextNode": "antwort_wahrheit",
         "effects": {
           "setFlags": [
             "motive_truth"
@@ -69,7 +145,7 @@
       {
         "id": "protect",
         "text": "„Ich will, dass so etwas niemandem mehr passiert.“",
-        "nextNode": "prolog_03",
+        "nextNode": "antwort_schutz",
         "effects": {
           "setFlags": [
             "motive_protect"
@@ -79,7 +155,7 @@
       {
         "id": "nothing",
         "text": "„Ich habe sowieso nichts mehr zu verlieren.“",
-        "nextNode": "prolog_03",
+        "nextNode": "antwort_leere",
         "effects": {
           "setFlags": [
             "motive_void"
@@ -87,19 +163,95 @@
           "stress": 5
         }
       }
-    ]
+    ],
+    "image": "hospital"
+  },
+  {
+    "id": "antwort_wahrheit",
+    "chapter": "Die erste Frage",
+    "age": 13,
+    "speakerId": null,
+    "text": "„Wer hat den Anschlag befohlen?“ Voss schiebt die Brille nach oben. „Ich kenne die Antwort nicht.“ Es ist der erste nützliche Satz, den du von ihm hörst. Du verlangst, dass er ihn auf die Rückseite des Bogens schreibt. Er tut es. Später wirst du dich fragen, wie oft er diese Antwort geübt hat.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Den Bogen umdrehen und unterschreiben.",
+        "nextNode": "schlafsaal"
+      }
+    ],
+    "image": "hospital"
+  },
+  {
+    "id": "antwort_schutz",
+    "chapter": "Ein Versprechen",
+    "age": 13,
+    "speakerId": null,
+    "text": "„Und wenn morgen wieder ein Zug ausfällt? Wer kümmert sich um die Leute am Bahnsteig?“ Voss sucht nach Worten. Du schiebst ihm den Aufnahmebogen hin. „Keine großen Versprechen. Sagen Sie mir einfach, wo ich anfangen kann.“ Er nennt dir den Abfahrtstag und leiht dir seinen Stift.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Den Abfahrtstag im Kalender einkreisen.",
+        "nextNode": "schlafsaal"
+      }
+    ],
+    "image": "hospital"
+  },
+  {
+    "id": "antwort_leere",
+    "chapter": "Das leere Feld",
+    "age": 13,
+    "speakerId": null,
+    "text": "Voss wartet auf eine Frage. Dir fällt nur ein, dass am Mittwoch die Bettwäsche gewechselt wird und du am Donnerstag wieder in die Schule sollst. „Kann ich dort eine Weile sein, ohne darüber zu reden?“ Er nickt. Zum Abschied gibt er dir einen Fahrplan. Das Institut hat keinen eigenen Halt.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Die letzte Haltestelle auf dem Fahrplan suchen.",
+        "nextNode": "schlafsaal"
+      }
+    ],
+    "image": "hospital"
+  },
+  {
+    "id": "schlafsaal",
+    "chapter": "Die siebte Schublade",
+    "age": 13,
+    "speakerId": null,
+    "text": "Im Schlafsaal haben die Schubladen Nummern. Deine klemmt. Das Mädchen gegenüber drückt mit dem Knie gegen das Holz, bis es nachgibt. „Nummer vier“, sagt sie und zeigt auf ihre eigene Lade. Als das Licht ausgeht, hörst du sie noch einmal. „Kira. Falls du mich im Dunkeln brauchst.“\n\nDu hast deinen Namen den ganzen Tag nicht gehört.",
+    "choices": [
+      {
+        "id": "name",
+        "text": "Ihr im Dunkeln deinen Vornamen sagen.",
+        "nextNode": "prolog_03",
+        "effects": {
+          "setFlags": [
+            "kira_knows_name"
+          ]
+        }
+      },
+      {
+        "id": "knock",
+        "text": "Zweimal an die Wand klopfen. Sie klopft zweimal zurück.",
+        "nextNode": "prolog_03",
+        "effects": {
+          "setFlags": [
+            "kira_knock"
+          ]
+        }
+      }
+    ],
+    "image": "campus"
   },
   {
     "id": "prolog_03",
-    "chapter": "Projekt PHOENIX · 14 Jahre",
+    "chapter": "Die verschwundene Minute",
     "age": 14,
     "speakerId": "voss",
-    "text": "Eine stillgelegte Kaserne in den Bergen, offiziell ein Internat für Hochbegabte. Sieben Kinder, sieben Nummern. Du bist Kandidat 7. Voss spricht leise und lobt selten. „Jeder von euch erhält einen Schwerpunkt. Wählt klug – PHOENIX formt, was ihr mitbringt.“",
+    "text": "Ein Jahr später. Voss stellt sieben Eieruhren auf den Tisch. In jeder läuft der Sand etwas anders. Euer Auftrag ist, die Frühstückspause zu vermessen. Die Küche meldet elf Minuten, die Aufsicht zehn. Die Stunde danach fehlt auf allen Plänen.\n\nVoss schiebt dir eine Messingmarke zu. Auf der Rückseite ist eine Sieben eingeprägt. „Ihr könnt nicht alle alles lernen. Such dir eine Aufgabe.“",
     "choices": [
       {
         "id": "body",
-        "text": "Körper: Ausdauer, Nahkampf, Präzision.",
-        "nextNode": "prolog_04",
+        "text": "Mit den Tabletts den ganzen Weg zwischen Küche und Hof gehen.",
+        "nextNode": "uebung_hof",
         "effects": {
           "attributes": {
             "fitness": 4,
@@ -112,8 +264,8 @@
       },
       {
         "id": "mind",
-        "text": "Verstand: Sprachen, Systeme, Analyse.",
-        "nextNode": "prolog_04",
+        "text": "Die Zeiten nebeneinanderlegen und die Abweichungen vergleichen.",
+        "nextNode": "uebung_uhr",
         "effects": {
           "attributes": {
             "intellect": 5,
@@ -126,8 +278,8 @@
       },
       {
         "id": "mask",
-        "text": "Maske: Legenden, Psychologie, Täuschung.",
-        "nextNode": "prolog_04",
+        "text": "Die Frau an der Essensausgabe nach ihrer Schicht fragen.",
+        "nextNode": "uebung_kueche",
         "effects": {
           "attributes": {
             "charisma": 5,
@@ -138,19 +290,95 @@
           }
         }
       }
-    ]
+    ],
+    "image": "campus"
+  },
+  {
+    "id": "uebung_hof",
+    "chapter": "Der letzte Weg",
+    "age": 14,
+    "speakerId": null,
+    "text": "Mit zwei vollen Tabletts kommst du nur langsam um die Ecke. Auf dem Rückweg bleibst du hinter dem kleinsten Kind der Gruppe. Als es sein Brot eingepackt hat, ist die Uhr der Aufsicht längst abgelaufen. Du schreibst seine Zeit auf. Deine Arme zittern. Kira nimmt dir wortlos das zweite Tablett ab.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Die Zeit des letzten Kindes ins Heft eintragen.",
+        "nextNode": "rueckbrief"
+      }
+    ],
+    "image": "campus"
+  },
+  {
+    "id": "uebung_uhr",
+    "chapter": "Zwei Spalten",
+    "age": 14,
+    "speakerId": null,
+    "text": "Du zeichnest zwei Spalten. Die Aufsicht stoppt, wenn der erste Teller leer ist. Die Köchin stoppt, wenn sie den letzten bekommt. Beide Uhren gehen richtig. Niemand hat je beide Frauen im selben Raum gefragt. Kira liest über deine Schulter. „Kann ich das Blatt haben, wenn du fertig bist?“",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Kira das Blatt überlassen.",
+        "nextNode": "rueckbrief"
+      }
+    ],
+    "image": "archives"
+  },
+  {
+    "id": "uebung_kueche",
+    "chapter": "Hinter der Ausgabe",
+    "age": 14,
+    "speakerId": null,
+    "text": "Die Köchin will erst wissen, wer fragt. Als du die Messingmarke in die Tasche steckst, darfst du beim Abwasch helfen. Es sind die elf Minuten zwischen dem letzten Teller und dem ersten Kind im Unterricht, die ihr Sorgen machen. „Die rennen mit vollem Bauch.“ Auf dem Rückweg wartet Kira mit zwei übrig gebliebenen Äpfeln.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Mit Kira den längeren Weg zurückgehen.",
+        "nextNode": "rueckbrief"
+      }
+    ],
+    "image": "campus"
+  },
+  {
+    "id": "rueckbrief",
+    "chapter": "Post ohne Empfänger",
+    "age": 15,
+    "speakerId": null,
+    "text": "An deinem fünfzehnten Geburtstag schenkt Kira dir einen Briefumschlag. Darauf steht „An mich, wenn ich selber einkaufen darf“. Ihr Inhalt ist eine Einkaufsliste. Milch, Pflaumen, das billigste Spülmittel. Nach drei Jahren will sie sich an einem Samstag über Preise ärgern können. Das scheint dir plötzlich ein ungeheurer Wunsch.\n\nIhr schiebt den Brief hinter die lockere Leiste zwischen euren Betten. „Falls wir getrennt werden“, sagt sie, „weißt du, wo er steckt.“",
+    "choices": [
+      {
+        "id": "plums",
+        "text": "„Pflaumen, sogar im Winter?“ Kira ergänzt „zur Not aus dem Glas“.",
+        "nextNode": "prolog_04",
+        "effects": {
+          "setFlags": [
+            "kira_plums"
+          ]
+        }
+      },
+      {
+        "id": "key",
+        "text": "Ihr zeigen, wie viel ein einzelner Schlüssel auf dem Papier Platz hätte. Sie zeichnet ihn nach.",
+        "nextNode": "prolog_04",
+        "effects": {
+          "setFlags": [
+            "kira_key"
+          ]
+        }
+      }
+    ],
+    "image": "archives"
   },
   {
     "id": "prolog_04",
-    "chapter": "Projekt PHOENIX · 15 Jahre",
+    "chapter": "Die Nacht im Büro",
     "age": 15,
     "speakerId": "voss",
-    "text": "Kandidatin 4, Kira, ist deine einzige Freundin hier. Eines Nachts ruft Voss dich zu sich. „Kira plant zu fliehen. Du wirst ihr Vertrauen nutzen und mir sagen, wann.“ Seine Brille spiegelt das Neonlicht. Er wartet.",
+    "text": "Eine Woche später holt Voss dich aus dem Unterricht. Vor ihm steht Kiras gepackte Tasche. Obenauf liegt ein einzelner linker Handschuh. „Den rechten hat sie noch“, sagt er. „Wohin geht sie heute Nacht?“\n\nKira hat dir von einem Bus erzählt, der morgens vor dem Tor die erste Schicht absetzt. Sie will wissen, ob er auf dem Rückweg auch jemanden mitnimmt. Mehr hat sie nicht gesagt. Voss zieht einen zweiten Stuhl heran.",
     "choices": [
       {
         "id": "obey",
         "text": "Du gehorchst. PHOENIX ist alles, was du hast.",
-        "nextNode": "prolog_05",
+        "nextNode": "bericht_geben",
         "effects": {
           "setFlags": [
             "phoenix_obedient"
@@ -164,7 +392,7 @@
       {
         "id": "refuse",
         "text": "Du weigerst dich – und nimmst die Strafe in Kauf.",
-        "nextNode": "prolog_05",
+        "nextNode": "bericht_schweigen",
         "effects": {
           "setFlags": [
             "phoenix_defiant"
@@ -178,7 +406,7 @@
       {
         "id": "warn",
         "text": "Du sagst Ja – und warnst Kira noch in derselben Nacht.",
-        "nextNode": "prolog_05",
+        "nextNode": "bericht_warnen",
         "effects": {
           "setFlags": [
             "phoenix_double",
@@ -191,19 +419,70 @@
           "stress": 12
         }
       }
-    ]
+    ],
+    "image": "archives"
+  },
+  {
+    "id": "bericht_geben",
+    "chapter": "Vor Schichtbeginn",
+    "age": 15,
+    "speakerId": null,
+    "text": "Du erzählst Voss von dem Bus. Am Morgen ist das Tor geschlossen. Von deinem Platz im Unterricht siehst du, wie eine Frau in Küchenkleidung durch den Regen zum Personaleingang läuft. Kira kommt als Letzte. Sie legt den linken Handschuh in deine Schublade. Über den Bus redet ihr nicht mehr.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Den Handschuh in ihrer Schublade zurücklassen.",
+        "nextNode": "prolog_05"
+      }
+    ],
+    "image": "archives"
+  },
+  {
+    "id": "bericht_schweigen",
+    "chapter": "Die Stunde danach",
+    "age": 15,
+    "speakerId": null,
+    "text": "Du schiebst den zweiten Stuhl unter den Tisch. Voss lässt dich allein im Büro sitzen, bis es hell ist. Als die Köchin zur Arbeit kommt, darfst du gehen. Im Flur kreuzt Kira deinen Weg. „Ich hab auf dich gewartet.“ Für ein paar Sekunden seid ihr beide wütend auf die falsche Person.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Ihr erzählen, wo du die Nacht verbracht hast.",
+        "nextNode": "prolog_05"
+      }
+    ],
+    "image": "archives"
+  },
+  {
+    "id": "bericht_warnen",
+    "chapter": "Die verpasste Abfahrt",
+    "age": 15,
+    "speakerId": null,
+    "text": "Kira hört dir bis zum Ende zu. Dann nimmt sie die Schuhe wieder ab. Ihr sitzt in Strümpfen hinter der Leiste und hört, wie unten der Bus hält. Er fährt ohne sie weiter. „Wenn er mich morgen fragt“, sagt sie, „werde ich behaupten, ich hätte verschlafen.“ Erst als du lachst, merkst du, dass das ein Witz war.",
+    "choices": [
+      {
+        "id": "weiter",
+        "text": "Mit ihr warten, bis es hell wird.",
+        "nextNode": "prolog_05"
+      }
+    ],
+    "image": "archives"
   },
   {
     "id": "prolog_05",
-    "chapter": "Projekt PHOENIX · 15 Jahre",
+    "chapter": "Inventur",
     "age": 15,
     "speakerId": null,
-    "text": "Kurz vor deinem sechzehnten Geburtstag wird PHOENIX aufgelöst – über Nacht, ohne Erklärung. Die anderen Kandidaten verschwinden in Bussen ohne Kennzeichen. Voss drückt dir einen Umschlag in die Hand: eine neue Identität, eine Versetzungsorder. „Die Division. Dort wird niemand wissen, wer du bist. Sorg dafür, dass es so bleibt.“",
+    "text": "Kurz vor deinem sechzehnten Geburtstag riecht das Haus nach nasser Pappe. Über Nacht hat jemand alle Schubladen ausgebaut. Hinter der Leiste findest du nur noch den rechteckigen hellen Fleck, wo Kiras Umschlag lag. Draußen fahren zwei Busse in entgegengesetzte Richtungen.\n\nVoss gibt dir eine Versetzungsorder, eine neue Identität und ein Foto aus deiner alten Akte. Auf dem Bild zeichnest du gerade auf die Rückseite einer Fahrkarte. Du erinnerst dich an die Zeichnung. Du erinnerst dich an niemanden mit einer Kamera.",
     "choices": [
       {
         "id": "accept",
-        "text": "Den Umschlag öffnen.",
-        "nextNode": "prolog_06"
+        "text": "Das Foto in der Versetzungsorder aufbewahren.",
+        "nextNode": "prolog_06",
+        "effects": {
+          "setFlags": [
+            "kept_station_photo"
+          ]
+        }
       },
       {
         "id": "burn",
@@ -218,14 +497,15 @@
           }
         }
       }
-    ]
+    ],
+    "image": "archives"
   },
   {
     "id": "prolog_06",
-    "chapter": "Versetzung · 16 Jahre",
+    "chapter": "Übergabe",
     "age": 16,
     "speakerId": null,
-    "text": "Ein schwarzer Transporter, verdunkelte Scheiben, zwei Stunden Fahrt. Dann eine Tiefgarage, eine Schleuse, ein Fingerabdruckscanner, der dich bereits kennt. Deine alte Identität ist verschlüsselt. Nur drei Menschen kennen die Wahrheit – und du weißt nicht, wer sie sind.",
+    "text": "Der Transporter hält in einer Tiefgarage. Ein Scanner erkennt deinen Finger beim ersten Versuch. Auf dem Empfangsbogen stehen ein Deckname und drei versiegelte Freigaben. Das Feld „Im Notfall benachrichtigen“ ist leer.\n\nHinter der Scheibe sitzt ein Mann in einem ausgewaschenen Pullover. Er isst eine Birne und liest nebenbei deine Akte. Als du die Hand vom Scanner nimmst, steht er auf. „Bevor wir anfangen. Hast du heute schon was gegessen?“ Nach drei Jahren PHOENIX brauchst du einen Moment für die Antwort.",
     "choices": [
       {
         "id": "enter",
@@ -234,6 +514,7 @@
           "xp": 0
         }
       }
-    ]
+    ],
+    "image": "hq"
   }
 ]
