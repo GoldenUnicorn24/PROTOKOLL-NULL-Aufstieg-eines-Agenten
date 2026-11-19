@@ -10,3 +10,6 @@ local.properties
 *.keystore
 *.jks
 captures/
+
+# Never commit local-only cast portraits.
+app/src/private/

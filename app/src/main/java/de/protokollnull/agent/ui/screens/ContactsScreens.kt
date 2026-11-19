@@ -8,6 +8,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import de.protokollnull.agent.data.PrivateCastPortraits
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -73,10 +75,14 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String) {
                     KeyValue("Fraktion", data.factionById[def?.factionId ?: "division"]?.name ?: "Division")
                     if (custom != null) KeyValue("Rang", data.rank(Social.customRank(s, custom)).name)
                     KeyValue("Aufenthalt", World.npcLocation(data, s, id)?.let { data.roomById[it]?.name } ?: "außer Haus")
-                    if (def?.actorName != null && data.portraitFor(id) != null) Text("Foto: ${def.actorName} (CC, Wikimedia Commons)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    val device = LocalContext.current
+                    if (def?.actorName != null && data.portraitFor(id) != null &&
+                        PrivateCastPortraits.imported(device, id) == null && PrivateCastPortraits.bundled(device, id) == null
+                    ) Text("Foto: ${def.actorName} (CC, Wikimedia Commons)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     if (Romance.romanceable(data, s, id) && r.romanceStage > 0) Pill(Romance.stageName(data, s, id, r.romanceStage), Pn.Violet)
                 }
             }
+            if (def?.seriesCharacter == true) CastPortraitUpload(id, def.name)
             ChipRow(listOf("profile" to "Akte", "relation" to "Beziehung", "talk" to "Interaktion"), tab) { tab = it }
             when (tab) {
                 "profile" -> {

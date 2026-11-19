@@ -17,6 +17,10 @@ android {
         versionCode = 4
         versionName = "0.4.0-beta"
     }
+    // Optional local-only assets: app/src/private/assets/ (gitignored).
+    sourceSets {
+        getByName("main") { assets.srcDir("src/private/assets") }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
