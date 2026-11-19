@@ -94,7 +94,7 @@ class ScreenshotTest {
         vm.closeOverlays(); vm.open(Overlay.Calendar); shot("20_kalender")
 
         // v0.5: Zeitplan-Bericht, Karriere, Trainingsplaner, Prüfung, Ausrüstungsprofile
-        vm.closeOverlays()
+        vm.closeOverlays(); compose.waitForIdle()
         vm.act { d, s -> Simulation.run(d, s, 30) }
         vm.dismissToast(); vm.open(Overlay.Calendar); shot("25_zeitplan_bericht")
         vm.closeOverlays(); vm.open(Overlay.Ranks); shot("26_karriere")

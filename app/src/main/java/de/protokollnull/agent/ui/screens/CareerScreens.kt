@@ -240,10 +240,11 @@ fun ExamScreen(vm: GameViewModel, s: GameState) {
 fun SimulationScreen(vm: GameViewModel, s: GameState) {
     var tab by remember { mutableStateOf(if (s.simReports.lastOrNull()?.endDay == s.clock.day) "report" else "plan") }
     val plan = Simulation.normalizedPlan(s)
+    LaunchedEffect(s.simReports.size) { if (s.simReports.lastOrNull()?.endDay == s.clock.day) tab = "report" }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Zeitplan", Clock.dateLabel(s.clock.day) + " · " + Clock.slotNames[s.clock.slot], onBack = { vm.back() })
         Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("plan" to "1 · Wochenplan", "run" to "2 · Zeitraum", "report" to "3 · Bericht").forEach { (id, l) ->
+            listOf("plan" to "Plan", "run" to "Zeitraum", "report" to "Bericht").forEach { (id, l) ->
                 FilterChip(selected = tab == id, onClick = { tab = id }, label = { Text(l) }, enabled = id != "report" || s.simReports.isNotEmpty())
             }
         }
