@@ -124,7 +124,7 @@ object Progression {
         val rng = Rng(Rng.mix(state.seed, day.toLong(), state.clock.slot.toLong(), trainingId.hashCode().toLong(), state.rolls.toLong()))
         val cap = Stats.attributeCap(p.level)
         val current = p.attributes[t.attribute] ?: 30
-        val deptBonus = ((state.director?.departments?.get("training") ?: 1) - 1) * 6
+        val deptBonus = (Directorate.power(data, state, "training") - 1) * 6
         val presentTrainer = trainerId?.takeIf { World.npcLocation(data, state, it) == state.location }
         val tBonus = trainerBonus(data, state, presentTrainer, t.attribute)
         val partnerBonus = if (partnerId != null) 6 else 0
@@ -208,7 +208,7 @@ object Progression {
             player = p.copy(rank = rank, skillPoints = p.skillPoints + 1, reputation = p.reputation + 10),
             flags = state.flags + "rank_$rank"
         )
-        if (rank == 12 && s.director == null) s = s.copy(director = DirectorState())
+        if (rank >= 10) s = Directorate.ensure(data, s)
         return s
     }
 

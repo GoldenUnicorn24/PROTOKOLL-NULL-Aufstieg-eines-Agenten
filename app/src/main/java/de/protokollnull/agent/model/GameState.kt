@@ -2,7 +2,7 @@ package de.protokollnull.agent.model
 
 import kotlinx.serialization.Serializable
 
-const val CURRENT_SCHEMA = 4
+const val CURRENT_SCHEMA = 5
 
 /** Attribute des Spielercharakters (0..100). */
 object Attr {
@@ -332,7 +332,10 @@ data class GameState(
     // --- v0.6: Living Division (Default → v0.4/v0.5-kompatibel)
     val living: LivingState = LivingState(),
     // --- v0.7: Shadow Operations (Default → v0.4–v0.6-kompatibel)
-    val ops: OpsState = OpsState()
+    val ops: OpsState = OpsState(),
+    // --- v0.8: Director's Legacy (Default → v0.4–v0.7-kompatibel)
+    val lead: LeadershipState = LeadershipState(),
+    val life: PrivateLife = PrivateLife()
 )
 
 @Serializable

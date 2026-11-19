@@ -147,6 +147,49 @@ class ScreenshotTest {
         vm.closeOverlays(); vm.open(Overlay.Recruit); shot("21_rekrutierungseditor")
         vm.update { it.copy(player = it.player.copy(rank = 12), director = DirectorState()) }
         vm.closeOverlays(); vm.open(Overlay.Director); shot("22_direktorat")
+        // v0.8: Director's Legacy – Führungscockpit, Delegation, Standorte, Dilemma, Berichte, Privatleben, Personalakte 2.0
+        vm.update { s0 ->
+            var x = s0.copy(team = listOf("alex", "birkhoff", "thom"), player = s0.player.copy(credits = 8000, energy = 100))
+            listOf("alex", "birkhoff", "thom", "sonya", "owen").forEach { id ->
+                x = x.copy(living = x.living.copy(lives = x.living.lives + (id to Life.life(vm.data, x, id).copy(status = LifeStatus.DUTY, statusUntil = -1, rank = 5, mood = 80, stress = 15))))
+                x = Relations.update(vm.data, x, id) { it.copy(loyalty = 90, trust = 75) }
+            }
+            x = Command.setRole(vm.data, x, "alex", "support").state
+            x = Command.setRole(vm.data, x, "birkhoff", "tech").state
+            x = Command.setRole(vm.data, x, "thom", "recon").state
+            x.copy(lead = x.lead.copy(cohesion = 64, teamWins = 7, teamLosses = 1))
+        }
+        vm.closeOverlays(); vm.open(Overlay.Command("team")); shot("42_fuehrungscockpit")
+        vm.update { s0 ->
+            var x = Ops.refresh(vm.data, s0)
+            val c = Ops.generate(vm.data, x, x.clock.day, 991, 5151L, forced = Ops.archetypeById.getValue("data"))!!.copy(id = "SHOT_DEL", difficulty = 2, complicationId = "none", chainId = null, caseId = null, maxTeam = 2)
+            x = x.copy(ops = x.ops.copy(contracts = x.ops.contracts + c))
+            x = Delegations.prepare(vm.data, x, c.id, listOf("sonya", "owen"), "owen").state
+            x
+        }
+        vm.closeOverlays(); vm.open(Overlay.Command("delegation")); shot("43_delegation")
+        vm.update { s0 ->
+            var x = Directorate.earn(s0, 20000)
+            x = Sites.build(vm.data, x, "safehouse").state
+            x = Sites.build(vm.data, x, "analysis").state
+            x = x.copy(lead = x.lead.copy(sites = x.lead.sites + ("safehouse" to x.lead.sites.getValue("safehouse").copy(staff = listOf("sonya")))))
+            x.copy(lead = x.lead.copy(hqModules = mapOf("training_hall" to 2, "lounge" to 1)))
+        }
+        vm.closeOverlays(); vm.open(Overlay.Command("sites")); shot("44_standorte")
+        vm.update { it.copy(lead = it.lead.copy(pendingDilemma = "leak", dilemmaDay = it.clock.day)) }
+        vm.closeOverlays(); vm.open(Overlay.Director); shot("45_direktorat_dilemma")
+        vm.update { s0 -> val w = Directorate.weekly(vm.data, s0.copy(lead = s0.lead.copy(pendingDilemma = null, lastFinanceWeek = -1))).state; w.copy(lead = w.lead.copy(pendingDilemma = null)) }
+        vm.closeOverlays(); vm.open(Overlay.Command("reports")); shot("46_wochenbericht")
+        vm.update { s0 ->
+            var x = Home.move(vm.data, s0.copy(player = s0.player.copy(credits = 9000)), "upscale").state
+            listOf("bed", "music", "plants", "desk", "table").forEach { f -> x = Home.buyFurniture(vm.data, x, f).state }
+            x.copy(life = x.life.copy(hobbies = mapOf("Fotografie" to 3, "Schach" to 2), pendingEvent = null))
+        }
+        vm.closeOverlays(); vm.open(Overlay.City("home")); shot("47_stadt_privatleben")
+        vm.update { it.copy(life = it.life.copy(pendingEvent = Home.events.first { e -> e.npcId == null && e.choices.none { c -> c.needsFurniture != null } }.id, eventDay = it.clock.day)) }
+        vm.closeOverlays(); vm.open(Overlay.City("event")); shot("48_alltagsereignis")
+        vm.update { it.copy(life = it.life.copy(pendingEvent = null)) }
+        vm.closeOverlays(); vm.open(Overlay.Npc("thom", "duty")); shot("49_personalakte_dienst")
         vm.closeOverlays(); vm.open(Overlay.Saves); shot("23_spielstaende")
         vm.closeOverlays()
         vm.update { it.copy(flags = it.flags + setOf("ending_order", "voss_arrested", "kira_rescued", "nikita_ally")) }

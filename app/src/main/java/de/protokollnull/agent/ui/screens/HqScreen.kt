@@ -42,6 +42,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
         }
         item { LivingHqCards(vm, s) }
         item { OpsHqCard(vm, s) }
+        item { LeadershipHqCard(vm, s) }
         if (quest != null) item {
             GlassPanel(onClick = { vm.open(Overlay.Quests) }) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -175,7 +176,7 @@ private fun actionIcon(a: String) = when (a) {
     "socialize" -> PnIcons.People; "training" -> PnIcons.Fist; "range" -> PnIcons.Target; "treat" -> PnIcons.Cross
     "shop", "repair" -> PnIcons.Bag; "missions" -> PnIcons.Radar; "tech_lab" -> PnIcons.Chip; "therapy" -> PnIcons.Brain
     "promotion" -> PnIcons.Star; "director_desk" -> PnIcons.Crown; "research" -> PnIcons.Archive; "team" -> PnIcons.People
-    "cafe" -> PnIcons.Food; "apartment" -> PnIcons.Hq; "cover_job" -> PnIcons.City; "study" -> PnIcons.Brain
+    "cafe" -> PnIcons.Food; "apartment" -> PnIcons.Hq; "cover_job" -> PnIcons.City; "city" -> PnIcons.City; "command" -> PnIcons.People; "study" -> PnIcons.Brain
     else -> PnIcons.Chevron
 }
 
@@ -197,7 +198,9 @@ private fun roomAction(vm: GameViewModel, s: GameState, a: String) {
         "research" -> vm.act { d, st -> World.research(d, st) }
         "team" -> vm.open(Overlay.Team)
         "cafe" -> vm.act { d, st -> World.cafe(d, st) }
-        "apartment" -> vm.act { d, st -> World.rentApartment(d, st) }
-        "cover_job" -> vm.act { d, st -> World.takeCoverJob(d, st) }
+        "apartment" -> vm.open(Overlay.City("home"))
+        "cover_job" -> vm.open(Overlay.City("job"))
+        "city" -> vm.open(Overlay.City("city"))
+        "command" -> vm.open(Overlay.Command("team"))
     }
 }

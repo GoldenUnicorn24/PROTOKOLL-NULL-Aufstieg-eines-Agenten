@@ -136,7 +136,7 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
                 Overlay.Calendar -> SimulationScreen(vm, s)
                 Overlay.Recruit -> RecruitEditorScreen(vm, s)
                 Overlay.Team -> TeamScreen(vm, s)
-                Overlay.Director -> DirectorScreen(vm, s)
+                Overlay.Director -> DirectorateScreen(vm, s)
                 Overlay.Settings -> SettingsScreen(vm)
                 Overlay.Saves -> SavesScreen(vm, inGame = true)
                 Overlay.Credits -> CreditsScreen(vm)
@@ -151,6 +151,8 @@ fun GameShell(vm: GameViewModel, s: GameState, overlays: List<Overlay>) {
                 is Overlay.Npc -> NpcDetailScreen(vm, s, o.id, o.tab)
                 is Overlay.Briefing -> BriefingScreen(vm, s, o.missionId)
                 is Overlay.Item -> ItemDetailScreen(vm, s, o.uid)
+                is Overlay.Command -> CommandScreen(vm, s, o.tab)
+                is Overlay.City -> CityScreen(vm, s, o.tab)
             }
         }
     }

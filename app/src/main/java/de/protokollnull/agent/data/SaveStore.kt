@@ -42,7 +42,17 @@ object SaveMigration {
     private fun migrateForward(s: GameState): GameState {
         // Schema 3 (v0.6): Erinnerungen strukturiert übernehmen
         val withMemories = if (s.schemaVersion < 3) de.protokollnull.agent.engine.Memories.migrate(s) else s
-        return withMemories.copy(schemaVersion = CURRENT_SCHEMA)
+        // Schema 5 (v0.8): bisherige Wohnung (Boolean) und Tarnjob ins Privatleben übernehmen
+        val withLife = if (withMemories.schemaVersion < 5) {
+            val week = withMemories.clock.day / 7
+            withMemories.copy(life = withMemories.life.copy(
+                housing = if (withMemories.player.apartment) "small" else withMemories.life.housing,
+                lastRentWeek = if (withMemories.player.apartment) week else withMemories.life.lastRentWeek,
+                coverJob = withMemories.player.coverJob?.let { "courier" } ?: withMemories.life.coverJob,
+                shiftWeek = if (withMemories.player.coverJob != null) week else withMemories.life.shiftWeek
+            ))
+        } else withMemories
+        return withLife.copy(schemaVersion = CURRENT_SCHEMA)
     }
 
     /** Schema 1 (Foundation) → Schema 2. */

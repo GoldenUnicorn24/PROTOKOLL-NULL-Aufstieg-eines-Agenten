@@ -41,6 +41,8 @@ sealed interface Overlay {
     data class Npc(val id: String, val tab: String = "profile") : Overlay
     data class Briefing(val missionId: String) : Overlay
     data class Item(val uid: Long) : Overlay
+    data class Command(val tab: String = "team") : Overlay
+    data class City(val tab: String = "home") : Overlay
 }
 
 data class Toast(val id: Long, val lines: List<String>, val error: Boolean)
