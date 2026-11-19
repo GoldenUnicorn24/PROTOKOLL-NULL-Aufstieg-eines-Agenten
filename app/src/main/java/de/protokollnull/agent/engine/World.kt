@@ -95,10 +95,15 @@ object World {
     fun weeklyTick(data: GameData, state: GameState): Result {
         var s = state
         val msgs = mutableListOf<String>()
-        val rank = data.rank(s.player.rank)
-        val salary = rank.salaryPerWeek
-        s = s.copy(player = s.player.copy(credits = (s.player.credits + salary).coerceAtLeast(0)))
-        msgs += "Wochensold: +$salary Cr"
+        val week = Clock.week(s.clock.day)
+        if (s.life.lastSalaryWeek < week) {
+            val salary = data.rank(s.player.rank).salaryPerWeek
+            s = s.copy(
+                player = s.player.copy(credits = (s.player.credits + salary).coerceAtLeast(0)),
+                life = s.life.copy(lastSalaryWeek = week)
+            )
+            msgs += "Wochensold: +$salary Cr"
+        }
         // v0.8: Miete und Tarnjob genau einmal pro Woche
         Home.weekly(data, s).let { (ns, m) -> s = ns; msgs += m }
         s = MissionGenerator.refreshBoard(data, s)

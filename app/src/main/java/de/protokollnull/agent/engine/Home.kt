@@ -115,13 +115,15 @@ object Home {
         }
         // Tarnjob: volle Bezahlung nur mit gearbeiteter Schicht
         val job = s.life.coverJob?.let { jobById[it] }
-        if (job != null) {
+        if (job != null && s.life.lastJobPayWeek < week) {
             // Abrechnung zum Wochenwechsel: zählt die Schicht der gerade beendeten Woche
             val worked = s.life.shiftWeek >= week - 1
             val pay = if (worked) job.pay else job.pay / 2
             var warnings = s.life.jobWarnings
             if (!worked) warnings++ else warnings = (warnings - 1).coerceAtLeast(0)
-            s = s.copy(player = s.player.copy(credits = s.player.credits + pay), life = s.life.copy(coverJobWeeks = s.life.coverJobWeeks + 1, jobWarnings = warnings))
+            s = s.copy(player = s.player.copy(credits = s.player.credits + pay), life = s.life.copy(
+                coverJobWeeks = s.life.coverJobWeeks + 1, jobWarnings = warnings, lastJobPayWeek = week
+            ))
             msgs += "${job.name}: +$pay Cr" + if (!worked) " (keine Schicht – Verwarnung $warnings/3)" else ""
             if (warnings >= 3) {
                 s = s.copy(player = s.player.copy(coverJob = null), life = s.life.copy(coverJob = null, jobWarnings = 0))
@@ -130,7 +132,8 @@ object Home {
             }
         }
         // Ereignis zu Hause
-        if (h.id != "quarters" && s.life.pendingEvent == null) {
+        if (housing(s).id != "quarters" && s.life.pendingEvent == null && s.life.lastHomeEventWeek < week) {
+            s = s.copy(life = s.life.copy(lastHomeEventWeek = week))
             val rng = Rng(Rng.mix(s.seed, week.toLong(), 3131))
             if (rng.percent() <= 30) s = trigger(data, s, rng, home = true)
         }

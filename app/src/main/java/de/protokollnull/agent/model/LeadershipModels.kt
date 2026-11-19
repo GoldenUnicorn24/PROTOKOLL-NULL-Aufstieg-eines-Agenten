@@ -160,5 +160,9 @@ data class PrivateLife(
     val eventDay: Int = -1,
     val eventsSeen: Map<String, Int> = emptyMap(),
     val meetings: List<String> = emptyList(),
-    val log: List<String> = emptyList()
+    val log: List<String> = emptyList(),
+    /** Individuelle Wochenmarker für Gehalt, Tarnjob und Wohnungen. */
+    val lastSalaryWeek: Int = -1,
+    val lastJobPayWeek: Int = -1,
+    val lastHomeEventWeek: Int = -1
 )
