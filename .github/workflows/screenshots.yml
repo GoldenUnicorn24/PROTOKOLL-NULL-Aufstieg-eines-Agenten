@@ -38,6 +38,6 @@ jobs:
           git add docs/screenshots
           if ! git diff --cached --quiet; then
             git commit -m "docs: Screenshots der Kernscreens aktualisiert [skip ci]"
-            git pull --rebase origin main
-            git push
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
           fi
