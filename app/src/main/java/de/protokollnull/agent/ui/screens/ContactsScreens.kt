@@ -151,7 +151,6 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                     if (Romance.romanceable(data, s, id) && r.romanceStage > 0) Pill(Romance.stageName(data, s, id, r.romanceStage), Pn.Violet)
                 }
             }
-            if (def?.seriesCharacter == true) CastPortraitUpload(id, def.name)
             ChipRow(listOf("profile" to "Akte", "career" to "Laufbahn", "relation" to "Beziehung", "circle" to "Umfeld", "talk" to "Interaktion"), tab) { tab = it }
             when (tab) {
                 "profile" -> {

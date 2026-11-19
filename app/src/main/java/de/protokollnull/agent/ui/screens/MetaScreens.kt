@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.protokollnull.agent.ui.CastPortraitSettings
 import de.protokollnull.agent.ui.GameViewModel
 import de.protokollnull.agent.ui.Overlay
 import de.protokollnull.agent.ui.theme.*
@@ -110,6 +111,7 @@ fun SettingsScreen(vm: GameViewModel) {
                 SettingSwitch("Hoher Kontrast", "Kräftigere Rahmen und Sekundärtexte", s.highContrast) { v -> vm.updateSettings { it.copy(highContrast = v) } }
                 SettingSwitch("Haptik", "Vibration bei Aktionen", s.haptics) { v -> vm.updateSettings { it.copy(haptics = v) } }
             }
+            CastPortraitSettings(vm.data.agents.filter { it.seriesCharacter }.map { it.id to it.name })
             GlassPanel {
                 Text("Musik (prozedural, eigene Komposition): ${s.musicVolume}%", style = MaterialTheme.typography.titleSmall)
                 Slider(value = s.musicVolume.toFloat(), onValueChange = { v -> vm.updateSettings { it.copy(musicVolume = v.toInt()) } }, valueRange = 0f..100f, steps = 9)
