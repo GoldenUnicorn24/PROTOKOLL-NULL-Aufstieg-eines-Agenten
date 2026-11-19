@@ -2,7 +2,7 @@ package de.protokollnull.agent.model
 
 import kotlinx.serialization.Serializable
 
-const val CURRENT_SCHEMA = 2
+const val CURRENT_SCHEMA = 3
 
 /** Attribute des Spielercharakters (0..100). */
 object Attr {
@@ -100,7 +100,9 @@ data class PlayerCharacter(
     val apartment: Boolean = false,
     /** Heilfortschritt der aktuellen Wunde in Tagen (7 = verheilt, Ruhe/Klinik beschleunigt). */
     val woundProgress: Int = 0,
-    val coverJob: String? = null
+    val coverJob: String? = null,
+    /** v0.6: Interessen für Kompatibilität und Geschenke. */
+    val interests: List<String> = emptyList()
 ) {
     val displayName: String get() = "$firstName $lastName"
 }
@@ -120,7 +122,11 @@ data class CustomNpc(
     /** Spieltag des Eintritts in die Division. */
     val createdDay: Int,
     val ageAtCreation: Int = 16,
-    val rank: Int = 1
+    val rank: Int = 1,
+    // --- v0.6: zweite Hauptfigur
+    val values: List<String> = emptyList(),
+    val lifeGoal: String = "",
+    val careerWish: String = ""
 ) {
     val name: String get() = "$firstName $lastName"
 }
@@ -302,7 +308,9 @@ data class GameState(
     val career: CareerState = CareerState(),
     val journal: List<JournalEntry> = emptyList(),
     val activeExam: ExamRun? = null,
-    val loadouts: List<Loadout> = Loadout.defaults()
+    val loadouts: List<Loadout> = Loadout.defaults(),
+    // --- v0.6: Living Division (Default → v0.4/v0.5-kompatibel)
+    val living: LivingState = LivingState()
 )
 
 @Serializable

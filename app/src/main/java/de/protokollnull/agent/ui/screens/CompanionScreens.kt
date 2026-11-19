@@ -37,12 +37,21 @@ fun CompanionForm(npc: CustomNpc, onChange: (CustomNpc) -> Unit) {
     GlassPanel {
         OutlinedTextField(npc.background, { onChange(npc.copy(background = it.take(180))) },
             label = { Text("Vorgeschichte") }, modifier = Modifier.fillMaxWidth())
-        Text("Charakterzüge", style = MaterialTheme.typography.titleSmall)
-        MultiChips(listOf("loyal", "neugierig", "ruhig", "humorvoll", "ehrgeizig", "kreativ"), npc.traits, 3) { onChange(npc.copy(traits = it)) }
-        Text("Interessen", style = MaterialTheme.typography.titleSmall)
-        MultiChips(listOf("Musik", "Klettern", "Bücher", "Schach", "Fotografie", "Sprachen"), npc.interests, 3) { onChange(npc.copy(interests = it)) }
-        Text("Fachgebiet", style = MaterialTheme.typography.titleSmall)
+        Text("Charakterzüge · bis zu 3", style = MaterialTheme.typography.titleSmall)
+        MultiChips(CompanionOptions.traits, npc.traits, 3) { onChange(npc.copy(traits = it)) }
+        SmallNote("Prägen Entscheidungen: ehrgeizig trainiert mehr und tritt früher zu Prüfungen an, ruhig meidet Einsätze, humorvoll knüpft schneller Freundschaften.")
+        Text("Interessen · bis zu 3", style = MaterialTheme.typography.titleSmall)
+        MultiChips(CompanionOptions.interests, npc.interests, 3) { onChange(npc.copy(interests = it)) }
+        SmallNote("Bestimmen Freundschaften in der Division und welche Geschenke gut ankommen.")
+        Text("Werte · bis zu 2", style = MaterialTheme.typography.titleSmall)
+        MultiChips(CompanionOptions.values, npc.values, 2) { onChange(npc.copy(values = it)) }
+        Text("Lebensziel", style = MaterialTheme.typography.titleSmall)
+        ChipRow(CompanionOptions.goals.map { it to it }, npc.lifeGoal) { onChange(npc.copy(lifeGoal = if (npc.lifeGoal == it) "" else it)) }
+        Text("Fachgebiet (Ausbildung)", style = MaterialTheme.typography.titleSmall)
         ChipRow(listOf("field" to "Außendienst", "intel" to "Analyse", "tech" to "Technik", "medic" to "Sanitätsdienst"), npc.profession) { onChange(npc.copy(profession = it)) }
+        Text("Berufswunsch", style = MaterialTheme.typography.titleSmall)
+        ChipRow(CompanionOptions.careerWishes, npc.careerWish.ifBlank { npc.profession }) { onChange(npc.copy(careerWish = it)) }
+        SmallNote("Die Laufbahn verläuft eigenständig: Training, Monatsnoten, Prüfungen und Beförderungen – unabhängig davon, wie viel Zeit vergeht.")
         Text("Fähigkeiten · ${5 - npc.skills.values.sum()} Punkte frei", style = MaterialTheme.typography.titleSmall)
         for ((skill, label) in listOf("observe" to "Beobachtung", "analysis" to "Datenanalyse", "first_aid" to "Erste Hilfe", "empathy" to "Empathie", "stamina" to "Ausdauer")) {
             val value = npc.skills[skill] ?: 0
@@ -54,6 +63,14 @@ fun CompanionForm(npc: CustomNpc, onChange: (CustomNpc) -> Unit) {
             }
         }
     }
+}
+
+object CompanionOptions {
+    val traits = listOf("loyal", "neugierig", "ruhig", "humorvoll", "ehrgeizig", "kreativ", "vorsichtig", "warmherzig", "diszipliniert", "kompetitiv")
+    val interests = listOf("Musik", "Klettern", "Bücher", "Schach", "Fotografie", "Sprachen", "Laufen", "Kunst", "Technik", "Kochen", "Spiele", "Schreiben")
+    val values = listOf("Loyalität", "Gerechtigkeit", "Freiheit", "Sicherheit", "Wahrheit", "Familie", "Disziplin", "Ehrgeiz")
+    val goals = listOf("Eine eigene Einheit führen", "Die Wahrheit über die Division", "Ein Leben außerhalb der Mauern", "Die Beste des Jahrgangs werden", "Menschen schützen, die sich nicht wehren können")
+    val careerWishes = listOf("field" to "Außendienst", "intel" to "Analyse", "tech" to "Technik", "medic" to "Sanität", "lead" to "Führung")
 }
 
 @Composable

@@ -314,7 +314,7 @@ fun RecruitEditorScreen(vm: GameViewModel, s: GameState) {
                 GlassPanel(padding = 12.dp, onClick = { vm.open(Overlay.Npc(c.id)) }) {
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                         NpcPortrait(data, s, c.id, 48.dp)
-                        Column { Text(c.name, style = MaterialTheme.typography.titleSmall); Text("${Ages.npc(data, s, c.id)} J. · ${Social.professionLabel(c.profession)} · ${data.rank(Social.customRank(s, c)).name}", style = MaterialTheme.typography.labelSmall) }
+                        Column { Text(c.name, style = MaterialTheme.typography.titleSmall); Text("${Ages.npc(data, s, c.id)} J. · ${Social.professionLabel(c.profession)} · ${data.rank(Life.rank(data, s, c.id)).name}", style = MaterialTheme.typography.labelSmall) }
                     }
                 }
             }

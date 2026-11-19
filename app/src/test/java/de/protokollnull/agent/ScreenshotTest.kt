@@ -108,6 +108,18 @@ class ScreenshotTest {
         vm.setTab(2); vm.dismissToast(); shot("29_ausruestungsprofile")
         vm.act { d, s -> World.timeSkip(d, s, 730) }
         vm.dismissToast()
+        // v0.6: Living Division – Status, Personalakte, Beziehung, Umfeld, HQ-Ereignis
+        vm.update { s ->
+            var x = Relations.update(vm.data, s, "alex") { it.copy(friendship = 62, trust = 58, memories = it.memories + "Morgens vor allen anderen am Schießstand" + "Ein geteilter Kopfhörer im Aufenthaltsraum") }
+            x = Bonds.addMilestone(vm.data, x, "alex", "friends")
+            x.copy(flags = x.flags + "lf_alex_promoted", living = x.living.copy(pendingHqEvent = "hq_alex_promoted", pendingHqEventDay = x.clock.day))
+        }
+        vm.closeOverlays(); vm.setTab(3); shot("30_kontakte_status")
+        vm.open(Overlay.Npc("alex", "career")); shot("31_personalakte_laufbahn")
+        vm.closeOverlays(); vm.open(Overlay.Npc("alex", "relation")); shot("32_beziehung_erinnerungen")
+        vm.closeOverlays(); vm.open(Overlay.Npc("alex", "circle")); shot("33_umfeld")
+        vm.closeOverlays(); vm.setTab(0); shot("34_hq_division_heute")
+        vm.open(Overlay.HqEvent); shot("35_hq_ereignis")
         vm.closeOverlays(); vm.open(Overlay.Recruit); shot("21_rekrutierungseditor")
         vm.update { it.copy(player = it.player.copy(rank = 12), director = DirectorState()) }
         vm.closeOverlays(); vm.open(Overlay.Director); shot("22_direktorat")

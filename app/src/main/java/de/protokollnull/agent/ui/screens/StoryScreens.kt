@@ -50,6 +50,7 @@ fun CreatorScreen(vm: GameViewModel) {
     var strength by rememberSaveable { mutableStateOf(Attr.PERCEPTION) }
     var weakness by rememberSaveable { mutableStateOf(Attr.CHARISMA) }
     var difficulty by rememberSaveable { mutableStateOf("normal") }
+    var interests by remember { mutableStateOf(listOf<String>()) }
     var includeCompanion by rememberSaveable { mutableStateOf(false) }
     var dossier by rememberSaveable(stateSaver = dossierSaver) { mutableStateOf(CompanionAssignment.dossier()) }
     val steps = listOf("Identität", "Aussehen", "Hintergrund", "Einsatzprofil", "Gefährtin oder Gefährte")
@@ -102,6 +103,10 @@ fun CreatorScreen(vm: GameViewModel) {
                     ChipRow(listOf("easy" to "Leicht", "normal" to "Normal", "hard" to "Hart"), difficulty) { difficulty = it }
                     SmallNote(when (difficulty) { "easy" -> "Proben +10, mehr XP, 600 Startcredits."; "hard" -> "Proben −10, weniger XP, 150 Startcredits."; else -> "Ausgewogene Proben, 300 Startcredits." })
                     Spacer(Modifier.height(8.dp))
+                    Text("Interessen · bis zu 3", style = MaterialTheme.typography.titleSmall)
+                    MultiChips(CompanionOptions.interests, interests, 3) { interests = it }
+                    SmallNote("Gemeinsame Interessen verbessern die Passung zu anderen Figuren.")
+                    Spacer(Modifier.height(8.dp))
                     KeyValue("Name", "$first $last")
                     KeyValue("Deckname", code)
                     KeyValue("Hintergrund", mapOf("athlete" to "Athlet/in", "analyst" to "Analytiker/in", "social" to "Menschenleser/in", "marksman" to "Präzisionsschütze/in")[background] ?: background)
@@ -130,7 +135,7 @@ fun CreatorScreen(vm: GameViewModel) {
                 vm.startGame(PlayerCharacter(
                     firstName = first.trim(), lastName = last.trim(), codename = code.trim(), gender = gender,
                     appearance = Appearance(avatar, style), background = background, strength = strength,
-                    weakness = weakness, difficulty = difficulty
+                    weakness = weakness, difficulty = difficulty, interests = interests
                 ), if (includeCompanion) dossier.copy(firstName = dossier.firstName.trim(), lastName = dossier.lastName.trim()) else null)
             }
         }

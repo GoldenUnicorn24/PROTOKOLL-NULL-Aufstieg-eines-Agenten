@@ -1,7 +1,7 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.5.0** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.5: Karriere & Ausbildung mit Michael, mehrphasige Beförderungsprüfungen, tagesgenaue Zeitplan-Simulation mit Bericht und Ausrüstungsprofile (Details unten).
+**Stand: Beta 0.6.0 „Living Division“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.6: Alle Figuren führen ein eigenes Leben mit Laufbahn, Einsätzen, Verletzungen und Freundschaften untereinander; die Gefährtin bzw. der Gefährte wird zur zweiten Hauptfigur; HQ-Ereignisse mit Folgen; Beziehungen 2.0 und zehn neue Alex-Szenen (Details unten und in [docs/LIVING_DIVISION.md](docs/LIVING_DIVISION.md)).
 
 > Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
 
@@ -13,6 +13,31 @@ Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, mi
 
 Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
 
+
+## Neu in v0.6 – Living Division
+
+### Lebendige Division
+- **Jede Figur entscheidet täglich selbst** – deterministisch nach Profil, Charakterzügen, Stimmung und Zielen: Dienst, eigenes Training, Freizeit, Einsätze (ab 18), Urlaub; dazu Verletzungen, seltene Versetzungen mit späterer Rückkehr.
+- **Eigene Laufbahnen**: Karrierepunkte, Monatsnoten A–E, Prüfungen mit Beförderung oder Durchfallen (30 Tage Wartezeit), Kompetenzen in fünf Bereichen, Einsatzbilanz.
+- **Sozialleben untereinander**: Freundschaften und Spannungen nach Interessen und Werten; volljährige NPC-Paare (nie Figuren, die eine Spielerromanze sein können).
+- **Anwesenheit nach Status**: Wer im Einsatz, im Urlaub oder versetzt ist, ist nicht im HQ; Verletzte liegen auf der Krankenstation.
+- **Divisionsleben-Feed** und Tagesmeldungen zu Beförderungen, Verletzungen, Rückkehr und Paaren.
+
+### Gefährtin/Gefährte als zweite Hauptfigur
+- Editor mit Charakterzügen, Interessen, **Werten, Lebensziel und Berufswunsch**.
+- **Eigenständige Laufbahn** – Rang aus Training, Noten, Prüfungen und Einsätzen statt aus vergangener Zeit; Laufbahn-Rat durch dich (Vertrauen entscheidet, ob sie/er folgt); eigene Freundschaften in der Division. Eine Beziehung beginnt nie automatisch.
+
+### HQ-Ereignisse
+- 27 Ereignisse rund um Michael, Nikita, Birkhoff, Sonya, Amanda, Percy, Alex, Jaden, Thom, Ryan, Owen, Maya, Ethan, Helena und deine Gefährtin/deinen Gefährten – mit echten Folgen: Beurlaubung, Versetzung, Konflikte, Bindungen zwischen Figuren, Percys Druck, Amandas Beobachtung. Wer nicht reagiert, entscheidet auch.
+
+### Beziehungen 2.0
+- **Passung** mit Begründung, **Meilensteine**, **strukturierte Erinnerungen** mit Zusammenfassung älterer Ereignisse.
+- **Geschenke nach Interessen** mit vorhergesagter Reaktion; **Konflikte** mit Aussprache.
+- **Mehrere mögliche Partner** in der Annäherungsphase, eine **feste Beziehung nur durch bewusste Entscheidung** (Bestätigung, andere Annäherungen enden respektvoll); „Nur Freunde bleiben“ und Trennung als eigene Entscheidungen.
+- **Altersgerechte Spielerromanze:** freiwillige, nicht-sexuelle Romanzen ab 16 bei maximal zwei Jahren Abstand, solange jemand unter 18 ist; Stufen zum Zusammenziehen und Heiraten erst, wenn beide erwachsen sind.
+
+### Alex-Route
+- Zehn neue Szenen: Freundschaft ab 16 (Rangliste, Kopfhörer, drei Uhr morgens, Narben, Beförderung, Alex' 18. Geburtstag), ein vollständiger Freundschaftsweg („Familie, die man sich aussucht“, „Noch einmal ehrlich“), eine altersgerechte Romanzenszene ab 16 und ein gemeinsames drittes Kapitel.
 
 ## Neu in v0.5 – Karriere, Zeitplan, Ausrüstung
 
@@ -38,7 +63,7 @@ Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests
 - Kein Kauf-/Rückgabe-Gewinn möglich (getestet), Rangrabatt ab Rang 6. Alle 42 Gegenstände haben ein vorhandenes Bild; ein neutraler Platzhalter mit Asset-ID erscheint nur, falls eine Datei fehlt (siehe `docs/MISSING_ITEM_ART.md`).
 
 ### Beziehungen
-- **Romantische Optionen gibt es ab v0.5 nur, wenn beide Figuren volljährig sind.** Die 18/16-Regel aus v0.4 wurde nicht übernommen. Alex-Route (ab 18), Gefährtenakte und alle Erwachsenen-Stufen bleiben erhalten; frühere Beziehungsstufen aus alten Spielständen werden als „pausiert“ angezeigt.
+- **Ergänzender v0.6-Patch:** Freiwillige, nicht-sexuelle 16/17- und 18/16-Romanzen sind wieder möglich, begrenzt auf Interesse und feste Partnerschaft bis beide 18 sind. Alex-Route ab 16, weitere Erwachsenenfunktionen nach Alter; alte Spielstände bleiben erhalten.
 
 ### Private Serienporträts
 - Lokale Bildauswahl pro Serienfigur über den Android-Fotopicker (PR #2), ohne Upload; wird in Dialogen, Personalakten und allen NPC-Porträts verwendet. Details: [private Serienporträts](docs/PRIVATE_CAST_PORTRAITS.md).
@@ -62,8 +87,10 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/21_rekrutierungseditor.png) | ![](docs/screenshots/22_direktorat.png) | ![](docs/screenshots/23_spielstaende.png) | ![](docs/screenshots/24_epilog.png) |
 | **Zeitplan-Bericht (v0.5)** | **Karriere (v0.5)** | **Trainingsplaner (v0.5)** | **Prüfung (v0.5)** |
 | ![](docs/screenshots/25_zeitplan_bericht.png) | ![](docs/screenshots/26_karriere.png) | ![](docs/screenshots/27_trainingsplaner.png) | ![](docs/screenshots/28_pruefung.png) |
-| **Ausrüstungsprofile (v0.5)** | | | |
-| ![](docs/screenshots/29_ausruestungsprofile.png) | | | |
+| **Ausrüstungsprofile (v0.5)** | **Kontakte mit Status (v0.6)** | **Personalakte · Laufbahn (v0.6)** | **Beziehung & Erinnerungen (v0.6)** |
+| ![](docs/screenshots/29_ausruestungsprofile.png) | ![](docs/screenshots/30_kontakte_status.png) | ![](docs/screenshots/31_personalakte_laufbahn.png) | ![](docs/screenshots/32_beziehung_erinnerungen.png) |
+| **Umfeld (v0.6)** | **Heute in der Division (v0.6)** | **HQ-Ereignis (v0.6)** | |
+| ![](docs/screenshots/33_umfeld.png) | ![](docs/screenshots/34_hq_division_heute.png) | ![](docs/screenshots/35_hq_ereignis.png) | |
 
 ## Was ist spielbar? (ehrlicher Stand)
 
@@ -81,7 +108,7 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - **Skilltree**: 9 Bäume, 36 Fähigkeiten (aktiv/passiv, Levelgrenzen, Voraussetzungen, Meisterperks mit baumübergreifenden Anforderungen), scroll- und zoombar.
 - **Inventar** mit Gegenstandsbildern (38 SVGs), 6 Ausrüstungsslots mit Attributboni, Stapeln, Seltenheit, Zustand/Verschleiß, Gewicht/Tragkraft, Spind-Lager, Filter, Detailansicht, Verbrauchsgegenstände, **Ausrüstungskammer** (Anfordern/Warten/Zurückgeben, Rangfreigaben).
 - **Beziehungen**: Freundschaft, Vertrauen, Loyalität, Respekt, Zuneigung, Rivalität, Erinnerungen; 22 handgeschriebene, verzweigte Dialoge mit Bedingungen und Proben; Smalltalk, Zeit verbringen, Rat, Geschenke, Wettkämpfe gegen Rivalen.
-- **Romanze (altersgerecht)**: nur mit fiktiven Figuren (Maya, Ethan, eigene Rekruten). Zwischen zwei Minderjährigen nur gemeinsame Zeit/Vertrauen/Gespräche, keinerlei sexualisierte Inhalte; zwischen Volljährigen und Minderjährigen grundsätzlich gesperrt. Ab beiderseits 18: Paar, Zusammenziehen (eigene Wohnung), Heirat, Familie.
+- **Romanze (altersgerecht)**: mit Maya, Ethan, Kira, eigenen Rekruten sowie optional Alex Udinov. Ab 16 zwischen Figuren mit höchstens zwei Jahren Abstand sind freiwillige, nicht-sexuelle Beziehungen bis Stufe 2 möglich; Zusammenziehen/Heirat erst nach Volljährigkeit beider und Familie nach den zusätzlichen 21er-Bedingungen.
 - **Rekrutierungseditor ab 18**: neue/r 16-jährige/r Agent/in (Standard: anderes Geschlecht) mit Name, Avatar, Charakterzügen, Hintergrund, Startberuf, Interessen und Fähigkeiten; eigenständiger NPC mit Tagesplan, Karriere und Mentoring – nicht sofort Partner/in.
 - **Team**: Teamgröße nach Rang, Teammitglieder kämpfen im Taktikmodus mit eigenen Fähigkeiten; ab Rang 8 Teambefehl, ab Rang 9 Delegieren von Aufträgen.
 - **Direktorat (Rang 12)**: Budget, 5 Abteilungen mit Ausbau und Leitung, Moral, Aufsicht, Leitlinien, wöchentliche Abrechnung; Abteilungsboni wirken auf Training, Heilung, Intel und Alarm.
@@ -124,24 +151,34 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 
 ### Tests
 - `ContentValidationTest`: Kataloggrößen, eindeutige IDs, alle Asset-Pfade, Serienstill-Lizenzregel, Missions-/Dialog-/Quest-Referenzen, unerreichbare Dialogknoten, Prolog-Graph, Kapitel 1 = 10 Missionen.
-- `RulesTest`: Level-100-Grenze, Editor ab 18, Romanzen nur unter Volljährigen, Alex-Route ab 18, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
+- `RulesTest`: Level-100-Grenze, Editor ab 18, altersgerechte 16/17- und 18/16-Romanzen, Alex-Route ab 16, Vertrauens-Clamp, Itemstapel, Gewichtsgrenze, Ausrüstungsfreigaben, Rang-12-Voraussetzungen, Stress/Energie, Zeitraffer, Save-Roundtrip, Migration, Dialogentscheidungen, Missionsablauf, Taktik-Determinismus, Generator-Altersgrenzen, Prolog → Spiel.
 - `V05SystemsTest`: Simulation 1/7/30/90/365 Tage deterministisch, Fortschritt nur aus Tätigkeiten, Beziehungen nur mit bekannten/anwesenden Figuren, Wundheilung, Stopp beim 18. Geburtstag mit einmaliger Gefährtenankunft, Story-Ereignisse bleiben erhalten, kein Rang 12 per Zeitraffer, **10-Jahres-Spielverlauf** mit Invarianten (Kalender, Geld, Beziehungen, Geburtstage genau einmal, Ereignisidentitäten, Save-Roundtrip), Beurteilung, Prüfungsphasen/Auflagen/Wartezeit, Tageslimit/Ausbilderbonus, Mentoring, Ausrüstungsprofile mit Rangsperre, Kauf/Rückgabe ohne Gewinn, Vergleich, Missionsboni, Archiv ab Rang 7, v0.4-Spielstand ohne neue Felder.
-- `ScreenshotTest`: rendert 29 Kernscreens mit echtem Spielzustand (Robolectric).
+- `LivingDivisionTest` (v0.6): Lebenssimulation deterministisch, idempotent und persistent; **10 Jahre Divisionsleben** (Beförderungen, Durchfallen, Einsätze, Verletzungen, Urlaub/Versetzung, NPC-Freundschaften, Paare nur unter Erwachsenen, keine automatische Romanze, Gefährten-Laufbahn, verdichtete Erinnerungen, Save-Roundtrip); Laufbahn hängt vom Charakter ab; Laufbahn-Rat; Anwesenheit nach Status; Rückkehr nach Urlaub; Erinnerungs-Zusammenfassung und Migration aus Schema 2; v0.5-Spielstand ohne Lebensdaten; HQ-Ereignisse mit Folgen, Ablauf mit „ignore“, Wissens-/Ankunftsprüfung; Geschenke nach Interessen; bewusste feste Beziehung, Nur-Freunde, Trennung; Aussprache; Passung; Altersregel; Alex-Szenen; Katalogvalidierung.
+- `ScreenshotTest`: rendert 35 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 0.6.0-beta „Living Division“
+- Lebenssimulation aller Figuren mit eigenen Laufbahnen, Einsätzen, Verletzungen, Abwesenheiten, Versetzungen und Sozialleben.
+- Strukturierte Erinnerungen mit Zusammenfassung; Schema 3 mit Migration.
+- Gefährtin/Gefährte mit Werten, Lebensziel, Berufswunsch und eigenständiger Laufbahn.
+- 27 HQ-Ereignisse mit Folgen; HQ-Übersicht „Heute in der Division“.
+- Beziehungen 2.0 (Passung, Meilensteine, Geschenke nach Interessen, Konflikte, bewusste Partnerschaft).
+- Zehn neue Alex-Szenen mit vollständigem Freundschaftsweg.
+- Neue/überarbeitete Screens: Kontakte, Personalakte (Laufbahn, Beziehung, Umfeld), HQ-Ereignis, Gefährten-Editor, Spieler-Interessen.
 
 ### 0.5.0-beta
 - Karriere 2.0 (Beurteilungen, Mentoring, dreiphasige Prüfungen mit Auflagen, Ziele, Journal, Auszeichnungen, Rangfreigaben).
 - Zeitplan-Simulation statt pauschalem Zeitraffer, mit Bericht und Ereignis-Stopps.
 - Ausrüstungsprofile, Gegenstandsvergleich, situative Missionsboni, Rangrabatt.
 - Neue Screens: Zeitplan-Assistent, Karriereübersicht, Prüfung, Trainingsplaner.
-- Romanzen nur unter Volljährigen; private Serienporträts (PR #2) integriert; Robolectric-Tests auf SDK 34 fixiert.
+- Historischer Stand von v0.5: Romanzen nur unter Volljährigen. Der ergänzende v0.6-Patch hat die altersgerechten Stufen 1–2 ab 16 wiederhergestellt; private Serienporträts (PR #2) sind integriert.
 
 
 ### 0.4.0-beta
 - Ein Fundstück vom Bahnhof begleitet dich durch die PHOENIX-Jahre. Entscheidungen über Beweise, Erinnerung und Kira eröffnen spätere Gesprächsoptionen und prägen den Epilog.
 - Eigene Fotos lassen sich für die Hauptfigur und die Gefährtenakte übernehmen. Die App verkleinert die Bilder lokal und nimmt sie beim JSON-Export mit.
-- Eine vor dem Prolog erstellte Gefährtenakte wird an deinem 18. Geburtstag wirksam. Michael stellt euch persönlich vor. Die neue Figur tritt wie im ursprünglichen Entwurf mit 16 ein. Eine Romanze ist eine spätere gemeinsame Entscheidung, sobald beide volljährig sind.
+- Eine vor dem Prolog erstellte Gefährtenakte wird an deinem 18. Geburtstag wirksam. Michael stellt euch persönlich vor. Die neue Figur tritt wie im ursprünglichen Entwurf mit 16 ein. Eine altersgerechte nicht-sexuelle Romanze kann nach dem Kennenlernen entstehen; Erwachsenenfunktionen erst, wenn beide volljährig sind.
 - Neun eigens generierte Szenenbilder und fünf Originalporträts begleiten Prolog, Einsatzbriefings, Zuteilung und Personalakten. Observationen verwenden erkennbare Zeichenfolgen.
 
 ### 0.3.0-beta

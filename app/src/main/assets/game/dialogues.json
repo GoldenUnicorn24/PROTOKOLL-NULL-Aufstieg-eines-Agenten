@@ -3225,7 +3225,7 @@
       ],
       "minFriendship": 40,
       "minTrust": 45,
-      "minAge": 18
+      "minAge": 16
     }
   },
   {
@@ -3301,7 +3301,807 @@
       ],
       "minFriendship": 50,
       "minTrust": 45,
-      "minAge": 18
+      "minAge": 16
     }
+  },
+  {
+    "id": "dlg_alexv6_ranking",
+    "npcId": "alex",
+    "title": "Die Rangliste",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minFriendship": 30,
+      "minDay": 20
+    },
+    "startNode": "r1",
+    "nodes": [
+      {
+        "id": "r1",
+        "speakerId": "alex",
+        "text": "Alex steht vor der Rangliste im Flur und fährt mit dem Finger die Namen entlang. Ihrer steht auf Platz neun. „Jaden hat mich überholt. Mit einem Trick am Schießstand, den Michael nicht bemerkt hat.“",
+        "choices": [
+          {
+            "id": "help",
+            "text": "„Dann zeigen wir ihr morgen, wie man es ohne Trick macht.“",
+            "nextNode": "r2",
+            "effects": {
+              "friendship": 3
+            }
+          },
+          {
+            "id": "calm",
+            "text": "„Die Liste sagt nichts darüber, wer hier überlebt.“",
+            "nextNode": "r3",
+            "effects": {
+              "trust": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "speakerId": "alex",
+        "text": "Am nächsten Morgen steht ihr eine Stunde vor allen anderen am Schießstand. Alex trifft schlechter, als sie zugibt, und besser, als sie glaubt.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Noch eine Runde.“",
+            "effects": {
+              "friendship": 4,
+              "xp": 40,
+              "memory": "Morgens vor allen anderen am Schießstand"
+            }
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "speakerId": "alex",
+        "text": "Sie sieht dich an, als hätte sie das noch nie jemanden sagen hören. „Das ist entweder sehr weise oder sehr dumm.“ Sie lacht. „Ich nehme weise.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Mitlachen.",
+            "effects": {
+              "friendship": 3,
+              "xp": 30
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_headphones",
+    "npcId": "alex",
+    "title": "Ein geteilter Kopfhörer",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minFriendship": 40,
+      "minDay": 60
+    },
+    "startNode": "h1",
+    "nodes": [
+      {
+        "id": "h1",
+        "speakerId": "alex",
+        "text": "Im Aufenthaltsraum sitzt Alex mit einem alten MP3-Player, das Kabel mit Klebeband geflickt. Sie hält dir wortlos einen Ohrstöpsel hin.",
+        "choices": [
+          {
+            "id": "listen",
+            "text": "Den Ohrstöpsel nehmen und zuhören.",
+            "nextNode": "h2",
+            "effects": {
+              "friendship": 3
+            }
+          },
+          {
+            "id": "ask",
+            "text": "„Was hörst du da?“",
+            "nextNode": "h3",
+            "effects": {
+              "trust": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "h2",
+        "speakerId": "alex",
+        "text": "Russische Popmusik, schrecklich und schön zugleich. Alex summt mit und hört mittendrin auf, als hätte sie sich ertappt.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Mach weiter. Es ist gut.“",
+            "effects": {
+              "friendship": 4,
+              "stress": -6,
+              "memory": "Ein geteilter Kopfhörer im Aufenthaltsraum"
+            }
+          }
+        ]
+      },
+      {
+        "id": "h3",
+        "speakerId": "alex",
+        "text": "„Musik von früher. Von zu Hause.“ Sie zögert. „Das Einzige, was ich mitnehmen durfte.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicht weiter fragen und einfach mithören.",
+            "effects": {
+              "trust": 4,
+              "friendship": 2,
+              "memory": "Alex' Musik von früher"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_three_am",
+    "npcId": "alex",
+    "title": "Drei Uhr morgens",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minTrust": 55,
+      "minFriendship": 45
+    },
+    "startNode": "t1",
+    "nodes": [
+      {
+        "id": "t1",
+        "speakerId": "alex",
+        "text": "Du kannst nicht schlafen und findest Alex im Treppenhaus, die Knie angezogen. Sie hatte einen Albtraum – das Feuer, wieder.",
+        "choices": [
+          {
+            "id": "sit",
+            "text": "Dich zwei Stufen unter sie setzen.",
+            "nextNode": "t2",
+            "effects": {
+              "trust": 3
+            }
+          },
+          {
+            "id": "tea",
+            "text": "Zwei Becher Tee aus der Kantine holen.",
+            "nextNode": "t2",
+            "effects": {
+              "friendship": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "speakerId": "alex",
+        "text": "„Es ist jedes Mal dasselbe. Ich renne, und die Tür geht nicht auf.“ Sie dreht den Becher in den Händen. „Wenn du irgendwem davon erzählst …“",
+        "choices": [
+          {
+            "id": "promise",
+            "text": "„Tu ich nicht. Versprochen.“",
+            "nextNode": "t3",
+            "effects": {
+              "trust": 6,
+              "loyalty": 4,
+              "memory": "Ein Versprechen im Treppenhaus um drei Uhr morgens"
+            }
+          },
+          {
+            "id": "amanda",
+            "text": "„Vielleicht hilft es, mit Amanda zu reden.“",
+            "nextNode": "t4",
+            "effects": {
+              "trust": -2,
+              "respect": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "speakerId": "alex",
+        "text": "Ihr bleibt sitzen, bis das Licht im Treppenhaus auf Tagbetrieb umspringt. Alex steht als Erste auf. „Danke. Das war … normal. Ich vermisse normal.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Ich auch.“",
+            "effects": {
+              "friendship": 4,
+              "xp": 50
+            }
+          }
+        ]
+      },
+      {
+        "id": "t4",
+        "speakerId": "alex",
+        "text": "„Amanda schreibt alles auf.“ Alex' Stimme wird kühl. „Aber danke, dass du es ehrlich meinst.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Nicken.",
+            "effects": {
+              "xp": 30
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_scars",
+    "npcId": "alex",
+    "title": "Narben",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "lf_alex_injured"
+      ],
+      "minFriendship": 35
+    },
+    "startNode": "s1",
+    "nodes": [
+      {
+        "id": "s1",
+        "speakerId": "alex",
+        "text": "Alex zieht den Verband vom Unterarm und betrachtet die frische Narbe. „Mein erster echter Fehler im Einsatz. Ich hab gezögert.“",
+        "choices": [
+          {
+            "id": "own",
+            "text": "„Ich hätte auch gezögert.“",
+            "nextNode": "s2",
+            "effects": {
+              "trust": 4
+            }
+          },
+          {
+            "id": "lesson",
+            "text": "„Was würdest du heute anders machen?“",
+            "nextNode": "s3",
+            "effects": {
+              "respect": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "speakerId": "alex",
+        "text": "„Du bist schlecht im Lügen“, sagt sie – und lächelt trotzdem.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Ehrlich sein: „Vielleicht nicht so lange.“",
+            "effects": {
+              "friendship": 4,
+              "memory": "Wir haben über meine erste Narbe geredet"
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "speakerId": "alex",
+        "text": "Sie denkt lange nach und erklärt dir dann jeden Schritt. Am Ende weiß sie es selbst. „Danke. Michael hätte mich nur angeschrien.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Michael schreit aus Sorge.“",
+            "effects": {
+              "friendship": 2,
+              "respect": 3,
+              "xp": 40
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_rank_up",
+    "npcId": "alex",
+    "title": "Eine Zeile höher",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAny": [
+        "lf_alex_rank_2",
+        "lf_alex_rank_3",
+        "lf_alex_rank_4"
+      ],
+      "minFriendship": 35
+    },
+    "startNode": "u1",
+    "nodes": [
+      {
+        "id": "u1",
+        "speakerId": "alex",
+        "text": "Alex hält dir ihr neues Abzeichen hin, als wäre es zerbrechlich. „Michael sagt, ich bin bereit für mehr Verantwortung. Ich glaube, er irrt sich.“",
+        "choices": [
+          {
+            "id": "believe",
+            "text": "„Michael irrt sich selten.“",
+            "nextNode": "u2",
+            "effects": {
+              "trust": 3
+            }
+          },
+          {
+            "id": "tease",
+            "text": "„Jetzt musst du die Matten nicht mehr putzen.“",
+            "nextNode": "u3",
+            "effects": {
+              "friendship": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "speakerId": "alex",
+        "text": "„Gut. Dann muss ich ihm jetzt beweisen, dass er recht hatte.“ Sie steckt das Abzeichen an.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Du schaffst das.“",
+            "effects": {
+              "friendship": 3,
+              "memory": "Mein neues Abzeichen – und du warst die erste, der ich es gezeigt habe"
+            }
+          }
+        ]
+      },
+      {
+        "id": "u3",
+        "speakerId": "alex",
+        "text": "„Doch. Jaden hat dafür gesorgt.“ Sie lacht so laut, dass sich zwei Rekruten umdrehen.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Mitlachen.",
+            "effects": {
+              "friendship": 4,
+              "stress": -5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_eighteen",
+    "npcId": "alex",
+    "title": "Achtzehn",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "met_alex"
+      ],
+      "minDay": 365,
+      "minFriendship": 45
+    },
+    "startNode": "e1",
+    "nodes": [
+      {
+        "id": "e1",
+        "speakerId": "alex",
+        "text": "Heute ist Alex' achtzehnter Geburtstag, und niemand in der Division hat es bemerkt – außer dir. Sie sitzt allein auf dem Dach des Quartiers.",
+        "choices": [
+          {
+            "id": "gift",
+            "text": "Ihr eine improvisierte Geburtstagskarte geben.",
+            "nextNode": "e2",
+            "effects": {
+              "friendship": 5
+            }
+          },
+          {
+            "id": "sit",
+            "text": "Wortlos neben sie setzen.",
+            "nextNode": "e3",
+            "effects": {
+              "trust": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "e2",
+        "speakerId": "alex",
+        "text": "Die Karte ist aus einem Einsatzformular gefaltet. Alex liest sie zweimal. „Das hat seit Jahren niemand mehr für mich gemacht.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Dann wurde es Zeit.“",
+            "effects": {
+              "friendship": 4,
+              "memory": "Eine Geburtstagskarte aus einem Einsatzformular"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e3",
+        "speakerId": "alex",
+        "text": "„Volljährig“, sagt sie irgendwann. „Ab heute schicken sie mich in echte Einsätze. Komisch, dass sich das wie ein Geschenk anfühlen soll.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Wir passen aufeinander auf.“",
+            "effects": {
+              "trust": 4,
+              "loyalty": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_friend_oath",
+    "npcId": "alex",
+    "title": "Familie, die man sich aussucht",
+    "chapter": "Alex · Freundschaft",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "alex_friendship_chosen"
+      ],
+      "minFriendship": 65,
+      "minTrust": 60
+    },
+    "startNode": "f1",
+    "nodes": [
+      {
+        "id": "f1",
+        "speakerId": "alex",
+        "text": "Nach einem langen Einsatztag findet Alex dich in der Kantine. „Ich hab nachgedacht. Über uns. Darüber, dass ich froh bin, wie es ist.“",
+        "choices": [
+          {
+            "id": "same",
+            "text": "„Ich auch. Du bist für mich so etwas wie Familie.“",
+            "nextNode": "f2",
+            "effects": {
+              "friendship": 5
+            }
+          },
+          {
+            "id": "ask",
+            "text": "„Wie meinst du das?“",
+            "nextNode": "f3",
+            "effects": {
+              "trust": 2
+            }
+          }
+        ]
+      },
+      {
+        "id": "f2",
+        "speakerId": "alex",
+        "text": "Alex nickt langsam. „Familie, die man sich aussucht.“ Sie hält dir die Faust hin, wie bei einem Schwur unter Kindern.",
+        "choices": [
+          {
+            "id": "oath",
+            "text": "Einschlagen.",
+            "effects": {
+              "friendship": 6,
+              "loyalty": 8,
+              "xp": 60,
+              "setFlags": [
+                "alex_best_friends"
+              ],
+              "memory": "Der Schwur in der Kantine: Familie, die man sich aussucht"
+            }
+          }
+        ]
+      },
+      {
+        "id": "f3",
+        "speakerId": "alex",
+        "text": "„Dass ich mit dir nichts beweisen muss. Kein Spiel, keine Fassade. Das ist hier drin selten.“",
+        "choices": [
+          {
+            "id": "oath",
+            "text": "„Dann bleibt das so.“",
+            "effects": {
+              "friendship": 5,
+              "loyalty": 6,
+              "setFlags": [
+                "alex_best_friends"
+              ],
+              "memory": "Mit Alex muss ich nichts beweisen"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_reconsider",
+    "npcId": "alex",
+    "title": "Noch einmal ehrlich",
+    "chapter": "Alex · Entscheidung",
+    "once": true,
+    "priority": 1,
+    "conditions": {
+      "flagsAll": [
+        "alex_friendship_chosen"
+      ],
+      "flagsNone": [
+        "alex_romance_unlocked",
+        "alex_platonic_final"
+      ],
+      "minAge": 19,
+      "minFriendship": 70,
+      "minTrust": 65
+    },
+    "startNode": "c1",
+    "nodes": [
+      {
+        "id": "c1",
+        "speakerId": "alex",
+        "text": "Alex dreht ihren Becher in den Händen. „Vor einer Weile haben wir gesagt, wir bleiben Freunde. Ich will nur wissen, ob das für dich noch stimmt. Egal, was du sagst – ich bleibe.“",
+        "choices": [
+          {
+            "id": "stay",
+            "text": "„Es stimmt. Und ich bin froh darüber.“",
+            "nextNode": "c2",
+            "effects": {
+              "trust": 4,
+              "setFlags": [
+                "alex_platonic_final"
+              ]
+            }
+          },
+          {
+            "id": "more",
+            "text": "„Ehrlich gesagt … ich würde gern herausfinden, ob da mehr ist.“",
+            "nextNode": "c3",
+            "effects": {
+              "trust": 3,
+              "setFlags": [
+                "alex_romance_unlocked"
+              ],
+              "memory": "Wir haben uns getraut, noch einmal ehrlich zu sein"
+            }
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "speakerId": "alex",
+        "text": "Alex lächelt erleichtert. „Gut. Dann muss ich nie wieder fragen.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Musst du nicht.“",
+            "effects": {
+              "friendship": 5,
+              "memory": "Wir sind bewusst Freunde geblieben – und das ist gut so"
+            }
+          }
+        ]
+      },
+      {
+        "id": "c3",
+        "speakerId": "alex",
+        "text": "Sie sieht dich lange an. „Dann langsam. Ohne dass wir verlieren, was wir schon haben.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Ohne Eile.“",
+            "effects": {
+              "friendship": 3,
+              "xp": 40
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_rooftop",
+    "npcId": "alex",
+    "title": "Ein Abend ohne Division",
+    "chapter": "Alex · Romanze",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAll": [
+        "alex_romance_unlocked"
+      ],
+      "minAge": 16,
+      "minAffection": 25,
+      "minTrust": 55
+    },
+    "startNode": "d1",
+    "nodes": [
+      {
+        "id": "d1",
+        "speakerId": "alex",
+        "text": "Alex hat den Wachplan studiert: Zwanzig Minuten lang ist das Dach unbeobachtet. Sie hat eine Decke mitgebracht und zwei Becher heiße Schokolade.",
+        "choices": [
+          {
+            "id": "stars",
+            "text": "Neben ihr in die Lichter der Stadt schauen.",
+            "nextNode": "d2",
+            "effects": {
+              "affection": 5
+            }
+          },
+          {
+            "id": "talk",
+            "text": "Fragen, wie sie sich ein Leben draußen vorstellt.",
+            "nextNode": "d3",
+            "effects": {
+              "trust": 4,
+              "affection": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "d2",
+        "speakerId": "alex",
+        "text": "Ihr redet über nichts und alles. Als der Wachwechsel näher rückt, greift Alex nach deiner Hand und lässt sie erst an der Tür wieder los.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Wiederholung?“",
+            "effects": {
+              "affection": 5,
+              "friendship": 3,
+              "xp": 40,
+              "memory": "Zwanzig unbeobachtete Minuten auf dem Dach"
+            }
+          }
+        ]
+      },
+      {
+        "id": "d3",
+        "speakerId": "alex",
+        "text": "„Eine kleine Wohnung. Ein Fenster zur Straße. Und niemand, der meine Post liest.“ Sie lacht leise. „Du darfst vorbeikommen.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Ich bringe die Schokolade mit.“",
+            "effects": {
+              "affection": 4,
+              "friendship": 3,
+              "memory": "Alex' Traum von einem Fenster zur Straße"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_alexv6_after",
+    "npcId": "alex",
+    "title": "Danach",
+    "chapter": "Alex · Kapitel 3",
+    "once": true,
+    "priority": 0,
+    "conditions": {
+      "flagsAny": [
+        "alex_friendship_chosen",
+        "alex_romance_unlocked"
+      ],
+      "minAge": 19,
+      "minTrust": 70,
+      "minFriendship": 60,
+      "minDay": 800
+    },
+    "startNode": "a1",
+    "nodes": [
+      {
+        "id": "a1",
+        "speakerId": "alex",
+        "text": "Alex legt eine Akte auf den Tisch – ihre eigene, ungeschwärzt. „Ich weiß jetzt, wer für das Feuer verantwortlich war. Ich muss eine Entscheidung treffen, und ich will sie nicht allein treffen.“",
+        "choices": [
+          {
+            "id": "support",
+            "text": "„Was auch immer du entscheidest – ich bin dabei.“",
+            "nextNode": "a2",
+            "effects": {
+              "loyalty": 6,
+              "trust": 4
+            }
+          },
+          {
+            "id": "caution",
+            "text": "„Lass uns erst herausfinden, wem wir trauen können.“",
+            "nextNode": "a3",
+            "effects": {
+              "respect": 5,
+              "trust": 3
+            }
+          }
+        ]
+      },
+      {
+        "id": "a2",
+        "speakerId": "alex",
+        "text": "Alex atmet tief durch. „Dann fangen wir morgen an. Zusammen.“",
+        "choices": [
+          {
+            "id": "friend",
+            "text": "Ihr die Hand auf die Schulter legen.",
+            "conditions": {
+              "flagsNone": [
+                "alex_romance_unlocked"
+              ]
+            },
+            "effects": {
+              "friendship": 5,
+              "xp": 80,
+              "setFlags": [
+                "alex_arc_truth"
+              ],
+              "memory": "Alex' Akte – und das Versprechen, es gemeinsam anzugehen"
+            }
+          },
+          {
+            "id": "partner",
+            "text": "Ihre Hand nehmen.",
+            "conditions": {
+              "flagsAll": [
+                "alex_romance_unlocked"
+              ]
+            },
+            "effects": {
+              "affection": 4,
+              "friendship": 3,
+              "xp": 80,
+              "setFlags": [
+                "alex_arc_truth"
+              ],
+              "memory": "Alex' Akte – und das Versprechen, es gemeinsam anzugehen"
+            }
+          }
+        ]
+      },
+      {
+        "id": "a3",
+        "speakerId": "alex",
+        "text": "„Du klingst wie Michael.“ Sie lächelt schief. „Das ist ausnahmsweise ein Kompliment.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Dann machen wir einen Plan.“",
+            "effects": {
+              "friendship": 3,
+              "xp": 60,
+              "setFlags": [
+                "alex_arc_truth"
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

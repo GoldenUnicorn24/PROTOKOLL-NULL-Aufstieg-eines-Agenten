@@ -139,6 +139,8 @@ object Simulation {
                 if (ev.ok) { s = ev.state; log += "${Clock.dateLabel(s.clock.day)}: Monatsbeurteilung durch Michael – Note ${s.career.evaluations.last().grade}" }
             }
             s = Career.checkGoals(s, log)
+            // Lebenssimulation läuft mit; HQ-Ereignisse entstehen nur im Tagesspiel
+            s = Life.advance(data, s, log, hqEvents = false)
             if (stopOnEvents) {
                 val story = Dialogues.pendingStory(data, s)
                 if (story != null && story.id != storyBefore) { stopReason = "Neues Ereignis: ${story.title}"; break }

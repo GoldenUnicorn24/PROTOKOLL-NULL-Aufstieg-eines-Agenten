@@ -72,7 +72,14 @@ object World {
             val w = weeklyTick(data, s)
             s = w.state; msgs += w.messages
         }
-        return Result(CompanionAssignment.arrive(data, s), msgs)
+        s = CompanionAssignment.arrive(data, s)
+        val feedBefore = s.living.feed.size
+        s = Life.advance(data, s)
+        // Wichtige Neuigkeiten über bekannte Figuren als Tagesmeldung
+        s.living.feed.drop(feedBefore.coerceAtMost(s.living.feed.size)).filter { it.type in setOf("promoted", "injured", "transferred", "couple", "returned") }
+            .takeLast(3).forEach { msgs += it.text }
+        if (s.living.pendingHqEvent != null && state.living.pendingHqEvent == null) msgs += "HQ-Ereignis: " + HqEvents.fill(data, s, HqEvents.pending(data, s)?.title ?: "", HqEvents.pending(data, s)?.npcId)
+        return Result(s, msgs)
     }
 
     fun weeklyTick(data: GameData, state: GameState): Result {
@@ -120,6 +127,19 @@ object World {
     fun npcLocation(data: GameData, state: GameState, id: String): String? {
         val slotId = Clock.slotIds[state.clock.slot]
         val custom = state.customNpcs.firstOrNull { it.id == id }
+        // v0.6: Lebensstatus geht dem Dienstplan vor
+        val life = state.living.lives[id]
+        val leader = data.agentById[id]?.lifeProfile in setOf("leader", "rogue")
+        if (life != null) {
+            val adult = Ages.npc(data, state, id) >= 18
+            when (life.status) {
+                LifeStatus.MISSION, LifeStatus.VACATION, LifeStatus.ABSENT, LifeStatus.TRANSFERRED -> return null
+                LifeStatus.INJURED -> return "medical"
+                LifeStatus.TRAINING -> if (!leader && state.clock.slot in 1..3) return if (life.focus == "combat" && state.clock.slot == 3) "range" else if (life.focus == "tech") "tech" else "training"
+                LifeStatus.FREE -> if (!leader) return if (adult) listOf("canteen", "canteen", "canteen", "city", "canteen", null)[state.clock.slot]
+                    else listOf("dorm", "canteen", "canteen", "canteen", "canteen", "dorm")[state.clock.slot]
+            }
+        }
         if (custom != null) {
             val plan = when (custom.profession) {
                 "tech" -> listOf("dorm", "tech", "canteen", "tech", "canteen", "dorm")

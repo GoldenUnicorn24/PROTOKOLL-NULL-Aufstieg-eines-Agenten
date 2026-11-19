@@ -36,7 +36,19 @@
       -0.16,
       -0.5
     ],
-    "look": "Dunkle Lederjacke, kurze dunkle Haare, Handschuhe, sachlicher Ausbilder-Look."
+    "look": "Dunkle Lederjacke, kurze dunkle Haare, Handschuhe, sachlicher Ausbilder-Look.",
+    "interests": [
+      "Schach",
+      "Laufen",
+      "Kochen"
+    ],
+    "values": [
+      "Loyalität",
+      "Disziplin"
+    ],
+    "goal": "Seine Rekruten lebend durch die Ausbildung bringen",
+    "lifeProfile": "leader",
+    "startRank": 7
   },
   {
     "id": "nikita",
@@ -71,7 +83,19 @@
       -0.45
     ],
     "look": "Dunkle Lederjacke, lange dunkelbraune Haare, häufig zusammengebunden, ernster Fokus.",
-    "revealFlag": "nikita_contact"
+    "revealFlag": "nikita_contact",
+    "interests": [
+      "Klettern",
+      "Sprachen",
+      "Musik"
+    ],
+    "values": [
+      "Freiheit",
+      "Gerechtigkeit"
+    ],
+    "goal": "Die Division von innen heraus zu Fall bringen",
+    "lifeProfile": "rogue",
+    "startRank": 8
   },
   {
     "id": "alex",
@@ -111,7 +135,19 @@
       -0.1,
       -0.55
     ],
-    "look": "Junge Rekrutin mit dunklen Haaren, oft graue Trainings- oder Freizeitkleidung."
+    "look": "Junge Rekrutin mit dunklen Haaren, oft graue Trainings- oder Freizeitkleidung.",
+    "interests": [
+      "Musik",
+      "Fotografie",
+      "Sprachen"
+    ],
+    "values": [
+      "Wahrheit",
+      "Familie"
+    ],
+    "goal": "Herausfinden, wer ihr die Familie genommen hat",
+    "lifeProfile": "recruit",
+    "startRank": 1
   },
   {
     "id": "birkhoff",
@@ -150,7 +186,19 @@
       -0.05,
       -0.6
     ],
-    "look": "Längere nach hinten fallende dunkle Haare, Bartansatz, legeres Shirt und Jackett vor Monitoren."
+    "look": "Längere nach hinten fallende dunkle Haare, Bartansatz, legeres Shirt und Jackett vor Monitoren.",
+    "interests": [
+      "Technik",
+      "Spiele",
+      "Musik"
+    ],
+    "values": [
+      "Freiheit",
+      "Sicherheit"
+    ],
+    "goal": "Eines Tages unbemerkt aussteigen",
+    "lifeProfile": "staff",
+    "startRank": 6
   },
   {
     "id": "amanda",
@@ -189,7 +237,19 @@
       0,
       -0.55
     ],
-    "look": "Gepflegte lange braune Haare, dunkle elegante Kleidung, strenge souveräne Körpersprache."
+    "look": "Gepflegte lange braune Haare, dunkle elegante Kleidung, strenge souveräne Körpersprache.",
+    "interests": [
+      "Bücher",
+      "Kunst",
+      "Schach"
+    ],
+    "values": [
+      "Kontrolle",
+      "Wahrheit"
+    ],
+    "goal": "Die Division nach ihren Vorstellungen formen",
+    "lifeProfile": "leader",
+    "startRank": 8
   },
   {
     "id": "percy",
@@ -228,7 +288,18 @@
       -0.1,
       -0.5
     ],
-    "look": "Hellgraue kurze Haare, dunkler dreiteiliger Anzug, autoritäre Haltung im Kontrollraum."
+    "look": "Hellgraue kurze Haare, dunkler dreiteiliger Anzug, autoritäre Haltung im Kontrollraum.",
+    "interests": [
+      "Schach",
+      "Bücher"
+    ],
+    "values": [
+      "Kontrolle",
+      "Macht"
+    ],
+    "goal": "Unersetzlich bleiben",
+    "lifeProfile": "leader",
+    "startRank": 9
   },
   {
     "id": "thom",
@@ -267,7 +338,19 @@
       0,
       -0.5
     ],
-    "look": "Junger Rekrut, kurzes dunkles Haar, schlichte Trainingskleidung."
+    "look": "Junger Rekrut, kurzes dunkles Haar, schlichte Trainingskleidung.",
+    "interests": [
+      "Klettern",
+      "Laufen",
+      "Musik"
+    ],
+    "values": [
+      "Ehrgeiz",
+      "Loyalität"
+    ],
+    "goal": "Als Erster seines Jahrgangs in den Außendienst",
+    "lifeProfile": "recruit",
+    "startRank": 2
   },
   {
     "id": "jaden",
@@ -306,7 +389,19 @@
       0,
       -0.5
     ],
-    "look": "Junge Rekrutin, Trainingskleidung der Division, konkurrenzbetonter Auftritt."
+    "look": "Junge Rekrutin, Trainingskleidung der Division, konkurrenzbetonter Auftritt.",
+    "interests": [
+      "Laufen",
+      "Mode",
+      "Schach"
+    ],
+    "values": [
+      "Ehrgeiz",
+      "Freiheit"
+    ],
+    "goal": "Die Rangliste anführen – um jeden Preis",
+    "lifeProfile": "recruit",
+    "startRank": 2
   },
   {
     "id": "owen",
@@ -345,7 +440,19 @@
       0.36,
       -0.5
     ],
-    "look": "Kurzes helles Haar, schwarzes Leder, zurückhaltender und gespannter Ausdruck."
+    "look": "Kurzes helles Haar, schwarzes Leder, zurückhaltender und gespannter Ausdruck.",
+    "interests": [
+      "Kochen",
+      "Bücher",
+      "Klettern"
+    ],
+    "values": [
+      "Gerechtigkeit",
+      "Loyalität"
+    ],
+    "goal": "Wiedergutmachen, was er als Wächter getan hat",
+    "lifeProfile": "agent",
+    "startRank": 6
   },
   {
     "id": "sonya",
@@ -384,7 +491,19 @@
       0,
       -0.55
     ],
-    "look": "Technikexpertin in Division-Umgebung, funktionaler Bürostil."
+    "look": "Technikexpertin in Division-Umgebung, funktionaler Bürostil.",
+    "interests": [
+      "Technik",
+      "Musik",
+      "Bücher"
+    ],
+    "values": [
+      "Sicherheit",
+      "Wahrheit"
+    ],
+    "goal": "Birkhoffs Labor eines Tages selbst leiten",
+    "lifeProfile": "staff",
+    "startRank": 4
   },
   {
     "id": "ryan",
@@ -423,7 +542,19 @@
       -0.1,
       -0.55
     ],
-    "look": "Glatte kurze dunkle Haare, dunkelblauer Anzug mit Krawatte, nüchterner Analysten-Look."
+    "look": "Glatte kurze dunkle Haare, dunkelblauer Anzug mit Krawatte, nüchterner Analysten-Look.",
+    "interests": [
+      "Bücher",
+      "Schach",
+      "Sprachen"
+    ],
+    "values": [
+      "Wahrheit",
+      "Gerechtigkeit"
+    ],
+    "goal": "Beweisen, dass hinter den Mustern ein Plan steckt",
+    "lifeProfile": "staff",
+    "startRank": 5
   },
   {
     "id": "voss",
@@ -458,7 +589,18 @@
       "accessory": 0
     },
     "look": "Grauer Mantel, kurz geschorenes graues Haar, randlose Brille – ein Mann, der wie ein Beamter aussieht und wie ein Chirurg denkt.",
-    "revealFlag": "voss_contact"
+    "revealFlag": "voss_contact",
+    "interests": [
+      "Laufen",
+      "Schach"
+    ],
+    "values": [
+      "Disziplin",
+      "Kontrolle"
+    ],
+    "goal": "PHOENIX zum Erfolg führen",
+    "lifeProfile": "leader",
+    "startRank": 7
   },
   {
     "id": "maya",
@@ -499,7 +641,19 @@
       "eyes": 2,
       "accessory": 1
     },
-    "look": "Dunkle Locken, meist zusammengebunden, graue Trainingsjacke mit hochgekrempelten Ärmeln, Bleistift hinter dem Ohr."
+    "look": "Dunkle Locken, meist zusammengebunden, graue Trainingsjacke mit hochgekrempelten Ärmeln, Bleistift hinter dem Ohr.",
+    "interests": [
+      "Kunst",
+      "Bücher",
+      "Fotografie"
+    ],
+    "values": [
+      "Freiheit",
+      "Familie"
+    ],
+    "goal": "Eines Tages ein Leben außerhalb der Mauern führen",
+    "lifeProfile": "recruit",
+    "startRank": 1
   },
   {
     "id": "ethan",
@@ -539,7 +693,19 @@
       "eyes": 0,
       "accessory": 0
     },
-    "look": "Kurzes dunkelblondes Haar, schwarzes Division-Shirt, Hundemarke seines Vaters um den Hals."
+    "look": "Kurzes dunkelblondes Haar, schwarzes Division-Shirt, Hundemarke seines Vaters um den Hals.",
+    "interests": [
+      "Laufen",
+      "Schreiben",
+      "Klettern"
+    ],
+    "values": [
+      "Familie",
+      "Loyalität"
+    ],
+    "goal": "Seine Schwester wiedersehen",
+    "lifeProfile": "recruit",
+    "startRank": 1
   },
   {
     "id": "kira",
@@ -581,7 +747,18 @@
       "accessory": 0
     },
     "revealFlag": "kira_rescued",
-    "portraitAsset": "cast/original_kira.jpg"
+    "portraitAsset": "cast/original_kira.jpg",
+    "interests": [
+      "Kunst",
+      "Musik"
+    ],
+    "values": [
+      "Freiheit",
+      "Wahrheit"
+    ],
+    "goal": "Herausfinden, was PHOENIX mit ihr gemacht hat",
+    "lifeProfile": "recruit",
+    "startRank": 1
   },
   {
     "id": "helena",
@@ -622,6 +799,18 @@
       "eyes": 0,
       "accessory": 2
     },
-    "portraitAsset": "cast/original_helena.jpg"
+    "portraitAsset": "cast/original_helena.jpg",
+    "interests": [
+      "Kochen",
+      "Bücher",
+      "Kunst"
+    ],
+    "values": [
+      "Sicherheit",
+      "Familie"
+    ],
+    "goal": "Dass jede Einheit hat, was sie braucht",
+    "lifeProfile": "staff",
+    "startRank": 5
   }
 ]

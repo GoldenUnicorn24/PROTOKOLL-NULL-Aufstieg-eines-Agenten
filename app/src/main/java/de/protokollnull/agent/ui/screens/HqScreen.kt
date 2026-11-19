@@ -40,6 +40,7 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
                 Text("Tippen, um zu reagieren", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
+        item { LivingHqCards(vm, s) }
         if (quest != null) item {
             GlassPanel(onClick = { vm.open(Overlay.Quests) }) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

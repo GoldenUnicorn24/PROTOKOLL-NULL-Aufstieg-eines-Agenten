@@ -46,7 +46,14 @@ data class AgentDefinition(
     /** Bildausschnitt (BiasAlignment x/y, -1..1) für das Darstellerfoto. */
     val portraitFocus: List<Float> = listOf(0f, -0.5f),
     /** Figur erscheint erst, wenn dieses Flag gesetzt ist (z. B. nach Story-Kontakt). */
-    val revealFlag: String? = null
+    val revealFlag: String? = null,
+    // --- v0.6: Lebenssimulation
+    val interests: List<String> = emptyList(),
+    val values: List<String> = emptyList(),
+    val goal: String = "",
+    /** recruit | agent | staff | leader | rogue */
+    val lifeProfile: String = "agent",
+    val startRank: Int = 1
 )
 
 @Serializable
@@ -155,7 +162,16 @@ data class Conditions(
     val minSkill: Map<String, Int> = emptyMap(),
     val minAttribute: Map<String, Int> = emptyMap(),
     val missionsDone: List<String> = emptyList(),
-    val hasItem: String? = null
+    val hasItem: String? = null,
+    // --- v0.6
+    val flagsAny: List<String> = emptyList(),
+    /** Mindestalter des Gesprächspartners. */
+    val minNpcAge: Int? = null,
+    val minDay: Int? = null,
+    /** NPC-NPC-Beziehung „a|b“ ≥ Wert. */
+    val minBond: Map<String, Int> = emptyMap(),
+    val maxBond: Map<String, Int> = emptyMap(),
+    val noConflict: Boolean = false
 )
 
 @Serializable
