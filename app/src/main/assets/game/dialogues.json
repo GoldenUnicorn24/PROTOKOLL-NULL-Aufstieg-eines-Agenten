@@ -3225,7 +3225,7 @@
       ],
       "minFriendship": 40,
       "minTrust": 45,
-      "minAge": 18
+      "minAge": 16
     }
   },
   {
@@ -3301,7 +3301,7 @@
       ],
       "minFriendship": 50,
       "minTrust": 45,
-      "minAge": 18
+      "minAge": 16
     }
   },
   {
@@ -3933,7 +3933,7 @@
       "flagsAll": [
         "alex_romance_unlocked"
       ],
-      "minAge": 18,
+      "minAge": 16,
       "minAffection": 25,
       "minTrust": 55
     },

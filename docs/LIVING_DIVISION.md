@@ -67,14 +67,14 @@ Wer nicht innerhalb von 4 Tagen reagiert, löst die `ignore`-Option aus (falls v
 - **Geschenke** wählt der Spieler gezielt aus. Jedes Geschenk zeigt eine vorhergesagte Reaktion: +10, wenn es ein Interesse trifft, +5 bei neugierigen oder kreativen Figuren, +3 sonst und +1 bei Wiederholung innerhalb von 60 Tagen.
 - **Konflikte** kosten jede Woche Freundschaft und blockieren romantische Schritte. Lösen lassen sie sich durch eine Aussprache (Empathie-Probe) oder, bei leichten Konflikten, durch ein perfektes Geschenk. Ungelöste leichte Konflikte verblassen nach 75 Tagen, schwere werden schwächer. Wer in einer Partnerschaft 21 Tage lang keine Zeit füreinander hat, bekommt einen Konflikt.
 - **Mehrere mögliche Partner:** Interesse (Stufe 1) kann bei mehreren Figuren gleichzeitig bestehen. Eine **feste Beziehung** ist eine bewusste Entscheidung mit Bestätigungsdialog und beendet andere Annäherungen respektvoll. „Nur Freunde bleiben“ pausiert Romantik für 90 Tage. Eine Trennung hinterlässt einen Konflikt.
-- **Altersregel unverändert:** Romantik nur, wenn beide Figuren volljährig sind.
+- **Altersregel (ergänzender v0.6-Patch):** Spielerromanzen sind als freiwillige, nicht-sexuelle Beziehungen ab 16 möglich, wenn beide mindestens 16 sind und höchstens zwei Jahre auseinanderliegen (16/17, 18/16). Ab Stufe 2 bleibt die Entwicklung bis zur Volljährigkeit beider Figuren stehen; erst danach sind Zusammenziehen und Heirat möglich. Unabhängige NPC-NPC-Paare entstehen weiterhin nur zwischen Erwachsenen.
 
 ## 6. Alex-Route
 
 Zehn neue handgeschriebene Szenen (`dlg_alexv6_*`) ergänzen die bestehenden:
 - **Freundschaftsszenen ab 16:** Rangliste, geteilter Kopfhörer, drei Uhr morgens, Narben (nach einer Verletzung in der Simulation), eine Zeile höher (nach Alex' Beförderung), Achtzehn (Alex' Geburtstag).
 - **Freundschaftsweg:** „Familie, die man sich aussucht“ und „Noch einmal ehrlich“. Die zweite Szene ist ab 19 eine bewusste zweite Entscheidung, bei der man Freunde bleiben oder sich öffnen kann.
-- **Romanze (beide 18+):** „Ein Abend ohne Division“.
+- **Romantische Annäherung ab 16 (altersgerecht, nicht-sexuell):** „Ein Abend ohne Division“. Die späteren Erwachsenen-Beziehungsschritte bleiben gesperrt, solange jemand minderjährig ist.
 - **Gemeinsames Kapitel:** „Danach“, mit Antworten je nach Weg.
 
 Der reine Freundschaftsweg bleibt vollständig spielbar.

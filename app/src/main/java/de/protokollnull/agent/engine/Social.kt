@@ -17,13 +17,17 @@ object Romance {
     }
 
     /**
-     * Romantische Optionen gibt es ausschließlich, wenn beide Figuren
-     * volljährig sind. Bis dahin sind nur Freundschaft, Vertrauen und
-     * Mentoring möglich (bewusste Entscheidung ab v0.5).
+     * Freiwillige, nicht-sexualisierte Romanzen sind ab 16 möglich, wenn beide
+     * Figuren mindestens 16 und höchstens zwei Jahre auseinander sind (16/17,
+     * 18/16). Zwei Erwachsene unterliegen nicht dieser Jugend-Altersgrenze.
+     * Zusammenziehen, Heirat und Familienplanung ausschließlich als Erwachsene.
      */
     fun allowed(data: GameData, state: GameState, npcId: String): Boolean {
         if (!romanceable(data, state, npcId)) return false
-        return Ages.player(state) >= 18 && Ages.npc(data, state, npcId) >= 18
+        val playerAge = Ages.player(state)
+        val npcAge = Ages.npc(data, state, npcId)
+        if (playerAge >= 18 && npcAge >= 18) return true
+        return playerAge >= 16 && npcAge >= 16 && kotlin.math.abs(playerAge - npcAge) <= 2
     }
 
     fun teen(data: GameData, state: GameState, npcId: String): Boolean =
@@ -47,6 +51,10 @@ object Romance {
             return if (r.romanceStage > 0) Step("pause", "Beziehung pausiert", "Die Altersvoraussetzungen sind momentan nicht erfüllt.", false)
             else null
         }
+        // Jugendbeziehungen bleiben bei Interesse oder fester Partnerschaft.
+        // Auch manipulierte oder alte Spielstände können hier keine
+        // Erwachsenenaktionen (Zusammenziehen/Heirat/Familie) auslösen.
+        if (teen(data, state, npcId) && r.romanceStage >= 2) return null
         val other = partnerId(data, state)
         if (other != null && other != npcId) return Step("busy", "Bereits in einer Beziehung", "Du bist mit ${Relations.displayName(data, state, other)} zusammen.", false)
         val day = state.clock.day
