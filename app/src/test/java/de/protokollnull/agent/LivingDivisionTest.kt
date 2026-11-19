@@ -87,6 +87,13 @@ class LivingDivisionTest {
         assertEquals(s, SaveMigration.decode(SaveMigration.encode(s)))
     }
 
+    @Test fun careerPaceIsBelievable() {
+        val s = skipYears(start(seed = 3L), 730)
+        val ranks = d.agents.filter { it.lifeProfile == "recruit" }.map { Life.rank(d, s, it.id) - it.startRank }
+        assertTrue("Rekruten steigen in zwei Jahren höchstens drei Ränge ($ranks)", ranks.all { it <= 3 })
+        assertTrue("aber nicht gar nicht ($ranks)", ranks.any { it >= 1 })
+    }
+
     @Test fun companionCareerDependsOnCharacterNotJustTime() {
         val eager = CompanionAssignment.dossier().copy(traits = listOf("ehrgeizig", "diszipliniert"), careerWish = "tech")
         val calm = CompanionAssignment.dossier().copy(traits = listOf("ruhig", "humorvoll"), careerWish = "medic")

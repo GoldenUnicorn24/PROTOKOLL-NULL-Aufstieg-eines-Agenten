@@ -143,7 +143,7 @@ object Life {
         LifeStatus.inHq(state.living.lives[id]?.status ?: LifeStatus.DUTY)
 
     /** Beförderungsschwelle in Karrierepunkten. */
-    fun examThreshold(rank: Int) = 70 + rank * 45
+    fun examThreshold(rank: Int) = 160 + rank * 130
 
     fun rankCap(data: GameData, state: GameState, id: String): Int {
         val adult = Ages.npc(data, state, id) >= 18
@@ -335,8 +335,8 @@ object Life {
         val injuryRoll = rng.percent()
         val injured = if (success) injuryRoll <= 7 else injuryRoll <= 38
         val nm = name(data, s, id)
-        l = if (success) l.copy(missions = l.missions + 1, careerXp = l.careerXp + 25 + l.missionDifficulty / 4, mood = (l.mood + 6).pct(), stress = (l.stress + 8).pct())
-        else l.copy(missionsFailed = l.missionsFailed + 1, careerXp = l.careerXp + 8, mood = (l.mood - 12).pct(), stress = (l.stress + 15).pct())
+        l = if (success) l.copy(missions = l.missions + 1, careerXp = l.careerXp + 12 + l.missionDifficulty / 6, mood = (l.mood + 6).pct(), stress = (l.stress + 8).pct())
+        else l.copy(missionsFailed = l.missionsFailed + 1, careerXp = l.careerXp + 4, mood = (l.mood - 12).pct(), stress = (l.stress + 15).pct())
         l = l.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "", missionDifficulty = 0)
         s = s.copy(flags = s.flags + if (success) "lf_${id}_mission_ok" else "lf_${id}_mission_failed")
         s = feed(data, s, LifeEvent(day, id, if (success) "mission_ok" else "mission_fail",
@@ -360,7 +360,7 @@ object Life {
         val nm = Relations.displayName(data, s, id)
         if (pass) {
             val newRank = l.rank + 1
-            l = l.copy(rank = newRank, careerXp = 0, examsPassed = l.examsPassed + 1, mood = (l.mood + 12).pct(), status = LifeStatus.DUTY, statusUntil = -1, statusNote = "Beförderung", lastDecision = "Prüfung bestanden", lastDecisionDay = day)
+            l = l.copy(rank = newRank, careerXp = 0, examCooldownUntil = day + 60, examsPassed = l.examsPassed + 1, mood = (l.mood + 12).pct(), status = LifeStatus.DUTY, statusUntil = -1, statusNote = "Beförderung", lastDecision = "Prüfung bestanden", lastDecisionDay = day)
             s = s.copy(flags = s.flags + "lf_${id}_promoted" + "lf_${id}_rank_$newRank")
             s = put(s, id, l)
             return feed(data, s, LifeEvent(day, id, "promoted", "$nm besteht die Prüfung und wird zum ${data.rank(newRank).name} befördert."), log)
@@ -378,7 +378,7 @@ object Life {
             val l = s.living.lives[id] ?: continue
             if (profile(data, s, id) in setOf("leader", "rogue") && s.customNpcs.none { it.id == id }) continue
             val delta = (l.careerXp - l.monthStartXp).coerceAtLeast(0) + if (l.careerXp < l.monthStartXp) 60 else 0
-            val score = (delta * 100 / 90 + (l.mood - 50) / 3).coerceIn(0, 100)
+            val score = (delta * 100 / 110 + (l.mood - 50) / 3).coerceIn(0, 100)
             val g = when { score >= 80 -> "A"; score >= 60 -> "B"; score >= 40 -> "C"; score >= 25 -> "D"; else -> "E" }
             s = put(s, id, l.copy(grades = (l.grades + g).takeLast(6), monthStartXp = l.careerXp))
         }

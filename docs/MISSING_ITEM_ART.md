@@ -12,3 +12,15 @@ Mehrfach genutzte Icons (optional später eigene Motive):
 | `pistol` | Trainingsmarkierer, Dienstausrüstung |
 | `armor` | Leichte und schwere Schutzweste |
 | `backpack` | Kleiner und großer Rucksack |
+
+## v0.6 „Living Division“
+
+Für v0.6 wurden **keine neuen Bilder** erzeugt oder heruntergeladen. Statusanzeigen, Feed, Personalakte und HQ-Ereignisse nutzen vorhandene Porträts, Avatare und Icons.
+
+Optional wünschenswert (nicht erforderlich, ein Mensch kann sie später mit geklärten Rechten ergänzen):
+
+| Asset (Vorschlag) | Zweck |
+|---|---|
+| `ui/status_mission.svg`, `status_injured.svg`, `status_vacation.svg`, `status_transferred.svg` | Eigene Statussymbole statt farbiger Plaketten |
+| `scenes/hq_rooftop.jpg` | Hintergrund für Dach-Szenen der Alex-Route |
+| `scenes/hq_medical.jpg` | Hintergrund für Krankenstation-Ereignisse |
