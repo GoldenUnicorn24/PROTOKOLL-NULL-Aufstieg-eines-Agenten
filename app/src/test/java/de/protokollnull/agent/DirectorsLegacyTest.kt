@@ -448,6 +448,10 @@ class DirectorsLegacyTest {
         var s = leader(3).let { it.copy(clock = GameClock(800, 0)) }
         s = Home.takeJob(d, s, "courier").state
         val w = Clock.week(800)
+        assertEquals("Vertragsschluss zählt nicht als Schicht", -1, s.life.shiftWeek)
+        val firstShift = Home.workShift(d, s)
+        assertTrue(firstShift.ok)
+        s = firstShift.state
         val worked = Home.weekly(d, s.copy(clock = GameClock((w + 1) * 7))).first
         assertEquals(s.player.credits + 120, worked.player.credits)
         val lazy = Home.weekly(d, worked.copy(clock = GameClock((w + 2) * 7))).first
@@ -609,6 +613,11 @@ class DirectorsLegacyTest {
         var s = leader(3).copy(clock = GameClock(800, 0))
         s = Home.takeJob(d, s, "courier").state
         val week = Clock.week(s.clock.day)
+        assertEquals("Neue Anstellung ist noch keine geleistete Schicht", -1, s.life.shiftWeek)
+        val worked = Home.workShift(d, s)
+        assertTrue("Schicht nach der Anstellung möglich", worked.ok)
+        s = worked.state
+        assertEquals(week, s.life.shiftWeek)
         val tick = s.copy(clock = GameClock((week + 1) * 7))
         val paid = Home.weekly(d, tick).first
         assertEquals(s.player.credits + 120, paid.player.credits)

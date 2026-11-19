@@ -160,7 +160,7 @@ object Home {
         if (Ages.player(state) < j.minAge) return state.fail("Ab ${j.minAge} Jahren")
         if (id == "tutor" && Stats.effectiveAttribute(data, state, Attr.INTELLECT) < 40) return state.fail("Intellekt ≥ 40 nötig")
         if (id == "translator" && (state.player.skills["language"] ?: 0) < 1) return state.fail("Fertigkeit „Fremdsprachen“ nötig")
-        val s = state.copy(player = state.player.copy(coverJob = j.name), life = state.life.copy(coverJob = id, jobWarnings = 0, shiftWeek = Clock.week(state.clock.day)))
+        val s = state.copy(player = state.player.copy(coverJob = j.name), life = state.life.copy(coverJob = id, jobWarnings = 0, shiftWeek = -1))
         return Result(log(s, "Tarnjob: ${j.name}"), listOf("Tarnjob: ${j.name} – ${j.pay} Cr/Woche bei einer Schicht pro Woche."))
     }
 
