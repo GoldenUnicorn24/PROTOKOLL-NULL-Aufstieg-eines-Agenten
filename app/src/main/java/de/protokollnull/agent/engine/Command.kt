@@ -64,7 +64,7 @@ object Command {
             LifeStatus.TRANSFERRED -> return Status("transferred", "versetzt", false)
         }
         Personnel.assignmentOf(data, state, id)?.let { return Status("assigned", "eingesetzt: $it", false) }
-        state.lead.tasks.firstOrNull { it.npcId == id && !it.done }?.let { return Status("task", "beschäftigt: " + (taskById[it.kind]?.label ?: it.kind), false) }
+        state.lead.tasks.firstOrNull { (it.npcId == id || it.partnerId == id) && !it.done }?.let { return Status("task", "beschäftigt: " + (taskById[it.kind]?.label ?: it.kind), false) }
         if (Ages.npc(data, state, id) < 18) return Status("minor", "minderjährig – nur Training", true, trainingOnly = true)
         if (forOps && Life.rank(data, state, id) < 2) return Status("rank", "rangbedingt ungeeignet für Einsätze", true, trainingOnly = true)
         return Status("ok", "verfügbar", true)

@@ -116,7 +116,8 @@ object Home {
         // Tarnjob: volle Bezahlung nur mit gearbeiteter Schicht
         val job = s.life.coverJob?.let { jobById[it] }
         if (job != null) {
-            val worked = s.life.shiftWeek == week
+            // Abrechnung zum Wochenwechsel: zählt die Schicht der gerade beendeten Woche
+            val worked = s.life.shiftWeek >= week - 1
             val pay = if (worked) job.pay else job.pay / 2
             var warnings = s.life.jobWarnings
             if (!worked) warnings++ else warnings = (warnings - 1).coerceAtLeast(0)
@@ -269,8 +270,13 @@ object Home {
     val meetingById = meetings.associateBy { it.id }
 
     fun meetingsFor(data: GameData, state: GameState): List<Meeting> {
-        val known = meetings.filter { Relations.isKnownNpc(data, state, it.npcId) && World.revealed(data, state, it.npcId) }
-        val generic = state.relations.keys.filter { id -> meetings.none { it.npcId == id } && Relations.isKnownNpc(data, state, id) && World.revealed(data, state, id) && id !in setOf("percy", "amanda") }
+        // Begleiter-Treffen gelten für die tatsächlich zugeteilte Begleitung (eigene Rekrutierungen)
+        val expanded = meetings.flatMap { m ->
+            if (m.npcId != "assigned_companion") listOf(m)
+            else state.customNpcs.map { c -> m.copy(id = "${m.id}_${c.id}", npcId = c.id, name = "${m.name} mit ${c.firstName}") }
+        }
+        val known = expanded.filter { Relations.isKnownNpc(data, state, it.npcId) && World.revealed(data, state, it.npcId) }
+        val generic = state.relations.keys.filter { id -> known.none { it.npcId == id } && Relations.isKnownNpc(data, state, id) && World.revealed(data, state, id) && id !in setOf("percy", "amanda") }
             .map { Meeting("coffee_$it", it, "Kaffee mit ${Relations.displayName(data, state, it).substringBefore(" ")}", "Ein Kaffee außerhalb des HQ.", 25, cost = 8, memory = "Ein Kaffee in der Stadt") }
         return known + generic
     }
