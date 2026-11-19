@@ -84,6 +84,15 @@ internal object ImportedPortraits {
     /** Used by the bounded ZIP importer. Bytes are staged and normalized like picked photos. */
     suspend fun importBytes(context: Context, bytes: ByteArray): String = withContext(Dispatchers.IO) {
         require(bytes.isNotEmpty() && bytes.size <= 12 * 1024 * 1024) { "Bilddatei zu groß oder leer." }
+        // Robolectric can return cached bitmap metadata from invalid files. Reject
+        // unrecognized formats before bitmap decoding (also safer against garbage).
+        val png = bytes.size >= 8 && bytes[0] == 0x89.toByte() && bytes[1] == 0x50.toByte() &&
+            bytes[2] == 0x4e.toByte() && bytes[3] == 0x47.toByte()
+        val jpeg = bytes.size >= 3 && bytes[0] == 0xff.toByte() &&
+            bytes[1] == 0xd8.toByte() && bytes[2] == 0xff.toByte()
+        val webp = bytes.size >= 12 && String(bytes, 0, 4, Charsets.US_ASCII) == "RIFF" &&
+            String(bytes, 8, 4, Charsets.US_ASCII) == "WEBP"
+        require(png || jpeg || webp) { "Keine gültige JPG-, PNG- oder WebP-Bilddatei." }
         val staged = File.createTempFile("cast-", ".source", context.cacheDir)
         try {
             staged.writeBytes(bytes)

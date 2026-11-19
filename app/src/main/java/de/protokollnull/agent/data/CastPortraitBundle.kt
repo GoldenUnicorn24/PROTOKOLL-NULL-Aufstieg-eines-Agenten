@@ -48,6 +48,19 @@ internal object CastPortraitBundle {
                     val id = match?.groupValues?.get(1)?.lowercase()
                     if (id == null || id !in allowedIds) {
                         skipped++
+                        // Bound ignored entries as well: closeEntry() would otherwise
+                        // decompress arbitrarily large unknown files inside ZIP bombs.
+                        val sink = ByteArray(32768)
+                        var unknownBytes = 0
+                        while (true) {
+                            val count = zip.read(sink)
+                            if (count < 0) break
+                            unknownBytes += count
+                            expanded += count
+                            require(unknownBytes <= MAX_IMAGE && expanded <= MAX_TOTAL) {
+                                "Das ZIP enthält zu große Dateien."
+                            }
+                        }
                         zip.closeEntry()
                         continue
                     }
