@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import de.protokollnull.agent.data.ImportedPortraits
+import de.protokollnull.agent.data.PrivateCastPortraits
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -121,13 +122,22 @@ fun NpcPortrait(data: GameData, state: GameState, id: String, size: Dp, modifier
     val photo = data.portraitFor(id)
     val def = data.agentById[id]
     val custom = state.customNpcs.firstOrNull { it.id == id }
+    val context = LocalContext.current
+    val revision = PrivateCastPortraits.revision
+    val imported = remember(context, id, revision) {
+        if (def?.seriesCharacter == true) PrivateCastPortraits.imported(context, id) else null
+    }
+    val privateBundle = remember(context, id) {
+        if (def?.seriesCharacter == true) PrivateCastPortraits.bundled(context, id) else null
+    }
+    val imageModel: Any? = imported ?: (privateBundle ?: photo)?.let { "file:///android_asset/" + it }
     val loader = LocalLoader.current
     val base = if (framed) modifier.size(width = size, height = height).clip(shape).border(1.dp, Pn.Accent.copy(alpha = 0.35f), shape) else modifier.clip(shape)
     Box(base) {
-        if (photo != null && loader != null) {
+        if (imageModel != null && loader != null) {
             val f = def?.portraitFocus ?: listOf(0f, -0.5f)
             AsyncImage(
-                model = "file:///android_asset/$photo", imageLoader = loader,
+                model = imageModel, imageLoader = loader,
                 contentDescription = "Porträt: " + (def?.name ?: id), contentScale = ContentScale.Crop,
                 alignment = BiasAlignment(f.getOrElse(0) { 0f }, f.getOrElse(1) { -0.5f }),
                 modifier = Modifier.fillMaxSize()
