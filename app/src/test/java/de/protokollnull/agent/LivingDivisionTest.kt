@@ -334,19 +334,25 @@ class LivingDivisionTest {
         assertTrue(Bonds.compatibility(d, conflicted, "alex").score < c1.score)
     }
 
-    // --- Altersregel bleibt bestehen ---------------------------------------------------------
+    // --- Altersgerechte Romantik und sichere Erwachsenenfunktionen -----------
 
-    @Test fun romanceStaysAdultsOnly() {
+    @Test fun ageAppropriateRomanceStartsAtSixteenButAdultActionsAreBlocked() {
         val young = start().copy(flags = start().flags + "alex_romance_unlocked")
-        assertFalse(Romance.allowed(d, young, "alex"))
-        assertNull(Romance.nextStep(d, young, "alex"))
-        listOf("dlg_alexv6_rooftop", "dlg_alexv6_reconsider").forEach { id ->
-            val dlg = d.dialogueById.getValue(id)
-            assertTrue("$id ab 18", (dlg.conditions?.minAge ?: 0) >= 18)
+        assertEquals(16, Ages.player(young))
+        assertEquals(17, Ages.npc(d, young, "alex"))
+        assertTrue(Romance.allowed(d, young, "alex"))
+        assertEquals(2, Romance.maxStage(d, young, "alex"))
+        val shared = Relations.update(d, young, "alex") {
+            it.copy(friendship = 90, trust = 90, affection = 80, romanceStage = 2,
+                romanceSinceDay = young.clock.day - 100)
         }
-        val crush = Relations.update(d, young, "alex") { it.copy(friendship = 90, trust = 90, affection = 0) }
-        val r = Social.interact(d, crush, "alex", "time")
-        assertEquals("keine Zuneigung unter 18", 0, Relations.get(d, r.state, "alex").affection)
+        assertNull("keine Erwachsenenaktionen", Romance.nextStep(d, shared, "alex"))
+        val updated = Social.interact(d, young, "alex", "time")
+        assertTrue("Zuneigung durch gemeinsames Erlebnis", Relations.get(d, updated.state, "alex").affection > 0)
+        listOf("dlg_alex_choice", "dlg_alex_evening", "dlg_alexv6_rooftop").forEach { id ->
+            val dlg = d.dialogueById.getValue(id)
+            assertEquals("$id ab 16", 16, dlg.conditions?.minAge)
+        }
     }
 
     @Test fun alexRouteHasHandwrittenScenesAndFriendshipPath() {
@@ -357,10 +363,11 @@ class LivingDivisionTest {
         val friendship = scenes.filter { "alex_friendship_chosen" in (it.conditions?.flagsAll ?: emptyList()) }
         assertTrue(friendship.isNotEmpty())
         assertTrue(friendship.none { "alex_romance_unlocked" in (it.conditions?.flagsAll ?: emptyList()) })
-        // Romantische Effekte nur in Szenen ab 18
+        // Romantische Szenen niemals unter 16; Erwachsenenfunktionen
+        // werden zentral durch Romance.nextStep gesperrt.
         scenes.forEach { sc ->
             val romantic = sc.nodes.flatMap { it.choices }.any { (it.effects?.affection ?: 0) > 0 }
-            if (romantic) assertTrue(sc.id, (sc.conditions?.minAge ?: 0) >= 18)
+            if (romantic) assertTrue(sc.id, (sc.conditions?.minAge ?: 0) >= 16)
         }
     }
 
