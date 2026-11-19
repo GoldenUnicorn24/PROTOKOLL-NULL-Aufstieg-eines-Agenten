@@ -49,7 +49,7 @@ object Ops {
         Archetype("observation", "Observation", true, listOf("intel", "tech"), listOf(
             Objective("meeting", "Treffen dokumentieren", "{Target} trifft im Bereich {region} einen Unbekannten. Das Treffen soll lückenlos dokumentiert werden.", null, "",
                 "Fotos sichern und abziehen" to "Saubere Beweislage, die Zielperson bleibt ahnungslos.", "Dem Unbekannten folgen" to "Mehr Erkenntnisse, aber höheres Risiko, entdeckt zu werden."),
-            Objective("courier", "Kurierroute", "Ein Kurier von {faction} pendelt durch {region}. Finde heraus, wem er die Umschläge übergibt.", null, "",
+            Objective("courier", "Kurierroute", "Ein Kurier von {faction} pendelt durch den Bereich {region}. Finde heraus, wem er die Umschläge übergibt.", null, "",
                 "Route melden" to "Die Division kann die Route später überwachen.", "Übergabeort markieren" to "Der Ort wird zur Falle – wenn niemand Verdacht schöpft."),
             Objective("contact", "Kontaktperson identifizieren", "{Target} trifft sich regelmäßig mit jemandem im Bereich {region}. Wer ist die Kontaktperson?", null, "",
                 "Identität bestätigen" to "Ein Name für die Akten.", "Kontaktperson ansprechen" to "Eine mögliche Quelle – oder ein Warnsignal für die Gegenseite.")
@@ -73,7 +73,7 @@ object Ops {
         Archetype("recon", "Aufklärung", true, listOf("intel", "combat"), listOf(
             Objective("site", "Gelände kartieren", "Das Gelände im Bereich {region} wird von {faction} genutzt. Erfasse Zugänge, Wachen und Rückzugswege.", "recon", "",
                 "Bericht nüchtern halten" to "Eine verlässliche Grundlage für Folgeeinsätze.", "Schwachstelle markieren" to "Ein späterer Zugriff wird leichter – wenn die Markierung unentdeckt bleibt."),
-            Objective("route", "Route prüfen", "Eine Fahrtroute durch {region} soll auf Hinterhalte geprüft werden.", "recon", "",
+            Objective("route", "Route prüfen", "Eine Fahrtroute durch den Bereich {region} soll auf Hinterhalte geprüft werden.", "recon", "",
                 "Alternativroute vorschlagen" to "Sicherere Wege für künftige Eskorten.", "Verdächtige Stelle melden" to "{faction} merkt, dass die Route bekannt ist."),
             Objective("guards", "Wachplan ermitteln", "Ermittle, wann die Wachen von {faction} im Bereich {region} wechseln.", "recon", "",
                 "Wachplan dokumentieren" to "Planbare Folgeeinsätze.", "Wachposten ablenken und tiefer vordringen" to "Mehr Einblick, mehr Risiko.")
@@ -95,11 +95,11 @@ object Ops {
             ap("deal", "Tauschgeschäft", "Etwas anbieten, das die Gegenseite braucht.", Attr.CHARISMA, "negotiation", "social", risk = "Kosten")
         ), "choice", maxTeam = 1),
         Archetype("data", "Datenauswertung", true, listOf("tech", "intel"), listOf(
-            Objective("files", "Akten entschlüsseln", "Ein Datensatz aus {region} enthält verschlüsselte Notizen von {faction}.", null, "",
+            Objective("files", "Akten entschlüsseln", "Ein Datensatz aus dem Bereich {region} enthält verschlüsselte Notizen von {faction}.", null, "",
                 "Gründlich auswerten" to "Belastbare Ergebnisse, etwas später.", "Schnellbericht liefern" to "Sofort nutzbar, aber mit Lücken."),
-            Objective("payments", "Zahlungen verfolgen", "Ungewöhnliche Zahlungen laufen über ein Konto in {region}. Wer steckt dahinter?", null, "",
+            Objective("payments", "Zahlungen verfolgen", "Ungewöhnliche Zahlungen laufen über ein Konto im Bereich {region}. Wer steckt dahinter?", null, "",
                 "Zahlungsfluss dokumentieren" to "Ein Beweisstück für die Akten.", "Konto einfrieren lassen" to "{faction} verliert Mittel – und weiß, dass jemand sucht."),
-            Objective("photos", "Bildabgleich", "Hunderte Fotos aus {region} müssen mit bekannten Gesichtern von {faction} abgeglichen werden.", null, "",
+            Objective("photos", "Bildabgleich", "Hunderte Fotos aus dem Bereich {region} müssen mit bekannten Gesichtern von {faction} abgeglichen werden.", null, "",
                 "Treffer bestätigen" to "Ein klares Bild der Beteiligten.", "Unbekannte Gesichter melden" to "Neue Spuren, mehr offene Fragen.")
         ), listOf(
             ap("analysis", "Musteranalyse", "Zusammenhänge im Datenmaterial suchen.", Attr.INTELLECT, "analysis", "stealth"),
@@ -111,7 +111,7 @@ object Ops {
                 "Sofort zur Versorgung bringen" to "Die Person ist in Sicherheit und dankbar.", "Erst befragen, dann versorgen" to "Wertvolle Hinweise, aber Unmut."),
             Objective("agent", "Agentin zurückholen", "Eine Agentin der Division ist im Bereich {region} aufgeflogen und sitzt fest.", "extract", "Agentin",
                 "Legende der Agentin retten" to "Sie kann später weiterarbeiten.", "Alles abbrechen, Hauptsache raus" to "Sicher, aber die Operation ist verloren."),
-            Objective("witness", "Zeugin evakuieren", "Eine Zeugin gegen {faction} muss aus {region} gebracht werden, bevor sie gefunden wird.", "extract", "Zeugin",
+            Objective("witness", "Zeugin evakuieren", "Eine Zeugin gegen {faction} muss aus dem Bereich {region} gebracht werden, bevor sie gefunden wird.", "extract", "Zeugin",
                 "In ein sicheres Haus bringen" to "Die Aussage bleibt verfügbar.", "Ins Programm der Regierungsaufsicht übergeben" to "Rechtlich sauber, aber außerhalb der Kontrolle der Division.")
         ), listOf(
             ap("quiet", "Leiser Zugang", "Über Nebeneingänge vordringen.", Attr.PERCEPTION, "shadowstep", "stealth", tactical = true, risk = "Alarm"),
@@ -131,11 +131,11 @@ object Ops {
             ap("archive", "Archivrecherche", "Öffentliche und interne Quellen kombinieren.", Attr.INTELLECT, "evidence", "balanced")
         ), "search"),
         Archetype("escort", "Eskorte", false, listOf("combat", "social"), listOf(
-            Objective("witness", "Zeugen begleiten", "Ein Zeuge muss sicher durch {region} zum Treffpunkt der Division.", "escort", "Zeuge",
+            Objective("witness", "Zeugen begleiten", "Ein Zeuge muss sicher durch den Bereich {region} zum Treffpunkt der Division.", "escort", "Zeuge",
                 "Pünktlich übergeben" to "Die Aussage kann verwertet werden.", "Umweg nehmen, um Verfolger abzuschütteln" to "Später, aber unauffälliger."),
-            Objective("defector", "Überläuferin", "Eine Überläuferin von {faction} wechselt die Seiten. Bring sie durch {region}.", "escort", "Überläuferin",
+            Objective("defector", "Überläuferin", "Eine Überläuferin von {faction} wechselt die Seiten. Bring sie durch den Bereich {region}.", "escort", "Überläuferin",
                 "Versprochenen Schutz einhalten" to "Weitere Überläufer fassen Vertrauen.", "Direkt der Division übergeben" to "Effizient, aber ihr Misstrauen wächst."),
-            Objective("courier", "Kurierfahrt", "Ein versiegelter Koffer der Division muss durch {region}.", "escort", "Kurier",
+            Objective("courier", "Kurierfahrt", "Ein versiegelter Koffer der Division muss durch den Bereich {region}.", "escort", "Kurier",
                 "Koffer ungeöffnet abliefern" to "Vertrauen der Einsatzleitung.", "Inhalt prüfen" to "Wissen ist Macht – aber nicht erlaubt.")
         ), listOf(
             ap("convoy", "Geschlossene Formation", "Eng beieinander bleiben, Gefahren abschirmen.", Attr.WILLPOWER, "planning", "direct", tactical = true, risk = "Offener Kontakt"),
@@ -385,7 +385,8 @@ object Ops {
         val difficulty = if (minor) base.coerceAtMost(2) else base
         val urgency = when (rng.percent()) { in 1..55 -> 1; in 56..88 -> 2; else -> 3 } + (if (target == "syndicate" && bm.arc == 1) 1 else 0)
         val phases = if (difficulty >= 3 && arch.id in setOf("observation", "undercover", "joint", "recon") && rng.percent() <= 45) 2 else 1
-        val code = rng.pick(codewords)
+        val used = state.ops.contracts.map { it.title.substringAfter("„").substringBefore("“") }.toSet()
+        val code = rng.pick(codewords.filter { it !in used }.ifEmpty { codewords })
         val who = rng.pick(targets)
         val fill = { t: String -> t.replace("{Target}", who.replaceFirstChar { it.uppercase() }).replace("{target}", who).replace("{region}", regionLabel(data, region)).replace("{faction}", factionName(data, target)) }
         val map = TacticalMaps.forRegion(region).let { rng.pick(it) }
