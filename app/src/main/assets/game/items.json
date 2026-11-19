@@ -606,5 +606,972 @@
     "description": "Questgegenstand zur PHOENIX-Verschwörung.",
     "buyable": false,
     "slot": "none"
+  },
+  {
+    "id": "ars_glock17",
+    "name": "Glock 17",
+    "category": "weapons",
+    "icon": "ars_glock17",
+    "weightGrams": 900,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1450,
+    "description": "Zuverlässige Dienstpistole im fiktiven Division-Arsenal · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 4,
+    "damage": 2,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_glock19",
+    "name": "Glock 19",
+    "category": "weapons",
+    "icon": "ars_glock19",
+    "weightGrams": 750,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1550,
+    "description": "Kompakte Seitenwaffe für verdeckte Einsätze · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 4,
+    "damage": 2,
+    "bonuses": {
+      "precision": 6
+    }
+  },
+  {
+    "id": "ars_p99",
+    "name": "Walther P99",
+    "category": "weapons",
+    "icon": "ars_p99",
+    "weightGrams": 650,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1850,
+    "description": "Präzise Pistole für spezialisierte Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 5,
+    "damage": 2,
+    "bonuses": {
+      "precision": 7
+    }
+  },
+  {
+    "id": "ars_p226",
+    "name": "SIG Sauer P226",
+    "category": "weapons",
+    "icon": "ars_p226",
+    "weightGrams": 960,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2200,
+    "description": "Robuste Dienstpistole für erfahrene Einsatzkräfte · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 5,
+    "damage": 3,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_m9",
+    "name": "Beretta M9",
+    "category": "weapons",
+    "icon": "ars_m9",
+    "weightGrams": 950,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1300,
+    "description": "Klassische Dienstpistole · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 4,
+    "damage": 2,
+    "bonuses": {
+      "precision": 4
+    }
+  },
+  {
+    "id": "ars_usp",
+    "name": "HK USP Tactical",
+    "category": "weapons",
+    "icon": "ars_usp",
+    "weightGrams": 920,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2600,
+    "description": "Präzisionsorientierte Pistole aus der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 3,
+    "bonuses": {
+      "precision": 6
+    }
+  },
+  {
+    "id": "ars_fiveseven",
+    "name": "FN Five-seveN",
+    "category": "weapons",
+    "icon": "ars_fiveseven",
+    "weightGrams": 740,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2950,
+    "description": "Leichte Spezialpistole mit abstrakter höherer Wirkung · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 3,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_mp5",
+    "name": "HK MP5",
+    "category": "weapons",
+    "icon": "ars_mp5",
+    "weightGrams": 2550,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 3300,
+    "description": "Kompakte Maschinenpistole für Divisionsoperationen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 5,
+    "damage": 3,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_mp5sd",
+    "name": "HK MP5SD",
+    "category": "weapons",
+    "icon": "ars_mp5sd",
+    "weightGrams": 2950,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 4400,
+    "description": "Spezialisierte Maschinenpistole für leise Missionen in der Fiktion · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 3,
+    "bonuses": {
+      "precision": 6
+    }
+  },
+  {
+    "id": "ars_mp7",
+    "name": "HK MP7",
+    "category": "weapons",
+    "icon": "ars_mp7",
+    "weightGrams": 2100,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 5500,
+    "description": "Sehr kompaktes Einsatzgerät für Elite-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 7,
+    "damage": 3,
+    "bonuses": {
+      "precision": 7
+    }
+  },
+  {
+    "id": "ars_ump45",
+    "name": "HK UMP45",
+    "category": "weapons",
+    "icon": "ars_ump45",
+    "weightGrams": 2500,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 3900,
+    "description": "Robuste Maschinenpistole mit höherem Taktikwert · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 4,
+    "bonuses": {
+      "precision": 3
+    }
+  },
+  {
+    "id": "ars_vector",
+    "name": "KRISS Vector",
+    "category": "weapons",
+    "icon": "ars_vector",
+    "weightGrams": 2800,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 6200,
+    "description": "Spezialisierte Maschinenpistole für Hochrisikoeinsätze · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 7,
+    "damage": 4,
+    "bonuses": {
+      "precision": 4
+    }
+  },
+  {
+    "id": "ars_m4a1",
+    "name": "M4A1",
+    "category": "weapons",
+    "icon": "ars_m4a1",
+    "weightGrams": 3050,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 4500,
+    "description": "Modulares Karabinergewehr für Außendienstteams · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 5,
+    "damage": 4,
+    "bonuses": {
+      "precision": 4
+    }
+  },
+  {
+    "id": "ars_hk416",
+    "name": "HK416",
+    "category": "weapons",
+    "icon": "ars_hk416",
+    "weightGrams": 3500,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 7600,
+    "description": "Hochwertiges Einsatzgewehr für erfahrene Division-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 7,
+    "damage": 5,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_g36c",
+    "name": "HK G36C",
+    "category": "weapons",
+    "icon": "ars_g36c",
+    "weightGrams": 3000,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 5100,
+    "description": "Kompaktes Sturmgewehr für taktische Spielmissionen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 4,
+    "bonuses": {
+      "precision": 4
+    }
+  },
+  {
+    "id": "ars_scarl",
+    "name": "FN SCAR-L",
+    "category": "weapons",
+    "icon": "ars_scarl",
+    "weightGrams": 3350,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 8300,
+    "description": "Modulares Spezialgewehr für höchste Freigabestufen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 8,
+    "damage": 5,
+    "bonuses": {
+      "precision": 4
+    }
+  },
+  {
+    "id": "ars_ak105",
+    "name": "AK-105",
+    "category": "weapons",
+    "icon": "ars_ak105",
+    "weightGrams": 3300,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 3600,
+    "description": "Widerstandsfähiges Sturmgewehr aus Spezialbeständen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 4,
+    "bonuses": {
+      "precision": 2
+    }
+  },
+  {
+    "id": "ars_sr25",
+    "name": "SR-25",
+    "category": "weapons",
+    "icon": "ars_sr25",
+    "weightGrams": 4200,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 8800,
+    "description": "Präzisionsgewehr für Distanz- und Aufklärungsrollen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 8,
+    "damage": 5,
+    "bonuses": {
+      "precision": 8
+    }
+  },
+  {
+    "id": "ars_mk14",
+    "name": "Mk 14 EBR",
+    "category": "weapons",
+    "icon": "ars_mk14",
+    "weightGrams": 4900,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 10200,
+    "description": "Schweres Präzisionsgewehr der Eliteausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 9,
+    "damage": 6,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_r700",
+    "name": "Remington 700",
+    "category": "weapons",
+    "icon": "ars_r700",
+    "weightGrams": 4200,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 8200,
+    "description": "Präzisionsplattform für die abstrakte Taktiksimulation · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 8,
+    "damage": 5,
+    "bonuses": {
+      "precision": 9
+    }
+  },
+  {
+    "id": "ars_benelli",
+    "name": "Benelli M4",
+    "category": "weapons",
+    "icon": "ars_benelli",
+    "weightGrams": 3800,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 6400,
+    "description": "Schrotflinte für spezielle Missionstypen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 7,
+    "damage": 5,
+    "bonuses": {
+      "precision": 2
+    }
+  },
+  {
+    "id": "ars_rem870",
+    "name": "Remington 870",
+    "category": "weapons",
+    "icon": "ars_rem870",
+    "weightGrams": 3200,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 4600,
+    "description": "Robuste Schrotflinte in der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 6,
+    "damage": 4,
+    "bonuses": {
+      "precision": 3
+    }
+  },
+  {
+    "id": "ars_electro",
+    "name": "Elektroimpulsgerät",
+    "category": "weapons",
+    "icon": "ars_electro",
+    "weightGrams": 360,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1100,
+    "description": "Nicht-tödliche Einsatzoption für fiktionale Missionen · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 4,
+    "damage": 1,
+    "bonuses": {
+      "precision": 5
+    }
+  },
+  {
+    "id": "ars_stunbaton",
+    "name": "Einsatz-Schockstock",
+    "category": "weapons",
+    "icon": "ars_stunbaton",
+    "weightGrams": 520,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 950,
+    "description": "Nicht-tödliche Nahbereichsausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
+    "slot": "weapon",
+    "minRank": 3,
+    "damage": 1,
+    "bonuses": {
+      "precision": 3
+    }
+  },
+  {
+    "id": "kit_field_dressing",
+    "name": "Steriler Feldverband",
+    "category": "medical",
+    "icon": "kit_field_dressing",
+    "weightGrams": 120,
+    "rarity": "common",
+    "maxStack": 6,
+    "baseValue": 45,
+    "description": "Versorgt kleinere Verletzungen nach Einsätzen.",
+    "slot": "none",
+    "minRank": 1,
+    "effect": {
+      "health": 14
+    }
+  },
+  {
+    "id": "kit_trauma_kit",
+    "name": "Trauma-Notfallset",
+    "category": "medical",
+    "icon": "kit_trauma_kit",
+    "weightGrams": 920,
+    "rarity": "rare",
+    "maxStack": 2,
+    "baseValue": 460,
+    "description": "Großes medizinisches Verbrauchsset.",
+    "slot": "none",
+    "minRank": 4,
+    "effect": {
+      "health": 38,
+      "stress": -4
+    }
+  },
+  {
+    "id": "kit_antiseptic",
+    "name": "Wunddesinfektion",
+    "category": "medical",
+    "icon": "kit_antiseptic",
+    "weightGrams": 140,
+    "rarity": "common",
+    "maxStack": 6,
+    "baseValue": 65,
+    "description": "Sanfte medizinische Nachversorgung.",
+    "slot": "none",
+    "minRank": 1,
+    "effect": {
+      "health": 8
+    }
+  },
+  {
+    "id": "kit_cool_pack",
+    "name": "Kühlkompresse",
+    "category": "medical",
+    "icon": "kit_cool_pack",
+    "weightGrams": 220,
+    "rarity": "common",
+    "maxStack": 5,
+    "baseValue": 55,
+    "description": "Reduziert körperlichen Stress nach Training.",
+    "slot": "none",
+    "minRank": 1,
+    "effect": {
+      "health": 5,
+      "stress": -7
+    }
+  },
+  {
+    "id": "kit_electrolytes",
+    "name": "Elektrolytgetränk",
+    "category": "medical",
+    "icon": "kit_electrolytes",
+    "weightGrams": 330,
+    "rarity": "common",
+    "maxStack": 8,
+    "baseValue": 35,
+    "description": "Erhöht die Erholung nach intensiven Trainingseinheiten.",
+    "slot": "none",
+    "minRank": 1,
+    "effect": {
+      "energy": 14
+    }
+  },
+  {
+    "id": "kit_energy_bar",
+    "name": "Energieriegel",
+    "category": "medical",
+    "icon": "kit_energy_bar",
+    "weightGrams": 70,
+    "rarity": "common",
+    "maxStack": 10,
+    "baseValue": 18,
+    "description": "Kleine Mahlzeit für längere Arbeitstage.",
+    "slot": "none",
+    "minRank": 1,
+    "effect": {
+      "energy": 8
+    }
+  },
+  {
+    "id": "kit_recovery_pouch",
+    "name": "Regenerationsbeutel",
+    "category": "medical",
+    "icon": "kit_recovery_pouch",
+    "weightGrams": 420,
+    "rarity": "uncommon",
+    "maxStack": 4,
+    "baseValue": 240,
+    "description": "Hilft nach einem besonders langen Einsatztag.",
+    "slot": "none",
+    "minRank": 3,
+    "effect": {
+      "energy": 20,
+      "stress": -12
+    }
+  },
+  {
+    "id": "kit_mini_drone",
+    "name": "Nano-Aufklärungsdrohne",
+    "category": "gadgets",
+    "icon": "kit_mini_drone",
+    "weightGrams": 460,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 3200,
+    "description": "Erweitert die Beobachtungsmöglichkeiten im Spiel.",
+    "slot": "gadget",
+    "minRank": 5,
+    "bonuses": {
+      "perception": 3,
+      "intellect": 1
+    }
+  },
+  {
+    "id": "kit_drone_battery",
+    "name": "Drohnen-Akkumodul",
+    "category": "gadgets",
+    "icon": "kit_drone_battery",
+    "weightGrams": 180,
+    "rarity": "common",
+    "maxStack": 4,
+    "baseValue": 175,
+    "description": "Reserveenergie für fiktive Aufklärungsgeräte.",
+    "slot": "none",
+    "minRank": 3
+  },
+  {
+    "id": "kit_thermal_sensor",
+    "name": "Thermischer Umgebungsscanner",
+    "category": "gadgets",
+    "icon": "kit_thermal_sensor",
+    "weightGrams": 740,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 3700,
+    "description": "Ergänzt die Wahrnehmung bei schwierigen Missionen.",
+    "slot": "gadget",
+    "minRank": 6,
+    "bonuses": {
+      "perception": 4
+    }
+  },
+  {
+    "id": "kit_encrypted_tablet",
+    "name": "Verschlüsseltes Einsatztablet",
+    "category": "gadgets",
+    "icon": "kit_encrypted_tablet",
+    "weightGrams": 680,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2900,
+    "description": "Mobiles Gerät für Einsatzinformationen und Akten.",
+    "slot": "gadget",
+    "minRank": 5,
+    "bonuses": {
+      "intellect": 3,
+      "perception": 1
+    }
+  },
+  {
+    "id": "kit_relay_unit",
+    "name": "Kompakter Funkrepeater",
+    "category": "gadgets",
+    "icon": "kit_relay_unit",
+    "weightGrams": 580,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1850,
+    "description": "Unterstützt Kommunikation mit entfernten Teams.",
+    "slot": "comms",
+    "minRank": 3,
+    "bonuses": {
+      "perception": 2
+    }
+  },
+  {
+    "id": "kit_bodycam",
+    "name": "Einsatzkamera",
+    "category": "gadgets",
+    "icon": "kit_bodycam",
+    "weightGrams": 260,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 980,
+    "description": "Erstellt fiktive Einsatzprotokolle.",
+    "slot": "gadget",
+    "minRank": 3,
+    "bonuses": {
+      "perception": 2
+    }
+  },
+  {
+    "id": "kit_tracker_beacon",
+    "name": "Ortungsmarkierung",
+    "category": "gadgets",
+    "icon": "kit_tracker_beacon",
+    "weightGrams": 80,
+    "rarity": "uncommon",
+    "maxStack": 5,
+    "baseValue": 450,
+    "description": "Marker für fiktive Missionsziele.",
+    "slot": "none",
+    "minRank": 3
+  },
+  {
+    "id": "kit_frequency_meter",
+    "name": "Frequenzanalysator",
+    "category": "gadgets",
+    "icon": "kit_frequency_meter",
+    "weightGrams": 320,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2950,
+    "description": "Analysegerät mit abstraktem Intelligenzbonus.",
+    "slot": "gadget",
+    "minRank": 6,
+    "bonuses": {
+      "intellect": 3
+    }
+  },
+  {
+    "id": "kit_security_probe",
+    "name": "Zugangstest-Modul",
+    "category": "gadgets",
+    "icon": "kit_security_probe",
+    "weightGrams": 190,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2100,
+    "description": "Fiktives Technikmodul für Sicherheitsrätsel.",
+    "slot": "accessory",
+    "minRank": 5,
+    "bonuses": {
+      "intellect": 2
+    }
+  },
+  {
+    "id": "kit_jammer_unit",
+    "name": "Simulierter Funkstörer",
+    "category": "gadgets",
+    "icon": "kit_jammer_unit",
+    "weightGrams": 560,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 4700,
+    "description": "Abstraktes Missions-Gadget für gestörte Signale.",
+    "slot": "gadget",
+    "minRank": 7,
+    "bonuses": {
+      "perception": 1,
+      "intellect": 3
+    }
+  },
+  {
+    "id": "kit_micro_camera",
+    "name": "Minikamera",
+    "category": "gadgets",
+    "icon": "kit_micro_camera",
+    "weightGrams": 110,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1350,
+    "description": "Kompaktes Beweisbildgerät.",
+    "slot": "gadget",
+    "minRank": 4,
+    "bonuses": {
+      "perception": 2
+    }
+  },
+  {
+    "id": "kit_night_visor",
+    "name": "Nachtsicht-Visier",
+    "category": "gadgets",
+    "icon": "kit_night_visor",
+    "weightGrams": 850,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 3900,
+    "description": "Visier mit Wahrnehmungsbonus in dunklen Spielbereichen.",
+    "slot": "gadget",
+    "minRank": 6,
+    "bonuses": {
+      "perception": 4
+    }
+  },
+  {
+    "id": "kit_audio_sensor",
+    "name": "Umgebungs-Audiosensor",
+    "category": "gadgets",
+    "icon": "kit_audio_sensor",
+    "weightGrams": 210,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1175,
+    "description": "Hilft beim Auffinden fiktiver Geräuschhinweise.",
+    "slot": "gadget",
+    "minRank": 4,
+    "bonuses": {
+      "perception": 2
+    }
+  },
+  {
+    "id": "kit_ceramic_vest",
+    "name": "Keramikschutzweste",
+    "category": "armor",
+    "icon": "kit_ceramic_vest",
+    "weightGrams": 3450,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 4200,
+    "description": "Zusätzlicher abstrakter Schutz auf schwierigen Einsätzen.",
+    "slot": "armor",
+    "minRank": 7,
+    "bonuses": {
+      "fitness": -2
+    },
+    "armor": 3
+  },
+  {
+    "id": "kit_concealed_vest",
+    "name": "Verdeckte Schutzweste",
+    "category": "armor",
+    "icon": "kit_concealed_vest",
+    "weightGrams": 1800,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2800,
+    "description": "Leichter Schutz in zivilen Missionen.",
+    "slot": "armor",
+    "minRank": 5,
+    "armor": 2
+  },
+  {
+    "id": "kit_ballistic_helmet",
+    "name": "Schutzhelm",
+    "category": "armor",
+    "icon": "kit_ballistic_helmet",
+    "weightGrams": 1350,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 2150,
+    "description": "Spezialschutz mit starkem Gewichtsnachteil.",
+    "slot": "accessory",
+    "minRank": 6,
+    "armor": 1
+  },
+  {
+    "id": "kit_protective_gloves",
+    "name": "Schnittschutzhandschuhe",
+    "category": "armor",
+    "icon": "kit_protective_gloves",
+    "weightGrams": 160,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 320,
+    "description": "Schützen bei Werkzeug- und Suchaktionen.",
+    "slot": "accessory",
+    "minRank": 2,
+    "bonuses": {
+      "fitness": 1
+    }
+  },
+  {
+    "id": "kit_knee_protection",
+    "name": "Knieschoner",
+    "category": "armor",
+    "icon": "kit_knee_protection",
+    "weightGrams": 300,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 175,
+    "description": "Zusätzliche Schutzausrüstung.",
+    "slot": "accessory",
+    "minRank": 2,
+    "armor": 1
+  },
+  {
+    "id": "kit_field_scanner",
+    "name": "Mobiler Spurenleser",
+    "category": "tools",
+    "icon": "kit_field_scanner",
+    "weightGrams": 540,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1900,
+    "description": "Sammelt Spuren in den Ermittlungsakten.",
+    "slot": "accessory",
+    "minRank": 4,
+    "bonuses": {
+      "perception": 2
+    }
+  },
+  {
+    "id": "kit_compact_toolkit",
+    "name": "Präzisionswerkzeugtasche",
+    "category": "tools",
+    "icon": "kit_compact_toolkit",
+    "weightGrams": 540,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 510,
+    "description": "Hilfe bei technischen Prüfungen.",
+    "slot": "accessory",
+    "minRank": 2,
+    "bonuses": {
+      "intellect": 2
+    }
+  },
+  {
+    "id": "kit_rescue_cutter",
+    "name": "Sicherheits-Trennwerkzeug",
+    "category": "tools",
+    "icon": "kit_rescue_cutter",
+    "weightGrams": 310,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 620,
+    "description": "Bergungswerkzeug für abstrakte Rettungsszenen.",
+    "slot": "accessory",
+    "minRank": 4,
+    "bonuses": {
+      "fitness": 1
+    }
+  },
+  {
+    "id": "kit_climbing_hook",
+    "name": "Sicherungshaken",
+    "category": "tools",
+    "icon": "kit_climbing_hook",
+    "weightGrams": 620,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 480,
+    "description": "Vereinfachtes Werkzeug für Bewegungshindernisse im Spiel.",
+    "slot": "accessory",
+    "minRank": 4,
+    "bonuses": {
+      "fitness": 1
+    }
+  },
+  {
+    "id": "kit_evidence_kit",
+    "name": "Spurensicherungsset",
+    "category": "tools",
+    "icon": "kit_evidence_kit",
+    "weightGrams": 880,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 670,
+    "description": "Sammelt und katalogisiert Beweise.",
+    "slot": "accessory",
+    "minRank": 3,
+    "bonuses": {
+      "intellect": 2
+    }
+  },
+  {
+    "id": "kit_casefile_pack",
+    "name": "Fallakten-Mappe",
+    "category": "documents",
+    "icon": "kit_casefile_pack",
+    "weightGrams": 120,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 0,
+    "description": "Persönliche Sammlung von Ermittlungsnotizen.",
+    "slot": "none",
+    "minRank": 2,
+    "buyable": false
+  },
+  {
+    "id": "kit_cipher_disk",
+    "name": "Chiffre-Datenträger",
+    "category": "documents",
+    "icon": "kit_cipher_disk",
+    "weightGrams": 40,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 0,
+    "description": "Verschlüsselter Story-Hinweis aus der Division.",
+    "slot": "none",
+    "minRank": 5,
+    "buyable": false
+  },
+  {
+    "id": "kit_suspect_dossier",
+    "name": "Personendossier",
+    "category": "documents",
+    "icon": "kit_suspect_dossier",
+    "weightGrams": 150,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 0,
+    "description": "Aktenauszug zu einer verdächtigen Person.",
+    "slot": "none",
+    "minRank": 4,
+    "buyable": false
+  },
+  {
+    "id": "kit_forensic_photos",
+    "name": "Tatort-Fotodossier",
+    "category": "documents",
+    "icon": "kit_forensic_photos",
+    "weightGrams": 90,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 0,
+    "description": "Bildmaterial für die Ermittlungsarbeit.",
+    "slot": "none",
+    "minRank": 3,
+    "buyable": false
+  },
+  {
+    "id": "kit_tactical_case",
+    "name": "Modularer Einsatzkoffer",
+    "category": "equipment",
+    "icon": "kit_tactical_case",
+    "weightGrams": 1180,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 1650,
+    "description": "Stabiler Koffer mit zusätzlicher Tragkapazität.",
+    "slot": "bag",
+    "minRank": 4,
+    "capacityBonusGrams": 2300
+  },
+  {
+    "id": "kit_sling_bag",
+    "name": "Leichte Umhängetasche",
+    "category": "equipment",
+    "icon": "kit_sling_bag",
+    "weightGrams": 570,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 560,
+    "description": "Leichte Tasche für Agenten und Analysegeräte.",
+    "slot": "bag",
+    "minRank": 2,
+    "capacityBonusGrams": 1600
   }
 ]
