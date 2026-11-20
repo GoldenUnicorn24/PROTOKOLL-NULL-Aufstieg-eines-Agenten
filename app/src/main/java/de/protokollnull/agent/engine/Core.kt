@@ -156,7 +156,7 @@ object Relations {
 
     fun displayName(data: GameData, state: GameState, id: String?): String {
         if (id == null) return ""
-        if (id == "player") return state.player.codename
+        if (id == "player") return state.player.identityName
         state.customNpcs.firstOrNull { it.id == id }?.let { return it.name }
         return data.agentById[id]?.name ?: id
     }
