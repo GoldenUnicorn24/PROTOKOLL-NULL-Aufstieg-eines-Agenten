@@ -450,6 +450,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
     val partners = eligible.filter { it != trainer }
         .sortedByDescending { Relations.get(data, s, it).friendship }
     val chosenPartner = partner?.takeIf { it in partners }
+    val selectedTrainer = trainer?.takeIf { it in trainers }
     val partnerBoost = Progression.partnerBoost(data, s, chosenPartner)
     val sessions = if (s.career.sessionsDay == s.clock.day) s.career.sessionsToday else 0
     val cap = Stats.attributeCap(s.player.level)
@@ -515,10 +516,10 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                                 style = MaterialTheme.typography.bodySmall)
                             if (friendship < 50) SmallNote("Ab 50 Freundschaft: doppelter Fortschritt. Ab 80: alle sechs Attribute wachsen bei BEIDEN mit. Ab 95: noch stärker.")
                             else if (friendship >= 80) SmallNote("Spezialbonus: Auch die fünf nicht trainierten Attribute wachsen bei euch beiden mit.")
-                            if (trainer != null && trainer != chosenPartner && Progression.trainerBonus(data, s, trainer, Attr.FITNESS) >= 0) {
-                                val trainerBond = Life.bond(s, trainer, chosenPartner)
+                            if (selectedTrainer != null && selectedTrainer != chosenPartner) {
+                                val trainerBond = Life.bond(s, selectedTrainer, chosenPartner)
                                 Text("Gemeinsames Training stärkt außerdem die Freundschaft zwischen " +
-                                    Relations.displayName(data, s, trainer).substringBefore(" ") + " und " +
+                                    Relations.displayName(data, s, selectedTrainer).substringBefore(" ") + " und " +
                                     Relations.displayName(data, s, chosenPartner).substringBefore(" ") +
                                     " (aktuell " + trainerBond + ").", style = MaterialTheme.typography.bodySmall)
                             }
@@ -532,7 +533,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                     SmallNote("Energie ×${iv.energyMult} · Fortschritt ×${iv.progressMult} · Verletzungsrisiko ${iv.injuryRisk} %")
                 }
             }
-            if (trainer != null && chosenPartner != null) item {
+            if (selectedTrainer != null && chosenPartner != null) item {
                 GlassPanel(accent = Pn.Ok) {
                     Overline("TEAMAKTIVITÄTEN", Pn.Ok)
                     Text("Zusammenhalt aufbauen", style = MaterialTheme.typography.titleMedium)
@@ -546,7 +547,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                             Modifier.fillMaxWidth(),
                             enabled = s.player.energy >= activity.energy && sessions <= Progression.DAILY_SESSIONS,
                             secondary = true, icon = PnIcons.People) {
-                            vm.act { d, x -> Progression.teamActivity(d, x, trainer, chosenPartner, activity.id) }
+                            vm.act { d, x -> Progression.teamActivity(d, x, selectedTrainer, chosenPartner, activity.id) }
                         }
                     }
                 }
