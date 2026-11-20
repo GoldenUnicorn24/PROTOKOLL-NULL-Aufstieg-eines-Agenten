@@ -61,7 +61,8 @@ object TacticalQuick {
      */
     fun act(t: TacticalState, id: String): TacticalState {
         if (t.finished || choices(t).none { it.id == id && it.enabled }) return t
-        var n = t.copy(maxTurns = maxOf(t.maxTurns, 12 + liveEnemies(t).size * 2))
+        val deadline = if (t.quickDeadline > 0) t.quickDeadline else maxOf(t.maxTurns, t.turn + 8 + liveEnemies(t).size * 2)
+        var n = t.copy(maxTurns = deadline, quickDeadline = deadline)
         val player = mainCharacter(n) ?: return t
         val teamCount = n.units.count { it.ally && !it.isPlayer && !it.vip && !it.down && !it.evacuated }
         val messages = mutableListOf<String>()
