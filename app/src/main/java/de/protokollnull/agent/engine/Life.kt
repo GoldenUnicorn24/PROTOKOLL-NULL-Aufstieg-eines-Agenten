@@ -84,6 +84,30 @@ object Life {
         else -> "intel"
     }
 
+    /**
+     * Gemeinsame 6er-Attributskala für sämtliche Charaktere. Für ältere Saves
+     * ohne individuelle NPC-Ratings werden stabile Ausgangswerte aus dem
+     * Figurenprofil berechnet; Training speichert danach echte Veränderungen.
+     */
+    fun attributeRatings(data: GameData, state: GameState, id: String): Map<String, Int> {
+        val l = life(data, state, id)
+        val def = data.agentById[id]
+        val own = state.customNpcs.firstOrNull { it.id == id }
+        val combat = def?.combat ?: (own?.skills?.get("stamina") ?: 2) * 6 + 28
+        val focus = l.focus.ifBlank { "combat" }
+        val base = linkedMapOf(
+            Attr.FITNESS to combat.coerceAtLeast(15),
+            Attr.PRECISION to (combat - 5).coerceAtLeast(15),
+            Attr.INTELLECT to (if (focus in setOf("tech", "intel")) 55 else 35),
+            Attr.CHARISMA to (if (focus == "social") 55 else 35),
+            Attr.PERCEPTION to (if (focus == "intel") 55 else 40),
+            Attr.WILLPOWER to (if (focus == "medic") 45 else 40)
+        )
+        return base.mapValues { (attribute, initial) ->
+            (l.attributes[attribute] ?: initial).coerceAtLeast(0)
+        }
+    }
+
     fun rank(data: GameData, state: GameState, id: String): Int = life(data, state, id).rank
 
     fun traits(data: GameData, state: GameState, id: String): List<String> =
