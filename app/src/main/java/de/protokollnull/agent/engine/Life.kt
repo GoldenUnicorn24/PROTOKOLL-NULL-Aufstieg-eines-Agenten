@@ -334,8 +334,25 @@ object Life {
                     s = feed(data, s, LifeEvent(day, id, "skill", "${name(data, s, id)} macht Fortschritte: ${focusLabel(l.focus)} Stufe ${level + 1}."), null)
                     l.copy(skillProgress = l.skillProgress + (l.focus to 0), skillGain = l.skillGain + (l.focus to level + 1))
                 } else l.copy(skillProgress = l.skillProgress + (l.focus to prog))
-                l = l.copy(status = LifeStatus.TRAINING, statusUntil = -1, statusNote = focusLabel(l.focus), careerXp = l.careerXp + 3 + if (ambitious) 1 else 0,
-                    trainingDays = l.trainingDays + 1, stress = (l.stress + 2).pct(), lastDecision = "Training: " + focusLabel(l.focus), lastDecisionDay = day)
+                // Auch autonomes NPC-Training entwickelt die gleichen sechs Attribute,
+                // die man in jeder Personalakte sehen kann – nicht bloß unsichtbare Skillpunkte.
+                val attr = when (l.focus) {
+                    "combat" -> Attr.FITNESS
+                    "tech" -> Attr.INTELLECT
+                    "intel" -> Attr.PERCEPTION
+                    "social" -> Attr.CHARISMA
+                    "medic" -> Attr.WILLPOWER
+                    else -> Attr.FITNESS
+                }
+                val currentRating = attributeRatings(data, s, id)[attr] ?: 30
+                val (rating, fraction) = Progression.growRating(currentRating,
+                    l.attributeProgress[attr] ?: 0, if (ambitious) 14 else 10)
+                l = l.copy(attributes = l.attributes + (attr to rating),
+                    attributeProgress = l.attributeProgress + (attr to fraction),
+                    status = LifeStatus.TRAINING, statusUntil = -1, statusNote = focusLabel(l.focus),
+                    careerXp = l.careerXp + 3 + if (ambitious) 1 else 0,
+                    trainingDays = l.trainingDays + 1, stress = (l.stress + 2).pct(),
+                    lastDecision = "Training: " + focusLabel(l.focus), lastDecisionDay = day)
             }
             LifeStatus.FREE -> l = l.copy(status = LifeStatus.FREE, statusUntil = -1, statusNote = freeNote(data, s, id, rng), mood = (l.mood + 3).pct(), stress = (l.stress - 4).pct(), lastDecision = "Freizeit", lastDecisionDay = day)
             else -> l = l.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "", careerXp = l.careerXp + if (profile in setOf("leader", "rogue")) 0 else 2, lastDecision = "Dienst", lastDecisionDay = day)
