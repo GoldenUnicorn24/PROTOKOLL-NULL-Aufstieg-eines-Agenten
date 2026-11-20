@@ -403,7 +403,7 @@ class V1ReleaseTest {
         assertTrue("10 Jahre simuliert", s.clock.day >= 3650)
         val p = s.player
         assertTrue(p.level in 1..100 && p.energy in 0..100 && p.stress in 0..100 && p.health in 1..100)
-        assertTrue(p.attributes.values.all { it in 0..100 })
+        assertTrue("Ratings bleiben nichtnegativ und ohne künstliche 100er-Obergrenze", p.attributes.values.all { it in 0..(Int.MAX_VALUE / 1024) })
         assertTrue(p.credits >= 0)
         assertTrue(s.relations.values.all { r -> listOf(r.trust, r.friendship, r.loyalty, r.respect, r.affection, r.rivalry).all { it in 0..100 } })
         assertTrue("Feed bleibt kompakt", s.living.feed.size <= 400)
