@@ -37,7 +37,7 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                     PlayerPortrait(s, 92.dp)
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Overline("Personalakte · Kandidat 7")
-                        Text(p.codename.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
+                        Text(p.identityName.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
                         Text(p.displayName, style = MaterialTheme.typography.titleSmall)
                         Text("${Ages.player(s)} Jahre · ${data.rank(p.rank).name} (Rang ${p.rank}/12)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
