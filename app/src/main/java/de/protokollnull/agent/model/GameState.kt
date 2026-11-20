@@ -165,7 +165,10 @@ data class TacticalUnit(
     val range: Int = 6,
     val homeX: Int = -1,
     val homeY: Int = -1,
-    val evacuated: Boolean = false
+    val evacuated: Boolean = false,
+    // --- v1.0
+    /** Überwachungsposten hat in dieser Runde bereits auf eine Bewegung reagiert. */
+    val reacted: Boolean = false
 ) {
     val down: Boolean get() = hp <= 0
 }

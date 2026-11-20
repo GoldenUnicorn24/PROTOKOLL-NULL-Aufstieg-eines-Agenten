@@ -155,8 +155,8 @@ fun AvatarControls(avatar: AvatarSpec, onChange: (AvatarSpec) -> Unit) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChipRow(options: List<Pair<String, String>>, selected: String, onSelect: (String) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        options.forEach { (id, label) -> FilterChip(selected = selected == id, onClick = { onSelect(id) }, label = { Text(label) }) }
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.forEach { (id, label) -> PnChip(label, selected == id) { onSelect(id) } }
     }
 }
 
@@ -288,7 +288,7 @@ fun EpilogueScreen(vm: GameViewModel, s: GameState) {
         Box(Modifier.fillMaxWidth().height(170.dp), contentAlignment = Alignment.Center) {
             RadarEmblem(Modifier.size(170.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("EPILOG", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+                Overline("EPILOG", Pn.Accent)
                 Text(Endings.title(Endings.endingId(s)).removePrefix("Ende: ").uppercase(), style = MaterialTheme.typography.displaySmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             }
         }

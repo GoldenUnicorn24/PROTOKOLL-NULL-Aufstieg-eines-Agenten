@@ -326,6 +326,20 @@ object Missions {
         return Result(state.copy(activeMission = run.copy(result = "abort", log = run.log + "Einsatz abgebrochen.")))
     }
 
+    /**
+     * v1.0: Grundbelohnung (XP, Credits, Ruf) eines beendeten Einsatzes – dieselbe Rechnung
+     * nutzt die Nachbesprechung als Vorschau und [finish] beim Abrechnen.
+     */
+    fun rewardPreview(m: MissionDefinition, run: MissionRun, repeatedFail: Boolean = false): Triple<Int, Int, Int> {
+        val alarmPenalty = run.alarm >= 4
+        return when (run.result) {
+            "success" -> Triple(m.xp + run.intel * 10, m.credits, if (m.reputation == 0) 0 else m.reputation + (if (alarmPenalty) -2 else 2))
+            // v1.0: Trost-XP nur beim ersten Scheitern – wiederholtes Scheitern ist keine XP-Quelle
+            "fail" -> Triple(if (repeatedFail) 0 else m.xp / 3, 0, -(m.reputation / 2).coerceAtLeast(1))
+            else -> Triple(0, 0, -1)
+        }
+    }
+
     /** Nachbesprechung: Belohnungen und Konsequenzen anwenden. */
     fun finish(data: GameData, state: GameState): Result {
         val run = state.activeMission ?: return Result(state)
@@ -334,13 +348,10 @@ object Missions {
         var s = state.copy(activeMission = null)
         val notes = mutableListOf<String>()
         val alarmPenalty = run.alarm >= 4
-        var xp = 0; var credits = 0; var rep = 0
         val contract = isContract(m.id)
+        val (xp, credits, rep) = rewardPreview(m, run, repeatedFail = !contract && m.id in state.failedMissions)
         when (result) {
             "success" -> {
-                xp = m.xp + run.intel * 10
-                credits = m.credits
-                rep = if (m.reputation == 0) 0 else m.reputation + (if (alarmPenalty) -2 else 2)
                 s = if (contract) s else s.copy(completedMissions = s.completedMissions + m.id, board = s.board.filter { it.id != m.id })
                 notes += m.debriefSuccess.ifBlank { "Auftrag erfüllt." }
                 val e = Effs.apply(m.successEffects, data, s, m.giverId)
@@ -351,8 +362,6 @@ object Missions {
                 if (run.team.isNotEmpty()) notes += "Team: Loyalität +4"
             }
             "fail" -> {
-                xp = m.xp / 3
-                rep = -(m.reputation / 2).coerceAtLeast(1)
                 s = if (contract) s else s.copy(failedMissions = s.failedMissions + m.id, board = s.board.filter { it.id != m.id })
                 notes += m.debriefFail.ifBlank { "Der Einsatz ist gescheitert." }
                 val e = Effs.apply(m.failEffects, data, s, m.giverId)
@@ -363,7 +372,6 @@ object Missions {
                 run.team.forEach { id -> s = Relations.update(data, s, id) { it.copy(trust = it.trust - 2) } }
             }
             else -> {
-                rep = -1
                 notes += "Abbruch gemeldet. Kein Ergebnis, aber kein Totalverlust."
             }
         }

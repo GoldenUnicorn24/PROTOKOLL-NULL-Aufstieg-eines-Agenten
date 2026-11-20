@@ -40,7 +40,7 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
     LazyVerticalGrid(columns = GridCells.Fixed(2), contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item(span = { GridItemSpan(2) }) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("AUSRÜSTUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Overline("AUSRÜSTUNG", Pn.Accent)
                 Text("INVENTAR", style = MaterialTheme.typography.titleLarge)
                 StatBar("Gewicht ${"%.1f".format(weight / 1000.0)} / ${"%.1f".format(cap / 1000.0)} kg", weight, cap, if (weight > cap * 0.9) Pn.Danger else Pn.Accent, showValue = false)
                 GlassPanel(padding = 12.dp) {
@@ -61,7 +61,7 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
                     }
                 }
                 LoadoutPanel(vm, s)
-                ChipRow(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
+                CompactChips(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ActionButton("Spind-Lager (${p.storage.size})", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Storage) }
                     ActionButton("Ausrüstungskammer", Modifier.weight(1f), secondary = true, enabled = s.location == "armory", subtitle = if (s.location == "armory") null else "nur vor Ort") { vm.open(Overlay.Shop) }
@@ -150,7 +150,7 @@ fun ShopScreen(vm: GameViewModel, s: GameState) {
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Ausrüstungskammer", "Owen · ${s.player.credits} Cr", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            item { ChipRow(categoryLabels.entries.filter { it.key != "equipped" }.map { it.key to it.value }, filter) { filter = it } }
+            item { CompactChips(categoryLabels.entries.filter { it.key != "equipped" }.map { it.key to it.value }, filter) { filter = it } }
             item { SmallNote("Anforderung gegen Credits. Freigaben richten sich nach deinem Rang. Wartung und Rückgabe in der Detailansicht eines Gegenstands.") }
             items(items, key = { it.id }) { def ->
                 val price = Inventory.price(def, s)
@@ -208,7 +208,7 @@ fun StorageScreen(vm: GameViewModel, s: GameState) {
 private fun LoadoutPanel(vm: GameViewModel, s: GameState) {
     val data = vm.data
     GlassPanel(padding = 12.dp, accent = Pn.Violet) {
-        Text("AUSRÜSTUNGSPROFILE", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+        Overline("AUSRÜSTUNGSPROFILE", Pn.Violet)
         s.loadouts.forEach { lo ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {

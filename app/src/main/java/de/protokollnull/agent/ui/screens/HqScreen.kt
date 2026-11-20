@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import de.protokollnull.agent.model.LifeStatus
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,45 +31,135 @@ fun HqScreen(vm: GameViewModel, s: GameState) {
     var floor by remember { mutableIntStateOf(current.floor) }
     LaunchedEffect(s.location) { floor = data.roomById[s.location]?.floor ?: 0 }
     val pendingStory = Dialogues.pendingStory(data, s)
+    val hqEvent = HqEvents.pending(data, s)
+    val lifeEvent = Home.pending(s)
+    val dilemma = Directorate.pendingDilemma(s)
     val quest = Quests.active(data, s).firstOrNull()
 
-    LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (pendingStory != null) item {
-            GlassPanel(accent = Pn.Warn, onClick = { vm.act(silent = true) { d, st -> Dialogues.start(d, st, pendingStory.id) } }) {
-                Row(verticalAlignment = Alignment.CenterVertically) { PulseDot(Pn.Warn, 6.dp); Spacer(Modifier.width(6.dp)); Text("EINGEHENDE NACHRICHT", style = MaterialTheme.typography.labelLarge, color = Pn.Warn) }
-                Text(pendingStory.title, style = MaterialTheme.typography.titleMedium)
-                Text("Tippen, um zu reagieren", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
-        item { LivingHqCards(vm, s) }
-        item { OpsHqCard(vm, s) }
-        item { LeadershipHqCard(vm, s) }
-        if (quest != null) item {
-            GlassPanel(onClick = { vm.open(Overlay.Quests) }) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f)) {
-                        Text("AKTUELLER AUFTRAG · ${quest.chapter.uppercase()}", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-                        Text(quest.title, style = MaterialTheme.typography.titleMedium)
-                    }
-                    Text("›", style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
-                }
-                quest.objectives.forEach { o ->
-                    val done = Quests.objectiveDone(s, o)
-                    Text((if (done) "✓ " else "○ ") + o.text, style = MaterialTheme.typography.bodySmall, color = if (done) Pn.Ok else Pn.Text)
-                }
-            }
-        }
+    LazyColumn(contentPadding = PaddingValues(start = Sp.gutter, end = Sp.gutter, top = 12.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
-            SectionLabel("Lageplan", trailing = "Raum antippen", icon = PnIcons.Radar)
-            Spacer(Modifier.height(8.dp))
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                data.hq.floors.forEach { f ->
-                    FilterChip(selected = floor == f.floor, onClick = { floor = f.floor }, label = { Text(if (f.floor == 0) "Ebene 0" else "Ebene ${f.floor}") })
-                }
+            Column {
+                Overline("Lagezentrum · ${data.hq.floors.firstOrNull { it.floor == current.floor }?.name?.substringBefore(" ·") ?: "HQ"}")
+                Text(greeting(s.clock.slot, s.player.codename), style = MaterialTheme.typography.titleLarge)
             }
+        }
+        // Wartende Entscheidungen zuerst – klar priorisiert
+        if (pendingStory != null) item {
+            Banner("Eingehende Nachricht: ${pendingStory.title}", "Tippen, um zu reagieren", Pn.Warn, PnIcons.Chat) {
+                vm.act(silent = true) { d, st -> Dialogues.start(d, st, pendingStory.id) }
+            }
+        }
+        if (hqEvent != null) item {
+            val left = HqEvents.EXPIRE_DAYS - (s.clock.day - s.living.pendingHqEventDay)
+            Banner("HQ-Ereignis: " + HqEvents.fill(data, s, hqEvent.title, hqEvent.npcId), "Reagieren · verfällt in $left Tag" + if (left == 1) "" else "en", Pn.Warn, PnIcons.People) { vm.open(Overlay.HqEvent) }
+        }
+        if (dilemma != null) item { Banner("Führungsentscheidung: ${dilemma.title}", "Im Direktorat entscheiden", Pn.Violet, PnIcons.Crown) { vm.open(Overlay.Director) } }
+        if (lifeEvent != null) item { Banner("Privat: ${lifeEvent.title}", "Im Privatleben reagieren", Pn.Rose, PnIcons.Home) { vm.open(Overlay.City("event")) } }
+        if (quest != null) item { QuestCard(vm, s, quest) }
+        item { QuickActions(vm, s) }
+        item { DivisionSnapshot(vm, s) }
+        item {
+            SectionLabel("Lageplan", trailing = "Raum antippen, um hinzugehen", icon = PnIcons.Radar)
+            Spacer(Modifier.height(8.dp))
+            PnTabs(data.hq.floors.map { f -> f.floor.toString() to (if (f.floor == 0) "Ebene 0" else "Ebene ${f.floor}") }, floor.toString(),
+                badges = data.hq.floors.filter { f -> f.floor != current.floor && data.hq.rooms.any { it.floor == f.floor && World.npcsIn(data, s, it.id).any { id -> Dialogues.available(data, s, id).isNotEmpty() } } }.map { it.floor.toString() }.toSet()
+            ) { floor = it.toInt() }
         }
         item { FloorMap(vm, s, floor) }
         item { RoomPanel(vm, s) }
+    }
+}
+
+private fun greeting(slot: Int, name: String) = when (slot) {
+    0 -> "Guten Morgen, $name"
+    1, 2 -> "Lage am Vormittag, $name"
+    3 -> "Nachmittagsbriefing, $name"
+    4 -> "Guten Abend, $name"
+    else -> "Nachtschicht, $name"
+}
+
+@Composable
+private fun QuestCard(vm: GameViewModel, s: GameState, quest: de.protokollnull.agent.model.QuestDefinition) {
+    val done = quest.objectives.count { Quests.objectiveDone(s, it) }
+    GlassPanel(onClick = { vm.open(Overlay.Quests) }) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Overline("Aktueller Auftrag · ${quest.chapter}")
+                Text(quest.title, style = MaterialTheme.typography.titleMedium)
+            }
+            ProgressRing(done, quest.objectives.size, 46.dp, Pn.Accent, "$done/${quest.objectives.size}", stroke = 4.dp)
+        }
+        quest.objectives.forEach { o ->
+            val ok = Quests.objectiveDone(s, o)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                PnIcon(if (ok) PnIcons.Check else PnIcons.Chevron, if (ok) Pn.Ok else Pn.Accent.copy(alpha = 0.7f), 14.dp)
+                Spacer(Modifier.width(8.dp))
+                Text(o.text, style = MaterialTheme.typography.bodySmall, color = if (ok) Pn.Ok else Pn.Text)
+            }
+        }
+    }
+}
+
+/** Schnellzugriffe auf die häufigsten Systeme – nur, was der Rang tatsächlich freischaltet. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun QuickActions(vm: GameViewModel, s: GameState) {
+    val actions = buildList {
+        add(Triple("Zeitplan", PnIcons.Calendar) { vm.open(Overlay.Calendar) })
+        add(Triple("Training", PnIcons.Fist) { vm.open(Overlay.Training) })
+        add(Triple("Lage", PnIcons.Radar) { vm.open(Overlay.MissionControl("world")) })
+        add(Triple("Karriere", PnIcons.Medal) { vm.open(Overlay.Ranks) })
+        add(Triple("Stadt", PnIcons.City) { vm.open(Overlay.City("city")) })
+        add(Triple("Questlog", PnIcons.Book) { vm.open(Overlay.Quests) })
+        if (Command.isLeader(s)) add(Triple("Kommando", PnIcons.People) { vm.open(Overlay.Command("team")) })
+        else add(Triple("Team", PnIcons.People) { vm.open(Overlay.Team) })
+        if (s.director != null) add(Triple("Direktorat", PnIcons.Crown) { vm.open(Overlay.Director) })
+        else add(Triple("Skills", PnIcons.Spark) { vm.open(Overlay.Skills) })
+    }
+    BoxWithConstraints {
+        val cols = if (maxWidth < 340.dp) 3 else 4
+        val w = (maxWidth - 8.dp * (cols - 1)) / cols
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            actions.forEach { (label, icon, go) ->
+                Column(
+                    Modifier.width(w).clip(RoundedCornerShape(14.dp)).background(Brush.verticalGradient(listOf(Color(0x1A3FD6C4), Color(0x083FD6C4))))
+                        .border(1.dp, Pn.Line, RoundedCornerShape(14.dp)).clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = go).padding(vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    PnIcon(icon, Pn.Accent, 22.dp)
+                    Spacer(Modifier.height(4.dp))
+                    Text(label, style = MaterialTheme.typography.labelMedium, maxLines = 1, color = Pn.Text)
+                }
+            }
+        }
+    }
+}
+
+/** Kurzlage: Division, Aufträge, Führung – kompakt statt drei voller Karten. */
+@Composable
+private fun DivisionSnapshot(vm: GameViewModel, s: GameState) {
+    val data = vm.data
+    val groups = Life.presenceSummary(data, s)
+    val inHq = groups.filterKeys { LifeStatus.inHq(it) && it != LifeStatus.INJURED }.values.sumOf { it.size }
+    val urgent = s.ops.contracts.count { it.urgency >= 2 }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        StatTile("Im HQ", "$inHq", Modifier.weight(1f), PnIcons.People, Pn.Accent) { vm.setTab(3) }
+        StatTile("Aufträge", "${s.ops.contracts.size}" + if (urgent > 0) " · $urgent!" else "", Modifier.weight(1f), PnIcons.Target, if (urgent > 0) Pn.Warn else Pn.Accent) { vm.setTab(1) }
+        if (Command.isLeader(s)) StatTile("Kohäsion", "${s.lead.cohesion}", Modifier.weight(1f), PnIcons.Shield, Pn.Ok) { vm.open(Overlay.Command("team")) }
+        else StatTile("Wunden", "${s.player.wounds}", Modifier.weight(1f), PnIcons.Cross, if (s.player.wounds > 0) Pn.Danger else Pn.Ok) { vm.setTab(4) }
+    }
+    val latest = s.living.feed.lastOrNull { World.revealed(data, s, it.npcId) && it.type != "mission_start" }
+    val world = s.ops.worldLog.lastOrNull()
+    if (latest != null || world != null) {
+        Spacer(Modifier.height(8.dp))
+        GlassPanel(padding = 12.dp, onClick = { vm.setTab(3) }) {
+            Overline("Heute in der Division")
+            if (latest != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (latest.npcId != "player") NpcPortrait(data, s, latest.npcId, 32.dp)
+                Text(latest.text, style = MaterialTheme.typography.bodySmall, color = feedColor(latest.type), modifier = Modifier.weight(1f))
+            }
+            if (world != null) Text("Weltlage: $world", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+        }
     }
 }
 
@@ -127,13 +218,13 @@ private fun RoomPanel(vm: GameViewModel, s: GameState) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             IconTile(PnIcons.forRoom(room.id), size = 46.dp)
             Column {
-                Text("STANDORT · " + (data.hq.floors.firstOrNull { it.floor == room.floor }?.name?.substringBefore(" ·") ?: ""), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Overline("Du bist hier · " + (data.hq.floors.firstOrNull { it.floor == room.floor }?.name?.substringBefore(" ·") ?: ""))
                 Text(room.name.uppercase(), style = MaterialTheme.typography.titleLarge)
             }
         }
         Text(room.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (npcs.isNotEmpty()) {
-            Text("Anwesend", style = MaterialTheme.typography.titleSmall)
+            Overline("Anwesend · antippen für Personalakte", Pn.Muted)
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 npcs.forEach { id ->
                     val hasTalk = Dialogues.available(data, s, id).isNotEmpty()
@@ -151,7 +242,7 @@ private fun RoomPanel(vm: GameViewModel, s: GameState) {
     if (encounter != null) {
         Spacer(Modifier.height(12.dp))
         GlassPanel(accent = Pn.Violet) {
-            Text("BEGEGNUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+            Overline("Begegnung", Pn.Violet)
             Text(encounter.title, style = MaterialTheme.typography.titleMedium)
             Text(encounter.description, style = MaterialTheme.typography.bodyMedium)
             encounter.choices.forEach { c -> ChoiceButton(c.text, if (c.xp > 0) "+${c.xp} XP · 1 Slot" else null) { vm.act { d, st -> World.resolveEncounter(d, st, encounter.id, c.id) } } }

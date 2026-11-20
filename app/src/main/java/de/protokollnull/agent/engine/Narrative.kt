@@ -141,9 +141,20 @@ object Quests {
                     changed = true
                 }
             }
+            // v1.0: Kapitelabschlüsse als feste Flags (für Feier-Einblendung, Kapitel 4 und Tests)
+            for ((flag, required) in chapterRules) {
+                if (flag !in s.flags && required.all { it in s.flags }) { s = s.copy(flags = s.flags + flag); changed = true }
+            }
         }
         return Result(s, msgs)
     }
+
+    /** Kapitel gilt als abgeschlossen, wenn alle zugehörigen Hauptaufträge erledigt sind. */
+    val chapterRules = listOf(
+        "ch2_done" to listOf("quest_q11", "quest_q12", "quest_q13"),
+        "ch3_done" to listOf("quest_q17"),
+        "ch4_done" to listOf("quest_q24")
+    )
 }
 
 /** Enden und Epilog: aus Story-Flags und Beziehungen zusammengesetzt. */

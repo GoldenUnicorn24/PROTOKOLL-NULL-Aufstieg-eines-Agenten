@@ -12,8 +12,10 @@ import de.protokollnull.agent.data.SaveRepository
 import de.protokollnull.agent.data.SettingsStore
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.*
+import de.protokollnull.agent.ui.theme.Celebration
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,11 +75,48 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     private val _settings = MutableStateFlow(settingsStore.load())
     val settings: StateFlow<Settings> = _settings.asStateFlow()
 
+    /** v1.0: Feier-Einblendung (Levelaufstieg, Beförderung, Kapitelabschluss). */
+    private val _celebration = MutableStateFlow<Celebration?>(null)
+    val celebration: StateFlow<Celebration?> = _celebration.asStateFlow()
+
+    /** v1.0: Label einer laufenden Hintergrundberechnung (z. B. Zeitraffer), sonst null. */
+    private val _busy = MutableStateFlow<String?>(null)
+    val busy: StateFlow<String?> = _busy.asStateFlow()
+
     private var toastCounter = 0L
+    private var celebrationCounter = 0L
     private var tone: ToneGenerator? = null
+
+    /**
+     * v1.0: Autosave läuft seriell im Hintergrund. Der Kanal behält nur den jeweils
+     * neuesten Stand (CONFLATED) – schnelle Aktionsfolgen blockieren den UI-Thread nicht
+     * mehr durch JSON-Serialisierung und Dateizugriffe.
+     */
+    private val saveQueue = Channel<Pair<Long, GameState>>(Channel.CONFLATED)
+    private val saveLock = Any()
+    @Volatile private var saveSeq = 0L
+    private var writtenSeq = -1L
 
     init {
         saves.importLegacyIfPresent()
+        viewModelScope.launch(Dispatchers.IO) {
+            for ((seq, st) in saveQueue) writeAuto(seq, st)
+        }
+    }
+
+    /** Schreibt nur, wenn kein neuerer Stand bereits auf der Platte liegt (Reihenfolge-sicher). */
+    private fun writeAuto(seq: Long, st: GameState) {
+        synchronized(saveLock) {
+            if (seq <= writtenSeq) return
+            runCatching { saves.save("auto", st) }
+            writtenSeq = seq
+        }
+    }
+
+    /** Schreibt den aktuellen Stand sofort (z. B. wenn die App in den Hintergrund geht). */
+    fun flushSave() {
+        val st = _state.value ?: return
+        writeAuto(saveSeq, st)
     }
 
     private fun listAssets(app: Application): Set<String> {
@@ -99,9 +138,12 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     }
     fun closeOverlays() { _overlays.value = emptyList() }
     fun dismissToast() { _toast.value = null }
+    fun dismissCelebration() { _celebration.value = null }
+    /** Kurzer Hinweis ohne Spielwirkung (z. B. bei geschützter Zurück-Geste). */
+    fun notify(message: String, error: Boolean = false) = show(listOf(message), error)
 
     fun goToStart() {
-        _state.value?.let { saves.save("auto", it) }
+        flushSave()
         _screen.value = "start"
         _overlays.value = emptyList()
     }
@@ -149,7 +191,11 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     fun load(slot: String) {
         val s = saves.load(slot)
         if (s == null) { show(listOf("Spielstand konnte nicht geladen werden."), true); return }
-        _state.value = MissionGenerator.refreshBoard(data, s)
+        // Board und (v1.0) Auftragslage beim Laden aktualisieren – früher geschah das als
+        // Seiteneffekt beim Öffnen von Mission Control.
+        var loaded = MissionGenerator.refreshBoard(data, s)
+        if (loaded.phase == "game" && loaded.ops.lastGenDay < loaded.clock.day) loaded = runCatching { Ops.refresh(data, loaded) }.getOrDefault(loaded)
+        _state.value = loaded
         _screen.value = "game"
         _overlays.value = emptyList()
         _tab.value = 0
@@ -206,7 +252,11 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun persist() { _state.value?.let { runCatching { saves.save("auto", it) } } }
+    private fun persist() {
+        val st = _state.value ?: return
+        val seq = ++saveSeq
+        saveQueue.trySend(seq to st)
+    }
 
     // --- Einstellungen ------------------------------------------------------
 
@@ -225,7 +275,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    override fun onCleared() { runCatching { tone?.release() }; super.onCleared() }
+    override fun onCleared() { flushSave(); saveQueue.close(); runCatching { tone?.release() }; super.onCleared() }
 
     // --- Aktionen -------------------------------------------------------------
 
@@ -236,8 +286,35 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Führt eine Engine-Aktion aus, speichert automatisch und zeigt Meldungen. */
     fun act(silent: Boolean = false, f: (GameData, GameState) -> Result) {
+        if (_busy.value != null) return
         val s = _state.value ?: return
         val r = runCatching { f(data, s) }.getOrElse { e -> Result(s, listOf("Interner Fehler: ${e.message}"), ok = false) }
+        apply(s, r, silent)
+    }
+
+    /**
+     * v1.0: Rechenintensive Aktionen (Zeitraffer über Wochen bis Jahre) laufen auf einem
+     * Hintergrund-Thread. Während der Berechnung sperrt eine Ladeanzeige weitere Eingaben,
+     * sodass kein zweiter Zustand parallel entstehen kann.
+     */
+    fun actAsync(label: String, silent: Boolean = false, f: (GameData, GameState) -> Result) {
+        if (_busy.value != null) return
+        val s = _state.value ?: return
+        _busy.value = label
+        viewModelScope.launch {
+            try {
+                val r = withContext(Dispatchers.Default) {
+                    runCatching { f(data, s) }.getOrElse { e -> Result(s, listOf("Interner Fehler: ${e.message}"), ok = false) }
+                }
+                // Nur übernehmen, wenn sich der Ausgangszustand nicht geändert hat
+                if (_state.value === s) apply(s, r, silent)
+            } finally {
+                _busy.value = null
+            }
+        }
+    }
+
+    private fun apply(before: GameState, r: Result, silent: Boolean) {
         var next = r.state
         if (r.ok) {
             val q = Quests.update(data, next)
@@ -250,12 +327,19 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             _state.value = next
             if (!silent || q.messages.isNotEmpty()) show(msgs, false)
             if (msgs.isNotEmpty()) beep(false)
+            celebrate(before, next)
         } else {
             _state.value = next
             show(r.messages, true)
             beep(true)
         }
         persist()
+    }
+
+    /** Erkennt bedeutsame Fortschritte und stößt eine einmalige Feier-Einblendung an. */
+    private fun celebrate(before: GameState, after: GameState) {
+        val c = Milestones.detect(data, before, after) ?: return
+        _celebration.value = Celebration(++celebrationCounter, c.kind, c.title, c.subtitle)
     }
 
     fun update(f: (GameState) -> GameState) { _state.value = _state.value?.let(f); persist() }

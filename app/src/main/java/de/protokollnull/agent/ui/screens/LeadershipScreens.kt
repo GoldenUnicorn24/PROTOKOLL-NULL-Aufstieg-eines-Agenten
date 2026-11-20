@@ -31,7 +31,7 @@ fun CommandScreen(vm: GameViewModel, s: GameState, initialTab: String = "team") 
         ScreenHeader("Führungscockpit", Directorate.tierLabel(Directorate.tier(s)) + " · " + vm.data.rank(s.player.rank).name, onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             item {
-                CompactChips(listOf("team" to "Team", "tasks" to "Aufgaben", "delegation" to "Delegation", "staff" to "Personal", "sites" to "Standorte", "reports" to "Berichte"), tab) { tab = it }
+                PnTabs(listOf("team" to "Team", "tasks" to "Aufgaben", "delegation" to "Delegation", "staff" to "Personal", "sites" to "Standorte", "reports" to "Berichte"), tab) { tab = it }
             }
             if (!Command.isLeader(s) && tab != "reports") item {
                 GlassPanel(accent = Pn.Warn) {
@@ -60,7 +60,7 @@ private fun TeamPanel(vm: GameViewModel, s: GameState) {
     val data = vm.data
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         GlassPanel {
-            Text("TEAMLAGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("TEAMLAGE", Pn.Accent)
             StatBar("Teamkohäsion", s.lead.cohesion, 100, Pn.Ok)
             StatBar("Bereitschaft", Command.teamReadiness(data, s), 100, Pn.Accent)
             KeyValue("Bilanz", "${s.lead.teamWins} Erfolg${if (s.lead.teamWins == 1) "" else "e"} · ${s.lead.teamLosses} Fehlschl${if (s.lead.teamLosses == 1) "ag" else "äge"}")
@@ -89,7 +89,7 @@ private fun TeamPanel(vm: GameViewModel, s: GameState) {
         if (Command.isLeader(s) && s.team.size >= 2) {
             val pairs = s.team.flatMapIndexed { i, a -> s.team.drop(i + 1).map { b -> Triple(a, b, Life.bond(s, a, b)) } }.filter { it.third < 0 }.sortedBy { it.third }
             if (pairs.isNotEmpty()) GlassPanel(accent = Pn.Danger) {
-                Text("SPANNUNGEN IM TEAM", style = MaterialTheme.typography.labelSmall, color = Pn.Danger)
+                Overline("SPANNUNGEN IM TEAM", Pn.Danger)
                 pairs.take(3).forEach { (a, b, v) ->
                     ChoiceButton("Aussprache: ${Relations.displayName(data, s, a).substringBefore(" ")} & ${Relations.displayName(data, s, b).substringBefore(" ")}", "Bindung $v · Empathie-Probe, 15 Energie") {
                         vm.act { d, x -> Command.mediate(d, x, a, b) }
@@ -108,7 +108,7 @@ private fun TasksPanel(vm: GameViewModel, s: GameState) {
     val staff = Command.staff(data, s)
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         GlassPanel {
-            Text("AUFGABE VERGEBEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("AUFGABE VERGEBEN", Pn.Accent)
             Text("Etat: ${Directorate.budget(s)} Cr · Energie ${s.player.energy}", style = MaterialTheme.typography.bodySmall)
             CompactChips(staff.map { it to Relations.displayName(data, s, it).substringBefore(" ") }, npc ?: "") { npc = it; mentor = null }
             npc?.let { id ->
@@ -130,12 +130,12 @@ private fun TasksPanel(vm: GameViewModel, s: GameState) {
         }
         val active = s.lead.tasks.filter { !it.done }
         if (active.isNotEmpty()) GlassPanel(accent = Pn.Violet) {
-            Text("LAUFENDE AUFGABEN", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+            Overline("LAUFENDE AUFGABEN", Pn.Violet)
             active.forEach { t -> Text("${Relations.displayName(data, s, t.npcId).substringBefore(" ")}: ${Command.taskById[t.kind]?.label} bis ${Clock.dateLabel(t.endDay)}", style = MaterialTheme.typography.bodySmall) }
         }
         val done = s.lead.tasks.filter { it.done }.takeLast(6).reversed()
         if (done.isNotEmpty()) GlassPanel(accent = Pn.Muted) {
-            Text("ERGEBNISSE", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+            Overline("ERGEBNISSE", Pn.Muted)
             done.forEach { Text("• ${it.result}", style = MaterialTheme.typography.bodySmall) }
         }
     }
@@ -277,7 +277,7 @@ private fun SitesPanel(vm: GameViewModel, s: GameState) {
     var staffFor by remember { mutableStateOf<String?>(null) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         GlassPanel {
-            Text("STANDORTE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("STANDORTE", Pn.Accent)
             SiteMap(s)
             KeyValue(if (s.director != null) "Organisationsbudget" else "Teametat", "${Directorate.budget(s)} Cr")
             SmallNote("Persönliche Credits werden nicht verwendet. Unterhalt wird wöchentlich abgerechnet.")
@@ -349,7 +349,7 @@ private fun ReportsPanel(vm: GameViewModel, s: GameState) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         val (income, costs) = Directorate.weeklyLines(vm.data, s)
         if (Command.isLeader(s)) GlassPanel(accent = Pn.Violet) {
-            Text("VORSCHAU NÄCHSTE WOCHE", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+            Overline("VORSCHAU NÄCHSTE WOCHE", Pn.Violet)
             income.forEach { KeyValue(it.label, "+${it.amount} Cr", Pn.Ok) }
             costs.forEach { KeyValue(it.label, "−${it.amount} Cr", Pn.Danger) }
             KeyValue("Saldo", Effs.signed(income.sumOf { it.amount } - costs.sumOf { it.amount }) + " Cr")
@@ -363,7 +363,7 @@ private fun ReportsPanel(vm: GameViewModel, s: GameState) {
             }
         }
         if (s.lead.log.isNotEmpty()) GlassPanel(accent = Pn.Muted) {
-            Text("FÜHRUNGSPROTOKOLL", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+            Overline("FÜHRUNGSPROTOKOLL", Pn.Muted)
             s.lead.log.takeLast(10).reversed().forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
     }
@@ -403,7 +403,8 @@ fun DirectorateScreen(vm: GameViewModel, s: GameState) {
                     if (d.lastWeekReport.isNotBlank()) SmallNote("Letzte Woche: " + d.lastWeekReport)
                 }
                 Spacer(Modifier.height(6.dp))
-                CompactChips(listOf("depts" to "Abteilungen", "budget" to "Haushalt", "projects" to "Projekte", "policy" to "Leitlinie", "decide" to "Entscheidung" + if (s.lead.pendingDilemma != null) " !" else ""), tab) { tab = it }
+                PnTabs(listOf("depts" to "Abteilungen", "budget" to "Haushalt", "projects" to "Projekte", "policy" to "Leitlinie", "agenda" to "Agenda", "decide" to "Entscheidung"), tab,
+                    badges = if (s.lead.pendingDilemma != null) setOf("decide") else emptySet()) { tab = it }
             }
             when (tab) {
                 "depts" -> {
@@ -483,7 +484,7 @@ private fun BudgetPanel(vm: GameViewModel, s: GameState) {
             SmallNote("Organisationsbudget und persönliche Credits sind getrennt. Reicht das Budget nicht, pausieren Projekte und die Moral sinkt.")
         }
         if (Directorate.tier(s) in 1..2) GlassPanel(accent = Pn.Violet) {
-            Text("HAUSHALTSANTRAG", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+            Overline("HAUSHALTSANTRAG", Pn.Violet)
             if (s.lead.budgetRequest > 0) Text("In Prüfung: ${s.lead.budgetRequest} Cr – Entscheidung zum Wochenwechsel.", style = MaterialTheme.typography.bodySmall)
             else Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(3000, 8000, 15000).forEach { a -> ActionButton("$a", Modifier.weight(1f), secondary = true, subtitle = "Cr") { vm.act { d, x -> Directorate.requestBudget(d, x, a) } } }
@@ -524,7 +525,7 @@ private fun DilemmaPanel(vm: GameViewModel, s: GameState) {
         if (d == null) SmallNote("Keine Entscheidung offen. Führungsdilemmata entstehen zum Wochenwechsel aus der Lage der Division.")
         else {
             GlassPanel(accent = Pn.Warn) {
-                Text("FÜHRUNGSENTSCHEIDUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Warn)
+                Overline("FÜHRUNGSENTSCHEIDUNG", Pn.Warn)
                 Text(d.title, style = MaterialTheme.typography.titleMedium)
                 Text(d.text, style = MaterialTheme.typography.bodyMedium)
                 if (d.id == "staff_dispute") Directorate.disputeParties(vm.data, s)?.let { (a, b) ->
@@ -542,7 +543,7 @@ private fun DilemmaPanel(vm: GameViewModel, s: GameState) {
         }
         val history = s.lead.dilemmaHistory.entries.sortedByDescending { it.value }.take(5)
         if (history.isNotEmpty()) GlassPanel(accent = Pn.Muted) {
-            Text("FRÜHERE ENTSCHEIDUNGEN", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+            Overline("FRÜHERE ENTSCHEIDUNGEN", Pn.Muted)
             history.forEach { (k, day) -> Text("${Clock.dateLabel(day)}: ${Directorate.dilemmaById[k.substringBefore("#")]?.title}", style = MaterialTheme.typography.bodySmall) }
         }
         if (s.lead.fallout.isNotEmpty()) SmallNote("Ausstehende Folgen: ${s.lead.fallout.size}")
@@ -570,7 +571,8 @@ fun CityScreen(vm: GameViewModel, s: GameState, initialTab: String = "home") {
                     SmallNote("Freizeit kostet Zeit, Energie und Geld – und konkurriert mit Training, Einsätzen und Führungsaufgaben.")
                 }
                 Spacer(Modifier.height(6.dp))
-                CompactChips(listOf("home" to "Wohnung", "city" to "Stadt", "meet" to "Treffen", "job" to "Tarnjob", "event" to "Ereignis" + if (s.life.pendingEvent != null) " !" else ""), tab) { tab = it }
+                PnTabs(listOf("home" to "Wohnung", "city" to "Stadt", "meet" to "Treffen", "job" to "Tarnjob", "event" to "Ereignis"), tab,
+                    badges = if (s.life.pendingEvent != null) setOf("event") else emptySet()) { tab = it }
             }
             when (tab) {
                 "home" -> item { HousingPanel(vm, s) }
@@ -603,7 +605,7 @@ fun CityScreen(vm: GameViewModel, s: GameState, initialTab: String = "home") {
             }
             if (s.life.log.isNotEmpty()) item {
                 GlassPanel(accent = Pn.Muted) {
-                    Text("PRIVATES TAGEBUCH", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+                    Overline("PRIVATES TAGEBUCH", Pn.Muted)
                     s.life.log.takeLast(6).reversed().forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                 }
             }
@@ -617,7 +619,7 @@ private fun HousingPanel(vm: GameViewModel, s: GameState) {
     val h = Home.housing(s)
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         GlassPanel(accent = Pn.Ok) {
-            Text("DEINE UNTERKUNFT", style = MaterialTheme.typography.labelSmall, color = Pn.Ok)
+            Overline("DEINE UNTERKUNFT", Pn.Ok)
             Text(h.name, style = MaterialTheme.typography.titleMedium)
             Text(h.description, style = MaterialTheme.typography.bodySmall)
             KeyValue("Miete", if (h.rent > 0) "${h.rent} Cr/Woche" else "keine")
@@ -642,7 +644,7 @@ private fun HousingPanel(vm: GameViewModel, s: GameState) {
             }
         }
         if (s.life.hobbies.isNotEmpty()) GlassPanel {
-            Text("HOBBYS", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("HOBBYS", Pn.Accent)
             s.life.hobbies.entries.sortedByDescending { it.value }.forEach { (h2, v) -> StatBar(h2 + if (h2 in s.player.interests) " ★" else "", v.coerceAtMost(10), 10, Pn.Violet) }
             SmallNote("Ab Stufe 3 wird ein Hobby zu einem Interesse – das verbessert die Passung zu Figuren mit denselben Interessen.")
         }
@@ -655,7 +657,7 @@ private fun JobPanel(vm: GameViewModel, s: GameState) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         val job = s.life.coverJob?.let { Home.jobById[it] }
         GlassPanel(accent = if (job != null) Pn.Accent else Pn.Muted) {
-            Text("TARNJOB", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("TARNJOB", Pn.Accent)
             if (job == null) Text("Kein Tarnjob. Eine zivile Identität hilft bei Undercover-Legenden und bringt etwas Geld.", style = MaterialTheme.typography.bodySmall)
             else {
                 Text(job.name, style = MaterialTheme.typography.titleMedium)
@@ -679,7 +681,7 @@ private fun LifeEventPanel(vm: GameViewModel, s: GameState) {
         if (e == null) SmallNote("Gerade passiert nichts Besonderes. Alltagsereignisse entstehen bei Freizeitaktivitäten und zu Hause.")
         else {
             GlassPanel(accent = Pn.Warn) {
-                Text("ALLTAG", style = MaterialTheme.typography.labelSmall, color = Pn.Warn)
+                Overline("ALLTAG", Pn.Warn)
                 Text(e.title, style = MaterialTheme.typography.titleMedium)
                 if (e.npcId != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     NpcPortrait(vm.data, s, e.npcId, 36.dp); Text(Relations.displayName(vm.data, s, e.npcId), style = MaterialTheme.typography.labelLarge)
@@ -705,11 +707,11 @@ fun LeadershipHqCard(vm: GameViewModel, s: GameState) {
     if (dil == null && running == 0 && ev == null && !Command.isLeader(s)) return
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (dil != null) GlassPanel(accent = Pn.Warn, onClick = { vm.open(Overlay.Director) }) {
-            Text("FÜHRUNGSENTSCHEIDUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Warn)
+            Overline("FÜHRUNGSENTSCHEIDUNG", Pn.Warn)
             Text(dil.title, style = MaterialTheme.typography.titleMedium)
         }
         if (Command.isLeader(s)) GlassPanel(onClick = { vm.open(Overlay.Command("team")) }) {
-            Text("FÜHRUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("FÜHRUNG", Pn.Accent)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Pill("Kohäsion ${s.lead.cohesion}", Pn.Ok)
                 if (running > 0) Pill("$running Delegation${if (running == 1) "" else "en"}", Pn.Violet)
@@ -717,7 +719,7 @@ fun LeadershipHqCard(vm: GameViewModel, s: GameState) {
             }
         }
         if (ev != null) GlassPanel(accent = Pn.Rose, onClick = { vm.open(Overlay.City("event")) }) {
-            Text("PRIVAT", style = MaterialTheme.typography.labelSmall, color = Pn.Rose)
+            Overline("PRIVAT", Pn.Rose)
             Text(ev.title, style = MaterialTheme.typography.titleMedium)
         }
     }
@@ -749,7 +751,7 @@ fun PersonnelFile(vm: GameViewModel, s: GameState, id: String) {
             if (age < 18) SmallNote("Minderjährig: nur Training, Mentoring und Ausbildung – keine Leitungsposten und keine gefährlichen Einsätze.")
         }
         GlassPanel {
-            Text("KOMPETENZEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("KOMPETENZEN", Pn.Accent)
             Life.focusAreas.forEach { a -> StatBar(Life.focusLabel(a), Life.competence(data, s, id, a), 10, if (a == l.focus) Pn.Accent else Pn.Muted) }
         }
         s.lead.reviews[id]?.let { r ->

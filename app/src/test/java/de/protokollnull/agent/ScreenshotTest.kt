@@ -34,7 +34,11 @@ class ScreenshotTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
+    private var vmRef: GameViewModel? = null
+
     private fun shot(name: String) {
+        // Feier-Einblendungen (Level/Rang) würden die Kernscreens verdecken
+        vmRef?.dismissCelebration()
         compose.waitForIdle()
         compose.mainClock.advanceTimeBy(1500)
         compose.waitForIdle()
@@ -45,6 +49,7 @@ class ScreenshotTest {
     fun coreScreens() {
         val app = ApplicationProvider.getApplicationContext<Application>()
         val vm = GameViewModel(app)
+        vmRef = vm
         vm.updateSettings { it.copy(animations = false, sfxVolume = 0, musicVolume = 0) }
         val loader = ImageLoader.Builder(app).components { add(SvgDecoder.Factory()) }
             .dispatcher(Dispatchers.Unconfined).allowHardware(false).crossfade(false).build()

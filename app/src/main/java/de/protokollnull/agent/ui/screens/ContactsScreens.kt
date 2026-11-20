@@ -44,12 +44,12 @@ fun ContactsScreen(vm: GameViewModel, s: GameState) {
     }
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
-            Text("PERSONALAKTEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("PERSONALAKTEN", Pn.Accent)
             Text("KONTAKTE & BEZIEHUNGEN", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(6.dp))
             PresenceStrip(vm, s)
             Spacer(Modifier.height(6.dp))
-            ChipRow(listOf("all" to "Alle", "hq" to "Im HQ", "away" to "Abwesend", "friends" to "Freunde", "rivals" to "Spannungen", "team" to "Team", "feed" to "Divisionsleben"), filter) { filter = it }
+            PnTabs(listOf("all" to "Alle", "hq" to "Im HQ", "away" to "Abwesend", "friends" to "Freunde", "rivals" to "Spannungen", "team" to "Team", "feed" to "Divisionsleben"), filter) { filter = it }
         }
         if (filter == "feed") {
             val feed = s.living.feed.reversed().filter { World.revealed(data, s, it.npcId) || it.npcId == "player" }.take(60)
@@ -151,7 +151,8 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                     if (Romance.romanceable(data, s, id) && r.romanceStage > 0) Pill(Romance.stageName(data, s, id, r.romanceStage), Pn.Violet)
                 }
             }
-            ChipRow(listOf("profile" to "Akte", "duty" to "Dienst", "career" to "Laufbahn", "relation" to "Beziehung", "circle" to "Umfeld", "talk" to "Interaktion"), tab) { tab = it }
+            PnTabs(listOf("profile" to "Akte", "talk" to "Interaktion", "relation" to "Beziehung", "duty" to "Dienst", "career" to "Laufbahn", "circle" to "Umfeld"), tab,
+                badges = if (Dialogues.available(data, s, id).isNotEmpty()) setOf("talk") else emptySet()) { tab = it }
             when (tab) {
                 "profile" -> {
                     GlassPanel {

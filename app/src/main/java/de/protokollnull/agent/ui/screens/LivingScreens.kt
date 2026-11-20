@@ -66,7 +66,7 @@ fun LivingHqCards(vm: GameViewModel, s: GameState) {
         if (e != null) GlassPanel(accent = Pn.Warn, onClick = { vm.open(Overlay.HqEvent) }) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 PulseDot(Pn.Warn, 6.dp); Spacer(Modifier.width(6.dp))
-                Text("HQ-EREIGNIS", style = MaterialTheme.typography.labelLarge, color = Pn.Warn)
+                Overline("HQ-EREIGNIS", Pn.Warn)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                 e.npcId?.let { NpcPortrait(data, s, it, 44.dp) }
@@ -78,7 +78,7 @@ fun LivingHqCards(vm: GameViewModel, s: GameState) {
             }
         }
         if (s.living.lives.isNotEmpty()) GlassPanel(onClick = { vm.setTab(3) }) {
-            Text("HEUTE IN DER DIVISION", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("HEUTE IN DER DIVISION", Pn.Accent)
             PresenceStrip(vm, s)
             val latest = s.living.feed.lastOrNull { World.revealed(data, s, it.npcId) && it.type != "mission_start" }
             if (latest != null) Text(latest.text, style = MaterialTheme.typography.bodySmall, color = feedColor(latest.type))

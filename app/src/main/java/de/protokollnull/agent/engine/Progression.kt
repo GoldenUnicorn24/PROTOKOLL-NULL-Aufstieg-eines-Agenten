@@ -212,5 +212,12 @@ object Progression {
         return s
     }
 
+    /** v1.0: Alle Voraussetzungen für die nächste Prüfung erfüllt (ohne Ort/Energie) – für Hinweise. */
+    fun examReady(data: GameData, state: GameState): Boolean {
+        val check = nextRankCheck(data, state) ?: return false
+        val c = state.career
+        return check.ready && state.clock.day >= c.examCooldownUntil && c.examPrep >= c.examPrepRequired
+    }
+
     fun teamSize(data: GameData, state: GameState): Int = data.rank(state.player.rank).teamSize
 }

@@ -46,11 +46,8 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
     var tab by remember { mutableStateOf("overview") }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Karriere", "Rang ${s.player.rank}/12 · ${data.rank(s.player.rank).name}", onBack = { vm.back() })
-        Row(Modifier.padding(horizontal = 16.dp).horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("overview" to "Übersicht", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})").forEach { (id, l) ->
-                FilterChip(selected = tab == id, onClick = { tab = id }, label = { Text(l) })
-            }
-        }
+        PnTabs(listOf("overview" to "Übersicht", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})"), tab,
+            Modifier.padding(horizontal = Sp.gutter, vertical = 8.dp), badges = if (Progression.examReady(data, s)) setOf("overview") else emptySet()) { tab = it }
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             when (tab) {
                 "overview" -> {
@@ -61,7 +58,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                                     Text(ev?.grade ?: "–", style = MaterialTheme.typography.displaySmall.copy(fontSize = 32.sp), color = gradeColor(ev?.grade))
                                 }
                                 Column(Modifier.weight(1f)) {
-                                    Text("LEISTUNGSBEURTEILUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                                    Overline("LEISTUNGSBEURTEILUNG", Pn.Accent)
                                     Text(if (ev != null) "vor ${s.clock.day - ev.day} Tagen · ${ev.score}/100" else "Noch keine Beurteilung", style = MaterialTheme.typography.titleSmall)
                                     Text(ev?.comment ?: "Bitte Michael im Ausbildungsbereich um eine Beurteilung.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
@@ -78,7 +75,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                     }
                     if (check != null) item {
                         GlassPanel(accent = if (check.ready) Pn.Ok else Pn.Warn) {
-                            Text("NÄCHSTER DIENSTGRAD", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("NÄCHSTER DIENSTGRAD", Pn.Accent)
                             Text(check.rank.name.uppercase(), style = MaterialTheme.typography.titleLarge)
                             Text(check.rank.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             check.requirements.forEach { (t, ok) ->
@@ -184,7 +181,7 @@ fun ExamScreen(vm: GameViewModel, s: GameState) {
     val e = s.activeExam ?: return
     val rankName = data.rank(e.rank).name
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("BEFÖRDERUNGSPRÜFUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+        Overline("BEFÖRDERUNGSPRÜFUNG", Pn.Accent)
         Text(rankName.uppercase(), style = MaterialTheme.typography.displaySmall.copy(fontSize = 32.sp, lineHeight = 36.sp))
         PhaseStepper(listOf("narrative", "search", "observe", "narrative"), e.phase.coerceAtMost(3))
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -221,7 +218,7 @@ fun ExamScreen(vm: GameViewModel, s: GameState) {
             else -> {
                 val sc = Career.scenario(e.rank)
                 GlassPanel {
-                    Text("PHASE 3 · LAGEENTSCHEIDUNG", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+                    Overline("PHASE 3 · LAGEENTSCHEIDUNG", Pn.Accent)
                     Text(sc.title, style = MaterialTheme.typography.titleMedium)
                     Text(sc.text, style = MaterialTheme.typography.bodyMedium)
                 }
@@ -243,11 +240,8 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
     LaunchedEffect(s.simReports.size) { if (s.simReports.lastOrNull()?.endDay == s.clock.day) tab = "report" }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Zeitplan", Clock.dateLabel(s.clock.day) + " · " + Clock.slotNames[s.clock.slot], onBack = { vm.back() })
-        Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("plan" to "Plan", "run" to "Zeitraum", "report" to "Bericht").forEach { (id, l) ->
-                FilterChip(selected = tab == id, onClick = { tab = id }, label = { Text(l) }, enabled = id != "report" || s.simReports.isNotEmpty())
-            }
-        }
+        PnTabs((listOf("plan" to "Plan", "run" to "Zeitraum") + if (s.simReports.isNotEmpty()) listOf("report" to "Bericht") else emptyList()), tab,
+            Modifier.padding(horizontal = Sp.gutter, vertical = 8.dp)) { tab = it }
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             when (tab) {
                 "plan" -> {
@@ -276,7 +270,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                     item {
                         val f = Simulation.forecast(s)
                         GlassPanel(accent = if (f.warning != null) Pn.Warn else Pn.Ok) {
-                            Text("WOCHENPROGNOSE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("WOCHENPROGNOSE", Pn.Accent)
                             KeyValue("Trainingstage", "${f.trainingDays}")
                             KeyValue("Ruhetage", "${f.restDays}")
                             KeyValue("Stress pro Woche", Effs.signed(f.stressPerWeek), if (f.stressPerWeek > 15) Pn.Danger else Pn.Text)
@@ -288,7 +282,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                 "run" -> {
                     item {
                         GlassPanel {
-                            Text("ZEITRAUM WÄHLEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("ZEITRAUM WÄHLEN", Pn.Accent)
                             Text("Die Simulation hält bei wichtigen Ereignissen automatisch an: 18. Geburtstag, neue Story-Ereignisse, kritische Gesundheit, erfüllte Prüfungsauflagen.", style = MaterialTheme.typography.bodySmall)
                             KeyValue("Heute", Clock.dateLabel(s.clock.day))
                             KeyValue("Bis zum 18. Geburtstag", if (Ages.player(s) >= 18) "volljährig" else "${Clock.daysUntilAge(s.clock.day, 18)} Tage")
@@ -301,7 +295,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(bottom = 10.dp)) {
                                 row.forEach { (d, l) ->
                                     ActionButton(l, Modifier.weight(1f), secondary = d != 30, icon = PnIcons.Calendar) {
-                                        vm.act { dd, x -> Simulation.run(dd, x, d) }
+                                        vm.actAsync("Zeitraffer: $d Tage werden simuliert …") { dd, x -> Simulation.run(dd, x, d) }
                                         tab = "report"
                                     }
                                 }
@@ -309,7 +303,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                             }
                         }
                         if (Ages.player(s) < 18) ActionButton("Bis zum 18. Geburtstag", Modifier.fillMaxWidth(), subtitle = "${Clock.daysUntilAge(s.clock.day, 18)} Tage", icon = PnIcons.Star) {
-                            vm.act { dd, x -> Simulation.run(dd, x, Clock.daysUntilAge(x.clock.day, 18).coerceAtLeast(1)) }
+                            vm.actAsync("Zeitraffer bis zum 18. Geburtstag …") { dd, x -> Simulation.run(dd, x, Clock.daysUntilAge(x.clock.day, 18).coerceAtLeast(1)) }
                             tab = "report"
                         }
                     }
@@ -336,7 +330,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel {
-            Text("TRAINING", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("TRAINING", Pn.Accent)
             r.activityDays.forEach { (a, n) -> KeyValue(Simulation.activity(a).name, "$n Tage") }
             if (r.failedSessions > 0) KeyValue("Ohne Ergebnis (Erschöpfung/Stress/niemand da)", "${r.failedSessions}", Pn.Warn)
             if (r.attributeGains.isEmpty()) SmallNote("Keine Attributsteigerung in diesem Zeitraum.")
@@ -348,7 +342,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel {
-            Text("VERFASSUNG & FINANZEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("VERFASSUNG & FINANZEN", Pn.Accent)
             KeyValue("Gesundheit", "${r.healthBefore} → ${r.healthAfter}")
             KeyValue("Wunden", "${r.woundsBefore} → ${r.woundsAfter}", if (r.woundsAfter < r.woundsBefore) Pn.Ok else Pn.Text)
             KeyValue("Stress", "${r.stressBefore} → ${r.stressAfter}")
@@ -360,7 +354,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     if (r.relationChanges.isNotEmpty()) item {
         GlassPanel {
-            Text("BEGEGNUNGEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("BEGEGNUNGEN", Pn.Accent)
             r.relationChanges.entries.sortedByDescending { it.value }.forEach { (id, d) ->
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
                     NpcPortrait(data, s, id, 30.dp, height = 36.dp)
@@ -373,7 +367,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel(accent = Pn.Muted) {
-            Text("EREIGNISPROTOKOLL", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+            Overline("EREIGNISPROTOKOLL", Pn.Muted)
             if (r.events.isEmpty()) SmallNote("Ruhige Zeit – keine besonderen Vorkommnisse.")
             r.events.forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
         }
@@ -402,7 +396,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                 GlassPanel {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text("HEUTE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("HEUTE", Pn.Accent)
                             Text("$sessions / ${Progression.DAILY_SESSIONS} volle Einheiten", style = MaterialTheme.typography.titleSmall)
                             Text("Danach nur noch geringer Fortschritt (Ermüdung).", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
@@ -414,7 +408,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
             }
             item {
                 GlassPanel {
-                    Text("AUSBILDER", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                    Overline("AUSBILDER", Pn.Accent)
                     if (trainers.isEmpty()) SmallNote("Gerade ist hier kein Ausbilder. Michael ist vormittags in der Trainingshalle, nachmittags am Präzisionsstand; Birkhoff und Sonya im Techniklabor.")
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         (listOf<String?>(null) + trainers).forEach { t ->

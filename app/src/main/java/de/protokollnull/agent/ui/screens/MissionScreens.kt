@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -81,13 +82,18 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             ScenePanel(m.locationId, Modifier.fillMaxWidth().aspectRatio(2.5f), "Einsatzgebiet",
                 data.placeById[m.locationId]?.name ?: m.locationId)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                StatTile("Gefahr", "${m.threat}/5", Modifier.weight(1f), PnIcons.Skull, if (m.threat >= 4) Pn.Danger else if (m.threat >= 3) Pn.Warn else Pn.Ok)
+                StatTile("XP", "${m.xp}", Modifier.weight(1f), PnIcons.Star, Pn.Violet)
+                StatTile("Credits", "${m.credits}", Modifier.weight(1f), PnIcons.Coin, Pn.Warn)
+            }
             GlassPanel {
                 if (m.giverId != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     NpcPortrait(data, s, m.giverId, 56.dp)
-                    Column { Text("Auftraggeber", style = MaterialTheme.typography.labelSmall, color = Pn.Accent); Text(Relations.displayName(data, s, m.giverId), style = MaterialTheme.typography.titleSmall) }
+                    Column { Overline("Auftraggeber"); Text(Relations.displayName(data, s, m.giverId), style = MaterialTheme.typography.titleSmall) }
                 }
                 Text(m.description, style = MaterialTheme.typography.bodyMedium)
-                if (m.briefing.isNotBlank()) Text(m.briefing, style = MaterialTheme.typography.bodySmall, color = Pn.Accent)
+                if (m.briefing.isNotBlank()) Text(m.briefing, style = MaterialTheme.typography.bodyMedium.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic), color = Pn.Accent)
                 if (contract == null) {
                     KeyValue("Fraktion", data.factionById[m.factionId]?.name ?: m.factionId)
                     KeyValue("Gefahrenstufe", "${m.threat}/5")
@@ -98,14 +104,15 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
             }
             if (contract != null) ContractBriefingPanel(vm, s, contract)
             SectionLabel(if (contract != null) "Einsatzstil" else "Vorgehen")
-            Missions.approaches.forEach { a -> ChoiceButton(a.name + if (approach == a.id) "  ✓" else "", a.description) { approach = a.id } }
+            Missions.approaches.forEach { a -> ChoiceButton(a.name, a.description, selected = approach == a.id, icon = when (a.id) { "stealth" -> PnIcons.Eye; "social" -> PnIcons.Chat; "direct" -> PnIcons.Bolt; else -> PnIcons.Shield }) { approach = a.id } }
             SectionLabel("Team", trailing = "${team.size}/$maxTeam")
-            if (maxTeam <= 0 || candidates.isEmpty()) SmallNote(if (candidates.isEmpty()) "Keine verfügbaren Teammitglieder (Vertrauen ≥ 30, bei Gefahr ≥ 3 nur Volljährige)." else "Einzeleinsatz.")
+            if (maxTeam <= 0 || candidates.isEmpty()) InfoNote(if (candidates.isEmpty()) "Keine verfügbaren Teammitglieder (Vertrauen ≥ 30, bei Gefahr ≥ 3 nur Volljährige)." else "Einzeleinsatz – dein Rang erlaubt noch kein Team.")
             else candidates.forEach { id ->
                 val sel = id in team
                 Row(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(if (sel) Color(0x223FD6C4) else Color(0x10FFFFFF))
-                        .clickable { team = if (sel) team - id else if (team.size < maxTeam) team + id else team }.padding(10.dp),
+                        .border(1.dp, if (sel) Pn.Accent.copy(alpha = 0.6f) else Pn.Hairline, RoundedCornerShape(14.dp))
+                        .clickable(role = androidx.compose.ui.semantics.Role.Checkbox) { team = if (sel) team - id else if (team.size < maxTeam) team + id else team }.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     NpcPortrait(data, s, id, 44.dp)
@@ -116,7 +123,7 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
                         Text("Fähigkeit: " + (Tactical.abilities[unit.ability]?.name ?: "–") + " · Treffer ${unit.accuracy} · LP ${unit.maxHp}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(Life.focusLabel(life.focus) + " · " + data.rank(life.rank).name + (contract?.let { " · Passung ${Ops.fit(data, s, it, id)}/10" } ?: ""), style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
                     }
-                    if (sel) Pill("Im Team")
+                    if (sel) PnIcon(PnIcons.Check, Pn.Accent, 22.dp) else if (team.size >= maxTeam) Pill("voll", Pn.Muted)
                 }
             }
             UnavailableTeamNote(vm, s, m, candidates)
@@ -135,14 +142,18 @@ fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
                 SmallNote("Ausgerüstete Gegenstände geben Attributboni; empfohlene Gegenstände im Inventar +5 auf Proben.")
             }
         }
-        Box(Modifier.padding(16.dp)) {
-            ActionButton(if (lock != null) lock else "Einsatz starten", Modifier.fillMaxWidth(), enabled = lock == null, subtitle = "Energie ≥ 25 · Gesundheit ≥ 40") {
+        val energyLock = when { s.player.energy < 25 -> "Zu erschöpft (Energie ${s.player.energy}/25)"; s.player.health < 40 -> "Gesundheit zu niedrig (${s.player.health}/40)"; else -> null }
+        Box(Modifier.background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xEE060C17)))).padding(16.dp)) {
+            ActionButton(lock ?: energyLock ?: "Einsatz starten", Modifier.fillMaxWidth(), enabled = lock == null && energyLock == null, icon = if (lock == null && energyLock == null) PnIcons.Play else PnIcons.Lock,
+                subtitle = if (lock == null && energyLock == null) "${approachName(approach)} · " + (if (team.isEmpty()) "allein" else "Team ${team.size}") else "Energie ≥ 25 · Gesundheit ≥ 40") {
                 vm.act { d, st -> Missions.start(d, st, m.id, approach, team) }
                 vm.closeOverlays()
             }
         }
     }
 }
+
+private fun approachName(id: String) = Missions.approaches.firstOrNull { it.id == id }?.name ?: id
 
 @Composable
 fun MissionRunScreen(vm: GameViewModel, s: GameState) {
@@ -151,9 +162,16 @@ fun MissionRunScreen(vm: GameViewModel, s: GameState) {
     val m = Missions.currentMission(data, s) ?: return
     if (run.result != null) { DebriefScreen(vm, s, m, run); return }
     val st = Missions.currentStage(data, s) ?: return
+    var confirmAbort by remember { mutableStateOf(false) }
+    if (confirmAbort) PnDialog(
+        title = "Einsatz abbrechen?",
+        text = "Ein Abbruch kostet Ruf (−1) und bringt keine Belohnung. Story-Einsätze kannst du später erneut starten.",
+        confirmLabel = "Abbrechen", dismissLabel = "Weitermachen", danger = true,
+        onConfirm = { confirmAbort = false; vm.act { d, x -> Missions.abort(d, x) } }, onDismiss = { confirmAbort = false }
+    )
     Column(Modifier.fillMaxSize()) {
         ScreenHeader(m.title, (st.title.ifBlank { "Einsatz" }), trailing = {
-            TextButton(onClick = { vm.act { d, x -> Missions.abort(d, x) } }) { Text("Abbrechen", color = Pn.Danger) }
+            TextButton(onClick = { confirmAbort = true }, modifier = Modifier.defaultMinSize(minHeight = 48.dp)) { Text("Abbrechen", color = Pn.Danger, style = MaterialTheme.typography.labelLarge) }
         })
         val idx = m.stages.indexOfFirst { it.id == st.id }
         PhaseStepper(m.stages.map { it.type }, idx, Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
@@ -181,7 +199,7 @@ private fun StageHeader(vm: GameViewModel, s: GameState, st: StageDefinition, ru
     GlassPanel {
         Row(verticalAlignment = Alignment.CenterVertically) {
             PnIcon(PnIcons.forStage(st.type), size = 16.dp); Spacer(Modifier.width(6.dp))
-            Text(when (st.type) { "search" -> "UNTERSUCHUNG"; "observe" -> "OBSERVATION"; "tactical" -> "TAKTIK"; else -> "LAGE" }, style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline(when (st.type) { "search" -> "Untersuchung"; "observe" -> "Observation"; "tactical" -> "Taktik"; else -> "Lage" })
         }
         TypewriterText(Dialogues.format(st.text, s), MaterialTheme.typography.bodyLarge)
     }
@@ -250,9 +268,9 @@ private fun ObserveStage(vm: GameViewModel, s: GameState, st: StageDefinition, r
         GlassPanel {
             Text("Signalabgleich", style = MaterialTheme.typography.titleMedium)
             Text("Die Aufzeichnung wiederholt sich im Kreis. Welcher Kanal liefert die nächsten zwei Zeichen?", style = MaterialTheme.typography.bodyMedium)
-            Text("TAKTFOLGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("TAKTFOLGE", Pn.Accent)
             Text(signal.reference.joinToString(" · "), style = MaterialTheme.typography.titleSmall)
-            Text("NEUER UMLAUF", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("NEUER UMLAUF", Pn.Accent)
             Text(signal.fragment.joinToString(" · ") + " · ? · ?", style = MaterialTheme.typography.titleSmall)
             ob.targets.forEachIndexed { i, t ->
                 ChoiceButton(t, signal.channels[i].joinToString(" → ")) { vm.act(silent = true) { d, x -> Missions.observe(d, x, i) } }
@@ -268,7 +286,7 @@ private fun ObserveStage(vm: GameViewModel, s: GameState, st: StageDefinition, r
 @Composable
 fun LogPanel(run: MissionRun) {
     GlassPanel(accent = Pn.Muted, padding = 12.dp) {
-        Text("EINSATZPROTOKOLL", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+        Overline("EINSATZPROTOKOLL", Pn.Muted)
         run.log.takeLast(6).forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
     }
 }
@@ -277,9 +295,20 @@ fun LogPanel(run: MissionRun) {
 private fun DebriefScreen(vm: GameViewModel, s: GameState, m: MissionDefinition, run: MissionRun) {
     val color = when (run.result) { "success" -> Pn.Ok; "fail" -> Pn.Danger; else -> Pn.Muted }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("NACHBESPRECHUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-        Text(m.title.uppercase(), style = MaterialTheme.typography.displaySmall.copy(fontSize = 34.sp, lineHeight = 38.sp))
-        Pill(when (run.result) { "success" -> "Auftrag erfüllt"; "fail" -> "Fehlgeschlagen"; else -> "Abgebrochen" }, color)
+        Overline("Nachbesprechung", Pn.Accent)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            IconTile(when (run.result) { "success" -> PnIcons.Trophy; "fail" -> PnIcons.Skull; else -> PnIcons.Flag }, color, 56.dp)
+            Column(Modifier.weight(1f)) {
+                Text(m.title.uppercase(), style = MaterialTheme.typography.displaySmall.copy(fontSize = 30.sp, lineHeight = 34.sp))
+                Text(when (run.result) { "success" -> "Auftrag erfüllt"; "fail" -> "Fehlgeschlagen"; else -> "Abgebrochen" }, style = MaterialTheme.typography.titleMedium, color = color)
+            }
+        }
+        val preview = Missions.rewardPreview(m, run, repeatedFail = !Ops.isContract(m.id) && m.id in s.failedMissions)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            StatTile("XP", "+${preview.first}", Modifier.weight(1f), PnIcons.Star, Pn.Violet)
+            StatTile("Credits", "+${preview.second}", Modifier.weight(1f), PnIcons.Coin, Pn.Warn)
+            StatTile("Ruf", Effs.signed(preview.third), Modifier.weight(1f), PnIcons.Medal, if (preview.third >= 0) Pn.Ok else Pn.Danger)
+        }
         GlassPanel(accent = color) {
             Text(when (run.result) { "success" -> m.debriefSuccess; "fail" -> m.debriefFail; else -> "Du brichst den Einsatz ab." }.ifBlank { "Einsatz beendet." }, style = MaterialTheme.typography.bodyLarge)
             KeyValue("Gesammelte Intel", run.intel.toString())
@@ -288,6 +317,6 @@ private fun DebriefScreen(vm: GameViewModel, s: GameState, m: MissionDefinition,
             KeyValue("Team", if (run.team.isEmpty()) "allein" else run.team.joinToString { Relations.displayName(vm.data, s, it) })
         }
         LogPanel(run)
-        ActionButton("Bericht abschließen", Modifier.fillMaxWidth(), subtitle = "Belohnungen & Konsequenzen anwenden") { vm.act { d, x -> Missions.finish(d, x) } }
+        ActionButton("Bericht abschließen", Modifier.fillMaxWidth(), subtitle = "Belohnungen & Konsequenzen anwenden", icon = PnIcons.Check) { vm.act { d, x -> Missions.finish(d, x) } }
     }
 }
