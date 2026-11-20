@@ -1,22 +1,58 @@
 # PROTOKOLL NULL – Aufstieg eines Agenten
 
 Native Android-RPG im Hochformat (Kotlin + Jetpack Compose, offline, deutsch, minSdk 26).
-**Stand: Beta 0.8.0 „Director's Legacy“** – vollständig durchspielbar: Prolog, drei Kapitel, Direktorat und Finale mit vier Enden. Neu in 0.8: Führungscockpit ab Rang 8, Delegation echter Aufträge ab Rang 9, abgestufte Sektionsleitung/stellvertretende Direktion/Direktion mit Wochen- und Monatsabrechnung, Projekten und Führungsdilemmata, HQ-Module und vier Außenstellen sowie ein echtes Privatleben mit Wohnstufen, Möbeln, Stadtkalender, Treffen, Tarnjobs und Alltagsereignissen (Details unten und in [docs/DIRECTORS_LEGACY.md](docs/DIRECTORS_LEGACY.md)). v0.7 „Shadow Operations“ bleibt vollständig erhalten ([docs/SHADOW_OPERATIONS.md](docs/SHADOW_OPERATIONS.md)).
+**Stand: 1.0.0-rc1 „Full Release“ (Release Candidate)** – vollständig durchspielbar: Prolog, vier Kapitel mit 36 Storymissionen, sechs Enden und ein Nachspiel-Kapitel nach dem Finale. Neu in 1.0: komplett überarbeitete Oberfläche (Designsystem 2.0), Taktik 3.0 mit 22 Karten und Team-KI, Missionsdirektor 3.0 mit Wendungen, Direktionsagenda für das Endgame, zehn neue HQ-Szenen und 25 neue Gegenstände. Alle Funktionen aus v0.5–v0.8 bleiben erhalten.
 
-> Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig.
+> **Warum „rc1“ und nicht 1.0.0?** Laut Masterplan wird 1.0.0 erst nach erfüllten Pflichtkriterien vergeben. Tests auf echten Geräten (TalkBack, Schriftgröße XL, 360/430 dp) und die externe Codex-Prüfung stehen noch aus – siehe [`docs/V1_RELEASE_CHECKLIST.md`](docs/V1_RELEASE_CHECKLIST.md).
+
+> Privater, nicht-kommerzieller Fan-Prototyp im Universum der Serie *Nikita* (The CW, 2010–2013). Story, Dialoge und Missionen sind eigenständig geschrieben, keine Episodenabschriften. Figurennamen und Setting gehören den Rechteinhabern. Für eine öffentliche oder kommerzielle Veröffentlichung sind Rechtefreigaben oder eigenständige Figuren nötig; urheberrechtlich geschützte Serienstills sind nicht im Repository (privater ZIP-Import siehe unten).
 
 ## Neues: Serienbild-Pakete
 
-Das Spiel unterstützt künftig einen **zentralen privaten ZIP-Import** für bis zu elf Serienfiguren unter Einstellungen. Beschreibung, zulässige Dateinamen und Bildquellen stehen in [CAST_BUNDLE_GUIDE.md](docs/CAST_BUNDLE_GUIDE.md). Das ZIP enthält keine urheberrechtlich geschützten Bilder im öffentlichen Repository.
+Das Spiel unterstützt einen **zentralen privaten ZIP-Import** für bis zu elf Serienfiguren unter Einstellungen. Beschreibung, zulässige Dateinamen und Bildquellen stehen in [CAST_BUNDLE_GUIDE.md](docs/CAST_BUNDLE_GUIDE.md). Das ZIP enthält keine urheberrechtlich geschützten Bilder im öffentlichen Repository.
 
 ## Installation (Debug-APK)
 
-1. Im Repository auf **Actions → Android CI** gehen und den neuesten grünen Lauf öffnen.
+1. Im Repository auf **Actions → Android CI** gehen und den neuesten grünen Lauf öffnen (für diesen Release Candidate: Läufe auf dem Branch des v1.0-Pull-Requests).
 2. Unten unter *Artifacts* **`ProtokollNull-debug-apk`** herunterladen (ZIP), entpacken.
 3. `app-debug.apk` aufs Android-Gerät (Android 8.0+) kopieren und installieren („Unbekannte Quellen“ erlauben).
+4. Spielstände aus v0.1–v0.8 bleiben erhalten (Autosave wird beim Start übernommen; Export/Import über *Spielstände*).
 
-Die APK wird bei jedem Push auf `main` neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung und ein Render-Test aller Kernscreens.
+Die APK wird bei jedem Push auf `main` und bei Pull Requests neu gebaut; vorher laufen alle Unit-Tests, die Inhaltsvalidierung, End-to-End-Durchläufe und ein Render-Test aller Kernscreens. Eine signierte Release-APK entsteht über den manuellen Workflow **Release-APK** (`.github/workflows/release.yml`), sobald die Keystore-Secrets gesetzt sind – Schlüssel liegen nie im Repository.
 
+## Neu in v1.0 – Full Release (rc1)
+
+Ausführlich: [Audit](docs/V1_AUDIT.md) · [UI-Review](docs/V1_UI_REVIEW.md) · [Release-Checkliste](docs/V1_RELEASE_CHECKLIST.md) · [Codex-Handoff](docs/CODEX_HANDOFF_V1.md) · [Spielübersicht](docs/V1_GAME_REVIEW.md)
+
+### Oberfläche (Designsystem 2.0)
+- Einheitliche Tokens und Komponenten auf allen Screens: einzeilige Reiterleisten mit Hinweisplaketten, Navigationszeilen, Kennzahlen-Kacheln, Fortschrittsringe, Attribut-Radar, Banner, leere Zustände, gestaltete Bestätigungsdialoge.
+- Lesbarkeit: Sekundärtexte in Inter statt Monospace, deutsche Silbentrennung, Schlüssel/Wert-Zeilen ohne senkrechte Buchstaben.
+- **HQ als Lagezentrum** (priorisierte Ereignisse, Auftrag, Schnellzugriffe, Kennzahlen), **Profil als Personalakte**, kompakte Statusleiste mit XP, Navigation mit Plaketten, animierte Übergänge, Feier-Einblendung bei Beförderung/Kapitel/jedem 5. Level – alles über „Animationen“ abschaltbar.
+- Sicherheit: Bestätigung vor Einsatzabbruch, Überschreiben und Löschen; geschützte Zurück-Geste bei Einsätzen, Dialogen und Prüfungen.
+
+### Taktik 3.0
+- Neues Taktikbrett: Pfadvorschau, Gefahrenpunkte (Gegner mit Schussfeld), Trefferchance direkt am Gegner, zweistufige Steuerung (vormerken → bestätigen), Einheitenleiste, Gegnerliste.
+- Reaktionsfeuer von Überwachungsposten, Rückzug angeschlagener Gegner, Überwältigungsversuche des Stoßtrupps, **„Team handelt“** (Team-KI) und **22 Karten** (+ Dachterrasse, U-Bahn-Tunnel, Forschungslabor, Villa am See, Serverfarm, Trockendock, Staatsbibliothek, Hängebrücke).
+
+### Story
+- **14 neue Storymissionen** (36 insgesamt): Alex' Schatten, Geist im Netz, das Bündnis mit Nikita, die Akademie, Michaels Akte – und **Kapitel 4 „Nachbeben“** nach dem Epilog (Kandidat 8, Dr. Lenz, ein Gesetz gegen Programme wie PHOENIX).
+- **Zwei neue Enden** („Das Bündnis“, „Die Akademie“), die an diese Stränge gebunden sind. Die vier bisherigen Enden bleiben unverändert wählbar. Neue Epilog-Abschnitte greifen Entscheidungen wieder auf.
+- **Missionsdirektor 3.0:** acht Wendungen in dynamischen Aufträgen (Zeuge, neuer Preis, Streife, Späher, Funkausfall, Verletzter, erkannte Tarnidentität, präparierte Daten).
+
+### Division, Direktion, Inventar
+- Zehn neue HQ-Szenen, in denen frühere Entscheidungen nachwirken; eine neue Szene, in der die Gefährtin bzw. der Gefährte selbst über ein Angebot entscheidet.
+- **Direktionsagenda** (ab Rang 10): fünf Agenden über je 26 Wochen mit Sofortkosten, messbaren Zielen und einer einmaligen Bewertung.
+- 25 neue Gegenstände (Ausrüstung, Verbrauchsgüter, Missionswerkzeug, Geschenke) mit eigenen Icons, Missionsboni und Geschenkinteressen.
+- Fairness: Trost-XP nur beim ersten Scheitern an einem Story-Einsatz.
+
+### Technik
+- Autosave seriell im Hintergrund (Reihenfolgeschutz), Zeitraffer auf einem Hintergrund-Thread mit Ladeanzeige, Spielstand-Schema 6 mit Migration.
+- Tests: End-to-End-Durchläufe bis zu allen sechs Enden und durch Kapitel 4, Zehn-Jahres-Simulation, Migration von v0.8-Spielständen, Kartenvalidierung, Agenda, Wendungen, Exploit-Schutz.
+
+### Bekannte Einschränkungen
+- Keine Tests auf echten Geräten; UI-Belege stammen aus Robolectric-Screenshots.
+- 36 statt der im Masterplan angestrebten 45–60 Storymissionen (Qualität vor Menge).
+- Barrierefreiheit verbessert, aber nicht mit TalkBack verifiziert.
 
 ## Neu in v0.8 – Director's Legacy
 
@@ -144,6 +180,10 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/29_ausruestungsprofile.png) | ![](docs/screenshots/30_kontakte_status.png) | ![](docs/screenshots/31_personalakte_laufbahn.png) | ![](docs/screenshots/32_beziehung_erinnerungen.png) |
 | **Umfeld (v0.6)** | **Heute in der Division (v0.6)** | **HQ-Ereignis (v0.6)** | |
 | ![](docs/screenshots/33_umfeld.png) | ![](docs/screenshots/34_hq_division_heute.png) | ![](docs/screenshots/35_hq_ereignis.png) | |
+| **Taktik 3.0 (v1.0)** | **Direktionsagenda (v1.0)** | **Kapitel 4 (v1.0)** | **Wendung (v1.0)** |
+| ![](docs/screenshots/50_taktik3_labor.png) | ![](docs/screenshots/51_direktion_agenda.png) | ![](docs/screenshots/52_kapitel4_briefing.png) | ![](docs/screenshots/53_wendung.png) |
+| **Beförderung (v1.0)** | **Ende: Die Akademie (v1.0)** | | |
+| ![](docs/screenshots/54_feier_befoerderung.png) | ![](docs/screenshots/55_epilog_akademie.png) | | |
 | **Mission Control (v0.7)** | **Weltlage (v0.7)** | **Einsatzketten (v0.7)** | **Ermittlungsakte (v0.7)** |
 | ![](docs/screenshots/36_mission_control.png) | ![](docs/screenshots/37_weltlage.png) | ![](docs/screenshots/38_einsatzketten.png) | ![](docs/screenshots/39_ermittlungsakte.png) |
 | **Auftragsbriefing (v0.7)** | **Taktik 2.0 (v0.7)** | **Führungscockpit (v0.8)** | **Delegation (v0.8)** |
@@ -198,7 +238,7 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 
 ## Technik
 
-- Kotlin 2.0, Jetpack Compose (Material 3, eigenes dunkles Designsystem), AGP 8.7, Gradle-Wrapper 8.9, compile/targetSdk 35, minSdk 26.
+- Kotlin 2.0, Jetpack Compose (Material 3, eigenes Designsystem 2.0 in `ui/theme/Theme.kt` und `ui/theme/Components.kt`), AGP 8.7, Gradle-Wrapper 8.9, compile/targetSdk 35, minSdk 26.
 - Architektur: `model/` (Kataloge + versionierter `GameState`), `engine/` (reine, deterministische Regeln: Clock, Progression, Inventory, Social/Romance, Missions, Tactical, MissionGenerator, Director, Narrative), `data/` (JSON-Kataloge, `SaveRepository` mit atomarer Speicherung und Migration), `ui/` (`GameViewModel` + Compose-Screens).
 - Abweichung vom ursprünglichen Plan: statt Room/DataStore/Navigation werden versionierte JSON-Spielstände (atomar per tmp+fsync+rename) und eine Overlay-Navigation im ViewModel genutzt – offlinefähig, testbar und ohne Annotation-Processing.
 - Spielinhalte liegen in `app/src/main/assets/game/` (`agents`, `items`, `skills`, `ranks`, `rooms`, `missions`, `quests`, `dialogues`, `story`, `events`, `places`, `factions`).
@@ -217,9 +257,19 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 - `LivingDivisionTest` (v0.6): Lebenssimulation deterministisch, idempotent und persistent; **10 Jahre Divisionsleben** (Beförderungen, Durchfallen, Einsätze, Verletzungen, Urlaub/Versetzung, NPC-Freundschaften, Paare nur unter Erwachsenen, keine automatische Romanze, Gefährten-Laufbahn, verdichtete Erinnerungen, Save-Roundtrip); Laufbahn hängt vom Charakter ab; Laufbahn-Rat; Anwesenheit nach Status; Rückkehr nach Urlaub; Erinnerungs-Zusammenfassung und Migration aus Schema 2; v0.5-Spielstand ohne Lebensdaten; HQ-Ereignisse mit Folgen, Ablauf mit „ignore“, Wissens-/Ankunftsprüfung; Geschenke nach Interessen; bewusste feste Beziehung, Nur-Freunde, Trennung; Aussprache; Passung; Altersregel; Alex-Szenen; Katalogvalidierung.
 - `ShadowOpsTest` (v0.7, 27 Tests): Kartenbibliothek (Validität, Erreichbarkeit, keine Duplikate), BFS, Sichtlinien, keine Angriffe durch Wände, Deckung nach Richtung, Ziele Infopunkte/Aufklärung/Treffpunkt/Evakuierung/Schutzposition, Patt-Erkennung, Reproduzierbarkeit, Teamwerte aus Life; deterministischer Pool ohne Duplikate, zehn Archetypen mit Alternativen und gültigen Stage-Verweisen, sichere Aufträge unter 18, Teamstatus/Alter/Rang, einmalige Verbuchung, mehrtägige Aufträge, Vertagen/Ablehnen/Ablauf, Teamauflage, Fraktionsbögen, Akten mit Widersprüchen, Falle, Ketten mit Entscheidungen, Katalogprüfung, v0.6-Spielstand ohne Ops-Daten, **10 Jahre Shadow Operations**.
 - `DirectorsLegacyTest` (v0.8, 33 Tests): Ranggrenzen 7/8/9/10/11/12, Sektionsbefugnis, Minderjährigenschutz (nur Training, keine Posten/Delegation), Aufgaben und Mentoren genau einmal, Ablehnung und Eigenständigkeit der Begleitung, Beurteilung/Versetzung, Delegation ohne Sofortabschluss, einmalige Abrechnung, Abbruch, keine Doppelbelegung, Finanzen einmal pro Woche und im Zeitraffer, getrennte Credits, Projekte nur bei Deckung, Haushaltsantrag, Dilemmata mit Spätfolgen, Außenstellen mit Personal/Schließen/Wiedereröffnen, HQ-Module, Migration der v0.7-Wohnung, Miete/Räumung, Möbel, Freizeitgrenzen, Treffen ohne Romanzenänderung, Tarnjob-Schichten, Alltagsereignisse, vollständiger v0.7-Spielstand (Team, Aufträge, 102 Gegenstände), Neuladen mitten in Projekt und Delegation, Führungsbonus, **1/7/30/90/365/3650 Tage** mit Invarianten, Determinismus, Spielstände Schema 2–4, unveränderte Romanzenregeln.
-- `ScreenshotTest`: rendert 49 Kernscreens mit echtem Spielzustand (Robolectric).
+- `V1ReleaseTest` (v1.0): 22 Karten mit Erreichbarkeit, Pfade, Reaktionsfeuer, Team-KI, Rückzug, Ziele auf neuen Karten; 36 Missionen/4 Kapitel; 6 Enden; Kapitel-Flags; Kapitel 4 nach dem Epilog; kein XP-Farming; Agenda; Feier-Erkennung; Plaketten; HQ-Szenen; Wendungen; neue Gegenstände; v0.8-Migration; 10 Jahre Simulation.
+- `E2EPlaythroughTest` (v1.0): Kampagne über echte Engine-Aktionen bis zu allen sechs Enden und durch Kapitel 4.
+- `ScreenshotTest`: rendert 55 Kernscreens mit echtem Spielzustand (Robolectric).
 
 ## Changelog
+
+### 1.0.0-rc1 „Full Release“ (Release Candidate)
+- Designsystem 2.0 und Überarbeitung aller Screens (Reiter, Typografie, HQ-Lagezentrum, Personalakte, Inventar, Briefing, Nachbesprechung, Spielstände, Einstellungen), Feier-Einblendungen, geschützte Zurück-Geste, Bestätigungsdialoge.
+- Taktik 3.0: Canvas-Brett mit Vorschauen, zweistufige Steuerung, Reaktionsfeuer, Rückzug, Team-KI, 22 Karten.
+- 14 neue Storymissionen inkl. Kapitel 4 „Nachbeben“, zwei neue Enden, Kapitelabschluss-Flags, 5 neue Quests, 2 neue Story-Dialoge.
+- Missionsdirektor 3.0 mit acht Wendungen; zehn neue HQ-Szenen; Direktionsagenda; 25 neue Gegenstände.
+- Hintergrund-Autosave, asynchroner Zeitraffer, Schema 6, Exploit-Schutz bei Story-Fehlschlägen, vorbereiteter Release-Workflow.
+- Neue Testsuiten (V1ReleaseTest, E2EPlaythroughTest), 6 neue Screenshots, Dokumentation unter `docs/V1_*.md` und `docs/CODEX_HANDOFF_V1.md`.
 
 ### 0.8.0-beta „Director's Legacy“
 - Führungscockpit ab Rang 8: Rollen, Aufgaben, Kohäsion, Aussprache, Bereitschaft, Führungsbonus.
