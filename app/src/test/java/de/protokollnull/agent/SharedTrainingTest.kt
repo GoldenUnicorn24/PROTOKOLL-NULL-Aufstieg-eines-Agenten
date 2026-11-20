@@ -95,4 +95,72 @@ class SharedTrainingTest {
         assertFalse(extra.ok)
         assertEquals(before, extra.state)
     }
+    @Test fun bestFriendsGrowEveryAttributeForBothFigures() {
+        val initial = state(96)
+        val beforeNpc = Life.attributeRatings(d, initial, "alex")
+        val completed = Progression.train(d, initial, "train_fitness", partnerId = "alex")
+        assertTrue(completed.messages.toString(), completed.ok)
+        assertEquals("Unzertrennliches Team", Progression.partnerBoost(d, initial, "alex")?.label)
+        val npc = Life.life(d, completed.state, "alex")
+        for (a in Attr.all.filter { it != Attr.FITNESS }) {
+            assertTrue("Spieler-Nebenfortschritt $a", (completed.state.player.trainingProgress[a] ?: 0) > 0)
+            assertTrue("NPC-Nebenfortschritt $a", (npc.attributeProgress[a] ?: 0) > 0)
+            assertTrue("NPC-Attribut gespeichert $a", (npc.attributes[a] ?: 0) >= (beforeNpc[a] ?: 0))
+        }
+        assertTrue("NPC-Hauptattribut wächst", (npc.attributes[Attr.FITNESS] ?: 0) >= (beforeNpc[Attr.FITNESS] ?: 0))
+    }
+
+    @Test fun michaelAndAlexBecomeFriendsThroughGroupTraining() {
+        var initial = state(96)
+        initial = Relations.update(d, initial, "michael") { it.copy(friendship = 90, trust = 85) }
+        assertNull(Progression.partnerLock(d, initial, "michael"))
+        val baseline = Life.bond(initial, "alex", "michael")
+        val session = Progression.train(d, initial, "train_combat", partnerId = "alex", trainerId = "michael")
+        assertTrue(session.messages.toString(), session.ok)
+        assertTrue("Michael und Alex bauen echte Freundschaft auf", Life.bond(session.state, "alex", "michael") > baseline)
+        assertTrue("Alex gewinnt Prüfungsreife", Life.life(d, session.state, "alex").careerXp >= 65)
+    }
+
+    @Test fun teamActivitiesGiveBothNpcsCareerProgressAndRealNpcBonds() {
+        var initial = state(95)
+        initial = Relations.update(d, initial, "michael") { it.copy(friendship = 90, trust = 85) }
+        val baseline = Life.bond(initial, "michael", "alex")
+        val r = Progression.teamActivity(d, initial, "michael", "alex", "course")
+        assertTrue(r.messages.toString(), r.ok)
+        assertTrue(Life.life(d, r.state, "alex").careerXp > 0)
+        assertTrue(Life.life(d, r.state, "michael").careerXp > 0)
+        assertTrue(Life.bond(r.state, "michael", "alex") >= baseline + 12)
+        assertEquals(1, r.state.career.sessionsToday)
+        assertEquals(0, Relations.get(d, r.state, "alex").romanceStage)
+        assertFalse(Progression.teamActivity(d, initial, "alex", "alex", "course").ok)
+    }
+
+    @Test fun teamMissionAcceleratesExamAndCannotRewardTwice() {
+        var initial = state(95)
+        initial = Relations.update(d, initial, "michael") { it.copy(friendship = 85) }
+        val m = MissionDefinition(id = "test_cooperation", title = "Testeinsatz", locationId = "hq", type = "test", threat = 2)
+        val run = MissionRun("test_cooperation", 748L, "done", team = listOf("alex", "michael"))
+        val baseline = Life.bond(initial, "alex", "michael")
+        val (after, notes) = Ops.afterMission(d, initial, m, run, "success")
+        assertTrue(notes.toString(), notes.any { "Prüfungs-XP" in it })
+        assertTrue(Life.life(d, after, "alex").careerXp >= 65)
+        assertTrue(Life.bond(after, "alex", "michael") > baseline)
+        val (repeat, _) = Ops.afterMission(d, after, m, run, "success")
+        assertEquals("Einsatzbelohnungen dürfen nicht doppelt vergeben werden", after, repeat)
+    }
+
+    @Test fun codenameIsOptionalAndOldNameCanBeCleared() {
+        val p = PlayerCharacter(firstName = "Lena", lastName = "Berg", codename = "")
+        assertEquals("Lena Berg", p.identityName)
+        assertEquals("Hallo Lena Berg!", Dialogues.format("Hallo {codename}!", GameState(player = p)))
+        val oldSave = p.copy(codename = "Null")
+        assertEquals("Null", oldSave.identityName)
+        assertEquals("Lena Berg", oldSave.copy(codename = "").identityName)
+    }
+
+    @Test fun ratingGrowsBeyondOneHundredWithoutOverflow() {
+        assertTrue(Stats.attributeCap(1) > 100)
+        assertEquals(101 to 9, Progression.growRating(100, 49, 10))
+    }
+
 }
