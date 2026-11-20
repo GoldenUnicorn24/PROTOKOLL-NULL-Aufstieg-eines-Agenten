@@ -652,19 +652,40 @@ object Ops {
             } else if (nl.status == LifeStatus.MISSION && nl.statusNote.startsWith("Einsatz mit")) nl.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "") else nl
             s = s.copy(living = s.living.copy(lives = s.living.lives + (id to nl)))
         }
-        // Gemeinsame Erfolge stärken auch die Beziehungen INNERHALB des Teams.
-        // Das passiert nur beim ersten Verbuchen des Einsatzes (settled-Key oben).
-        if (result == "success") {
+        // Gemeinsame Einsätze schweißen die Agenten unabhängig von ihrer Beziehung
+        // zum Spieler zusammen. Wiederholte Zusammenarbeit verstärkt den Effekt.
+        // Nur echte abgeschlossene Einsätze zählen, nie Abbruch oder doppelte Abrechnung.
+        if (result == "success" || result == "fail") {
             val teammates = run.team.distinct().filter { Relations.isKnownNpc(data, s, it) }
             for (a in teammates.indices) for (b in a + 1 until teammates.size) {
-                val first = teammates[a]; val second = teammates[b]
-                val f1 = Relations.get(data, s, first).friendship
-                val f2 = Relations.get(data, s, second).friendship
-                val delta = if (f1 >= 80 && f2 >= 80) 14 else if (f1 >= 50 && f2 >= 50) 9 else 4
+                val first = teammates[a]
+                val second = teammates[b]
                 val key = LivingState.key(first, second)
-                s = s.copy(living = s.living.copy(bonds = s.living.bonds +
-                    (key to (Life.bond(s, first, second) + delta).coerceIn(-100, 100))))
-                notes += "${Relations.displayName(data, s, first)} und ${Relations.displayName(data, s, second)}: Zusammenhalt +$delta."
+                val count = ((s.living.sharedMissions[key] ?: 0).toLong() + 1L)
+                    .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+                val bondBefore = Life.bond(s, first, second)
+                val gain = if (result == "fail") 2 else when {
+                    count >= 10 -> 12
+                    count >= 5 -> 10
+                    count >= 3 -> 7
+                    else -> 4
+                }
+                val bondAfter = (bondBefore + gain).coerceIn(-100, 100)
+                s = s.copy(living = s.living.copy(
+                    sharedMissions = s.living.sharedMissions + (key to count),
+                    bonds = s.living.bonds + (key to bondAfter)
+                ))
+                // Kleine, seltene Meilensteine statt eines neuen Absatzes nach jedem Einsatz.
+                if (result == "success" && count in setOf(3, 5, 10)) {
+                    notes += "${Relations.displayName(data, s, first)} und " +
+                        "${Relations.displayName(data, s, second)}: $count gemeinsame Einsätze, Freundschaft $bondAfter."
+                }
+            }
+            // Die Zusammenarbeit verbessert auch die normale Freundschaft zu den Begleitern.
+            if (result == "success") for (id in teammates) {
+                s = Relations.update(data, s, id) {
+                    it.copy(friendship = it.friendship + 2, trust = it.trust + 1)
+                }
             }
         }
         val c = contract(s, m.id) ?: return s to notes
