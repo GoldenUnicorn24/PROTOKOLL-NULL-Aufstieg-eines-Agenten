@@ -42,7 +42,7 @@ fun CreatorScreen(vm: GameViewModel) {
     var step by rememberSaveable { mutableIntStateOf(0) }
     var first by rememberSaveable { mutableStateOf("Lena") }
     var last by rememberSaveable { mutableStateOf("Berg") }
-    var code by rememberSaveable { mutableStateOf("Null") }
+    var code by rememberSaveable { mutableStateOf("") }
     var gender by rememberSaveable { mutableStateOf("female") }
     var avatar by rememberSaveable(stateSaver = avatarSaver) { mutableStateOf(AvatarSpec(skin = 1, hairStyle = 4, hairColor = 1, outfit = 0)) }
     var style by rememberSaveable { mutableStateOf("sachlich") }
@@ -64,7 +64,7 @@ fun CreatorScreen(vm: GameViewModel) {
             if (step < steps.lastIndex) Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(width = 96.dp, height = 120.dp)) { AvatarCanvas(avatar, Modifier.fillMaxSize()) }
                 Column {
-                    Text(code.ifBlank { "—" }.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
+                    Text(code.ifBlank { "$first $last".trim() }.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
                     Text("$first $last", style = MaterialTheme.typography.titleSmall)
                     Text("Kandidat 7 · Projekt PHOENIX", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
@@ -73,8 +73,9 @@ fun CreatorScreen(vm: GameViewModel) {
                 0 -> GlassPanel {
                     PortraitUpload(avatar) { avatar = it }
                     OutlinedTextField(first, { first = it.take(18) }, label = { Text("Vorname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(last, { last = it.take(18) }, label = { Text("Nachname (Tarnidentität)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(code, { code = it.take(14) }, label = { Text("Deckname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(last, { last = it.take(18) }, label = { Text("Nachname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(code, { code = it.take(14) }, label = { Text("Deckname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    SmallNote("Ein Deckname ist freiwillig. Ohne Eingabe wird im ganzen Spiel dein Vor- und Nachname verwendet.")
                     Text("Geschlecht", style = MaterialTheme.typography.titleSmall)
                     ChipRow(listOf("female" to "Weiblich", "male" to "Männlich", "diverse" to "Divers"), gender) { gender = it }
                     Text("Auftreten", style = MaterialTheme.typography.titleSmall)
@@ -108,7 +109,7 @@ fun CreatorScreen(vm: GameViewModel) {
                     SmallNote("Gemeinsame Interessen verbessern die Passung zu anderen Figuren.")
                     Spacer(Modifier.height(8.dp))
                     KeyValue("Name", "$first $last")
-                    KeyValue("Deckname", code)
+                    KeyValue("Deckname", code.ifBlank { "Keiner – normaler Name" })
                     KeyValue("Hintergrund", mapOf("athlete" to "Athlet/in", "analyst" to "Analytiker/in", "social" to "Menschenleser/in", "marksman" to "Präzisionsschütze/in")[background] ?: background)
                     KeyValue("Stärke / Schwäche", Attr.label(strength) + " / " + Attr.label(weakness))
                     SmallNote("Der Prolog beginnt mit 13 Jahren. Ab 16 bist du Rekrut/in der Division.")
@@ -125,13 +126,13 @@ fun CreatorScreen(vm: GameViewModel) {
                 }
             }
         }
-        if (step == 0) TextButton(onClick = { usedShortcut = true; step = steps.lastIndex }, enabled = first.isNotBlank() && code.isNotBlank(), modifier = Modifier.fillMaxWidth()) {
+        if (step == 0) TextButton(onClick = { usedShortcut = true; step = steps.lastIndex }, enabled = first.isNotBlank() && last.isNotBlank(), modifier = Modifier.fillMaxWidth()) {
             Text("Einsatzprofil übernehmen und zur Gefährtenwahl")
         }
         Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             if (step > 0) ActionButton("Zurück", Modifier.weight(1f), secondary = true) { previous() }
-            if (step < steps.lastIndex) ActionButton("Weiter", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank()) { usedShortcut = false; step++ }
-            else ActionButton("Prolog beginnen", Modifier.weight(1f), enabled = first.isNotBlank() && code.isNotBlank() && (!includeCompanion || dossier.firstName.isNotBlank())) {
+            if (step < steps.lastIndex) ActionButton("Weiter", Modifier.weight(1f), enabled = first.isNotBlank() && last.isNotBlank()) { usedShortcut = false; step++ }
+            else ActionButton("Prolog beginnen", Modifier.weight(1f), enabled = first.isNotBlank() && last.isNotBlank() && (!includeCompanion || dossier.firstName.isNotBlank())) {
                 vm.startGame(PlayerCharacter(
                     firstName = first.trim(), lastName = last.trim(), codename = code.trim(), gender = gender,
                     appearance = Appearance(avatar, style), background = background, strength = strength,
