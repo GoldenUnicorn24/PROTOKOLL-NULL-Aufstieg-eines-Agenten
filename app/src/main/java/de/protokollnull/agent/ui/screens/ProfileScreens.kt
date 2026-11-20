@@ -53,7 +53,7 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item {
-            SectionLabel("Attribute", trailing = "Limit ${Stats.attributeCap(p.level)}", icon = PnIcons.Chart)
+            SectionLabel("Attribute", trailing = "Unbegrenztes Rating", icon = PnIcons.Chart)
             Spacer(Modifier.height(6.dp))
             GlassPanel(padding = 12.dp) {
                 BoxWithConstraints {
@@ -132,7 +132,7 @@ private fun AttributeBars(vm: GameViewModel, s: GameState) {
     Attr.all.forEach { a ->
         val base = p.attributes[a] ?: 30
         val eff = Stats.effectiveAttribute(vm.data, s, a)
-        StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)})" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, 100,
+        StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)})" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, maxOf(100, eff),
             if (a == p.strength) Pn.Ok else if (a == p.weakness) Pn.Warn else Pn.Accent)
     }
 }
