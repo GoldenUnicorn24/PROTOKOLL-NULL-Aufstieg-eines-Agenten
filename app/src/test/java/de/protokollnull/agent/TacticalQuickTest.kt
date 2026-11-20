@@ -95,6 +95,13 @@ class TacticalQuickTest {
         assertTrue(t.log.toString(), t.finished && t.won)
     }
 
+    @Test fun oldNearlyExpiredGridMissionStillGetsEnoughStepsToFinish() {
+        val stuck = initial("reach").copy(turn = 10, maxTurns = 11)
+        val rescued = TacticalQuick.act(TacticalQuick.act(TacticalQuick.act(stuck, "advance"), "advance"), "secure")
+        assertTrue("Ein alter festgefahrener Einsatz darf im einfachen Modus nicht blockieren", rescued.finished && rescued.won)
+        assertTrue(rescued.quickDeadline > stuck.maxTurns)
+    }
+
     @Test fun invalidActionsDoNotConsumeTurns() {
         val t = initial("reach")
         assertEquals(t, TacticalQuick.act(t, "secure"))
