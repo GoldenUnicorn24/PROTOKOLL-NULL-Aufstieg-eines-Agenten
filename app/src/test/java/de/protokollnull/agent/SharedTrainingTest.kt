@@ -38,7 +38,7 @@ class SharedTrainingTest {
         assertTrue("mehr Spieler-XP", together.state.player.xp > solo.state.player.xp)
         val trained = Life.life(d, together.state, "alex")
         assertTrue("NPC verdient Karrierepunkte", trained.careerXp >= 50)
-        assertTrue("NPC lernt Kompetenz", trained.skillGain["combat"] ?: 0 > 0 || (trained.skillProgress["combat"] ?: 0) > 0)
+        assertTrue("NPC lernt Kompetenz", (trained.skillGain["combat"] ?: 0) > 0 || (trained.skillProgress["combat"] ?: 0) > 0)
         assertEquals("NPC-Trainingstag verbucht", 1, trained.trainingDays)
         assertTrue("Freundschaft verbessert", Relations.get(d, together.state, "alex").friendship > 85)
         assertEquals("Keine automatische Romanze", 0, Relations.get(d, together.state, "alex").romanceStage)
