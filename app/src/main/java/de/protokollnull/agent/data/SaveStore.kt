@@ -52,6 +52,8 @@ object SaveMigration {
                 shiftWeek = if (withMemories.player.coverJob != null) week else withMemories.life.shiftWeek
             ))
         } else withMemories
+        // Schema 6 (v1.0): neue Felder (Agenda, Reaktionsfeuer, Kapitel-Flags) haben Defaults;
+        // Kapitelabschlüsse werden beim nächsten Quest-Update aus erledigten Aufträgen nachgetragen.
         return withLife.copy(schemaVersion = CURRENT_SCHEMA)
     }
 

@@ -3064,6 +3064,36 @@
                 "ending_exit"
               ]
             }
+          },
+          {
+            "id": "alliance",
+            "text": "Ein Bündnis schmieden: Division, Nikita und die Geretteten – eine kleine, offene Einheit gegen Black Meridian.",
+            "nextNode": "f6",
+            "conditions": {
+              "flagsAll": [
+                "alliance_forged"
+              ]
+            },
+            "effects": {
+              "setFlags": [
+                "ending_alliance"
+              ]
+            }
+          },
+          {
+            "id": "academy",
+            "text": "Die Direktion abgeben und die Akademie selbst leiten – damit niemand mehr so ausgebildet wird wie du.",
+            "nextNode": "f7",
+            "conditions": {
+              "flagsAll": [
+                "academy_founded"
+              ]
+            },
+            "effects": {
+              "setFlags": [
+                "ending_academy"
+              ]
+            }
           }
         ]
       },
@@ -3104,6 +3134,28 @@
         "id": "f5",
         "speakerId": null,
         "text": "Die Redaktion bestätigt den Eingang in einem einzigen Satz. Du liest ihn auf dem Bahnsteig, steckst das Telefon ein und kaufst eine Fahrkarte am Schalter. „Nur hin?“, fragt die Frau hinter der Scheibe. In deiner Tasche wäre noch Platz für die Rückfahrt. Du schüttelst den Kopf. Der nächste Zug fährt in elf Minuten.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Epilog ansehen"
+          }
+        ]
+      },
+      {
+        "id": "f6",
+        "speakerId": null,
+        "text": "Du wählst die Nummer, die Nikita dir auf dem Dach gegeben hat. Sie hebt beim ersten Klingeln ab, als hätte sie gewartet. „Ein Büro ohne Fenster?“, fragt sie. „Eines mit“, sagst du. Am nächsten Morgen steht sie im Flur, einen Kaffee in jeder Hand, und Michael tut so, als sei das alles ganz normal.",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "Epilog ansehen"
+          }
+        ]
+      },
+      {
+        "id": "f7",
+        "speakerId": null,
+        "text": "Du räumst den Schreibtisch selbst. Die Akte „Protokoll Null“ übergibst du deiner Nachfolge mit einer einzigen Bitte. Dann gehst du hinunter in die Trainingshalle, wo zwölf Rekrutinnen und Rekruten warten, die freiwillig hier sind. Eine von ihnen hebt die Hand: „Wie war es bei Ihnen am Anfang?“ Du setzt dich auf die Bank. „Lang“, sagst du. „Fangen wir an.“",
         "choices": [
           {
             "id": "ok",
@@ -4098,6 +4150,94 @@
               "setFlags": [
                 "alex_arc_truth"
               ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_ch4_intro",
+    "npcId": null,
+    "title": "Ein Jahr danach",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "once": true,
+    "priority": 90,
+    "startNode": "c1",
+    "completeFlag": "ch4_started",
+    "conditions": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "minDay": 0
+    },
+    "nodes": [
+      {
+        "id": "c1",
+        "speakerId": null,
+        "text": "Ein Jahr ist vergangen. Die Division hat sich verändert – manches zum Besseren, manches nur auf dem Papier. An einem grauen Dienstag liegt eine Postkarte auf deinem Schreibtisch. Niemand weiß, wie sie dorthin gekommen ist.",
+        "choices": [
+          {
+            "id": "read",
+            "text": "Die Postkarte umdrehen.",
+            "nextNode": "c2"
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "speakerId": "birkhoff",
+        "text": "Birkhoff steht schon in der Tür, Laptop unter dem Arm. „Sieben Zahlen. Die PHOENIX-Kandidaten. Und eine achte, die es nicht geben dürfte.“ Er schluckt. „Ich hab's noch niemandem gezeigt.“",
+        "choices": [
+          {
+            "id": "ok",
+            "text": "„Dann fangen wir an.“",
+            "effects": {
+              "setFlags": [
+                "ch4_open"
+              ],
+              "xp": 100
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dlg_ch4_end",
+    "npcId": null,
+    "title": "Nach dem Beben",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "once": true,
+    "priority": 85,
+    "startNode": "e1",
+    "conditions": {
+      "flagsAll": [
+        "quest_q24"
+      ]
+    },
+    "nodes": [
+      {
+        "id": "e1",
+        "speakerId": "michael",
+        "text": "Michael findet dich auf dem Dach des HQ, wo man die Stadt sieht und den Bahnhof dahinter. „Weißt du, was ich damals gedacht habe, als ich deine Akte gelesen habe? Dass sie zu kurz ist.“ Er lehnt sich an das Geländer. „Jetzt ist sie ziemlich lang.“",
+        "choices": [
+          {
+            "id": "thanks",
+            "text": "„Ohne dich wäre sie kürzer.“",
+            "effects": {
+              "otherTrust": {
+                "michael": 5
+              },
+              "xp": 150
+            }
+          },
+          {
+            "id": "quiet",
+            "text": "Nichts sagen. Einfach dastehen.",
+            "effects": {
+              "xp": 150,
+              "stress": -10
             }
           }
         ]

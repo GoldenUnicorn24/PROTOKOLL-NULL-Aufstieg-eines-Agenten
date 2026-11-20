@@ -39,6 +39,8 @@ class CompanionCreatorTest {
             vm.update { it.copy(activeDialogue = null) }
             vm.act { data, state -> World.timeSkip(data, state, 730) }
             vm.dismissToast()
+            // v1.0: Levelaufstieg-Einblendung liegt über allem und wird per Tippen geschlossen
+            vm.dismissCelebration()
         }
         compose.onNodeWithText("Die zweite Unterschrift").assertExists()
         compose.onNodeWithText("„Komm. Ich zeige dir meinen Platz am Fenster.“").performScrollTo().performClick()

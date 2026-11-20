@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.protokollnull.agent.engine.*
 import de.protokollnull.agent.model.*
 import de.protokollnull.agent.ui.*
@@ -423,12 +424,73 @@ fun DirectorateScreen(vm: GameViewModel, s: GameState) {
                     item { SmallNote(if (tier >= 2) "Leitlinien wirken jede Woche auf Moral, Aufsicht, Kosten und Einsätze." else "Leitlinien legt die stellvertretende Direktion bzw. Direktion fest.") }
                     items(Director.policies) { (id, name) ->
                         val allowed = id in Directorate.allowedPolicies(s)
-                        ChoiceButton(name + if (d.policy == id) "  ✓" else "", Directorate.policyEffects[id] + if (!allowed) " · nicht in deiner Befugnis" else "", enabled = allowed && d.policy != id) {
+                        ChoiceButton(name, Directorate.policyEffects[id] + if (!allowed) " · nicht in deiner Befugnis" else "", enabled = allowed && d.policy != id, selected = d.policy == id) {
                             vm.act { dd, x -> Directorate.setPolicy(dd, x, id) }
                         }
                     }
                 }
+                "agenda" -> item { AgendaPanel(vm, s) }
                 else -> item { DilemmaPanel(vm, s) }
+            }
+        }
+    }
+}
+
+/** v1.0: Direktionsagenda – langfristige, messbare Ziele mit echter Bewertung. */
+@Composable
+private fun AgendaPanel(vm: GameViewModel, s: GameState) {
+    val data = vm.data
+    val active = Agenda.active(s)
+    var confirm by remember { mutableStateOf<String?>(null) }
+    confirm?.let { id ->
+        val def = Agenda.byId.getValue(id)
+        PnDialog("Agenda „${def.name}“ beschließen?", "${def.description}\n\n${def.cost}\nBei Erfolg: ${def.reward}\nBei Verfehlen: ${def.penalty}",
+            "Beschließen", onConfirm = { confirm = null; vm.act { d, x -> Agenda.choose(d, x, id) } }, onDismiss = { confirm = null })
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (active != null) {
+            val def = Agenda.byId[active.id]
+            val goals = Agenda.goals(data, s)
+            GlassPanel(accent = Pn.Violet) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Overline("Laufende Agenda", Pn.Violet)
+                        Text(def?.name ?: active.id, style = MaterialTheme.typography.titleMedium)
+                    }
+                    ProgressRing(Agenda.TERM_WEEKS - Agenda.weeksLeft(s), Agenda.TERM_WEEKS, 54.dp, Pn.Violet, "${Agenda.weeksLeft(s)} W.", stroke = 4.dp)
+                }
+                def?.let { Text(it.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                goals.forEach { g ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        PnIcon(if (g.met) PnIcons.Check else PnIcons.Target, if (g.met) Pn.Ok else Pn.Warn, 16.dp)
+                        Spacer(Modifier.width(8.dp))
+                        Text(g.label, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                        Text("${g.current} ${if (g.atMost) "≤" else "≥"} ${g.target}", style = PnType.data.copy(fontSize = 12.sp), color = if (g.met) Pn.Ok else Pn.Warn)
+                    }
+                }
+                def?.let { InfoNote("Bei Erfolg: ${it.reward} · Bei Verfehlen: ${it.penalty}", Pn.Violet) }
+                SmallNote("Bewertet wird genau einmal in der Wochenabrechnung nach Ablauf der Amtsperiode – auch im Zeitraffer.")
+            }
+        } else {
+            val options = Agenda.available(s)
+            if (options.isEmpty()) EmptyState(PnIcons.Flag, "Keine Agenda verfügbar", "Eine Direktionsagenda setzt die Direktionsebene ab Rang 10 voraus.")
+            else {
+                InfoNote("Wähle ein Ziel für die nächsten ${Agenda.TERM_WEEKS} Wochen. Die Wahl kostet sofort etwas – der Erfolg wird am Ende gemessen.")
+                options.forEach { def ->
+                    ChoiceButton(def.name, def.description + " · " + def.cost, icon = PnIcons.Flag) { confirm = def.id }
+                }
+            }
+        }
+        if (s.lead.agendaHistory.isNotEmpty()) {
+            SectionLabel("Bisherige Agenden", trailing = "${s.lead.agendaHistory.count { it.success }}/${s.lead.agendaHistory.size} erfüllt")
+            s.lead.agendaHistory.reversed().forEach { r ->
+                GlassPanel(padding = 12.dp, accent = if (r.success) Pn.Ok else Pn.Danger) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(Agenda.byId[r.id]?.name ?: r.id, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                        Pill(if (r.success) "erfüllt" else "verfehlt", if (r.success) Pn.Ok else Pn.Danger)
+                    }
+                    Text("Woche ${r.startWeek + 1}–${r.endWeek + 1} · ${r.summary}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
         }
     }

@@ -2,7 +2,7 @@ package de.protokollnull.agent.model
 
 import kotlinx.serialization.Serializable
 
-const val CURRENT_SCHEMA = 5
+const val CURRENT_SCHEMA = 6
 
 /** Attribute des Spielercharakters (0..100). */
 object Attr {

@@ -133,8 +133,18 @@ data class LeadershipState(
     val prepReady: Int = 0,
     /** Absagen: Figur → Tag, ab dem wieder gefragt werden kann. */
     val refusals: Map<String, Int> = emptyMap(),
-    val log: List<String> = emptyList()
+    val log: List<String> = emptyList(),
+    // --- v1.0: Direktionsagenda (Schema 6)
+    val agenda: AgendaState? = null,
+    val agendaHistory: List<AgendaResult> = emptyList()
 )
+
+/** v1.0: laufende Direktionsagenda (26 Wochen). */
+@Serializable
+data class AgendaState(val id: String, val startWeek: Int, val endWeek: Int, val baseline: Int = 0)
+
+@Serializable
+data class AgendaResult(val id: String, val startWeek: Int, val endWeek: Int, val success: Boolean, val summary: String)
 
 // --- Privatleben -------------------------------------------------------------------
 
