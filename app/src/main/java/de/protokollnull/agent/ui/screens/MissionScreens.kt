@@ -183,7 +183,7 @@ fun MissionRunScreen(vm: GameViewModel, s: GameState) {
         when (st.type) {
             "search" -> SearchStage(vm, s, st, run)
             "observe" -> ObserveStage(vm, s, st, run)
-            "tactical" -> TacticalScreen(vm, s, st, run)
+            "tactical" -> Box(Modifier.weight(1f).fillMaxWidth()) { TacticalScreen(vm, s, st, run) }
             else -> ChoiceStage(vm, s, st, run)
         }
     }
