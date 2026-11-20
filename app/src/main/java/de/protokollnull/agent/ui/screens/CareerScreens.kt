@@ -440,11 +440,17 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
 fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     val present = World.npcsIn(data, s, s.location)
-    val trainers = present.filter { it in Progression.trainers.keys }
-    val partners = present.filter { it !in Progression.trainers.keys && Relations.get(data, s, it).friendship >= 25 }
+    val eligible = present.filter { Progression.partnerLock(data, s, it) == null }
+    val trainers = eligible.filter { it in Progression.trainers.keys }
     var trainer by remember { mutableStateOf(trainers.firstOrNull()) }
     var partner by remember { mutableStateOf<String?>(null) }
     var intensity by remember { mutableStateOf("normal") }
+    // Jeder anwesende, freie NPC kann Trainingspartner werden – auch Ausbilder,
+    // wenn er nicht gleichzeitig den Ausbilderplatz belegt.
+    val partners = eligible.filter { it != trainer }
+        .sortedByDescending { Relations.get(data, s, it).friendship }
+    val chosenPartner = partner?.takeIf { it in partners }
+    val partnerBoost = Progression.partnerBoost(data, s, chosenPartner)
     val sessions = if (s.career.sessionsDay == s.clock.day) s.career.sessionsToday else 0
     val cap = Stats.attributeCap(s.player.level)
     Column(Modifier.fillMaxSize()) {
@@ -482,9 +488,35 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                             }
                         }
                     }
-                    if (partners.isNotEmpty()) {
-                        Text("Trainingspartner", style = MaterialTheme.typography.titleSmall)
-                        ChipRow(listOf("" to "Keiner") + partners.map { it to Relations.displayName(data, s, it).substringBefore(" ") }, partner ?: "") { partner = it.ifBlank { null } }
+                    Text("GEMEINSAMES TRAINING", style = MaterialTheme.typography.titleSmall)
+                    if (partners.isEmpty()) {
+                        SmallNote("Aktuell ist kein freier Trainingspartner hier. Triff Alex beispielsweise vormittags in der Trainingshalle oder nachmittags am Präzisionsstand.")
+                    } else {
+                        ChipRow(listOf("" to "Allein trainieren") + partners.map { it to Relations.displayName(data, s, it).substringBefore(" ") },
+                            chosenPartner ?: "") { partner = it.ifBlank { null } }
+                    }
+                    if (chosenPartner != null && partnerBoost != null) {
+                        val friendship = Relations.get(data, s, chosenPartner).friendship
+                        GlassPanel(accent = if (friendship >= 50) Pn.Ok else Pn.Accent, padding = 12.dp) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                NpcPortrait(data, s, chosenPartner, 48.dp)
+                                Spacer(Modifier.width(10.dp))
+                                Column(Modifier.weight(1f)) {
+                                    Text(Relations.displayName(data, s, chosenPartner), style = MaterialTheme.typography.titleSmall)
+                                    Text("${partnerBoost.label} · Freundschaft $friendship/100",
+                                        style = MaterialTheme.typography.bodySmall, color = Pn.Muted)
+                                }
+                            }
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Pill("Lernen ×${partnerBoost.progressMult}", Pn.Ok)
+                                Pill("XP ×${partnerBoost.xpMult}", Pn.Accent)
+                            }
+                            Text("Ihr profitiert BEIDE: Deine Attribute und XP steigen schneller. ${Relations.displayName(data, s, chosenPartner).substringBefore(" ")} verbessert gleichzeitig die eigene Fähigkeit und Karriere.",
+                                style = MaterialTheme.typography.bodySmall)
+                            if (friendship < 50) SmallNote("Ab 50 Freundschaft: besonders großer gemeinsamer Bonus. Ab 80: maximaler Team-Bonus.")
+                        }
+                    } else {
+                        SmallNote("Gemeinsames Training ist freiwillig. Je besser eure Freundschaft, desto stärker lernen BEIDE. Ab Freundschaft 50 sehr stark, ab 80 besonders stark.")
                     }
                     Text("Intensität", style = MaterialTheme.typography.titleSmall)
                     ChipRow(Progression.intensities.map { it.id to it.name }, intensity) { intensity = it }
@@ -498,17 +530,18 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                 val cur = s.player.attributes[t.attribute] ?: 30
                 val bonus = Progression.trainerBonus(data, s, trainer, t.attribute)
                 val goal = s.career.goals[t.attribute]
-                GlassPanel(padding = 12.dp, accent = if (bonus > 0) Pn.Ok else Pn.Accent) {
+                GlassPanel(padding = 12.dp, accent = if (bonus > 0 || partnerBoost != null) Pn.Ok else Pn.Accent) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text(t.name, style = MaterialTheme.typography.titleSmall)
                             Text("${Attr.label(t.attribute)} $cur/$cap · Teilfortschritt ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         if (bonus > 0) Pill("Ausbilder +$bonus", Pn.Ok)
+                        else if (partnerBoost != null) Pill("Team ×${partnerBoost.progressMult}", Pn.Ok)
                     }
                     StatBar("", cur, cap, if (cur >= cap) Pn.Warn else Pn.Accent, showValue = false)
                     ActionButton("Trainieren · −$cost Energie · 1 Slot", Modifier.fillMaxWidth(), enabled = s.player.energy >= cost && sessions <= Progression.DAILY_SESSIONS, secondary = true, icon = PnIcons.Fist) {
-                        vm.act { d, x -> Progression.train(d, x, t.id, partner, trainer, intensity) }
+                        vm.act { d, x -> Progression.train(d, x, t.id, chosenPartner, trainer, intensity) }
                     }
                 }
             }
