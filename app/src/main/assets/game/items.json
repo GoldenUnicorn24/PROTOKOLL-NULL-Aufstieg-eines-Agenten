@@ -70,7 +70,7 @@
     "description": "Dienstausrüstung für volljährige Einsatzkräfte. Im Spiel abstrakt: erhöht Wirkung im Taktikmodus.",
     "slot": "weapon",
     "damage": 2,
-    "minRank": 4,
+    "minRank": 2,
     "bonuses": {
       "precision": 5
     }
@@ -618,7 +618,7 @@
     "baseValue": 1450,
     "description": "Zuverlässige Dienstpistole im fiktiven Division-Arsenal · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 5
@@ -635,7 +635,7 @@
     "baseValue": 1550,
     "description": "Kompakte Seitenwaffe für verdeckte Einsätze · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 6
@@ -652,7 +652,7 @@
     "baseValue": 1850,
     "description": "Präzise Pistole für spezialisierte Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 2,
     "bonuses": {
       "precision": 7
@@ -669,7 +669,7 @@
     "baseValue": 2200,
     "description": "Robuste Dienstpistole für erfahrene Einsatzkräfte · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -686,7 +686,7 @@
     "baseValue": 1300,
     "description": "Klassische Dienstpistole · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 4
@@ -703,7 +703,7 @@
     "baseValue": 2600,
     "description": "Präzisionsorientierte Pistole aus der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 6
@@ -720,7 +720,7 @@
     "baseValue": 2950,
     "description": "Leichte Spezialpistole mit abstrakter höherer Wirkung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -737,7 +737,7 @@
     "baseValue": 3300,
     "description": "Kompakte Maschinenpistole für Divisionsoperationen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -754,7 +754,7 @@
     "baseValue": 4400,
     "description": "Spezialisierte Maschinenpistole für leise Missionen in der Fiktion · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 6
@@ -771,7 +771,7 @@
     "baseValue": 5500,
     "description": "Sehr kompaktes Einsatzgerät für Elite-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 3,
     "bonuses": {
       "precision": 7
@@ -788,7 +788,7 @@
     "baseValue": 3900,
     "description": "Robuste Maschinenpistole mit höherem Taktikwert · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 3
@@ -805,7 +805,7 @@
     "baseValue": 6200,
     "description": "Spezialisierte Maschinenpistole für Hochrisikoeinsätze · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -822,7 +822,7 @@
     "baseValue": 4500,
     "description": "Modulares Karabinergewehr für Außendienstteams · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -839,7 +839,7 @@
     "baseValue": 7600,
     "description": "Hochwertiges Einsatzgewehr für erfahrene Division-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 5,
     "bonuses": {
       "precision": 5
@@ -856,7 +856,7 @@
     "baseValue": 5100,
     "description": "Kompaktes Sturmgewehr für taktische Spielmissionen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -873,7 +873,7 @@
     "baseValue": 8300,
     "description": "Modulares Spezialgewehr für höchste Freigabestufen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 4
@@ -890,7 +890,7 @@
     "baseValue": 3600,
     "description": "Widerstandsfähiges Sturmgewehr aus Spezialbeständen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 2
@@ -907,7 +907,7 @@
     "baseValue": 8800,
     "description": "Präzisionsgewehr für Distanz- und Aufklärungsrollen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 8
@@ -924,7 +924,7 @@
     "baseValue": 10200,
     "description": "Schweres Präzisionsgewehr der Eliteausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 9,
+    "minRank": 7,
     "damage": 6,
     "bonuses": {
       "precision": 5
@@ -941,7 +941,7 @@
     "baseValue": 8200,
     "description": "Präzisionsplattform für die abstrakte Taktiksimulation · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 9
@@ -958,7 +958,7 @@
     "baseValue": 6400,
     "description": "Schrotflinte für spezielle Missionstypen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 5,
     "bonuses": {
       "precision": 2
@@ -975,7 +975,7 @@
     "baseValue": 4600,
     "description": "Robuste Schrotflinte in der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 3
@@ -992,7 +992,7 @@
     "baseValue": 1100,
     "description": "Nicht-tödliche Einsatzoption für fiktionale Missionen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 1,
     "bonuses": {
       "precision": 5
@@ -1009,7 +1009,7 @@
     "baseValue": 950,
     "description": "Nicht-tödliche Nahbereichsausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 3,
+    "minRank": 1,
     "damage": 1,
     "bonuses": {
       "precision": 3
