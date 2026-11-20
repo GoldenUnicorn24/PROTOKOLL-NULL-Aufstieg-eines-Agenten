@@ -249,13 +249,14 @@ class ShadowOpsTest {
         assertEquals("verletzt", Ops.unavailableReason(d, hurt, "alex"))
         val away = withLife(s, "alex") { it.copy(status = LifeStatus.VACATION, statusUntil = 805) }
         assertFalse("alex" in Missions.teamCandidates(d, away, probe))
-        // Gefährtin mit 16: nur sichere Aufgaben
+        // Selbst erstellte Gefährtin mit 16 darf nach der neuen Kampagnenregel
+        // ausdrücklich auf eigene Verantwortung auch bei höherer Gefahr mit.
         val comp = CompanionAssignment.dossier().copy(id = "assigned_companion", createdDay = 790, ageAtCreation = 16)
         val withComp = Relations.update(d, s.copy(customNpcs = listOf(comp)), comp.id) { it.copy(trust = 60) }
         assertTrue(Ages.npc(d, withComp, comp.id) < 18)
         assertTrue(comp.id in Missions.teamCandidates(d, withComp, probe.copy(minAge = 16)))
-        assertFalse(comp.id in Missions.teamCandidates(d, withComp, probe.copy(minAge = 18)))
-        assertFalse(comp.id in Missions.teamCandidates(d, withComp, probe.copy(threat = 3)))
+        assertTrue(comp.id in Missions.teamCandidates(d, withComp, probe.copy(minAge = 18)))
+        assertTrue(comp.id in Missions.teamCandidates(d, withComp, probe.copy(threat = 3)))
     }
 
     private fun contractState(arch: String = "data", phases: Int = 1, seed: Long = 5L): Pair<GameState, Contract> {
