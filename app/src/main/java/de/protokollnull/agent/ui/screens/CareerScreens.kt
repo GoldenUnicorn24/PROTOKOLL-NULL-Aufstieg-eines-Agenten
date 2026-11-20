@@ -189,7 +189,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.leaderboardItems(vm: 
             if (e.isPlayer) PlayerPortrait(s, 34.dp) else NpcPortrait(data, s, e.id, 34.dp)
             Column(Modifier.weight(1f)) {
                 Text(e.name + if (e.isPlayer) " (du)" else "", style = MaterialTheme.typography.titleSmall, maxLines = 1)
-                Text(data.rank(e.rank).name + " · ${e.missions} Einsätze" + if (!e.isPlayer && !LifeStatus.inHq(e.status)) " · ${LifeStatus.label(e.status)}" else "",
+                Text(data.rank(e.rank).name + " · ${e.missions} " + (if (e.missions == 1) "Einsatz" else "Einsätze") + if (!e.isPlayer && !LifeStatus.inHq(e.status)) " · ${LifeStatus.label(e.status)}" else "",
                     style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
             }
             Box(Modifier.size(28.dp).clip(CircleShape).background(gradeColor(e.grade).copy(alpha = 0.18f)).border(1.dp, gradeColor(e.grade), CircleShape), contentAlignment = Alignment.Center) {
