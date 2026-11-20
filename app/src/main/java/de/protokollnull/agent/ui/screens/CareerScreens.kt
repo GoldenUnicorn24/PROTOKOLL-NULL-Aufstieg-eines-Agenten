@@ -458,7 +458,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                 GlassPanel {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Overline("HEUTE", Pn.Accent)
+                            Overline("TRAINING", Pn.Accent)
                             Text("$sessions / ${Progression.DAILY_SESSIONS} Einheiten", style = MaterialTheme.typography.titleSmall)
                         }
                     }
@@ -526,7 +526,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                             Text("${Attr.label(t.attribute)} $cur · ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         if (bonus > 0) Pill("Ausbilder +$bonus", Pn.Ok)
-                        else if (partnerBoost != null) Pill("Team ×${partnerBoost.progressMult}", Pn.Ok)
+                        else if (partnerBoost != null) Pill("Bonus ×${partnerBoost.progressMult}", Pn.Ok)
                     }
                     StatBar("", cur, maxOf(100, cur), Pn.Accent, showValue = false)
                     ActionButton("Trainieren · −$cost Energie", Modifier.fillMaxWidth(), enabled = s.player.energy >= cost && sessions <= Progression.DAILY_SESSIONS, secondary = true, icon = PnIcons.Fist) {
