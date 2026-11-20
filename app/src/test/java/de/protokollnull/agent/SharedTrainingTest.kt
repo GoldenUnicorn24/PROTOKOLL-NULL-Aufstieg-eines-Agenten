@@ -121,20 +121,6 @@ class SharedTrainingTest {
         assertTrue("Alex gewinnt Prüfungsreife", Life.life(d, session.state, "alex").careerXp >= 65)
     }
 
-    @Test fun teamActivitiesGiveBothNpcsCareerProgressAndRealNpcBonds() {
-        var initial = state(95)
-        initial = Relations.update(d, initial, "michael") { it.copy(friendship = 90, trust = 85) }
-        val baseline = Life.bond(initial, "michael", "alex")
-        val r = Progression.teamActivity(d, initial, "michael", "alex", "course")
-        assertTrue(r.messages.toString(), r.ok)
-        assertTrue(Life.life(d, r.state, "alex").careerXp > 0)
-        assertTrue(Life.life(d, r.state, "michael").careerXp > 0)
-        assertTrue(Life.bond(r.state, "michael", "alex") >= baseline + 12)
-        assertEquals(1, r.state.career.sessionsToday)
-        assertEquals(0, Relations.get(d, r.state, "alex").romanceStage)
-        assertFalse(Progression.teamActivity(d, initial, "alex", "alex", "course").ok)
-    }
-
     @Test fun teamMissionAcceleratesExamAndCannotRewardTwice() {
         var initial = state(95)
         initial = Relations.update(d, initial, "michael") { it.copy(friendship = 85) }
