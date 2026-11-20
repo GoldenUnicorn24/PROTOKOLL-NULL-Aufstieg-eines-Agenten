@@ -57,6 +57,29 @@ import de.protokollnull.agent.ui.theme.*
  */
 @Composable
 fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: MissionRun) {
+    // Für alle alten und neuen Einsätze ist der kartenfreie Modus standardmäßig aktiv.
+    // Die Taktikkarte bleibt auf Wunsch erreichbar, ohne einen Spielstand zu ändern.
+    var advanced by rememberSaveable(run.missionId, run.stageId) { mutableStateOf(false) }
+    Column(Modifier.fillMaxSize()) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(if (advanced) "Taktikkarte" else "Einsatz",
+                modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
+            TextButton(onClick = { advanced = !advanced }) {
+                Text(if (advanced) "Einfacher Modus" else "Taktikkarte")
+            }
+        }
+        Box(Modifier.weight(1f)) {
+            if (advanced) TacticalBoardScreen(vm, s, st, run)
+            else TacticalQuickScreen(vm, s, run)
+        }
+    }
+}
+
+@Composable
+private fun TacticalBoardScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: MissionRun) {
     val t = run.tactical ?: return
     var mode by remember { mutableStateOf("act") }
     // Einmal antippen = Ziel auswählen. Erst der gut sichtbare Button löst die Aktion aus.
