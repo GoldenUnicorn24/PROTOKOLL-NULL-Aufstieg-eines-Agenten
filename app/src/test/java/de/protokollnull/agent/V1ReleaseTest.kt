@@ -317,7 +317,8 @@ class V1ReleaseTest {
         val s = start()
         val up = s.copy(player = s.player.copy(rank = 2, level = 3))
         assertEquals("rank", Milestones.detect(d, s, up)?.kind)
-        assertEquals("level", Milestones.detect(d, s, s.copy(player = s.player.copy(level = 2, skillPoints = s.player.skillPoints + 1)))?.kind)
+        assertEquals("level", Milestones.detect(d, s, s.copy(player = s.player.copy(level = 5, skillPoints = s.player.skillPoints + 1)))?.kind)
+        assertNull("Zwischenlevel nur als Meldung, ohne Einblendung", Milestones.detect(d, s, s.copy(player = s.player.copy(level = 3))))
         assertNull(Milestones.detect(d, s, s))
     }
 

@@ -760,32 +760,6 @@ private fun LifeEventPanel(vm: GameViewModel, s: GameState) {
     }
 }
 
-/** HQ-Karte: offene Führungsentscheidung, laufende Delegationen, Alltagsereignis. */
-@Composable
-fun LeadershipHqCard(vm: GameViewModel, s: GameState) {
-    val dil = Directorate.pendingDilemma(s)
-    val running = s.lead.delegations.count { it.status == DelegationStatus.RUNNING }
-    val ev = Home.pending(s)
-    if (dil == null && running == 0 && ev == null && !Command.isLeader(s)) return
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        if (dil != null) GlassPanel(accent = Pn.Warn, onClick = { vm.open(Overlay.Director) }) {
-            Overline("FÜHRUNGSENTSCHEIDUNG", Pn.Warn)
-            Text(dil.title, style = MaterialTheme.typography.titleMedium)
-        }
-        if (Command.isLeader(s)) GlassPanel(onClick = { vm.open(Overlay.Command("team")) }) {
-            Overline("FÜHRUNG", Pn.Accent)
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Pill("Kohäsion ${s.lead.cohesion}", Pn.Ok)
-                if (running > 0) Pill("$running Delegation${if (running == 1) "" else "en"}", Pn.Violet)
-                Pill("Etat ${Directorate.budget(s)}", Pn.Warn)
-            }
-        }
-        if (ev != null) GlassPanel(accent = Pn.Rose, onClick = { vm.open(Overlay.City("event")) }) {
-            Overline("PRIVAT", Pn.Rose)
-            Text(ev.title, style = MaterialTheme.typography.titleMedium)
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Personalakte 2.0 – Reiter „Dienst“ in der Personendetailansicht

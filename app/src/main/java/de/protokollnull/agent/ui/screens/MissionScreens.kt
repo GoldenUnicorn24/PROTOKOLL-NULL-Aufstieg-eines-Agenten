@@ -70,7 +70,7 @@ private fun MissionCard(vm: GameViewModel, s: GameState, m: MissionDefinition) {
 fun BriefingScreen(vm: GameViewModel, s: GameState, missionId: String) {
     val data = vm.data
     val m = Missions.definition(data, s, missionId)
-    if (m == null) { LaunchedEffect(Unit) { vm.back() }; return }
+    if (m == null) { LaunchedEffect(Unit) { vm.backFrom(Overlay.Briefing(missionId)) }; return }
     var approach by remember { mutableStateOf("balanced") }
     val candidates = Missions.teamCandidates(data, s, m)
     val maxTeam = minOf(m.maxTeam, Progression.teamSize(data, s))

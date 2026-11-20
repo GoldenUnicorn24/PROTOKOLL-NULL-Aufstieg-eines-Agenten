@@ -57,31 +57,3 @@ private fun consequenceHint(c: HqChoice): String {
     return parts.joinToString(" · ").ifBlank { "1 Zeitslot" }
 }
 
-/** Kompakte Übersicht für das HQ: offenes Ereignis und Anwesenheit. */
-@Composable
-fun LivingHqCards(vm: GameViewModel, s: GameState) {
-    val data = vm.data
-    val e = HqEvents.pending(data, s)
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (e != null) GlassPanel(accent = Pn.Warn, onClick = { vm.open(Overlay.HqEvent) }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                PulseDot(Pn.Warn, 6.dp); Spacer(Modifier.width(6.dp))
-                Overline("HQ-EREIGNIS", Pn.Warn)
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                e.npcId?.let { NpcPortrait(data, s, it, 44.dp) }
-                Column(Modifier.weight(1f)) {
-                    Text(HqEvents.fill(data, s, e.title, e.npcId), style = MaterialTheme.typography.titleMedium)
-                    val left = HqEvents.EXPIRE_DAYS - (s.clock.day - s.living.pendingHqEventDay)
-                    Text("Reagieren · verfällt in $left Tag" + if (left == 1) "" else "en", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            }
-        }
-        if (s.living.lives.isNotEmpty()) GlassPanel(onClick = { vm.setTab(3) }) {
-            Overline("HEUTE IN DER DIVISION", Pn.Accent)
-            PresenceStrip(vm, s)
-            val latest = s.living.feed.lastOrNull { World.revealed(data, s, it.npcId) && it.type != "mission_start" }
-            if (latest != null) Text(latest.text, style = MaterialTheme.typography.bodySmall, color = feedColor(latest.type))
-        }
-    }
-}

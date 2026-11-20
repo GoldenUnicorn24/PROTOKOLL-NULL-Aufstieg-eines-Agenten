@@ -264,7 +264,7 @@ private fun CaseCard(vm: GameViewModel, s: GameState, c: Cases.CaseDef) {
 @Composable
 fun CaseScreen(vm: GameViewModel, s: GameState, caseId: String) {
     val data = vm.data
-    val c = Cases.byId[caseId] ?: run { LaunchedEffect(Unit) { vm.back() }; return }
+    val c = Cases.byId[caseId] ?: run { LaunchedEffect(Unit) { vm.backFrom(Overlay.Case(caseId)) }; return }
     val st = s.ops.cases[caseId]
     val clues = Cases.known(s, caseId)
     val refuted = clues.mapNotNull { it.contradicts }.toSet()
@@ -358,7 +358,7 @@ fun ContractBriefingPanel(vm: GameViewModel, s: GameState, c: Contract) {
     }
     if (c.status == ContractStatus.OPEN || c.status == ContractStatus.POSTPONED) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         ActionButton("Vertagen", Modifier.weight(1f), enabled = c.status == ContractStatus.OPEN && c.urgency < 3, secondary = true, subtitle = "+3 Tage, −20 %") { vm.act { d, x -> Ops.postpone(d, x, c.id) } }
-        ActionButton("Ablehnen", Modifier.weight(1f), secondary = true, subtitle = if (c.urgency >= 3) "Haltung −1" else "ohne Folgen") { vm.act { d, x -> Ops.decline(d, x, c.id) }; vm.back() }
+        ActionButton("Ablehnen", Modifier.weight(1f), secondary = true, subtitle = if (c.urgency >= 3) "Haltung −1" else "ohne Folgen") { vm.act { d, x -> Ops.decline(d, x, c.id) }; vm.backFrom(Overlay.Briefing(c.id)) }
     }
 }
 
@@ -379,25 +379,6 @@ fun UnavailableTeamNote(vm: GameViewModel, s: GameState, m: MissionDefinition, c
     }
 }
 
-/** HQ-Kurzlage: dringende Aufträge, Weltlage, offene Akten. */
-@Composable
-fun OpsHqCard(vm: GameViewModel, s: GameState) {
-    if (s.ops.lastGenDay < 0) return
-    val urgent = s.ops.contracts.count { it.urgency >= 2 }
-    val running = s.ops.contracts.count { it.status == ContractStatus.IN_PROGRESS }
-    val openCases = s.ops.cases.values.count { !it.solved }
-    GlassPanel(accent = if (urgent > 0) Pn.Warn else Pn.Accent, onClick = { vm.open(Overlay.MissionControl("world")) }) {
-        Overline("SHADOW OPERATIONS", Pn.Accent)
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Pill("${s.ops.contracts.size} Aufträge")
-            if (urgent > 0) Pill("$urgent dringend", Pn.Warn)
-            if (running > 0) Pill("$running laufend", Pn.Violet)
-            if (openCases > 0) Pill("$openCases Akten", Pn.Muted)
-        }
-        StatBar("Einfluss Black Meridian", Ops.faction(s, "syndicate").influence, 100, Pn.Danger)
-        s.ops.worldLog.lastOrNull()?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2) }
-    }
-}
 
 /** Kompakte, horizontal scrollbare Auswahlchips (spart Platz im Hochformat); die Auswahl scrollt in Sicht. */
 @Composable

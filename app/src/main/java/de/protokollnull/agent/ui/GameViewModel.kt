@@ -139,6 +139,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         return false
     }
     fun closeOverlays() { _overlays.value = emptyList() }
+    /** Schließt [o] nur, wenn es (noch) oben liegt – verhindert doppeltes Zurück bei Ausblend-Animationen. */
+    fun backFrom(o: Overlay) { val list = _overlays.value; if (list.lastOrNull() == o) _overlays.value = list.dropLast(1) }
     fun dismissToast() { _toast.value = null }
     fun dismissCelebration() { _celebration.value = null }
     /** Kurzer Hinweis ohne Spielwirkung (z. B. bei geschützter Zurück-Geste). */

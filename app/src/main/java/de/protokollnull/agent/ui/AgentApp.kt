@@ -88,11 +88,14 @@ fun AgentApp(vm: GameViewModel = viewModel(), imageLoader: ImageLoader? = null) 
     }
     // Zurück-Logik: Overlays schließen, laufende Einsätze/Dialoge schützen, sonst zum HQ.
     val s = state
-    val shielded = s != null && screen == "game" && overlays.isEmpty() && (s.activeMission != null || s.activeDialogue != null || s.activeExam != null)
+    // Vollbild-Ereignisse (Einsatz, Dialog, Prüfung, Epilog, Gefährten-Ankunft) liegen über allen Overlays –
+    // „Zurück“ darf darunter nichts Unsichtbares schließen.
+    val shielded = s != null && screen == "game" && s.phase == "game" && (s.activeMission != null || s.activeDialogue != null || s.activeExam != null ||
+        de.protokollnull.agent.engine.Endings.pending(s) || de.protokollnull.agent.engine.CompanionAssignment.awaitingIntroduction(s) != null)
     BackHandler(enabled = busy == null && (overlays.isNotEmpty() || shielded || (screen == "game" && tab != 0) || screen == "creator")) {
         when {
-            overlays.isNotEmpty() -> vm.back()
             shielded -> vm.notify("Erst abschließen oder oben abbrechen – Fortschritt bleibt gespeichert.")
+            overlays.isNotEmpty() -> vm.back()
             screen == "creator" -> vm.goToStart()
             else -> vm.setTab(0)
         }

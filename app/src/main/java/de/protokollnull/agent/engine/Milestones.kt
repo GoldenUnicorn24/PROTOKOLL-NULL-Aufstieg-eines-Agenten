@@ -27,7 +27,8 @@ object Milestones {
         chapterFlags.entries.firstOrNull { (f, _) -> f in after.flags && f !in before.flags }?.let { (_, name) ->
             return Milestone("chapter", "Kapitel abgeschlossen", name)
         }
-        if (pa.level > pb.level) {
+        // Levelaufstiege nur an Meilensteinen feiern (alle 5 Level) – sonst genügt die Meldung
+        if (pa.level > pb.level && (pa.level / 5 > pb.level / 5)) {
             val gained = (pa.skillPoints - pb.skillPoints).coerceAtLeast(0)
             return Milestone("level", "Level ${pa.level}", if (gained > 0) "+$gained Fähigkeitspunkt${if (gained > 1) "e" else ""} – im Skilltree einsetzen" else "Deine Erfahrung wächst.")
         }

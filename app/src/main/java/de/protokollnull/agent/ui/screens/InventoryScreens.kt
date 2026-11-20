@@ -109,7 +109,7 @@ private fun slotIcon(slot: String) = when (slot) {
 fun ItemDetailScreen(vm: GameViewModel, s: GameState, uid: Long) {
     val data = vm.data
     val st = s.player.inventory.firstOrNull { it.uid == uid }
-    if (st == null) { LaunchedEffect(uid) { vm.back() }; return }
+    if (st == null) { LaunchedEffect(uid) { vm.backFrom(Overlay.Item(uid)) }; return }
     val def = data.itemById[st.itemId] ?: return
     val color = Pn.rarity[def.rarity] ?: Pn.Accent
     val equipped = uid in s.player.equipment.values
