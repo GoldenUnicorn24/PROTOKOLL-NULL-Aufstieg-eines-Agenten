@@ -208,7 +208,7 @@ private fun GoalsPanel(vm: GameViewModel, s: GameState) {
     var attr by remember { mutableStateOf(s.player.weakness.takeIf { it in Attr.all } ?: Attr.FITNESS) }
     val cur = s.player.attributes[attr] ?: 30
     val cap = Stats.attributeCap(s.player.level)
-    var target by remember(attr) { mutableIntStateOf((s.career.goals[attr] ?: (cur + 5)).coerceAtMost(cap.coerceAtLeast(cur + 1))) }
+    var target by remember(attr) { mutableIntStateOf(s.career.goals[attr] ?: (cur + 5)) }
     GlassPanel(padding = 14.dp) {
         s.career.goals.forEach { (a, t) ->
             val v = s.player.attributes[a] ?: 30
@@ -222,9 +222,9 @@ private fun GoalsPanel(vm: GameViewModel, s: GameState) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             ActionButton("−", secondary = true, enabled = target > cur + 1) { target-- }
             Text("${Attr.label(attr)}: $cur → $target", modifier = Modifier.weight(1f), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleSmall)
-            ActionButton("+", secondary = true, enabled = target < 100) { target++ }
+            ActionButton("+", secondary = true, enabled = target < Int.MAX_VALUE / 1024 - 1) { target++ }
         }
-        if (target > cap) SmallNote("Hinweis: Das Attributlimit liegt bei Level ${s.player.level} bei $cap – mehr Level nötig.")
+        SmallNote("Dein Rating kann durch Training dauerhaft über 100 steigen. Hohe Werte brauchen mehr Ausdauer.")
         ActionButton("Ziel festlegen", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Flag) { vm.update { Career.setGoal(it, attr, target) } }
     }
 }
@@ -464,7 +464,7 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                             Text("$sessions / ${Progression.DAILY_SESSIONS} volle Einheiten", style = MaterialTheme.typography.titleSmall)
                             Text("Danach nur noch geringer Fortschritt (Ermüdung).", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                        Pill("Limit $cap", Pn.Violet)
+                        Pill("Rating ohne Limit", Pn.Violet)
                     }
                     StatBar("Energie", s.player.energy, 100, Pn.Accent, icon = PnIcons.Bolt)
                     if (s.player.wounds > 0) Text("Verletzt: intensives Körpertraining gesperrt, Heilung ${s.player.woundProgress}/7 Tage.", color = Pn.Danger, style = MaterialTheme.typography.bodySmall)
@@ -534,12 +534,12 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text(t.name, style = MaterialTheme.typography.titleSmall)
-                            Text("${Attr.label(t.attribute)} $cur/$cap · Teilfortschritt ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("${Attr.label(t.attribute)} $cur · Teilfortschritt ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         if (bonus > 0) Pill("Ausbilder +$bonus", Pn.Ok)
                         else if (partnerBoost != null) Pill("Team ×${partnerBoost.progressMult}", Pn.Ok)
                     }
-                    StatBar("", cur, cap, if (cur >= cap) Pn.Warn else Pn.Accent, showValue = false)
+                    StatBar("", cur, maxOf(100, cur), Pn.Accent, showValue = false)
                     ActionButton("Trainieren · −$cost Energie · 1 Slot", Modifier.fillMaxWidth(), enabled = s.player.energy >= cost && sessions <= Progression.DAILY_SESSIONS, secondary = true, icon = PnIcons.Fist) {
                         vm.act { d, x -> Progression.train(d, x, t.id, chosenPartner, trainer, intensity) }
                     }
