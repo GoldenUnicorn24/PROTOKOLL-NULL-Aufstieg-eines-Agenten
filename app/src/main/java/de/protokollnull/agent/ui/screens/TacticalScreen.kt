@@ -103,8 +103,8 @@ fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: Mi
                 val target = pending ?: return
                 upd { Tactical.move(it, active.id, target.first, target.second) }
             }
-            "attack" -> upd { Tactical.attack(it, active.id, option.targetId ?: return) }
-            "takedown" -> upd { Tactical.takedown(it, active.id, option.targetId ?: return) }
+            "attack" -> option.targetId?.let { id -> upd { Tactical.attack(it, active.id, id) } }
+            "takedown" -> option.targetId?.let { id -> upd { Tactical.takedown(it, active.id, id) } }
             "ability" -> upd { Tactical.useAbility(it, active.id, option.targetId) }
         }
         mode = "act"
