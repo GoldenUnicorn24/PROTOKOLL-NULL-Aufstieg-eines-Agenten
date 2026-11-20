@@ -100,7 +100,7 @@ class SharedTrainingTest {
         val beforeNpc = Life.attributeRatings(d, initial, "alex")
         val completed = Progression.train(d, initial, "train_fitness", partnerId = "alex")
         assertTrue(completed.messages.toString(), completed.ok)
-        assertEquals("Unzertrennliches Team", Progression.partnerBoost(d, initial, "alex")?.label)
+        assertEquals("Beste Freunde", Progression.partnerBoost(d, initial, "alex")?.label)
         val npc = Life.life(d, completed.state, "alex")
         for (a in Attr.all.filter { it != Attr.FITNESS }) {
             assertTrue("Spieler-Nebenfortschritt $a", (completed.state.player.trainingProgress[a] ?: 0) > 0)
