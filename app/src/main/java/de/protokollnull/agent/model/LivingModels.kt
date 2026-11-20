@@ -48,6 +48,9 @@ data class NpcLife(
     /** Zusätzliche Fertigkeitsstufen aus eigenem Training. */
     val skillGain: Map<String, Int> = emptyMap(),
     val skillProgress: Map<String, Int> = emptyMap(),
+    /** Sechs trainierbare Attribute wie beim Spieler; alte Saves bleiben durch Defaults gültig. */
+    val attributes: Map<String, Int> = emptyMap(),
+    val attributeProgress: Map<String, Int> = emptyMap(),
     val trainingDays: Int = 0,
     val missions: Int = 0,
     val missionsFailed: Int = 0,
