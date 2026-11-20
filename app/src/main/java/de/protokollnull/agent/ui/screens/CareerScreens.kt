@@ -513,15 +513,42 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                             }
                             Text("Ihr profitiert BEIDE: Deine Attribute und XP steigen schneller. ${Relations.displayName(data, s, chosenPartner).substringBefore(" ")} verbessert gleichzeitig die eigene Fähigkeit und Karriere.",
                                 style = MaterialTheme.typography.bodySmall)
-                            if (friendship < 50) SmallNote("Ab 50 Freundschaft: besonders großer gemeinsamer Bonus. Ab 80: maximaler Team-Bonus.")
+                            if (friendship < 50) SmallNote("Ab 50 Freundschaft: doppelter Fortschritt. Ab 80: alle sechs Attribute wachsen bei BEIDEN mit. Ab 95: noch stärker.")
+                            else if (friendship >= 80) SmallNote("Spezialbonus: Auch die fünf nicht trainierten Attribute wachsen bei euch beiden mit.")
+                            if (trainer != null && trainer != chosenPartner && Progression.trainerBonus(data, s, trainer, Attr.FITNESS) >= 0) {
+                                val trainerBond = Life.bond(s, trainer, chosenPartner)
+                                Text("Gemeinsames Training stärkt außerdem die Freundschaft zwischen " +
+                                    Relations.displayName(data, s, trainer).substringBefore(" ") + " und " +
+                                    Relations.displayName(data, s, chosenPartner).substringBefore(" ") +
+                                    " (aktuell " + trainerBond + ").", style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     } else {
-                        SmallNote("Gemeinsames Training ist freiwillig. Je besser eure Freundschaft, desto stärker lernen BEIDE. Ab Freundschaft 50 sehr stark, ab 80 besonders stark.")
+                        SmallNote("Gemeinsames Training ist freiwillig. Ab Freundschaft 50 lernt ihr besonders schnell, ab 80 wachsen alle sechs Attribute und ab 95 gibt es den höchsten Bonus.")
                     }
                     Text("Intensität", style = MaterialTheme.typography.titleSmall)
                     ChipRow(Progression.intensities.map { it.id to it.name }, intensity) { intensity = it }
                     val iv = Progression.intensities.first { it.id == intensity }
                     SmallNote("Energie ×${iv.energyMult} · Fortschritt ×${iv.progressMult} · Verletzungsrisiko ${iv.injuryRisk} %")
+                }
+            }
+            if (trainer != null && chosenPartner != null) item {
+                GlassPanel(accent = Pn.Ok) {
+                    Overline("TEAMAKTIVITÄTEN", Pn.Ok)
+                    Text("Zusammenhalt aufbauen", style = MaterialTheme.typography.titleMedium)
+                    Text("Du, " + Relations.displayName(data, s, trainer) + " und " +
+                        Relations.displayName(data, s, chosenPartner) + " unternehmt etwas gemeinsam.",
+                        style = MaterialTheme.typography.bodySmall)
+                    Text("Beide Agenten verbessern ihre Freundschaft untereinander, bekommen Prüfungs-XP und machen eigene Fortschritte. Keine automatische Romanze.",
+                        style = MaterialTheme.typography.bodySmall, color = Pn.Muted)
+                    Progression.teamActivities.forEach { activity ->
+                        ActionButton(activity.label + " · −" + activity.energy + " Energie · 1 Slot",
+                            Modifier.fillMaxWidth(),
+                            enabled = s.player.energy >= activity.energy && sessions <= Progression.DAILY_SESSIONS,
+                            secondary = true, icon = PnIcons.People) {
+                            vm.act { d, x -> Progression.teamActivity(d, x, trainer, chosenPartner, activity.id) }
+                        }
+                    }
                 }
             }
             items(Progression.trainings) { t ->
