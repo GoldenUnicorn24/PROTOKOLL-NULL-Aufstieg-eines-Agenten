@@ -106,7 +106,7 @@ object Dialogues {
     }
 
     fun format(text: String, state: GameState): String = text
-        .replace("{codename}", state.player.codename)
+        .replace("{codename}", state.player.identityName)
         .replace("{name}", state.player.firstName)
         .replace("{fullname}", state.player.displayName)
 }
