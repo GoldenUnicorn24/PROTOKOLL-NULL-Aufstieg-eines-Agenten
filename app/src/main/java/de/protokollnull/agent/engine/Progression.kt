@@ -108,6 +108,87 @@ object Progression {
 
     const val DAILY_SESSIONS = 3
 
+    /** Freundschaft wirkt beim gemeinsamen Training auf BEIDE Laufbahnen. */
+    data class PartnerTrainingBoost(
+        val label: String,
+        val progressMult: Double,
+        val xpMult: Double,
+        val npcSkillProgress: Int,
+        val npcCareerXp: Int,
+        val friendshipGain: Int
+    )
+
+    fun partnerBoost(data: GameData, state: GameState, partnerId: String?): PartnerTrainingBoost? {
+        if (partnerId == null || !Relations.isKnownNpc(data, state, partnerId)) return null
+        val friendship = Relations.get(data, state, partnerId).friendship
+        return when {
+            friendship >= 80 -> PartnerTrainingBoost("Enge Freunde", 2.75, 1.9, 65, 50, 5)
+            friendship >= 50 -> PartnerTrainingBoost("Gute Freunde", 2.2, 1.6, 48, 34, 4)
+            friendship >= 25 -> PartnerTrainingBoost("Trainingspartner", 1.35, 1.15, 24, 16, 3)
+            else -> PartnerTrainingBoost("Gemeinsames Training", 1.05, 1.0, 12, 8, 2)
+        }
+    }
+
+    /** Wichtig: Ein Partner muss wirklich am Ort und nicht anderweitig gebunden sein. */
+    fun partnerLock(data: GameData, state: GameState, partnerId: String, trainerId: String? = null): String? {
+        if (!Relations.isKnownNpc(data, state, partnerId) || !World.revealed(data, state, partnerId))
+            return "Dieser Trainingspartner ist nicht bekannt oder noch nicht verfügbar."
+        if (trainerId == partnerId) return "Dieselbe Figur kann nicht zugleich Ausbilder und Trainingspartner sein."
+        if (World.npcLocation(data, state, partnerId) != state.location)
+            return "${Relations.displayName(data, state, partnerId)} ist gerade nicht hier."
+        val availability = Command.status(data, state, partnerId, forOps = false)
+        if (!availability.available)
+            return "${Relations.displayName(data, state, partnerId)} ist gerade ${availability.label}."
+        return null
+    }
+
+    private fun practiceFocus(trainingId: String): String = when (trainingId) {
+        "train_fitness", "train_combat", "train_precision" -> "combat"
+        "train_tech" -> "tech"
+        "train_theory", "train_observe" -> "intel"
+        "train_social" -> "social"
+        "train_mind" -> "combat"
+        else -> "combat"
+    }
+
+    /**
+     * Ein gemeinsames Training trainiert den NPC WIRKLICH: Kompetenz, Teilfortschritt,
+     * Karriere-XP und Trainingstage. Mehrere erreichte Stufen werden abgearbeitet,
+     * statt beim Stufenwechsel überzähligen Fortschritt zu verlieren.
+     */
+    private fun advanceTrainingPartner(
+        data: GameData, state: GameState, partnerId: String, trainingId: String,
+        boost: PartnerTrainingBoost, intensity: Intensity, fatigue: Double
+    ): Pair<GameState, String> {
+        val old = Life.life(data, state, partnerId)
+        val focus = practiceFocus(trainingId)
+        val increment = (boost.npcSkillProgress * intensity.progressMult * fatigue).toInt().coerceAtLeast(1)
+        var level = (old.skillGain[focus] ?: 0).coerceIn(0, 5)
+        var progress = if (level >= 5) 0 else old.skillProgress[focus] ?: 0
+        val before = level
+        if (level < 5) progress += increment
+        while (level < 5 && progress >= 40 * (level + 1)) {
+            progress -= 40 * (level + 1)
+            level++
+        }
+        if (level == 5) progress = 0
+        val careerGain = (boost.npcCareerXp * fatigue).toInt().coerceAtLeast(1)
+        val next = old.copy(
+            skillGain = old.skillGain + (focus to level),
+            skillProgress = old.skillProgress + (focus to progress),
+            careerXp = old.careerXp + careerGain,
+            trainingDays = old.trainingDays + 1,
+            mood = (old.mood + 3).pct(),
+            stress = (old.stress + intensity.stressAdd.coerceAtLeast(0) / 2).pct(),
+            lastDecision = "Gemeinsames Training: ${Life.focusLabel(focus)}",
+            lastDecisionDay = state.clock.day
+        )
+        val s = state.copy(living = state.living.copy(lives = state.living.lives + (partnerId to next)))
+        val levelText = if (level > before) " · ${Life.focusLabel(focus)} Stufe $before → $level"
+            else if (level < 5) " · Kompetenzfortschritt +$increment" else " · Kompetenz auf Maximum"
+        return s to ("${Relations.displayName(data, s, partnerId)}: Karriere +$careerGain XP" + levelText)
+    }
+
     fun train(data: GameData, state: GameState, trainingId: String, partnerId: String? = null, trainerId: String? = null, intensityId: String = "normal"): Result {
         val t = trainings.firstOrNull { it.id == trainingId } ?: return state.fail("Unbekanntes Training")
         val intensity = intensities.firstOrNull { it.id == intensityId } ?: intensities[1]
@@ -117,6 +198,8 @@ object Progression {
         if (p.health < 35) return state.fail("Die Krankenstation untersagt Training (Gesundheit zu niedrig).")
         if (p.wounds > 0 && t.attribute == Attr.FITNESS && intensity.id == "hard") return state.fail("Mit einer offenen Verletzung ist intensives Körpertraining untersagt.")
         val day = state.clock.day
+        if (partnerId != null) partnerLock(data, state, partnerId, trainerId)?.let { return state.fail(it) }
+        val boost = partnerBoost(data, state, partnerId)
         val c = state.career
         val sessions = if (c.sessionsDay == day) c.sessionsToday else 0
         if (sessions >= DAILY_SESSIONS + 1) return state.fail("Für heute ist Schluss: Mehr als ${DAILY_SESSIONS + 1} Einheiten am Tag bringen nichts mehr.")
@@ -127,8 +210,8 @@ object Progression {
         val deptBonus = (Directorate.power(data, state, "training") - 1) * 6
         val presentTrainer = trainerId?.takeIf { World.npcLocation(data, state, it) == state.location }
         val tBonus = trainerBonus(data, state, presentTrainer, t.attribute)
-        val partnerBonus = if (partnerId != null) 6 else 0
-        val (newValue, progress) = attributeProgress(current, p.trainingProgress[t.attribute] ?: 0, cap, rng.nextInt(25), deptBonus + tBonus + partnerBonus, intensity.progressMult * fatigue)
+        val sharedMult = boost?.progressMult ?: 1.0
+        val (newValue, progress) = attributeProgress(current, p.trainingProgress[t.attribute] ?: 0, cap, rng.nextInt(25), deptBonus + tBonus, intensity.progressMult * fatigue * sharedMult)
         val msgs = mutableListOf<String>()
         msgs += t.name + " (" + intensity.name + ") abgeschlossen." + if (fatigue < 1) " Müdigkeit: kaum Fortschritt." else ""
         if (newValue > current) msgs += Attr.label(t.attribute) + " " + current + " → " + newValue
@@ -152,12 +235,22 @@ object Progression {
             trainingDays = (c.trainingDays.filter { it > day - 90 } + day).distinct()
         )
         var s = state.copy(player = next, rolls = state.rolls + 1, career = career)
-        val xpRes = grantXp(data, s, (trainingXp(t.xp, p.level) * fatigue).toInt())
+        val xpRes = grantXp(data, s, (trainingXp(t.xp, p.level) * fatigue * (boost?.xpMult ?: 1.0)).toInt())
         s = xpRes.state
         msgs += xpRes.messages
-        if (partnerId != null) {
-            s = Relations.update(data, s, partnerId) { it.copy(friendship = it.friendship + 2, respect = it.respect + 1, lastTalkDay = day) }
-            msgs += Relations.displayName(data, s, partnerId) + " trainiert mit dir (Freundschaft +2)"
+        if (partnerId != null && boost != null) {
+            val (trained, npcReport) = advanceTrainingPartner(data, s, partnerId, t.id, boost, intensity, fatigue)
+            s = trained
+            s = Relations.update(data, s, partnerId) {
+                it.copy(friendship = it.friendship + boost.friendshipGain,
+                    trust = it.trust + if (boost.progressMult >= 2.0) 2 else 1,
+                    respect = it.respect + 2, lastTalkDay = day)
+            }
+            if (boost.progressMult >= 2.0)
+                s = Memories.add(data, s, partnerId, "Gemeinsames intensives Training in ${t.name} – beide machen große Fortschritte.", "training", 3)
+            msgs += "Teamtraining mit ${Relations.displayName(data, s, partnerId)}: ${boost.label} · Lernfortschritt ×${boost.progressMult} · Trainings-XP ×${boost.xpMult}."
+            msgs += npcReport
+            msgs += "Freundschaft +${boost.friendshipGain}, Vertrauen +${if (boost.progressMult >= 2.0) 2 else 1}"
         }
         if (presentTrainer != null && tBonus > 0) s = Relations.update(data, s, presentTrainer) { it.copy(respect = it.respect + 1) }
         s = Career.checkGoals(s, msgs)
