@@ -86,7 +86,7 @@ object Ages {
 fun Int.pct() = coerceIn(0, 100)
 
 object Stats {
-    fun attributeCap(level: Int): Int = (40 + level).coerceAtMost(100)
+    fun attributeCap(level: Int): Int = Int.MAX_VALUE / 1024 // Technischer Überlaufschutz; keine spielerische Attribut-Obergrenze
 
     fun equipped(data: GameData, p: PlayerCharacter): List<ItemDefinition> =
         p.equipment.values.mapNotNull { uid -> p.inventory.firstOrNull { it.uid == uid } }
@@ -96,7 +96,7 @@ object Stats {
         val p = state.player
         val base = p.attributes[attr] ?: 30
         val items = equipped(data, p).sumOf { it.bonuses[attr] ?: 0 }
-        return (base + items).coerceIn(0, 120)
+        return (base.toLong() + items.toLong()).coerceIn(0L, Int.MAX_VALUE.toLong() / 1024).toInt()
     }
 
     fun difficultyShift(state: GameState): Int = when (state.player.difficulty) {
