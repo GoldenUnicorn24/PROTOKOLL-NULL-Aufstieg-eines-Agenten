@@ -115,18 +115,31 @@ object Progression {
         val xpMult: Double,
         val npcSkillProgress: Int,
         val npcCareerXp: Int,
-        val friendshipGain: Int
+        val friendshipGain: Int,
+        /** Zusätzlicher Teilfortschritt für jedes andere Attribut auf BEIDEN Seiten. */
+        val crossTraining: Int = 0
     )
 
     fun partnerBoost(data: GameData, state: GameState, partnerId: String?): PartnerTrainingBoost? {
         if (partnerId == null || !Relations.isKnownNpc(data, state, partnerId)) return null
         val friendship = Relations.get(data, state, partnerId).friendship
         return when {
-            friendship >= 80 -> PartnerTrainingBoost("Enge Freunde", 2.75, 1.9, 65, 50, 5)
+            friendship >= 95 -> PartnerTrainingBoost("Unzertrennliches Team", 3.25, 2.2, 80, 65, 6, 20)
+            friendship >= 80 -> PartnerTrainingBoost("Enge Freunde", 2.75, 1.9, 65, 50, 5, 12)
             friendship >= 50 -> PartnerTrainingBoost("Gute Freunde", 2.2, 1.6, 48, 34, 4)
             friendship >= 25 -> PartnerTrainingBoost("Trainingspartner", 1.35, 1.15, 24, 16, 3)
             else -> PartnerTrainingBoost("Gemeinsames Training", 1.05, 1.0, 12, 8, 2)
         }
+    }
+
+    /**
+     * Freies Rating ohne 100er-Grenze; Teilfortschritt bleibt exakt erhalten.
+     * Damit gewinnen enge Freunde auf ALLEN Attributen etwas, auch bei nur einer Übung.
+     */
+    fun growRating(current: Int, partial: Int, gain: Int): Pair<Int, Int> {
+        val total = partial.coerceAtLeast(0).toLong() + gain.coerceAtLeast(0)
+        val next = (current.toLong() + total / 50L).coerceAtMost(Int.MAX_VALUE.toLong() / 1024L).toInt()
+        return next to (total % 50L).toInt()
     }
 
     /** Wichtig: Ein Partner muss wirklich am Ort und nicht anderweitig gebunden sein. */
@@ -173,9 +186,25 @@ object Progression {
         }
         if (level == 5) progress = 0
         val careerGain = (boost.npcCareerXp * fatigue).toInt().coerceAtLeast(1)
+        // Für alle Figuren dieselben sechs Rating-Attribute wie für die Hauptfigur.
+        val mainAttribute = trainings.first { it.id == trainingId }.attribute
+        val baseRatings = Life.attributeRatings(data, state, partnerId)
+        val newRatings = baseRatings.toMutableMap()
+        val newPartials = old.attributeProgress.toMutableMap()
+        val extra = (boost.crossTraining * intensity.progressMult * fatigue).toInt()
+        for (attr in Attr.all) {
+            val amount = if (attr == mainAttribute) increment else extra
+            if (amount > 0) {
+                val (rating, fraction) = growRating(baseRatings.getValue(attr), old.attributeProgress[attr] ?: 0, amount)
+                newRatings[attr] = rating
+                newPartials[attr] = fraction
+            }
+        }
         val next = old.copy(
             skillGain = old.skillGain + (focus to level),
             skillProgress = old.skillProgress + (focus to progress),
+            attributes = newRatings,
+            attributeProgress = newPartials,
             careerXp = old.careerXp + careerGain,
             trainingDays = old.trainingDays + 1,
             mood = (old.mood + 3).pct(),
@@ -186,7 +215,8 @@ object Progression {
         val s = state.copy(living = state.living.copy(lives = state.living.lives + (partnerId to next)))
         val levelText = if (level > before) " · ${Life.focusLabel(focus)} Stufe $before → $level"
             else if (level < 5) " · Kompetenzfortschritt +$increment" else " · Kompetenz auf Maximum"
-        return s to ("${Relations.displayName(data, s, partnerId)}: Karriere +$careerGain XP" + levelText)
+        return s to ("${Relations.displayName(data, s, partnerId)}: Karriere +$careerGain XP" + levelText +
+            if (extra > 0) " · alle weiteren Attribute +$extra Teilfortschritt" else "")
     }
 
     fun train(data: GameData, state: GameState, trainingId: String, partnerId: String? = null, trainerId: String? = null, intensityId: String = "normal"): Result {
@@ -212,20 +242,29 @@ object Progression {
         val tBonus = trainerBonus(data, state, presentTrainer, t.attribute)
         val sharedMult = boost?.progressMult ?: 1.0
         val (newValue, progress) = attributeProgress(current, p.trainingProgress[t.attribute] ?: 0, cap, rng.nextInt(25), deptBonus + tBonus, intensity.progressMult * fatigue * sharedMult)
+        val trainedAttributes = (p.attributes + (t.attribute to newValue)).toMutableMap()
+        val trainedPartials = (p.trainingProgress + (t.attribute to progress)).toMutableMap()
+        val sideGain = ((boost?.crossTraining ?: 0) * intensity.progressMult * fatigue).toInt()
+        if (sideGain > 0) for (attr in Attr.all.filter { it != t.attribute }) {
+            val (rating, fraction) = growRating(p.attributes[attr] ?: 30, p.trainingProgress[attr] ?: 0, sideGain)
+            trainedAttributes[attr] = rating
+            trainedPartials[attr] = fraction
+        }
         val msgs = mutableListOf<String>()
         msgs += t.name + " (" + intensity.name + ") abgeschlossen." + if (fatigue < 1) " Müdigkeit: kaum Fortschritt." else ""
         if (newValue > current) msgs += Attr.label(t.attribute) + " " + current + " → " + newValue
         else if (current >= cap) msgs += Attr.label(t.attribute) + " am Limit für Level ${p.level} ($cap)."
         else msgs += "Fortschritt " + Attr.label(t.attribute) + ": ${progress * 2}%"
         if (presentTrainer != null && tBonus > 0) msgs += Relations.displayName(data, state, presentTrainer) + " korrigiert deine Technik (Bonus +$tBonus)"
+        if (sideGain > 0) msgs += "Enge Freundschaft: Alle fünf anderen Attribute erhalten jeweils +$sideGain Teilfortschritt."
         var wounds = p.wounds
         if (intensity.injuryRisk > 0 && rng.percent() <= intensity.injuryRisk + (if (p.energy - energyCost < 15) 6 else 0)) {
             wounds += 1
             msgs += "Verletzung beim Training! (Wunden +1)"
         }
         val next = p.copy(
-            attributes = p.attributes + (t.attribute to newValue),
-            trainingProgress = p.trainingProgress + (t.attribute to progress),
+            attributes = trainedAttributes,
+            trainingProgress = trainedPartials,
             energy = (p.energy - energyCost).pct(),
             stress = (p.stress + t.stress + intensity.stressAdd).pct(),
             wounds = wounds
@@ -253,6 +292,21 @@ object Progression {
             msgs += "Freundschaft +${boost.friendshipGain}, Vertrauen +${if (boost.progressMult >= 2.0) 2 else 1}"
         }
         if (presentTrainer != null && tBonus > 0) s = Relations.update(data, s, presentTrainer) { it.copy(respect = it.respect + 1) }
+        if (partnerId != null && presentTrainer != null && presentTrainer != partnerId) {
+            // Gemeinsame Einheit mit z.B. Michael als Trainer und Alex als Partner.
+            // Bestehende Spielerfreundschaften erleichtern auch den NPCs ihre Freundschaft.
+            val fTrainer = Relations.get(data, s, presentTrainer).friendship
+            val fPartner = Relations.get(data, s, partnerId).friendship
+            val connection = when {
+                fTrainer >= 80 && fPartner >= 80 -> 16
+                fTrainer >= 50 && fPartner >= 50 -> 10
+                else -> 5
+            }
+            val key = LivingState.key(presentTrainer, partnerId)
+            val newBond = (Life.bond(s, presentTrainer, partnerId) + connection).coerceIn(-100, 100)
+            s = s.copy(living = s.living.copy(bonds = s.living.bonds + (key to newBond)))
+            msgs += "${Relations.displayName(data, s, presentTrainer)} und ${Relations.displayName(data, s, partnerId)}: Freundschaft untereinander +$connection."
+        }
         s = Career.checkGoals(s, msgs)
         val time = World.passTime(data, s, 1)
         return Result(time.state, msgs + time.messages)
