@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import de.protokollnull.agent.engine.Missions
 import de.protokollnull.agent.engine.Tactical
 import de.protokollnull.agent.engine.TacticalMaps
+import de.protokollnull.agent.engine.TacticalUX
 import de.protokollnull.agent.model.*
 import de.protokollnull.agent.ui.GameViewModel
 import de.protokollnull.agent.ui.theme.*
@@ -57,63 +59,144 @@ import de.protokollnull.agent.ui.theme.*
 fun TacticalScreen(vm: GameViewModel, s: GameState, st: StageDefinition, run: MissionRun) {
     val t = run.tactical ?: return
     var mode by remember { mutableStateOf("act") }
+    // Einmal antippen = Ziel auswählen. Erst der gut sichtbare Button löst die Aktion aus.
     var pending by remember(t.turn, t.selectedUnit) { mutableStateOf<Pair<Int, Int>?>(null) }
+    var showHelp by rememberSaveable { mutableStateOf(true) }
     var showDanger by remember { mutableStateOf(true) }
+    var feedback by remember { mutableStateOf<String?>(null) }
     val sel = t.units.firstOrNull { it.id == t.selectedUnit && !it.down && !it.evacuated }
     val reach = if (sel != null && sel.ap > 0 && mode == "act" && sel.stunned == 0 && !t.finished) Tactical.reachable(t, sel) else emptySet()
     val visible = remember(t.units, t.selectedUnit) { if (sel != null && !sel.vip) Tactical.visibleTiles(t, sel) else emptySet() }
     val danger = remember(t.units, reach, showDanger) { if (showDanger) reach.associateWith { Tactical.dangerAt(t, it.first, it.second) } else emptyMap() }
     val pendingPath = remember(pending, t.units) { pending?.let { p -> if (sel != null && p in reach) Tactical.path(t, sel, p.first, p.second) else emptyList() } ?: emptyList() }
-    val pendingEnemy = pending?.let { p -> Tactical.unitAt(t, p.first, p.second)?.takeIf { !it.ally } }
+    val preview = pending?.let { TacticalUX.preview(t, sel, it.first, it.second, mode) }
+    val teamReady = t.units.count { it.ally && !it.isPlayer && !it.vip && !it.down && !it.evacuated && it.ap > 0 }
 
-    fun upd(f: (TacticalState) -> TacticalState) { pending = null; vm.act(silent = true) { d, x -> Missions.updateTactical(d, x, f) } }
+    fun upd(f: (TacticalState) -> TacticalState) {
+        pending = null
+        feedback = null
+        vm.act(silent = true) { d, x -> Missions.updateTactical(d, x, f) }
+    }
 
     fun tap(x: Int, y: Int) {
         if (t.finished) return
         val unit = Tactical.unitAt(t, x, y)
-        when {
-            unit != null && unit.ally -> { mode = "act"; pending = null; upd { Tactical.select(it, unit.id) } }
-            unit != null && sel != null && mode == "takedown" -> { upd { Tactical.takedown(it, sel.id, unit.id) }; mode = "act" }
-            unit != null && sel != null && mode == "ability" -> { upd { Tactical.useAbility(it, sel.id, unit.id) }; mode = "act" }
-            unit != null && sel != null -> if (pending == (x to y)) upd { Tactical.attack(it, sel.id, unit.id) } else pending = x to y
-            (x to y) in reach && sel != null -> if (pending == (x to y)) upd { Tactical.move(it, sel.id, x, y) } else pending = x to y
-            else -> pending = null
+        if (unit != null && unit.ally) {
+            mode = "act"
+            upd { Tactical.select(it, unit.id) }
+        } else {
+            // Auch nicht erreichbare Ziele auswählbar lassen, damit der Grund sichtbar wird.
+            pending = x to y
+            feedback = null
         }
     }
 
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 12.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ObjectivePanel(t)
-        UnitStrip(t, sel) { id -> mode = "act"; upd { Tactical.select(it, id) } }
-        val hint = when {
-            t.finished -> null
-            mode == "takedown" -> "Überwältigen: angrenzenden Gegner antippen"
-            mode == "ability" -> "Fähigkeit: Ziel antippen"
-            pendingEnemy != null && sel != null -> Tactical.attackBlocker(t, sel, pendingEnemy)?.let { "${pendingEnemy.name}: $it" }
-                ?: "${pendingEnemy.name} anvisiert · Treffer ${Tactical.hitChance(t, sel, pendingEnemy)}% · erneut tippen zum Angreifen"
-            pending != null -> "Ziel vorgemerkt (${pendingPath.size} Felder" + (danger[pending]?.takeIf { it > 0 }?.let { " · im Schussfeld von $it" } ?: "") + ") · erneut tippen zum Bewegen"
-            sel != null && sel.ap > 0 -> "Feld antippen zum Vormerken · Gegner antippen zum Zielen"
-            else -> "Keine Aktionspunkte mehr – Runde beenden oder andere Einheit wählen"
+    fun confirmSelection() {
+        val option = preview ?: return
+        val active = sel ?: return
+        if (!option.allowed) {
+            feedback = option.detail
+            return
         }
-        if (hint != null) Text(hint, style = MaterialTheme.typography.labelMedium, color = if (mode != "act") Pn.Violet else if (pending != null) Pn.Warn else Pn.Muted)
-
-        Board(t, sel, reach, visible, danger, pendingPath, pending, Modifier.fillMaxWidth(), onTap = ::tap)
-
-        if (sel != null) ActionPanel(t, sel, mode, onMode = { mode = it; pending = null }, upd = ::upd)
-        EnemyList(t, sel, pending) { e -> if (sel != null) { if (pending == (e.x to e.y)) upd { Tactical.attack(it, sel.id, e.id) } else pending = e.x to e.y } }
-        GlassPanel(accent = Pn.Muted, padding = 12.dp) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Overline("Gefechtsprotokoll", Pn.Muted, Modifier.weight(1f))
-                PnChip("Gefahrenzonen", showDanger) { showDanger = !showDanger }
+        when (option.action) {
+            "move" -> {
+                val target = pending ?: return
+                upd { Tactical.move(it, active.id, target.first, target.second) }
             }
-            t.log.takeLast(6).forEach { line ->
-                Text(line, style = MaterialTheme.typography.bodySmall, color = when {
-                    line.contains("Reaktionsfeuer") || line.contains("kampfunfähig") -> Pn.Warn
-                    line.startsWith("—") -> Pn.Accent
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                })
+            "attack" -> option.targetId?.let { id -> upd { Tactical.attack(it, active.id, id) } }
+            "takedown" -> option.targetId?.let { id -> upd { Tactical.takedown(it, active.id, id) } }
+            "ability" -> upd { Tactical.useAbility(it, active.id, option.targetId) }
+        }
+        mode = "act"
+    }
+
+    Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ObjectivePanel(t)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "1. Figur wählen    2. Ziel tippen    3. Unten bestätigen",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Pn.Accent
+                )
+                TextButton(onClick = { showHelp = !showHelp }) { Text(if (showHelp) "Hilfe schließen" else "Hilfe") }
+            }
+            if (showHelp) GlassPanel(accent = Pn.Accent, padding = 12.dp) {
+                Text("So funktioniert der Einsatz", style = MaterialTheme.typography.titleSmall)
+                Text("Wähle oben deine Figur. Tippe ein türkis markiertes Feld zum Bewegen oder einen Gegner zum Angreifen an. Die Aktion wird unten angezeigt und erst mit dem großen Button ausgeführt.", style = MaterialTheme.typography.bodySmall)
+                Text("AP = Aktionspunkte. Meist kostet eine Bewegung oder ein Angriff 1 AP. Mit „Team handelt“ helfen deine Begleiter; „Runde beenden“ gibt anschließend wieder AP, aber die Gegner handeln mit.", style = MaterialTheme.typography.bodySmall)
+                TextButton(onClick = { showHelp = false }) { Text("Verstanden") }
+            }
+            UnitStrip(t, sel) { id -> mode = "act"; upd { Tactical.select(it, id) } }
+            if (sel != null) Text(
+                "Ausgewählt: " + sel.name + " · " + sel.ap + " AP · " + sel.hp + "/" + sel.maxHp + " LP" +
+                    if (mode == "takedown") " · Überwältigen: Gegner wählen"
+                    else if (mode == "ability") " · Fähigkeit: Gegner wählen" else "",
+                style = MaterialTheme.typography.labelMedium,
+                color = Pn.Text
+            )
+            Board(t, sel, reach, visible, danger, pendingPath, pending, Modifier.fillMaxWidth(), onTap = ::tap)
+            if (sel != null) ActionPanel(t, sel, mode, onMode = { mode = it; pending = null; feedback = null }, upd = ::upd)
+            EnemyList(t, sel, pending) { enemy -> pending = enemy.x to enemy.y; feedback = null }
+            GlassPanel(accent = Pn.Muted, padding = 12.dp) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Overline("Gefechtsprotokoll", Pn.Muted, Modifier.weight(1f))
+                    PnChip("Gefahrenzonen", showDanger) { showDanger = !showDanger }
+                }
+                t.log.takeLast(4).forEach { line ->
+                    Text(line, style = MaterialTheme.typography.bodySmall, color = when {
+                        line.contains("Reaktionsfeuer") || line.contains("kampfunfähig") -> Pn.Warn
+                        line.startsWith("—") -> Pn.Accent
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                    })
+                }
+            }
+            Legend()
+        }
+
+        // Die wichtigsten Befehle bleiben sichtbar – unabhängig vom Scrollstand.
+        Surface(color = Pn.Surface1, tonalElevation = 6.dp, modifier = Modifier.fillMaxWidth().border(1.dp, Pn.Line)) {
+            Column(
+                Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                val message = feedback ?: preview?.detail ?: when {
+                    sel == null -> "Wähle oben eine eigene Figur."
+                    sel.ap == 0 -> "Keine AP mehr? Wähle eine andere Figur oder beende die Runde."
+                    mode == "takedown" -> "Tippe einen benachbarten Gegner an."
+                    mode == "ability" -> "Tippe einen Gegner für deine Fähigkeit an."
+                    else -> "Tippe einmal ein Zielfeld oder einen Gegner auf der Karte an."
+                }
+                Text(message, style = MaterialTheme.typography.bodySmall,
+                    color = if (preview != null && !preview.allowed || feedback != null) Pn.Warn else Pn.Text,
+                    maxLines = 3)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Button(
+                        onClick = ::confirmSelection,
+                        enabled = preview?.allowed == true,
+                        modifier = Modifier.weight(1f).defaultMinSize(minHeight = 48.dp)
+                    ) { Text(preview?.label ?: "Ziel wählen", maxLines = 1) }
+                    if (pending != null || mode != "act") TextButton(onClick = { pending = null; mode = "act"; feedback = null }) { Text("Abwählen") }
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = { upd { Tactical.teamAuto(it) } },
+                        enabled = teamReady > 0 && !t.finished,
+                        modifier = Modifier.weight(1f).defaultMinSize(minHeight = 48.dp)
+                    ) { Text("Team handeln lassen", maxLines = 2, style = MaterialTheme.typography.labelMedium) }
+                    Button(
+                        onClick = { mode = "act"; upd { Tactical.endTurn(it) } },
+                        enabled = !t.finished,
+                        modifier = Modifier.weight(1f).defaultMinSize(minHeight = 48.dp)
+                    ) { Text("Runde beenden", maxLines = 2, style = MaterialTheme.typography.labelMedium) }
+                }
             }
         }
-        Legend()
     }
 }
 
@@ -125,6 +208,7 @@ private fun ObjectivePanel(t: TacticalState) {
             Pill("Runde ${t.turn.coerceAtMost(t.maxTurns)}/${t.maxTurns}", if (t.maxTurns - t.turn <= 2) Pn.Danger else Pn.Accent, icon = PnIcons.Hourglass)
         }
         Text(Tactical.objectiveLabel(t.objective, t.requiredSecured, t.holdTurns, t.units.count { !it.ally }), style = MaterialTheme.typography.titleSmall)
+        Text("Dein Ziel: " + TacticalUX.objective(t), style = MaterialTheme.typography.bodySmall, color = Pn.Accent)
         when (t.objective) {
             "intel", "recon" -> StatBar("Fortschritt", t.secured.size, t.requiredSecured.coerceAtLeast(1), Pn.Warn)
             "protect" -> StatBar("Gehalten", t.held, t.holdTurns.coerceAtLeast(1), Pn.Ok)
@@ -338,43 +422,62 @@ private fun DrawScope.drawUnit(u: TacticalUnit, o: Offset, cw: Float, ch: Float,
 
 @Composable
 private fun ActionPanel(t: TacticalState, sel: TacticalUnit, mode: String, onMode: (String) -> Unit, upd: ((TacticalState) -> TacticalState) -> Unit) {
+    var advanced by remember { mutableStateOf(false) }
     GlassPanel(padding = 12.dp, accent = unitColor(sel)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(sel.name, style = MaterialTheme.typography.titleSmall)
-                Text("AP ${sel.ap} · Treffer ${sel.accuracy} · Wirkung ${sel.damage}" + (if (sel.armor > 0) " · Schutz ${sel.armor}" else "") + if (sel.stunned > 0) " · setzt aus" else "",
-                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(sel.ap.toString() + " AP verfügbar · Treffer " + sel.accuracy +
+                    " · Wirkung " + sel.damage, style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
             }
-            ProgressRing(sel.hp, sel.maxHp, 42.dp, if (sel.hp * 3 <= sel.maxHp) Pn.Danger else Pn.Ok, "${sel.hp}", stroke = 4.dp)
+            ProgressRing(sel.hp, sel.maxHp, 42.dp, if (sel.hp * 3 <= sel.maxHp) Pn.Danger else Pn.Ok, sel.hp.toString(), stroke = 4.dp)
         }
         if (sel.vip) {
-            InfoNote("Schutzperson: kann sich bewegen, aber nicht angreifen. Bring sie zum Ziel (X).", Pn.Warn)
+            InfoNote("Schutzperson: bewegen, nicht angreifen. Bringe sie zum Ausgang X.", Pn.Warn)
         } else {
-            val ab = Tactical.abilities[sel.ability]
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                ActionButton("Überwältigen", Modifier.weight(1f), enabled = sel.ap >= 2 && !t.finished && sel.stunned == 0, secondary = mode != "takedown", subtitle = "2 AP, angrenzend") { onMode(if (mode == "takedown") "act" else "takedown") }
-                ActionButton(ab?.name ?: "Fähigkeit", Modifier.weight(1f), enabled = ab != null && sel.abilityCooldown == 0 && sel.ap > 0 && !t.finished, secondary = mode != "ability",
-                    subtitle = if (sel.abilityCooldown > 0) "bereit in ${sel.abilityCooldown}" else "1 AP") {
-                    if (sel.ability in listOf("hack", "distract")) onMode(if (mode == "ability") "act" else "ability")
-                    else upd { Tactical.useAbility(it, sel.id, null) }
-                }
-            }
+            // Die einzige Sonderaktion, die für manche Missionsziele zwingend ist.
             if (t.tile(sel.x, sel.y) == 'I' && Tactical.key(sel.x, sel.y) !in t.secured)
-                ActionButton("Infopunkt sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished, subtitle = "1 AP", icon = PnIcons.Chip) { upd { Tactical.secure(it, sel.id) } }
-            val threat = t.units.filter { !it.ally && !it.down }.minByOrNull { Tactical.dist(it.x, it.y, sel.x, sel.y) }
-            if (threat != null) {
-                val cov = Tactical.cover(t, threat.x, threat.y, sel.x, sel.y)
-                InfoNote("Deckung gegen ${threat.name}: " + when (cov) { 25 -> "voll (−25)"; 20 -> "teilweise (−20)"; else -> "keine" } +
-                    if (Tactical.lineOfSight(t, threat.x, threat.y, sel.x, sel.y)) " · im Sichtfeld" else " · außer Sicht", if (cov == 0) Pn.Warn else Pn.Ok, PnIcons.Shield)
+                ActionButton("Infopunkt sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished,
+                    subtitle = "1 AP · erforderlich für dieses Missionsziel", icon = PnIcons.Chip) {
+                    upd { Tactical.secure(it, sel.id) }
+                }
+            TextButton(onClick = { advanced = !advanced }) {
+                Text(if (advanced) "Erweiterte Aktionen schließen" else "Erweiterte Aktionen (optional)")
             }
-            if (ab != null) InfoNote(ab.description)
+            if (advanced) {
+                val ab = Tactical.abilities[sel.ability]
+                val medicReady = sel.ability != "medic" || t.units.any {
+                    it.ally && !it.down && !it.evacuated && it.hp < it.maxHp &&
+                        Tactical.dist(it.x, it.y, sel.x, sel.y) <= 1
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ActionButton("Überwältigen", Modifier.weight(1f),
+                        enabled = sel.ap >= 2 && !t.finished && sel.stunned == 0,
+                        secondary = mode != "takedown", subtitle = "2 AP · Nachbarfeld") {
+                        onMode(if (mode == "takedown") "act" else "takedown")
+                    }
+                    ActionButton(ab?.name ?: "Fähigkeit", Modifier.weight(1f),
+                        enabled = ab != null && medicReady && sel.abilityCooldown == 0 && sel.ap > 0 && !t.finished,
+                        secondary = mode != "ability",
+                        subtitle = if (!medicReady) "Kein Verletzter in der Nähe" else if (sel.abilityCooldown > 0) "Warte " + sel.abilityCooldown + " Runden" else "1 AP") {
+                        if (sel.ability in listOf("hack", "distract")) onMode(if (mode == "ability") "act" else "ability")
+                        else upd { Tactical.useAbility(it, sel.id, null) }
+                    }
+                }
+                ActionButton("Position sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished,
+                    secondary = true, subtitle = "Verbraucht übrige AP · bessere Abwehr") { upd { Tactical.guard(it, sel.id) } }
+                val threat = t.units.filter { !it.ally && !it.down }
+                    .minByOrNull { Tactical.dist(it.x, it.y, sel.x, sel.y) }
+                if (threat != null) {
+                    val cov = Tactical.cover(t, threat.x, threat.y, sel.x, sel.y)
+                    InfoNote("Deckung gegen " + threat.name + ": " +
+                        when (cov) { 25 -> "voll"; 20 -> "teilweise"; else -> "keine" } +
+                        if (Tactical.lineOfSight(t, threat.x, threat.y, sel.x, sel.y)) " · im Sichtfeld" else " · außer Sicht",
+                        if (cov == 0) Pn.Warn else Pn.Ok, PnIcons.Shield)
+                }
+                if (ab != null) InfoNote(ab.description)
+            }
         }
-        val team = t.units.count { it.ally && !it.isPlayer && !it.vip && !it.down && !it.evacuated && it.ap > 0 }
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (!sel.vip) ActionButton("Sichern", Modifier.weight(1f), enabled = sel.ap > 0 && !t.finished, secondary = true, subtitle = "−15 gegn. Treffer") { upd { Tactical.guard(it, sel.id) } }
-            if (team > 0) ActionButton("Team handelt", Modifier.weight(1f), enabled = !t.finished, secondary = true, subtitle = "$team mit AP", icon = PnIcons.Robot) { upd { Tactical.teamAuto(it) } }
-        }
-        ActionButton("Runde beenden", Modifier.fillMaxWidth(), enabled = !t.finished, icon = PnIcons.Hourglass, subtitle = "Gegner sind am Zug") { onMode("act"); upd { Tactical.endTurn(it) } }
     }
 }
 
@@ -383,14 +486,14 @@ private fun EnemyList(t: TacticalState, sel: TacticalUnit?, pending: Pair<Int, I
     val enemies = t.units.filter { !it.ally && !it.down }
     if (enemies.isEmpty()) return
     GlassPanel(accent = Pn.Danger, padding = 12.dp) {
-        Overline("Gegner · antippen zum Zielen, erneut zum Angreifen", Pn.Danger)
+        Overline("Gegner · einmal wählen, unten bestätigen", Pn.Danger)
         enemies.forEach { e ->
             val blocker = sel?.let { Tactical.attackBlocker(t, it, e) }
             val chance = if (sel != null && blocker == null) Tactical.hitChance(t, sel, e) else null
             val aimed = pending == (e.x to e.y)
             Row(
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(if (aimed) Pn.Warn.copy(alpha = 0.14f) else Color.Transparent)
-                    .clickable(enabled = sel != null && !sel.vip && sel.ap > 0 && !t.finished, role = Role.Button) { onAim(e) }
+                    .clickable(enabled = sel != null && !t.finished, role = Role.Button) { onAim(e) }
                     .defaultMinSize(minHeight = 44.dp).padding(horizontal = 6.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -417,7 +520,7 @@ private fun Legend() {
         if (open) {
             SmallNote("Abstrakte Simulation: Treffer bedeuten „kampfunfähig/markiert“. ★ du · Buchstabe Teammitglied · ♦ Schutzperson · W Wachposten · Ü Überwachung (reagiert einmal pro Runde auf Bewegung im Sichtfeld) · F Flankierer · S Stoßtrupp (überwältigt in Deckung).")
             SmallNote("Wände und Türen blockieren die Sicht, Wasser und Glas nur den Weg. Auf Deckung −25, hinter Deckung in Schussrichtung −20, Sichern −15. Rote Punkte auf erreichbaren Feldern = Anzahl Gegner mit Schussfeld. Abgedunkelte Felder liegen außerhalb der Sicht der gewählten Einheit.")
-            SmallNote("„Team handelt“ lässt deine Teammitglieder nach festen Regeln agieren: gute Schüsse, Versorgung, Infopunkte, sonst Deckung mit Schussfeld.")
+            SmallNote("Einmal tippen zeigt die Vorschau; der große Button unten bestätigt. „Team handeln lassen“ bewegt nur deine Begleiter, nicht die Hauptfigur. „Runde beenden“ lässt die Gegner handeln und erneuert deine AP.")
         }
     }
 }
