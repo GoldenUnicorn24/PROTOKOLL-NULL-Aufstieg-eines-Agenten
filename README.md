@@ -43,6 +43,7 @@ Ausführlich: [Audit](docs/V1_AUDIT.md) · [UI-Review](docs/V1_UI_REVIEW.md) · 
 - Zehn neue HQ-Szenen, in denen frühere Entscheidungen nachwirken; eine neue Szene, in der die Gefährtin bzw. der Gefährte selbst über ein Angebot entscheidet.
 - **Direktionsagenda** (ab Rang 10): fünf Agenden über je 26 Wochen mit Sofortkosten, messbaren Zielen und einer einmaligen Bewertung.
 - 25 neue Gegenstände (Ausrüstung, Verbrauchsgüter, Missionswerkzeug, Geschenke) mit eigenen Icons, Missionsboni und Geschenkinteressen.
+- **Rangliste der Division** (Karriere → Rangliste, Aktion im Aufenthaltsbereich, Profil): du und alle Figuren mit Laufbahn, sortiert nach Dienstgrad, letzter Note, Einsatzbilanz und Ausbildung – mit Wochentrend; Alex und Jaden kommentieren deinen tatsächlichen Platz.
 - Fairness: Trost-XP nur beim ersten Scheitern an einem Story-Einsatz.
 
 ### Technik
@@ -182,8 +183,8 @@ Automatisch von Robolectric/Roborazzi aus echtem Spielzustand gerendert (Workflo
 | ![](docs/screenshots/33_umfeld.png) | ![](docs/screenshots/34_hq_division_heute.png) | ![](docs/screenshots/35_hq_ereignis.png) | |
 | **Taktik 3.0 (v1.0)** | **Direktionsagenda (v1.0)** | **Kapitel 4 (v1.0)** | **Wendung (v1.0)** |
 | ![](docs/screenshots/50_taktik3_labor.png) | ![](docs/screenshots/51_direktion_agenda.png) | ![](docs/screenshots/52_kapitel4_briefing.png) | ![](docs/screenshots/53_wendung.png) |
-| **Beförderung (v1.0)** | **Ende: Die Akademie (v1.0)** | | |
-| ![](docs/screenshots/54_feier_befoerderung.png) | ![](docs/screenshots/55_epilog_akademie.png) | | |
+| **Beförderung (v1.0)** | **Ende: Die Akademie (v1.0)** | **Rangliste (v1.0)** | |
+| ![](docs/screenshots/54_feier_befoerderung.png) | ![](docs/screenshots/55_epilog_akademie.png) | ![](docs/screenshots/56_rangliste.png) | |
 | **Mission Control (v0.7)** | **Weltlage (v0.7)** | **Einsatzketten (v0.7)** | **Ermittlungsakte (v0.7)** |
 | ![](docs/screenshots/36_mission_control.png) | ![](docs/screenshots/37_weltlage.png) | ![](docs/screenshots/38_einsatzketten.png) | ![](docs/screenshots/39_ermittlungsakte.png) |
 | **Auftragsbriefing (v0.7)** | **Taktik 2.0 (v0.7)** | **Führungscockpit (v0.8)** | **Delegation (v0.8)** |

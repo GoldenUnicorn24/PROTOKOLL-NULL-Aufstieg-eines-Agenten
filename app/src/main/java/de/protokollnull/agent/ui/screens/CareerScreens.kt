@@ -38,15 +38,15 @@ private fun activityIcon(id: String) = when (id) {
 // ---------------------------------------------------------------------------
 
 @Composable
-fun CareerScreen(vm: GameViewModel, s: GameState) {
+fun CareerScreen(vm: GameViewModel, s: GameState, initialTab: String = "overview") {
     val data = vm.data
     val check = Progression.nextRankCheck(data, s)
     val c = s.career
     val ev = Career.latestEvaluation(s)
-    var tab by remember { mutableStateOf("overview") }
+    var tab by remember { mutableStateOf(initialTab) }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Karriere", "Rang ${s.player.rank}/12 · ${data.rank(s.player.rank).name}", onBack = { vm.back() })
-        PnTabs(listOf("overview" to "Übersicht", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})"), tab,
+        PnTabs(listOf("overview" to "Übersicht", "board" to "Rangliste", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})"), tab,
             Modifier.padding(horizontal = Sp.gutter, vertical = 8.dp), badges = if (Progression.examReady(data, s)) setOf("overview") else emptySet()) { tab = it }
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             when (tab) {
@@ -129,6 +129,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                         }
                     }
                 }
+                "board" -> leaderboardItems(vm, s)
                 else -> {
                     if (s.journal.isEmpty()) item { SmallNote("Noch keine Einträge. Beurteilungen, Prüfungen, Ziele und Auszeichnungen erscheinen hier.") }
                     items(s.journal.reversed()) { j ->
@@ -142,6 +143,63 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                 }
             }
         }
+    }
+}
+
+/** v1.0: Die Rangliste der Division – berechnet aus echten Laufbahnwerten. */
+private fun androidx.compose.foundation.lazy.LazyListScope.leaderboardItems(vm: GameViewModel, s: GameState) {
+    val data = vm.data
+    val board = Leaderboard.board(data, s)
+    val me = board.indexOfFirst { it.isPlayer }
+    val trend = Leaderboard.trend(s)
+    item {
+        GlassPanel(accent = if (me == 0) Pn.Warn else Pn.Accent) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                ProgressRing(board.size - me, board.size, 64.dp, if (me == 0) Pn.Warn else Pn.Accent, "${me + 1}.")
+                Column(Modifier.weight(1f)) {
+                    Overline("Dein Platz auf der Tafel")
+                    Text("Platz ${me + 1} von ${board.size}", style = MaterialTheme.typography.titleMedium)
+                    Text(when {
+                        trend > 0 -> "▲ $trend seit letzter Woche"
+                        trend < 0 -> "▼ ${-trend} seit letzter Woche"
+                        s.career.boardWeek >= 0 -> "Unverändert seit letzter Woche"
+                        else -> "Erste Wertung – der Trend erscheint nach einer Woche"
+                    }, style = MaterialTheme.typography.labelSmall, color = if (trend > 0) Pn.Ok else if (trend < 0) Pn.Danger else MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Text("${board[me].score}", style = PnType.metric, color = Pn.Text)
+            }
+            if (me > 0) {
+                val gap = board[me - 1].score - board[me].score
+                InfoNote("Bis Platz $me (${board[me - 1].name}) fehlen dir $gap Punkte.", Pn.Accent, PnIcons.Target)
+            }
+        }
+    }
+    items(board.size) { i ->
+        val e = board[i]
+        val tone = when { e.isPlayer -> Pn.Accent; i == 0 -> Pn.Warn; else -> Pn.Muted }
+        Row(
+            Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                .background(if (e.isPlayer) Pn.Accent.copy(alpha = 0.14f) else Color(0x0DFFFFFF))
+                .border(1.dp, if (e.isPlayer) Pn.Accent.copy(alpha = 0.6f) else Pn.Hairline, RoundedCornerShape(12.dp))
+                .then(if (!e.isPlayer) Modifier.clickable(role = androidx.compose.ui.semantics.Role.Button) { vm.open(Overlay.Npc(e.id, "career")) } else Modifier)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("${i + 1}", style = PnType.metric.copy(fontSize = 20.sp), color = tone, modifier = Modifier.width(30.dp))
+            if (e.isPlayer) PlayerPortrait(s, 34.dp) else NpcPortrait(data, s, e.id, 34.dp)
+            Column(Modifier.weight(1f)) {
+                Text(e.name + if (e.isPlayer) " (du)" else "", style = MaterialTheme.typography.titleSmall, maxLines = 1)
+                Text(data.rank(e.rank).name + " · ${e.missions} Einsätze" + if (!e.isPlayer && !LifeStatus.inHq(e.status)) " · ${LifeStatus.label(e.status)}" else "",
+                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            }
+            Box(Modifier.size(28.dp).clip(CircleShape).background(gradeColor(e.grade).copy(alpha = 0.18f)).border(1.dp, gradeColor(e.grade), CircleShape), contentAlignment = Alignment.Center) {
+                Text(e.grade ?: "–", style = PnType.data.copy(fontSize = 12.sp), color = gradeColor(e.grade))
+            }
+            Text("${e.score}", style = PnType.data, color = Pn.Text, modifier = Modifier.width(44.dp), textAlign = androidx.compose.ui.text.style.TextAlign.End)
+        }
+    }
+    item {
+        SmallNote("Punkte: Dienstgrad × 100 · letzte Note (A 40 bis E 0) · erfolgreiche Einsätze × 3 (höchstens 60) · Ausbildung bis 30 (bei dir Trainingstage der letzten 30 Tage, bei anderen der Fortschritt zur nächsten Prüfung). Die Leitungsebene steht nicht auf der Tafel. Antippen öffnet die Laufbahn.")
     }
 }
 

@@ -78,6 +78,8 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                 NavRow("Skilltree", "${p.skills.values.sum()} Stufen gelernt · ${p.skillPoints} Punkte frei", PnIcons.Spark, badge = if (p.skillPoints > 0) "${p.skillPoints}" else null) { vm.open(Overlay.Skills) }
                 NavRow("Karriere & Prüfungen", next?.let { "Nächster Rang: ${it.rank.name} · ${it.requirements.count { r -> r.second }}/${it.requirements.size} erfüllt" } ?: "Höchster Rang erreicht", PnIcons.Medal,
                     badge = if (Progression.examReady(data, s)) "Prüfung" else null) { vm.open(Overlay.Ranks) }
+                val place = Leaderboard.placeOf(data, s)
+                NavRow("Rangliste", "Platz $place von ${Leaderboard.board(data, s).size}" + Leaderboard.trend(s).let { if (it > 0) " · ▲ $it" else if (it < 0) " · ▼ ${-it}" else "" }, PnIcons.Chart) { vm.open(Overlay.CareerView("board")) }
                 NavRow("Zeitplan & Zeitraffer", Clock.dateLabel(s.clock.day), PnIcons.Calendar) { vm.open(Overlay.Calendar) }
                 NavRow("Questlog", "${Quests.active(data, s).size} aktiv · ${Quests.completed(data, s).size} erledigt", PnIcons.Book) { vm.open(Overlay.Quests) }
                 NavRow("Einsatzberichte", "${s.reports.size} Berichte", PnIcons.Archive) { vm.open(Overlay.Reports) }

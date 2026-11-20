@@ -267,7 +267,7 @@ private fun actionIcon(a: String) = when (a) {
     "socialize" -> PnIcons.People; "training" -> PnIcons.Fist; "range" -> PnIcons.Target; "treat" -> PnIcons.Cross
     "shop", "repair" -> PnIcons.Bag; "missions" -> PnIcons.Radar; "tech_lab" -> PnIcons.Chip; "therapy" -> PnIcons.Brain
     "promotion" -> PnIcons.Star; "director_desk" -> PnIcons.Crown; "research" -> PnIcons.Archive; "team" -> PnIcons.People
-    "cafe" -> PnIcons.Food; "apartment" -> PnIcons.Hq; "cover_job" -> PnIcons.City; "city" -> PnIcons.City; "command" -> PnIcons.People; "study" -> PnIcons.Brain
+    "cafe" -> PnIcons.Food; "apartment" -> PnIcons.Hq; "cover_job" -> PnIcons.City; "city" -> PnIcons.City; "command" -> PnIcons.People; "study" -> PnIcons.Brain; "leaderboard" -> PnIcons.Chart
     else -> PnIcons.Chevron
 }
 
@@ -293,5 +293,6 @@ private fun roomAction(vm: GameViewModel, s: GameState, a: String) {
         "cover_job" -> vm.open(Overlay.City("job"))
         "city" -> vm.open(Overlay.City("city"))
         "command" -> vm.open(Overlay.Command("team"))
+        "leaderboard" -> vm.open(Overlay.CareerView("board"))
     }
 }

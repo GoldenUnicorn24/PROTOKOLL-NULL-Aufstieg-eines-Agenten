@@ -64,7 +64,8 @@
       "actions": [
         "eat",
         "socialize",
-        "study"
+        "study",
+        "leaderboard"
       ]
     },
     {

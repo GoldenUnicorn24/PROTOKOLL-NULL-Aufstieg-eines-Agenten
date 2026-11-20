@@ -219,6 +219,7 @@ class ScreenshotTest {
         vm.act { d, s0 -> Result(Progression.applyPromotion(d, s0, 12)) }
         vm.dismissToast(); shot("54_feier_befoerderung", keepCelebration = true)
         vm.dismissCelebration()
+        vm.closeOverlays(); vm.open(Overlay.CareerView("board")); shot("56_rangliste")
         vm.closeOverlays(); vm.open(Overlay.Saves); shot("23_spielstaende")
         vm.closeOverlays()
         vm.update { it.copy(flags = it.flags + setOf("ending_order", "voss_arrested", "kira_rescued", "nikita_ally")) }

@@ -237,6 +237,45 @@ class V1ReleaseTest {
         }
     }
 
+    // --- Rangliste ---------------------------------------------------------------------------
+
+    @Test fun leaderboardUsesRealValuesAndExcludesLeadership() {
+        val s = Life.advance(d, start().copy(clock = GameClock(day = 120)))
+        val board = Leaderboard.board(d, s)
+        assertEquals(1, board.count { it.isPlayer })
+        assertTrue(board.none { it.id in setOf("michael", "amanda", "percy", "voss", "nikita") })
+        assertTrue(board.any { it.id == "jaden" } && board.any { it.id == "alex" })
+        assertFalse("Kira erst nach dem Beitritt", board.any { it.id == "kira" })
+        assertEquals(board.sortedByDescending { it.score }.map { it.score }, board.map { it.score })
+        board.filter { !it.isPlayer }.forEach { e ->
+            val l = Life.life(d, s, e.id)
+            assertEquals(e.id, l.rank * 100 + Leaderboard.gradePoints(l.grades.lastOrNull()) + (l.missions * 3).coerceAtMost(60) + e.training, e.score)
+        }
+        // Eine gute Beurteilung bringt dich nach vorn
+        val before = Leaderboard.placeOf(d, s)
+        val better = s.copy(career = s.career.copy(evaluations = s.career.evaluations + Evaluation(s.clock.day, "A", 90, "")), player = s.player.copy(rank = 3))
+        assertTrue(Leaderboard.placeOf(d, better) <= before)
+    }
+
+    @Test fun leaderboardSnapshotOncePerWeekWithTrend() {
+        var s = Life.advance(d, start().copy(clock = GameClock(day = 14)))
+        s = Leaderboard.weeklySnapshot(d, s)
+        val first = s.career.boardPlace
+        assertTrue(first >= 1)
+        assertEquals(0, Leaderboard.trend(s))
+        assertSame("Gleiche Woche – keine zweite Aufnahme", s, Leaderboard.weeklySnapshot(d, s))
+        val promoted = s.copy(clock = GameClock(day = 21), player = s.player.copy(rank = 6), completedMissions = s.completedMissions + d.missions.take(10).map { it.id })
+        val next = Leaderboard.weeklySnapshot(d, promoted)
+        assertEquals(1, next.career.boardPlace)
+        assertEquals(first - 1, Leaderboard.trend(next))
+        // Auch der Zeitraffer schreibt die Wochenwertung fort
+        val sim = Simulation.run(d, s, 21, stopOnEvents = false).state
+        assertTrue(sim.career.boardWeek > s.career.boardWeek)
+        // Alex kennt deinen tatsächlichen Platz
+        val place = Leaderboard.placeOf(d, next)
+        assertTrue(Social.boardLine(d, next, "alex").contains(if (place == 1) "Platz eins" else "$place"))
+    }
+
     // --- Missionsdirektor 3.0 ----------------------------------------------------------------
 
     @Test fun contractTwistsAreDeterministicAndPlayable() {

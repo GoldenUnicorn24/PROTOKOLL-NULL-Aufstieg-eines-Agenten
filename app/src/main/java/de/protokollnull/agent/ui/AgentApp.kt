@@ -214,6 +214,7 @@ private fun OverlayContent(vm: GameViewModel, s: GameState, o: Overlay) {
         is Overlay.Command -> CommandScreen(vm, s, o.tab)
         is Overlay.City -> CityScreen(vm, s, o.tab)
         is Overlay.DirectorView -> DirectorateScreen(vm, s, o.tab)
+        is Overlay.CareerView -> CareerScreen(vm, s, o.tab)
     }
 }
 

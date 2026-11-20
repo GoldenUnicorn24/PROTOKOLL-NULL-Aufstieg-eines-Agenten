@@ -47,6 +47,8 @@ sealed interface Overlay {
     data class City(val tab: String = "home") : Overlay
     /** Direktorat mit vorgewähltem Reiter (z. B. „agenda“). */
     data class DirectorView(val tab: String) : Overlay
+    /** Karriere mit vorgewähltem Reiter (z. B. „board“ für die Rangliste). */
+    data class CareerView(val tab: String) : Overlay
 }
 
 data class Toast(val id: Long, val lines: List<String>, val error: Boolean)

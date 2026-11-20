@@ -286,16 +286,37 @@ object Social {
         return if (i.isEmpty()) "Ein ruhiger Abend im Aufenthaltsraum" else "Ein Nachmittag über ${i[state.clock.day % i.size]}"
     }
 
+    /** v1.0: Bemerkungen zur Rangliste, die deinen tatsächlichen Platz kennen. */
+    fun boardLine(data: GameData, state: GameState, speaker: String): String {
+        val board = Leaderboard.board(data, state)
+        val me = board.indexOfFirst { it.isPlayer } + 1
+        val jaden = board.indexOfFirst { it.id == "jaden" } + 1
+        val n = board.size
+        return when (speaker) {
+            "alex" -> when {
+                me == 1 -> "Platz eins. Ehrlich, wie machst du das? Jaden redet seit Tagen von nichts anderem."
+                jaden in 1 until me -> "Hast du die neue Rangliste gesehen? Du auf $me, Jaden auf $jaden. Er ist unausstehlich."
+                jaden > me -> "Du stehst auf $me von $n – vor Jaden. Er tut so, als wäre ihm das egal."
+                else -> "Platz $me von $n. Die Tafel lügt nicht, aber sie erzählt auch nicht alles."
+            }
+            else -> when {
+                jaden == 1 -> "Schon die Tafel gesehen? Ganz oben. Du findest dich weiter unten – Platz $me."
+                me < jaden -> "Platz $me. Genieß es, solange es dauert."
+                else -> "Du warst heute nicht schlecht. Für jemanden auf Platz $me."
+            }
+        }
+    }
+
     private fun smalltalkLine(data: GameData, state: GameState, id: String): String {
         val lines = when (id) {
             "michael" -> listOf("Schlaf ist Teil des Trainings. Ignorier das nicht.", "Gute Arbeit heute. Morgen besser.", "Wer hier überlebt, lernt zuzuhören.")
             "nikita" -> listOf("Vertrau deinen Instinkten, nicht den Akten.", "Division nimmt dir mehr, als sie dir gibt.")
-            "alex" -> listOf("Hast du die neue Rangliste gesehen? Jaden ist unausstehlich.", "Manchmal vermisse ich ganz normale Dinge. Musik. Ein Fenster.")
+            "alex" -> listOf(boardLine(data, state, "alex"), "Manchmal vermisse ich ganz normale Dinge. Musik. Ein Fenster.")
             "birkhoff" -> listOf("Wenn du was brauchst: Kaffee, dann Fragen. In der Reihenfolge.", "Dein Login hat übrigens ein Passwort wie ein Rentner.")
             "amanda" -> listOf("Wie schläfst du? Ehrlich.", "Lügen sind Werkzeuge. Man muss sie warten wie alles andere.")
             "percy" -> listOf("Effizienz, Rekrut. Alles andere ist Sentimentalität.", "Ich beobachte deine Fortschritte. Enttäusche mich nicht.")
             "thom" -> listOf("Morgen Sparring? Ich zeig dir den Trick mit der Fußarbeit.", "Wenn man oben auf der Liste steht, wird die Luft dünn.")
-            "jaden" -> listOf("Glaub nicht, dass du hier Freunde findest.", "Du warst heute nicht schlecht. Für einen Neuen.")
+            "jaden" -> listOf("Glaub nicht, dass du hier Freunde findest.", boardLine(data, state, "jaden"))
             "owen" -> listOf("Jeder hier hat etwas, das er vergessen will.", "Halt die Augen offen. Immer.")
             "sonya" -> listOf("Die Server laufen heiß. Irgendwer kopiert Archive.", "Birkhoff tut so, als wäre er faul. Ist er nicht.")
             "ryan" -> listOf("In den Mustern steckt immer die Wahrheit.", "Ich habe mir deine Akte angesehen. Oder das, was davon übrig ist.")

@@ -387,7 +387,11 @@ data class CareerState(
     val sessionsToday: Int = 0,
     val lastMentorDay: Int = -1,
     val goals: Map<String, Int> = emptyMap(),
-    val awards: Set<String> = emptySet()
+    val awards: Set<String> = emptySet(),
+    // --- v1.0: wöchentliche Momentaufnahme der Ranglistenplatzierung
+    val boardWeek: Int = -1,
+    val boardPlace: Int = -1,
+    val boardPrevPlace: Int = -1
 )
 
 @Serializable

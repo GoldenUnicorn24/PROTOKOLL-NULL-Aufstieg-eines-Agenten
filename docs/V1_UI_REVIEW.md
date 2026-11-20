@@ -49,6 +49,7 @@ Alle Screenshots werden automatisch von Robolectric/Roborazzi aus echtem Spielzu
 | Einstellungen | – | Gruppiert, Schriftvorschau, Hinweis zur reduzierten Bewegung | (nicht im Screenshot-Set) |
 | Epilog | – | Zwei neue Enden | `24_epilog`, `55_epilog_akademie` |
 | Feier-Einblendung | – | Neu | `54_feier_befoerderung` |
+| Rangliste | Nur in Dialogen erwähnt, nicht einsehbar | Neuer Karriere-Reiter mit eigenem Platz, Wochentrend, Abstand zum Vordermann, Noten, Antippen öffnet die Laufbahn | `56_rangliste` |
 | HUD / Navigation | Groß, ohne XP, ohne Hinweise | Kompakt, XP-Balken, Plaketten an den Reitern | alle Spiel-Screens |
 
 ## 3. Visuelle Reviewdurchläufe

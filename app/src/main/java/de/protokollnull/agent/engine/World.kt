@@ -93,7 +93,7 @@ object World {
     }
 
     fun weeklyTick(data: GameData, state: GameState): Result {
-        var s = state
+        var s = Leaderboard.weeklySnapshot(data, state)
         val msgs = mutableListOf<String>()
         val week = Clock.week(s.clock.day)
         if (s.life.lastSalaryWeek < week) {
@@ -206,6 +206,7 @@ object World {
         "timeskip" -> RoomAction(id, "Zeitraffer", "Wochen/Monate mit Routine überspringen")
         "eat" -> RoomAction(id, "Essen", "1 Slot, Energie +20, Stress −4")
         "socialize" -> RoomAction(id, "Unter Leute gehen", "Freundschaft mit Anwesenden")
+        "leaderboard" -> RoomAction(id, "Rangliste ansehen", "Wo stehst du in der Division?")
         "training" -> RoomAction(id, "Trainieren", "Attribute verbessern")
         "range" -> RoomAction(id, "Präzisionsstand", "Präzision trainieren")
         "treat" -> RoomAction(id, "Behandlung", "Gesundheit & Wunden, 2 Slots")
