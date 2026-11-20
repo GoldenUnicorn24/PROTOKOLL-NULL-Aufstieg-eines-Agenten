@@ -30,6 +30,30 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
     val p = s.player
     val next = Progression.nextRankCheck(data, s)
     val req = Progression.requiredXp(p.level)
+    var showIdentityEditor by remember { mutableStateOf(false) }
+    var editedCodename by remember { mutableStateOf(p.codename) }
+    if (showIdentityEditor) AlertDialog(
+        onDismissRequest = { showIdentityEditor = false },
+        title = { Text("Deckname (freiwillig)") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Du kannst deinen Decknamen jederzeit ändern oder ganz entfernen. Ohne Decknamen verwenden alle deinen Vor- und Nachnamen.")
+                OutlinedTextField(
+                    value = editedCodename, onValueChange = { editedCodename = it.take(14) },
+                    label = { Text("Deckname – leer lassen für normalen Namen") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                val newName = editedCodename.trim()
+                vm.update { it.copy(player = it.player.copy(codename = newName)) }
+                showIdentityEditor = false
+            }) { Text("Speichern") }
+        },
+        dismissButton = { TextButton(onClick = { showIdentityEditor = false }) { Text("Abbrechen") } }
+    )
     LazyColumn(contentPadding = PaddingValues(start = Sp.gutter, end = Sp.gutter, top = 12.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             GlassPanel {
@@ -40,6 +64,9 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                         Text(p.identityName.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
                         Text(p.displayName, style = MaterialTheme.typography.titleSmall)
                         Text("${Ages.player(s)} Jahre · ${data.rank(p.rank).name} (Rang ${p.rank}/12)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        TextButton(onClick = { editedCodename = p.codename; showIdentityEditor = true }) {
+                            Text(if (p.codename.isBlank()) "Optionalen Decknamen festlegen" else "Decknamen ändern oder entfernen")
+                        }
                     }
                     ProgressRing(p.xp, req, 62.dp, Pn.Violet, "Lv ${p.level}")
                 }
