@@ -80,7 +80,7 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item {
-            SectionLabel("Attribute", trailing = "Unbegrenztes Rating", icon = PnIcons.Chart)
+            SectionLabel("Attribute", icon = PnIcons.Chart)
             Spacer(Modifier.height(6.dp))
             GlassPanel(padding = 12.dp) {
                 BoxWithConstraints {
@@ -95,7 +95,7 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                         AttributeBars(vm, s)
                     }
                 }
-                SmallNote("★ Stärke · ▼ Schwäche · Werte inklusive Ausrüstung. Training im HQ steigert sie mit abnehmendem Ertrag.")
+                SmallNote("★ Stärke · ▼ Schwäche · inkl. Ausrüstung")
             }
         }
         item {

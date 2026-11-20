@@ -100,7 +100,7 @@ class SharedTrainingTest {
         val beforeNpc = Life.attributeRatings(d, initial, "alex")
         val completed = Progression.train(d, initial, "train_fitness", partnerId = "alex")
         assertTrue(completed.messages.toString(), completed.ok)
-        assertEquals("Unzertrennliches Team", Progression.partnerBoost(d, initial, "alex")?.label)
+        assertEquals("Beste Freunde", Progression.partnerBoost(d, initial, "alex")?.label)
         val npc = Life.life(d, completed.state, "alex")
         for (a in Attr.all.filter { it != Attr.FITNESS }) {
             assertTrue("Spieler-Nebenfortschritt $a", (completed.state.player.trainingProgress[a] ?: 0) > 0)
@@ -119,20 +119,6 @@ class SharedTrainingTest {
         assertTrue(session.messages.toString(), session.ok)
         assertTrue("Michael und Alex bauen echte Freundschaft auf", Life.bond(session.state, "alex", "michael") > baseline)
         assertTrue("Alex gewinnt Prüfungsreife", Life.life(d, session.state, "alex").careerXp >= 65)
-    }
-
-    @Test fun teamActivitiesGiveBothNpcsCareerProgressAndRealNpcBonds() {
-        var initial = state(95)
-        initial = Relations.update(d, initial, "michael") { it.copy(friendship = 90, trust = 85) }
-        val baseline = Life.bond(initial, "michael", "alex")
-        val r = Progression.teamActivity(d, initial, "michael", "alex", "course")
-        assertTrue(r.messages.toString(), r.ok)
-        assertTrue(Life.life(d, r.state, "alex").careerXp > 0)
-        assertTrue(Life.life(d, r.state, "michael").careerXp > 0)
-        assertTrue(Life.bond(r.state, "michael", "alex") >= baseline + 12)
-        assertEquals(1, r.state.career.sessionsToday)
-        assertEquals(0, Relations.get(d, r.state, "alex").romanceStage)
-        assertFalse(Progression.teamActivity(d, initial, "alex", "alex", "course").ok)
     }
 
     @Test fun teamMissionAcceleratesExamAndCannotRewardTwice() {

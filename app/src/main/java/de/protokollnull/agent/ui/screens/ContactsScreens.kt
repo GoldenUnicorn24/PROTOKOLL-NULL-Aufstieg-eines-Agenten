@@ -257,8 +257,6 @@ private fun CareerFile(vm: GameViewModel, s: GameState, id: String) {
         KeyValue("Einsätze", "${l.missions} erfolgreich · ${l.missionsFailed} gescheitert")
         KeyValue("Prüfungen", "${l.examsPassed} bestanden · ${l.examsFailed} nicht bestanden")
         KeyValue("Trainingstage", "${l.trainingDays}")
-        KeyValue("Prüfungs-XP", "${l.careerXp}" + if (cap > l.rank) " / ${Life.examThreshold(l.rank)}" else "")
-        if (cap > l.rank) SmallNote("Gemeinsames Training und Einsätze mit befreundeten Agenten beschleunigen diese Prüfungsreife.")
         KeyValue("Verletzungen", "${l.injuries}")
         if (l.grades.isNotEmpty()) Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("Monatsnoten", style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
@@ -267,29 +265,24 @@ private fun CareerFile(vm: GameViewModel, s: GameState, id: String) {
         if (l.lastDecision.isNotBlank()) KeyValue("Letzte Entscheidung", l.lastDecision)
     }
     GlassPanel {
-        Text("Attribute · wie in deinem Charakterprofil", style = MaterialTheme.typography.titleSmall)
+        Text("Attribute", style = MaterialTheme.typography.titleSmall)
         val values = Life.attributeRatings(data, s, id)
         val maxRating = maxOf(100, values.values.maxOrNull() ?: 100)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            AttributeRadar(Attr.all.map { Attr.label(it).take(5) to (values[it] ?: 0) },
-                Modifier.size(116.dp), max = maxRating)
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                KeyValue("Höchster Wert", (values.values.maxOrNull() ?: 0).toString())
-                KeyValue("Rating-Limit", "Keines")
-            }
-        }
+        AttributeRadar(
+            Attr.all.map { Attr.label(it).take(5) to (values[it] ?: 0) },
+            Modifier.size(144.dp).align(Alignment.CenterHorizontally), max = maxRating
+        )
         Attr.all.forEach { a ->
             val rating = values[a] ?: 0
-            val fraction = l.attributeProgress[a] ?: 0
-            StatBar(Attr.label(a) + " · " + rating.toString() + if (fraction > 0) " (+" + fraction * 2 + "%)" else "",
-                rating, maxOf(100, rating), if (fraction > 0) Pn.Ok else Pn.Accent)
+            StatBar(Attr.label(a), rating, maxOf(100, rating), Pn.Accent)
         }
-        SmallNote("Dieselben sechs Attribute wie bei dir. Die Werte steigen durch gemeinsames Training und eigenständige Karriere. Keine 100er-Obergrenze.")
     }
     GlassPanel {
-        Text("Fachkompetenzen", style = MaterialTheme.typography.titleSmall)
-        Life.focusAreas.forEach { a -> StatBar(Life.focusLabel(a), Life.competence(data, s, id, a), 10, if (a == l.focus) Pn.Warn else Pn.Accent) }
+        Text("Kompetenzen", style = MaterialTheme.typography.titleSmall)
+        Life.focusAreas.forEach { a ->
+            StatBar(Life.focusLabel(a), Life.competence(data, s, id, a), 10,
+                if (a == l.focus) Pn.Warn else Pn.Accent)
+        }
     }
     val events = s.living.feed.filter { it.npcId == id || id in it.others }.takeLast(8).reversed()
     if (events.isNotEmpty()) GlassPanel {
