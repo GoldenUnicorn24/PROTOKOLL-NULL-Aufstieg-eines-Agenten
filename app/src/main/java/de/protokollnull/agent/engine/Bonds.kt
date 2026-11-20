@@ -142,7 +142,16 @@ object Bonds {
         "smartphone" to listOf("Technik", "Spiele", "Sprachen"),
         "wallet" to listOf("Mode"),
         "binoculars" to listOf("Klettern", "Fotografie"),
-        "rope" to listOf("Klettern")
+        "rope" to listOf("Klettern"),
+        // v1.0: eigene Geschenkartikel mit klarer Zielgruppe
+        "gift_vinyl" to listOf("Musik"),
+        "gift_artbook" to listOf("Kunst", "Bücher", "Fotografie"),
+        "gift_chess" to listOf("Schach", "Spiele"),
+        "gift_spices" to listOf("Kochen"),
+        "gift_phrasebook" to listOf("Sprachen", "Bücher"),
+        "gift_sketchbook" to listOf("Zeichnen", "Schreiben", "Kunst"),
+        "gear_running_shoes" to listOf("Laufen"),
+        "gear_tea_flask" to listOf("Kochen")
     )
     val giftItems = giftTags.keys
 

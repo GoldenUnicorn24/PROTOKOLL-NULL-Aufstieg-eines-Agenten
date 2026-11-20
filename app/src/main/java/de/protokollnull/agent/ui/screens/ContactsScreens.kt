@@ -160,7 +160,7 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                         val look = def?.look
                         if (!look.isNullOrBlank()) { Text(if (def?.seriesCharacter == true) "Serien-Look (Referenz)" else "Erscheinungsbild", style = MaterialTheme.typography.titleSmall); Text(look, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                         val traits = def?.traits ?: custom?.traits ?: emptyList()
-                        if (traits.isNotEmpty()) ChipRow(traits.map { it to it }, "") {}
+                        if (traits.isNotEmpty()) PillRow(traits, Pn.Violet)
                         val interests = Life.interests(data, s, id)
                         if (interests.isNotEmpty()) KeyValue("Interessen", interests.joinToString())
                         val values = Life.values(data, s, id)

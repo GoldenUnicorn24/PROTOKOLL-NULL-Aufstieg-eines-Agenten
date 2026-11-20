@@ -106,7 +106,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                     item {
                         SectionLabel("Auszeichnungen", trailing = "${c.awards.size}/${Career.awardTitles.size}", icon = PnIcons.Star)
                         Spacer(Modifier.height(6.dp))
-                        ChipRow(Career.awardTitles.map { (id, t) -> id to (if (id in c.awards) "★ $t" else "☆ $t") }, "") {}
+                        PillRow(Career.awardTitles.map { (id, t) -> if (id in c.awards) "★ $t" else "☆ $t" }, Pn.Warn)
                     }
                 }
                 "ranks" -> items(data.ranks) { r ->

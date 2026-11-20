@@ -533,7 +533,8 @@ object Ops {
             stages = stages, witnesses = if (entry.id == "crowd" || c.complicationId == "civilians") 2 else 0, risk = d, repeatable = false,
             maxTeam = c.maxTeam, recommendedItems = when (arch.id) {
                 "observation", "recon" -> listOf("binoculars", "camera"); "data" -> listOf("laptop", "usb"); "intel" -> listOf("smartphone", "usb")
-                "undercover" -> listOf("passport", "smartphone"); "rescue", "protection" -> listOf("medkit", "vest_light"); "escort", "joint" -> listOf("radio_secure", "vest_light")
+                "undercover" -> listOf("passport", "gear_cover_papers"); "rescue", "protection" -> listOf("medkit", "vest_light"); "escort", "joint" -> listOf("radio_secure", "vest_light")
+                "negotiation" -> listOf("gear_earpiece", "notebook")
                 else -> listOf("notebook")
             },
             debriefSuccess = c.successConsequence, debriefFail = c.failConsequence

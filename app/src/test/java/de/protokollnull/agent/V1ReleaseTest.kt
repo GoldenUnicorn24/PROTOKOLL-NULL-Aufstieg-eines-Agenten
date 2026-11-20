@@ -217,6 +217,21 @@ class V1ReleaseTest {
         assertTrue(s1.player.credits - s0.player.credits >= cr)
     }
 
+    // --- Inventar ------------------------------------------------------------------------------
+
+    @Test fun v1ItemsHaveRealUse() {
+        val v1 = d.items.filter { it.id.startsWith("gear_") || it.id.startsWith("gift_") }
+        assertTrue(d.items.size >= 120)
+        assertTrue(v1.size >= 20)
+        val missionBonusItems = d.missions.flatMap { m -> m.stages.flatMap { st -> st.options.flatMap { it.itemBonus.keys } } }.toSet()
+        v1.forEach { def ->
+            assertTrue("SVG fehlt: ${def.icon}", "items/${def.icon}.svg" in TestData.files)
+            val useful = def.effect != null || def.bonuses.isNotEmpty() || def.armor > 0 || def.capacityBonusGrams > 0 ||
+                def.id in Bonds.giftItems || def.id in missionBonusItems
+            assertTrue("${def.id} ohne Nutzen", useful)
+        }
+    }
+
     // --- Direktionsagenda --------------------------------------------------------------------
 
     @Test fun agendaIsChosenOnceAndEvaluatedExactlyOnce() {

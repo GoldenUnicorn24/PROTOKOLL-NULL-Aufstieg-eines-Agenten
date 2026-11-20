@@ -160,6 +160,13 @@ fun ChipRow(options: List<Pair<String, String>>, selected: String, onSelect: (St
     }
 }
 
+/** Nicht interaktive Kennzeichnungen (Charakterzüge, Auszeichnungen) – bewusst keine Buttons. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun PillRow(labels: List<String>, color: androidx.compose.ui.graphics.Color = Pn.Accent) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) { labels.forEach { Pill(it, color) } }
+}
+
 @Composable
 fun OptionStepper(label: String, names: List<String>, value: Int, onChange: (Int) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {

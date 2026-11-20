@@ -29,66 +29,81 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     val p = s.player
     val next = Progression.nextRankCheck(data, s)
-    LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    val req = Progression.requiredXp(p.level)
+    LazyColumn(contentPadding = PaddingValues(start = Sp.gutter, end = Sp.gutter, top = 12.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             GlassPanel {
-                Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    PlayerPortrait(s, 96.dp)
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                    PlayerPortrait(s, 92.dp)
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Overline("Personalakte · Kandidat 7")
                         Text(p.codename.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
                         Text(p.displayName, style = MaterialTheme.typography.titleSmall)
-                        Text("${Ages.player(s)} Jahre · ${data.rank(p.rank).name}", style = MaterialTheme.typography.bodySmall)
-                        Text("Ruf ${p.reputation} · Wunden ${p.wounds}" + (p.coverJob?.let { " · Tarnjob: $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("${Ages.player(s)} Jahre · ${data.rank(p.rank).name} (Rang ${p.rank}/12)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
+                    ProgressRing(p.xp, req, 62.dp, Pn.Violet, "Lv ${p.level}")
                 }
-                StatBar("Level ${p.level} – ${p.xp} / ${Progression.requiredXp(p.level)} XP", p.xp, Progression.requiredXp(p.level), showValue = false)
-                Text("Freie Fähigkeitspunkte: ${p.skillPoints}", style = MaterialTheme.typography.labelLarge, color = if (p.skillPoints > 0) Pn.Warn else Pn.Muted)
+                StatBar("Erfahrung bis Level ${(p.level + 1).coerceAtMost(100)}", p.xp, req, Pn.Violet)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    StatTile("Ruf", "${p.reputation}", Modifier.weight(1f), PnIcons.Medal, Pn.Ok)
+                    StatTile("Credits", "${p.credits}", Modifier.weight(1f), PnIcons.Coin, Pn.Warn)
+                    StatTile("Wunden", "${p.wounds}", Modifier.weight(1f), PnIcons.Cross, if (p.wounds > 0) Pn.Danger else Pn.Accent)
+                }
+                if (p.skillPoints > 0) Banner("${p.skillPoints} freie Fähigkeitspunkte", "Im Skilltree einsetzen", Pn.Warn, PnIcons.Spark) { vm.open(Overlay.Skills) }
             }
         }
         item {
-            SectionLabel("Attribute", trailing = "Limit ${Stats.attributeCap(p.level)}")
+            SectionLabel("Attribute", trailing = "Limit ${Stats.attributeCap(p.level)}", icon = PnIcons.Chart)
             Spacer(Modifier.height(6.dp))
             GlassPanel(padding = 12.dp) {
-                Attr.all.forEach { a ->
-                    val base = p.attributes[a] ?: 30
-                    val eff = Stats.effectiveAttribute(data, s, a)
-                    StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)} Ausrüstung)" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, 100)
+                BoxWithConstraints {
+                    val wide = maxWidth >= 330.dp
+                    val values = Attr.all.map { Attr.label(it).take(5) to Stats.effectiveAttribute(data, s, it) }
+                    if (wide) Row(verticalAlignment = Alignment.CenterVertically) {
+                        AttributeRadar(values, Modifier.size(132.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) { AttributeBars(vm, s) }
+                    } else Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        AttributeRadar(values, Modifier.size(150.dp).align(Alignment.CenterHorizontally))
+                        AttributeBars(vm, s)
+                    }
                 }
+                SmallNote("★ Stärke · ▼ Schwäche · Werte inklusive Ausrüstung. Training im HQ steigert sie mit abnehmendem Ertrag.")
             }
         }
         item {
-            SectionLabel("Laufbahn")
+            SectionLabel("Laufbahn", icon = PnIcons.Medal)
             Spacer(Modifier.height(6.dp))
-            val buttons = listOf(
-                Triple("Skilltree", "${p.skills.values.sum()} Stufen gelernt", Overlay.Skills),
-                Triple("Karriere & Prüfungen", next?.let { "Nächster: ${it.rank.name}" } ?: "Höchster Rang", Overlay.Ranks),
-                Triple("Questlog", "${Quests.active(data, s).size} aktiv · ${Quests.completed(data, s).size} erledigt", Overlay.Quests),
-                Triple("Zeitplan & Kalender", Clock.dateLabel(s.clock.day), Overlay.Calendar),
-                Triple("Einsatzberichte", "${s.reports.size} Berichte", Overlay.Reports),
-                Triple("Team", "${s.team.size}/${Progression.teamSize(data, s)} Plätze", Overlay.Team),
-                Triple("Neuer Agent (Editor)", if (Social.canCreateRecruit(s)) "freigeschaltet" else if (Ages.player(s) < 18) "ab 18 (noch ${Clock.daysUntilAge(s.clock.day, 18)} Tage)" else "max. 3", Overlay.Recruit),
-                Triple("Führungscockpit", if (Command.isLeader(s)) "Kohäsion ${s.lead.cohesion} · Etat ${Directorate.budget(s)} Cr" else "ab Rang 8", Overlay.Command("team")),
-                Triple("Direktorat", if (s.director != null) "${Directorate.tierLabel(Directorate.tier(s))} · ${s.director.budget} Cr" else "ab Rang 10", Overlay.Director),
-                Triple("Stadt & Privatleben", Home.housingName(s.life.housing) + (s.life.coverJob?.let { " · Tarnjob" } ?: ""), Overlay.City("home")),
-                Triple("Wochen- & Monatsberichte", "${s.lead.reports.size} Berichte", Overlay.Command("reports"))
-            )
-            buttons.chunked(2).forEach { row ->
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(bottom = 10.dp)) {
-                    row.forEach { (t, sub, o) -> ActionButton(t, Modifier.weight(1f), secondary = true, subtitle = sub) { vm.open(o) } }
-                }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                NavRow("Skilltree", "${p.skills.values.sum()} Stufen gelernt · ${p.skillPoints} Punkte frei", PnIcons.Spark, badge = if (p.skillPoints > 0) "${p.skillPoints}" else null) { vm.open(Overlay.Skills) }
+                NavRow("Karriere & Prüfungen", next?.let { "Nächster Rang: ${it.rank.name} · ${it.requirements.count { r -> r.second }}/${it.requirements.size} erfüllt" } ?: "Höchster Rang erreicht", PnIcons.Medal,
+                    badge = if (Progression.examReady(data, s)) "Prüfung" else null) { vm.open(Overlay.Ranks) }
+                NavRow("Zeitplan & Zeitraffer", Clock.dateLabel(s.clock.day), PnIcons.Calendar) { vm.open(Overlay.Calendar) }
+                NavRow("Questlog", "${Quests.active(data, s).size} aktiv · ${Quests.completed(data, s).size} erledigt", PnIcons.Book) { vm.open(Overlay.Quests) }
+                NavRow("Einsatzberichte", "${s.reports.size} Berichte", PnIcons.Archive) { vm.open(Overlay.Reports) }
             }
         }
         item {
-            SectionLabel("System")
+            SectionLabel("Team & Führung", icon = PnIcons.People)
             Spacer(Modifier.height(6.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                ActionButton("Spielstände", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Saves) }
-                ActionButton("Einstellungen", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Settings) }
-                ActionButton("Credits", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Credits) }
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                NavRow("Stammteam", "${s.team.size}/${Progression.teamSize(data, s)} Plätze", PnIcons.People) { vm.open(Overlay.Team) }
+                NavRow("Führungscockpit", if (Command.isLeader(s)) "Kohäsion ${s.lead.cohesion} · Etat ${Directorate.budget(s)} Cr" else "Ab Rang 8 (Teamleiter)", PnIcons.Shield, enabled = Command.isLeader(s)) { vm.open(Overlay.Command("team")) }
+                NavRow("Direktorat", if (s.director != null) "${Directorate.tierLabel(Directorate.tier(s))} · ${s.director.budget} Cr" + (Agenda.active(s)?.let { " · Agenda läuft" } ?: "") else "Ab Rang 10", PnIcons.Crown, enabled = s.director != null,
+                    badge = if (s.lead.pendingDilemma != null) "!" else null) { vm.open(Overlay.Director) }
+                NavRow("Neuer Agent (Rekrutierung)", if (Social.canCreateRecruit(s)) "freigeschaltet" else if (Ages.player(s) < 18) "Ab 18 (noch ${Clock.daysUntilAge(s.clock.day, 18)} Tage)" else "Maximal drei eigene Rekruten", PnIcons.Plus) { vm.open(Overlay.Recruit) }
             }
         }
         item {
-            SectionLabel("Fraktionen")
+            SectionLabel("Privatleben", icon = PnIcons.Home)
+            Spacer(Modifier.height(6.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                NavRow("Stadt & Wohnung", Home.housingName(s.life.housing) + (s.life.coverJob?.let { " · Tarnjob" } ?: ""), PnIcons.City, badge = if (s.life.pendingEvent != null) "!" else null) { vm.open(Overlay.City("home")) }
+                NavRow("Wochen- & Monatsberichte", "${s.lead.reports.size} Berichte", PnIcons.Chart) { vm.open(Overlay.Command("reports")) }
+            }
+        }
+        item {
+            SectionLabel("Fraktionen", icon = PnIcons.Flag)
             Spacer(Modifier.height(6.dp))
             GlassPanel(padding = 12.dp) {
                 data.factions.forEach { f ->
@@ -97,6 +112,26 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                 }
             }
         }
+        item {
+            SectionLabel("System", icon = PnIcons.Gear)
+            Spacer(Modifier.height(6.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                NavRow("Spielstände", "3 Slots, Autosave, Import und Export", PnIcons.Save) { vm.open(Overlay.Saves) }
+                NavRow("Einstellungen", "Schrift, Kontrast, Animationen, Audio", PnIcons.Gear) { vm.open(Overlay.Settings) }
+                NavRow("Credits & Rechte", "Lizenzen, Bildnachweise, Fan-Projekt-Hinweis", PnIcons.Star) { vm.open(Overlay.Credits) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AttributeBars(vm: GameViewModel, s: GameState) {
+    val p = s.player
+    Attr.all.forEach { a ->
+        val base = p.attributes[a] ?: 30
+        val eff = Stats.effectiveAttribute(vm.data, s, a)
+        StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)})" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, 100,
+            if (a == p.strength) Pn.Ok else if (a == p.weakness) Pn.Warn else Pn.Accent)
     }
 }
 
@@ -185,7 +220,7 @@ fun ReportsScreen(vm: GameViewModel, s: GameState) {
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Einsatzberichte", "${s.reports.size} Einträge", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            if (s.reports.isEmpty()) item { SmallNote("Noch keine Berichte.") }
+            if (s.reports.isEmpty()) item { EmptyState(PnIcons.Archive, "Noch keine Berichte", "Nach jeder Nachbesprechung entsteht hier ein Einsatzbericht.") }
             items(s.reports.reversed()) { ReportCard(it) }
         }
     }
