@@ -375,11 +375,11 @@ private fun ReportsPanel(vm: GameViewModel, s: GameState) {
 // ---------------------------------------------------------------------------
 
 @Composable
-fun DirectorateScreen(vm: GameViewModel, s: GameState) {
+fun DirectorateScreen(vm: GameViewModel, s: GameState, initialTab: String = "depts") {
     val data = vm.data
     val d = s.director
     val tier = Directorate.tier(s)
-    var tab by remember(s.lead.pendingDilemma) { mutableStateOf(if (s.lead.pendingDilemma != null) "decide" else "depts") }
+    var tab by remember(s.lead.pendingDilemma) { mutableStateOf(if (s.lead.pendingDilemma != null) "decide" else initialTab) }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Direktorat", if (d != null) "${Directorate.tierLabel(tier)} · Budget ${d.budget} Cr" else "ab Rang 10", onBack = { vm.back() })
         if (d == null) {

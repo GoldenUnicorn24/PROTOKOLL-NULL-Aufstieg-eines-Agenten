@@ -14,8 +14,8 @@ android {
         applicationId = "de.protokollnull.agent"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "0.8.0-beta"
+        versionCode = 9
+        versionName = "1.0.0-rc1"
     }
     // Optional local-only assets: app/src/private/assets/ (gitignored).
     sourceSets {
