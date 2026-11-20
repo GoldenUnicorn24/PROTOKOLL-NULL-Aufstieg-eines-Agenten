@@ -79,8 +79,8 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
                 LoadoutPanel(vm, s)
                 CompactChips(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ActionButton("Spind-Lager (${p.storage.size})", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Storage) }
-                    ActionButton("Ausrüstungskammer", Modifier.weight(1f), secondary = true, enabled = s.location == "armory", subtitle = if (s.location == "armory") null else "nur vor Ort") { vm.open(Overlay.Shop) }
+                    ActionButton("Spind (${p.storage.size})", Modifier.weight(1f), secondary = true, icon = PnIcons.Box, subtitle = "Lager") { vm.open(Overlay.Storage) }
+                    ActionButton("Kammer", Modifier.weight(1f), secondary = true, icon = PnIcons.Bag, enabled = s.location == "armory", subtitle = if (s.location == "armory") "Anfordern" else "nur vor Ort (Ebene −1)") { vm.open(Overlay.Shop) }
                 }
             }
         }
