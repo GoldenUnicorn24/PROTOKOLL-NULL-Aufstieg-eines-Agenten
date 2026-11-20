@@ -126,6 +126,8 @@ data class LivingState(
     val lives: Map<String, NpcLife> = emptyMap(),
     /** NPC-NPC-Beziehung, Schlüssel „a|b“ (alphabetisch), −100..100. */
     val bonds: Map<String, Int> = emptyMap(),
+    /** Wie oft zwei NPCs gemeinsam einen Einsatz absolviert haben (einmal pro Einsatz). */
+    val sharedMissions: Map<String, Int> = emptyMap(),
     /** Volljährige NPC-Paare, Schlüssel wie [bonds]. */
     val couples: Set<String> = emptySet(),
     val feed: List<LifeEvent> = emptyList(),
