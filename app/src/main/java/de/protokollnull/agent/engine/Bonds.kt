@@ -319,7 +319,7 @@ object HqEvents {
     fun fill(data: GameData, state: GameState, text: String, npcId: String?): String =
         text.replace("{name}", Relations.displayName(data, state, npcId).substringBefore(" "))
             .replace("{fullname}", Relations.displayName(data, state, npcId))
-            .replace("{player}", state.player.codename)
+            .replace("{player}", state.player.identityName)
 
     fun eligible(data: GameData, state: GameState, e: HqEventDefinition, day: Int): Boolean {
         if (day < e.minDay) return false

@@ -70,7 +70,7 @@ data class Appearance(
 data class PlayerCharacter(
     val firstName: String = "Lena",
     val lastName: String = "Berg",
-    val codename: String = "Null",
+    val codename: String = "",
     val gender: String = "female",
     val appearance: Appearance = Appearance(),
     val background: String = "analyst",
@@ -104,7 +104,9 @@ data class PlayerCharacter(
     /** v0.6: Interessen für Kompatibilität und Geschenke. */
     val interests: List<String> = emptyList()
 ) {
-    val displayName: String get() = "$firstName $lastName"
+    val displayName: String get() = "$firstName $lastName".trim()
+    /** Wenn kein Deckname gewählt wurde, verwenden alle Systeme Vor- und Nachname. */
+    val identityName: String get() = codename.trim().ifBlank { displayName }
 }
 
 @Serializable

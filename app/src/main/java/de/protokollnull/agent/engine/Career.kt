@@ -121,7 +121,7 @@ object Career {
     // --- Ziele ------------------------------------------------------------------
 
     fun setGoal(state: GameState, attribute: String, target: Int?): GameState {
-        val goals = if (target == null) state.career.goals - attribute else state.career.goals + (attribute to target.coerceIn(10, 100))
+        val goals = if (target == null) state.career.goals - attribute else state.career.goals + (attribute to target.coerceIn(10, Int.MAX_VALUE / 1024))
         return state.copy(career = state.career.copy(goals = goals))
     }
 

@@ -223,7 +223,7 @@ private fun OverlayContent(vm: GameViewModel, s: GameState, o: Overlay) {
 private fun Hud(vm: GameViewModel, s: GameState) {
     val p = s.player
     val xpReq = Progression.requiredXp(p.level)
-    val desc = "${p.codename}, ${Ages.player(s)} Jahre, Level ${p.level}, ${vm.data.rank(p.rank).name}. ${Clock.dateLabel(s.clock.day)}, ${Clock.slotNames[s.clock.slot]}. ${p.credits} Credits. Energie ${p.energy}, Stress ${p.stress}, Gesundheit ${p.health}."
+    val desc = "${p.identityName}, ${Ages.player(s)} Jahre, Level ${p.level}, ${vm.data.rank(p.rank).name}. ${Clock.dateLabel(s.clock.day)}, ${Clock.slotNames[s.clock.slot]}. ${p.credits} Credits. Energie ${p.energy}, Stress ${p.stress}, Gesundheit ${p.health}."
     Column(
         Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color(0xF7060C17), Color(0xE0060C17))))
             .drawBehind { drawLine(Pn.Accent.copy(alpha = 0.18f), androidx.compose.ui.geometry.Offset(0f, size.height), androidx.compose.ui.geometry.Offset(size.width, size.height), 1f) }
@@ -240,7 +240,7 @@ private fun Hud(vm: GameViewModel, s: GameState) {
                 Text(Clock.dateLabel(s.clock.day).uppercase() + " · " + Clock.slotTimes[s.clock.slot] + " · " + Clock.slotNames[s.clock.slot].uppercase(),
                     style = PnType.overline.copy(fontSize = 10.sp), color = Pn.Accent, maxLines = 1)
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(p.codename.uppercase(), style = MaterialTheme.typography.titleLarge.copy(fontSize = 19.sp, lineHeight = 22.sp), color = Pn.Text, maxLines = 1, modifier = Modifier.weight(1f, fill = false))
+                    Text(p.identityName.uppercase(), style = MaterialTheme.typography.titleLarge.copy(fontSize = 19.sp, lineHeight = 22.sp), color = Pn.Text, maxLines = 1, modifier = Modifier.weight(1f, fill = false))
                     Spacer(Modifier.width(8.dp))
                     Text("Lv ${p.level}", style = PnType.data.copy(fontSize = 12.sp), color = Pn.Accent)
                 }

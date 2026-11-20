@@ -47,13 +47,13 @@ object Leaderboard {
         val missions = state.completedMissions.size + state.ops.history.count { it.status == ContractStatus.DONE }
         val training = state.career.trainingDays.count { it > state.clock.day - 30 }.coerceAtMost(30)
         return Entry(PLAYER, p.codename, p.rank, grade, missions, training,
-            p.rank * 100 + gradePoints(grade) + (missions * 3).coerceAtMost(60) + training, isPlayer = true)
+            p.rank * 100 + gradePoints(grade) + (missions.toLong() * 3L).coerceAtMost(500_000_000L).toInt() + training, isPlayer = true)
     }
 
     fun npcEntry(data: GameData, state: GameState, id: String): Entry {
         val l = Life.life(data, state, id)
         val grade = l.grades.lastOrNull()
-        val training = (l.careerXp * 30 / Life.examThreshold(l.rank).coerceAtLeast(1)).coerceIn(0, 30)
+        val training = (l.careerXp.toLong() * 30L / Life.examThreshold(l.rank).coerceAtLeast(1)).coerceAtMost(500_000_000L).toInt()
         return Entry(id, Relations.displayName(data, state, id), l.rank, grade, l.missions, training,
             l.rank * 100 + gradePoints(grade) + (l.missions * 3).coerceAtMost(60) + training, isPlayer = false, status = l.status)
     }

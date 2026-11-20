@@ -632,15 +632,40 @@ object Ops {
         s = s.copy(ops = s.ops.copy(settled = (s.ops.settled + settleKey).let { if (it.size > 200) it.drop(it.size - 200).toSet() else it }))
         // Teamfolgen für alle Einsätze: Bilanz, Verletzungen, Erinnerungen
         val downed = run.tactical?.units?.filter { it.ally && it.down && !it.isPlayer }?.map { it.id }?.toSet() ?: emptySet()
-        run.team.forEach { id ->
+        run.team.distinct().forEach { id ->
             val l = Life.life(data, s, id)
-            var nl = if (result == "success") l.copy(missions = l.missions + 1, careerXp = l.careerXp + 15 + m.threat * 5, mood = (l.mood + 5).coerceIn(0, 100))
+            val friends = Relations.get(data, s, id).friendship
+            val sharedBonus = if (result == "success") when {
+                friends >= 80 -> 65
+                friends >= 50 -> 35
+                friends >= 25 -> 14
+                else -> 0
+            } else 0
+            var nl = if (result == "success") l.copy(missions = l.missions + 1,
+                careerXp = l.careerXp + 15 + m.threat * 5 + sharedBonus,
+                mood = (l.mood + 5).coerceIn(0, 100))
                 else if (result == "fail") l.copy(missionsFailed = l.missionsFailed + 1, careerXp = l.careerXp + 5, mood = (l.mood - 8).coerceIn(0, 100)) else l
+            if (sharedBonus > 0) notes += "${Relations.displayName(data, s, id)}: gemeinsame Einsatzerfahrung +$sharedBonus Prüfungs-XP (Freundschaft $friends)."
             nl = if (id in downed) {
                 notes += "${Relations.displayName(data, s, id).substringBefore(" ")} ist verletzt und fällt einige Tage aus."
                 nl.copy(status = LifeStatus.INJURED, statusUntil = s.clock.day + 3 + m.threat, statusNote = "Einsatzverletzung", injuries = nl.injuries + 1)
             } else if (nl.status == LifeStatus.MISSION && nl.statusNote.startsWith("Einsatz mit")) nl.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "") else nl
             s = s.copy(living = s.living.copy(lives = s.living.lives + (id to nl)))
+        }
+        // Gemeinsame Erfolge stärken auch die Beziehungen INNERHALB des Teams.
+        // Das passiert nur beim ersten Verbuchen des Einsatzes (settled-Key oben).
+        if (result == "success") {
+            val teammates = run.team.distinct().filter { Relations.isKnownNpc(data, s, it) }
+            for (a in teammates.indices) for (b in a + 1 until teammates.size) {
+                val first = teammates[a]; val second = teammates[b]
+                val f1 = Relations.get(data, s, first).friendship
+                val f2 = Relations.get(data, s, second).friendship
+                val delta = if (f1 >= 80 && f2 >= 80) 14 else if (f1 >= 50 && f2 >= 50) 9 else 4
+                val key = LivingState.key(first, second)
+                s = s.copy(living = s.living.copy(bonds = s.living.bonds +
+                    (key to (Life.bond(s, first, second) + delta).coerceIn(-100, 100))))
+                notes += "${Relations.displayName(data, s, first)} und ${Relations.displayName(data, s, second)}: Zusammenhalt +$delta."
+            }
         }
         val c = contract(s, m.id) ?: return s to notes
         s = Command.recordMission(s, run.team, result == "success" && c.phase >= c.phases - 1)

@@ -124,7 +124,7 @@ class SaveRepository(private val dir: File) {
         val p = state.player
         val info = SlotInfo(
             slot = slot,
-            title = title ?: "${p.codename} · ${p.firstName} ${p.lastName}".trim(),
+            title = title ?: p.displayName + (if (p.codename.isBlank()) "" else " · " + p.codename.trim()),
             subtitle = "Level ${p.level} · Rang ${p.rank} · Tag ${state.clock.day + 1}",
             savedAt = now
         )

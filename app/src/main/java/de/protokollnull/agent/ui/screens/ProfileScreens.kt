@@ -30,6 +30,30 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
     val p = s.player
     val next = Progression.nextRankCheck(data, s)
     val req = Progression.requiredXp(p.level)
+    var showIdentityEditor by remember { mutableStateOf(false) }
+    var editedCodename by remember { mutableStateOf(p.codename) }
+    if (showIdentityEditor) AlertDialog(
+        onDismissRequest = { showIdentityEditor = false },
+        title = { Text("Deckname (freiwillig)") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Du kannst deinen Decknamen jederzeit ändern oder ganz entfernen. Ohne Decknamen verwenden alle deinen Vor- und Nachnamen.")
+                OutlinedTextField(
+                    value = editedCodename, onValueChange = { editedCodename = it.take(14) },
+                    label = { Text("Deckname – leer lassen für normalen Namen") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                val newName = editedCodename.trim()
+                vm.update { it.copy(player = it.player.copy(codename = newName)) }
+                showIdentityEditor = false
+            }) { Text("Speichern") }
+        },
+        dismissButton = { TextButton(onClick = { showIdentityEditor = false }) { Text("Abbrechen") } }
+    )
     LazyColumn(contentPadding = PaddingValues(start = Sp.gutter, end = Sp.gutter, top = 12.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             GlassPanel {
@@ -37,9 +61,12 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
                     PlayerPortrait(s, 92.dp)
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Overline("Personalakte · Kandidat 7")
-                        Text(p.codename.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
+                        Text(p.identityName.uppercase(), style = MaterialTheme.typography.titleLarge, color = Pn.Accent)
                         Text(p.displayName, style = MaterialTheme.typography.titleSmall)
                         Text("${Ages.player(s)} Jahre · ${data.rank(p.rank).name} (Rang ${p.rank}/12)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        TextButton(onClick = { editedCodename = p.codename; showIdentityEditor = true }) {
+                            Text(if (p.codename.isBlank()) "Optionalen Decknamen festlegen" else "Decknamen ändern oder entfernen")
+                        }
                     }
                     ProgressRing(p.xp, req, 62.dp, Pn.Violet, "Lv ${p.level}")
                 }
@@ -53,7 +80,7 @@ fun ProfileScreen(vm: GameViewModel, s: GameState) {
             }
         }
         item {
-            SectionLabel("Attribute", trailing = "Limit ${Stats.attributeCap(p.level)}", icon = PnIcons.Chart)
+            SectionLabel("Attribute", trailing = "Unbegrenztes Rating", icon = PnIcons.Chart)
             Spacer(Modifier.height(6.dp))
             GlassPanel(padding = 12.dp) {
                 BoxWithConstraints {
@@ -132,7 +159,7 @@ private fun AttributeBars(vm: GameViewModel, s: GameState) {
     Attr.all.forEach { a ->
         val base = p.attributes[a] ?: 30
         val eff = Stats.effectiveAttribute(vm.data, s, a)
-        StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)})" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, 100,
+        StatBar(Attr.label(a) + (if (eff != base) " (${Effs.signed(eff - base)})" else "") + (if (a == p.strength) " ★" else if (a == p.weakness) " ▼" else ""), eff, maxOf(100, eff),
             if (a == p.strength) Pn.Ok else if (a == p.weakness) Pn.Warn else Pn.Accent)
     }
 }

@@ -227,6 +227,7 @@ fun AttributeRadar(values: List<Pair<String, Int>>, modifier: Modifier = Modifie
     val anim by animateFloatAsState(1f, tween(if (animOn()) 900 else 0), label = "radar")
     Canvas(modifier.semantics { contentDescription = values.joinToString { "${it.first} ${it.second}" } }) {
         val n = values.size.coerceAtLeast(3)
+        val visualMax = maxOf(max, values.maxOfOrNull { it.second } ?: max)
         val c = center
         val r = size.minDimension / 2 * 0.86f
         fun pt(i: Int, f: Float): Offset {
@@ -242,13 +243,13 @@ fun AttributeRadar(values: List<Pair<String, Int>>, modifier: Modifier = Modifie
         for (i in 0 until n) drawLine(Color(0x1746E0CF), c, pt(i, 1f), 1.dp.toPx())
         val shape = Path()
         values.forEachIndexed { i, (_, v) ->
-            val o = pt(i, (v.toFloat() / max).coerceIn(0.04f, 1f) * anim)
+            val o = pt(i, (v.toFloat() / visualMax).coerceIn(0.04f, 1f) * anim)
             if (i == 0) shape.moveTo(o.x, o.y) else shape.lineTo(o.x, o.y)
         }
         shape.close()
         drawPath(shape, Brush.radialGradient(listOf(color.copy(alpha = 0.45f), color.copy(alpha = 0.12f)), center = c, radius = r))
         drawPath(shape, color, style = Stroke(2.dp.toPx()))
-        values.forEachIndexed { i, (_, v) -> drawCircle(color, 3.dp.toPx(), pt(i, (v.toFloat() / max).coerceIn(0.04f, 1f) * anim)) }
+        values.forEachIndexed { i, (_, v) -> drawCircle(color, 3.dp.toPx(), pt(i, (v.toFloat() / visualMax).coerceIn(0.04f, 1f) * anim)) }
     }
 }
 
