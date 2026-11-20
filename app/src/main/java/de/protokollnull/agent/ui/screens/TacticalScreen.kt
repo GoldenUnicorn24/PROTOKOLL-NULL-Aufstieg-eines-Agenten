@@ -422,42 +422,61 @@ private fun DrawScope.drawUnit(u: TacticalUnit, o: Offset, cw: Float, ch: Float,
 
 @Composable
 private fun ActionPanel(t: TacticalState, sel: TacticalUnit, mode: String, onMode: (String) -> Unit, upd: ((TacticalState) -> TacticalState) -> Unit) {
+    var advanced by remember { mutableStateOf(false) }
     GlassPanel(padding = 12.dp, accent = unitColor(sel)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(sel.name, style = MaterialTheme.typography.titleSmall)
-                Text("AP ${sel.ap} · Treffer ${sel.accuracy} · Wirkung ${sel.damage}" + (if (sel.armor > 0) " · Schutz ${sel.armor}" else "") + if (sel.stunned > 0) " · setzt aus" else "",
-                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(sel.ap.toString() + " AP verfügbar · Treffer " + sel.accuracy +
+                    " · Wirkung " + sel.damage, style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
             }
-            ProgressRing(sel.hp, sel.maxHp, 42.dp, if (sel.hp * 3 <= sel.maxHp) Pn.Danger else Pn.Ok, "${sel.hp}", stroke = 4.dp)
+            ProgressRing(sel.hp, sel.maxHp, 42.dp, if (sel.hp * 3 <= sel.maxHp) Pn.Danger else Pn.Ok, sel.hp.toString(), stroke = 4.dp)
         }
         if (sel.vip) {
-            InfoNote("Schutzperson: kann sich bewegen, aber nicht angreifen. Bring sie zum Ziel (X).", Pn.Warn)
+            InfoNote("Schutzperson: bewegen, nicht angreifen. Bringe sie zum Ausgang X.", Pn.Warn)
         } else {
-            val ab = Tactical.abilities[sel.ability]
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                ActionButton("Überwältigen", Modifier.weight(1f), enabled = sel.ap >= 2 && !t.finished && sel.stunned == 0, secondary = mode != "takedown", subtitle = "2 AP, angrenzend") { onMode(if (mode == "takedown") "act" else "takedown") }
-                ActionButton(ab?.name ?: "Fähigkeit", Modifier.weight(1f), enabled = ab != null && sel.abilityCooldown == 0 && sel.ap > 0 && !t.finished, secondary = mode != "ability",
-                    subtitle = if (sel.abilityCooldown > 0) "bereit in ${sel.abilityCooldown}" else "1 AP") {
-                    if (sel.ability in listOf("hack", "distract")) onMode(if (mode == "ability") "act" else "ability")
-                    else upd { Tactical.useAbility(it, sel.id, null) }
-                }
-            }
+            // Die einzige Sonderaktion, die für manche Missionsziele zwingend ist.
             if (t.tile(sel.x, sel.y) == 'I' && Tactical.key(sel.x, sel.y) !in t.secured)
-                ActionButton("Infopunkt sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished, subtitle = "1 AP", icon = PnIcons.Chip) { upd { Tactical.secure(it, sel.id) } }
-            val threat = t.units.filter { !it.ally && !it.down }.minByOrNull { Tactical.dist(it.x, it.y, sel.x, sel.y) }
-            if (threat != null) {
-                val cov = Tactical.cover(t, threat.x, threat.y, sel.x, sel.y)
-                InfoNote("Deckung gegen ${threat.name}: " + when (cov) { 25 -> "voll (−25)"; 20 -> "teilweise (−20)"; else -> "keine" } +
-                    if (Tactical.lineOfSight(t, threat.x, threat.y, sel.x, sel.y)) " · im Sichtfeld" else " · außer Sicht", if (cov == 0) Pn.Warn else Pn.Ok, PnIcons.Shield)
+                ActionButton("Infopunkt sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished,
+                    subtitle = "1 AP · erforderlich für dieses Missionsziel", icon = PnIcons.Chip) {
+                    upd { Tactical.secure(it, sel.id) }
+                }
+            TextButton(onClick = { advanced = !advanced }) {
+                Text(if (advanced) "Erweiterte Aktionen schließen" else "Erweiterte Aktionen (optional)")
             }
-            if (ab != null) InfoNote(ab.description)
-        }
-        var advanced by remember { mutableStateOf(false) }
-        TextButton(onClick = { advanced = !advanced }) { Text(if (advanced) "Weitere Aktionen schließen" else "Weitere Aktionen & Deckung") }
-        if (advanced && !sel.vip) {
-            ActionButton("Position sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished,
-                secondary = true, subtitle = "Verbraucht übrige AP · bessere Abwehr") { upd { Tactical.guard(it, sel.id) } }
+            if (advanced) {
+                val ab = Tactical.abilities[sel.ability]
+                val medicReady = sel.ability != "medic" || t.units.any {
+                    it.ally && !it.down && !it.evacuated && it.hp < it.maxHp &&
+                        Tactical.dist(it.x, it.y, sel.x, sel.y) <= 1
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ActionButton("Überwältigen", Modifier.weight(1f),
+                        enabled = sel.ap >= 2 && !t.finished && sel.stunned == 0,
+                        secondary = mode != "takedown", subtitle = "2 AP · Nachbarfeld") {
+                        onMode(if (mode == "takedown") "act" else "takedown")
+                    }
+                    ActionButton(ab?.name ?: "Fähigkeit", Modifier.weight(1f),
+                        enabled = ab != null && medicReady && sel.abilityCooldown == 0 && sel.ap > 0 && !t.finished,
+                        secondary = mode != "ability",
+                        subtitle = if (!medicReady) "Kein Verletzter in der Nähe" else if (sel.abilityCooldown > 0) "Warte " + sel.abilityCooldown + " Runden" else "1 AP") {
+                        if (sel.ability in listOf("hack", "distract")) onMode(if (mode == "ability") "act" else "ability")
+                        else upd { Tactical.useAbility(it, sel.id, null) }
+                    }
+                }
+                ActionButton("Position sichern", Modifier.fillMaxWidth(), enabled = sel.ap > 0 && !t.finished,
+                    secondary = true, subtitle = "Verbraucht übrige AP · bessere Abwehr") { upd { Tactical.guard(it, sel.id) } }
+                val threat = t.units.filter { !it.ally && !it.down }
+                    .minByOrNull { Tactical.dist(it.x, it.y, sel.x, sel.y) }
+                if (threat != null) {
+                    val cov = Tactical.cover(t, threat.x, threat.y, sel.x, sel.y)
+                    InfoNote("Deckung gegen " + threat.name + ": " +
+                        when (cov) { 25 -> "voll"; 20 -> "teilweise"; else -> "keine" } +
+                        if (Tactical.lineOfSight(t, threat.x, threat.y, sel.x, sel.y)) " · im Sichtfeld" else " · außer Sicht",
+                        if (cov == 0) Pn.Warn else Pn.Ok, PnIcons.Shield)
+                }
+                if (ab != null) InfoNote(ab.description)
+            }
         }
     }
 }
