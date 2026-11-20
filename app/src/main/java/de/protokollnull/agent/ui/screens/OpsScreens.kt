@@ -98,7 +98,7 @@ private fun BoardFilters(vm: GameViewModel, s: GameState) {
         var open by remember { mutableStateOf(false) }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             StatTile("Aufträge", "${s.ops.contracts.size}", Modifier.weight(1f), PnIcons.Target)
-            StatTile("Team bereit", "$avail", Modifier.weight(1f), PnIcons.People, Pn.Ok)
+            StatTile("Bereit", "$avail", Modifier.weight(1f), PnIcons.People, Pn.Ok)
             StatTile("Ausfälle", "${(staff[LifeStatus.INJURED]?.size ?: 0) + (staff[LifeStatus.MISSION]?.size ?: 0)}", Modifier.weight(1f), PnIcons.Cross, Pn.Warn)
         }
         GlassPanel(padding = 12.dp) {

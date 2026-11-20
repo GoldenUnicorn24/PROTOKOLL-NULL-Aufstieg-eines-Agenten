@@ -153,12 +153,20 @@ fun ProtokollTheme(settings: Settings, content: @Composable () -> Unit) {
         // v1.0: Sekundärtexte in Inter statt Monospace – deutlich besser lesbar bei langen deutschen Wörtern
         labelSmall = base.labelSmall.copy(fontFamily = b, fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.2.sp)
     )
+    // Deutsche Silbentrennung für lange Komposita (statt harter Umbrüche mitten im Wort)
+    val de = androidx.compose.ui.text.intl.LocaleList("de-DE")
+    fun TextStyle.hy() = copy(hyphens = androidx.compose.ui.text.style.Hyphens.Auto, localeList = de)
+    val hyphenated = typography.copy(
+        titleMedium = typography.titleMedium.hy(), titleSmall = typography.titleSmall.hy(),
+        bodyLarge = typography.bodyLarge.hy(), bodyMedium = typography.bodyMedium.hy(), bodySmall = typography.bodySmall.hy(),
+        labelLarge = typography.labelLarge.hy(), labelMedium = typography.labelMedium.hy(), labelSmall = typography.labelSmall.hy()
+    )
     val density = LocalDensity.current
     CompositionLocalProvider(
         LocalSettings provides settings,
         LocalDensity provides Density(density.density, density.fontScale * settings.fontScale)
     ) {
-        MaterialTheme(colorScheme = scheme, typography = typography) {
+        MaterialTheme(colorScheme = scheme, typography = hyphenated) {
             CompositionLocalProvider(LocalContentColor provides Pn.Text, content = content)
         }
     }
@@ -358,9 +366,26 @@ fun ChanceRing(chance: Int, size: Dp = 42.dp) {
  */
 @Composable
 fun KeyValue(key: String, value: String, valueColor: Color = Pn.Text) {
-    Row(Modifier.fillMaxWidth().padding(vertical = 2.dp).semantics(mergeDescendants = true) {}, verticalAlignment = Alignment.Top) {
-        Text(key, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(0.42f).padding(end = 10.dp))
-        Text(value, style = MaterialTheme.typography.bodySmall, color = valueColor, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.End, modifier = Modifier.weight(0.58f))
+    // Inhaltsabhängige Aufteilung: Der Wert erhält höchstens 60 % der Breite, der Schlüssel
+    // den Rest – kurze Werte lassen langen deutschen Komposita genug Platz.
+    androidx.compose.ui.layout.Layout(
+        content = {
+            Text(key, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(value, style = MaterialTheme.typography.bodySmall, color = valueColor, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.End)
+        },
+        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp).semantics(mergeDescendants = true) {}
+    ) { measurables, constraints ->
+        val gap = 10.dp.roundToPx()
+        // In unbegrenzt breiten Containern (horizontales Scrollen) auf natürliche Breite fallen
+        val w = if (constraints.hasBoundedWidth) constraints.maxWidth
+            else measurables[0].maxIntrinsicWidth(constraints.maxHeight) + gap + measurables[1].maxIntrinsicWidth(constraints.maxHeight)
+        val valuePl = measurables[1].measure(androidx.compose.ui.unit.Constraints(maxWidth = (w * 0.6f).toInt()))
+        val keyPl = measurables[0].measure(androidx.compose.ui.unit.Constraints(maxWidth = (w - valuePl.width - gap).coerceAtLeast(w / 3)))
+        val h = maxOf(keyPl.height, valuePl.height)
+        layout(w, h) {
+            keyPl.placeRelative(0, 0)
+            valuePl.placeRelative(w - valuePl.width, 0)
+        }
     }
 }
 

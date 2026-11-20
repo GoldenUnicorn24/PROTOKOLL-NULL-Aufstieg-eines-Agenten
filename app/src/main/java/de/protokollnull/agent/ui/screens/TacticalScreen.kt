@@ -165,8 +165,8 @@ private fun UnitStrip(t: TacticalState, sel: TacticalUnit?, onSelect: (String) -
 private fun unitColor(u: TacticalUnit) = when { u.vip -> Pn.Warn; u.isPlayer -> Pn.Accent; u.ally -> Pn.Ok; else -> Pn.Danger }
 
 private fun envTint(env: String) = when (env) {
-    "industrial" -> Color(0xFF2A2418); "clinic" -> Color(0xFF15282E); "transit" -> Color(0xFF14203A)
-    "nature" -> Color(0xFF142A1E); "interior" -> Color(0xFF1A1D2C); else -> Color(0xFF15253A)
+    "industrial" -> Color(0xFF3A3324); "clinic" -> Color(0xFF203A42); "transit" -> Color(0xFF1F2E4E)
+    "nature" -> Color(0xFF1F3D2C); "interior" -> Color(0xFF2A2E42); else -> Color(0xFF213651)
 }
 
 @Composable
@@ -254,9 +254,11 @@ private fun DrawScope.drawTile(t: TacticalState, x: Int, y: Int, o: Offset, cw: 
     val tl = o + Offset(inset, inset)
     when (tile) {
         '#' -> {
-            drawRect(Color(0xFF060B14), o, Size(cw, ch))
-            drawRect(Brush.verticalGradient(listOf(Color(0xFF1D2A3C), Color(0xFF0E1726)), startY = o.y, endY = o.y + ch * 0.8f), tl, Size(sz.width, sz.height * 0.78f))
-            drawLine(Color(0x33A9C6E6), tl, tl + Offset(sz.width, 0f), 1.dp.toPx())
+            // Wandblock mit heller Oberseite und dunkler Front – klar vom Boden unterscheidbar
+            drawRect(Color(0xFF04070D), o, Size(cw, ch))
+            drawRect(Brush.verticalGradient(listOf(Color(0xFF4A5F7C), Color(0xFF2A3A52)), startY = o.y, endY = o.y + ch * 0.62f), tl, Size(sz.width, sz.height * 0.62f))
+            drawRect(Color(0xFF111A28), tl + Offset(0f, sz.height * 0.62f), Size(sz.width, sz.height * 0.38f))
+            drawLine(Color(0x66C9DCF0), tl, tl + Offset(sz.width, 0f), 1.dp.toPx())
         }
         '~' -> {
             drawRect(Brush.verticalGradient(listOf(Color(0xFF0B2740), Color(0xFF0E3355)), startY = o.y, endY = o.y + ch), o, Size(cw, ch))
@@ -273,7 +275,7 @@ private fun DrawScope.drawTile(t: TacticalState, x: Int, y: Int, o: Offset, cw: 
         else -> {
             val dark = Color(tint.red * 0.75f, tint.green * 0.75f, tint.blue * 0.8f, 1f)
             drawRoundRect(Brush.linearGradient(listOf(tint, dark), start = o, end = o + Offset(cw, ch)), tl, sz, CornerRadius(6f))
-            drawRoundRect(Color(0x10FFFFFF), tl, sz, CornerRadius(6f), style = Stroke(1f))
+            drawRoundRect(Color(0x1FFFFFFF), tl, sz, CornerRadius(6f), style = Stroke(1f))
             when (tile) {
                 'c' -> {
                     val b = Size(cw * 0.62f, ch * 0.5f); val bo = o + Offset((cw - b.width) / 2, ch * 0.3f)

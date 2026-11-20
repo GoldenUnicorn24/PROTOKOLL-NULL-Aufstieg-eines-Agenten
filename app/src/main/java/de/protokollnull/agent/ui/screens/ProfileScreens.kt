@@ -176,7 +176,7 @@ private fun SkillNode(vm: GameViewModel, s: GameState, sk: SkillDefinition) {
     val shape = RoundedCornerShape(14.dp)
     val color = when { rank >= sk.maxRank -> Pn.Warn; rank > 0 -> Pn.Accent; unlocked -> Pn.Text; else -> Pn.Muted }
     Column(
-        Modifier.width(150.dp).clip(shape).background(if (rank > 0) Color(0x223FD6C4) else Color(0x10FFFFFF)).border(1.dp, color.copy(alpha = 0.6f), shape)
+        Modifier.width(164.dp).clip(shape).background(if (rank > 0) Color(0x223FD6C4) else Color(0x10FFFFFF)).border(1.dp, color.copy(alpha = 0.6f), shape)
             .clickable(enabled = can) { vm.act { d, x -> Progression.learnSkill(d, x, sk.id) } }.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(3.dp)
     ) {
