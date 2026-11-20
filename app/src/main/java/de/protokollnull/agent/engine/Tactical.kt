@@ -99,7 +99,7 @@ object Tactical {
         val hpScaled = (maxHp * (p.health.coerceAtLeast(30)) / 100).coerceAtLeast(4)
         val spawn0 = pSpawns.getOrElse(0) { 0 to h - 1 }
         units += TacticalUnit(
-            id = "player", name = p.codename, ally = true, x = spawn0.first, y = spawn0.second,
+            id = "player", name = p.identityName, ally = true, x = spawn0.first, y = spawn0.second,
             hp = hpScaled, maxHp = maxHp, accuracy = 45 + prec / 2 + (p.skills["weapon_handling"] ?: 0) * 4,
             damage = 3 + weaponDmg, armor = armor, isPlayer = true,
             ability = if (p.rank >= 8) "command" else when {
