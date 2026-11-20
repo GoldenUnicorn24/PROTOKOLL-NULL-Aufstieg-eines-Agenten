@@ -312,6 +312,94 @@ object Progression {
         return Result(time.state, msgs + time.messages)
     }
 
+    /**
+     * Frei wählbare Teamaktivitäten mit zwei NPCs (z.B. Michael & Alex).
+     * Eigenständiger Fortschritt, reale Zeit-/Energiekosten und echtes NPC-NPC-Bond.
+     * Pro Tag dieselbe Sitzungsgrenze wie normales Training; keine Endlosschleife.
+     */
+    data class TeamActivity(val id: String, val label: String, val attribute: String?, val energy: Int, val npcXp: Int, val stressRelief: Int)
+    val teamActivities = listOf(
+        TeamActivity("course", "Team-Parcours", Attr.FITNESS, 22, 28, 0),
+        TeamActivity("planning", "Gemeinsamer Taktikworkshop", Attr.INTELLECT, 16, 24, 3),
+        TeamActivity("hangout", "Teamabend & Zusammenhalt", null, 8, 12, 14)
+    )
+
+    fun teamActivity(data: GameData, state: GameState, firstId: String, secondId: String, activityId: String): Result {
+        val a = teamActivities.firstOrNull { it.id == activityId } ?: return state.fail("Unbekannte Teamaktivität")
+        if (firstId == secondId) return state.fail("Wähle zwei unterschiedliche Teammitglieder.")
+        for (id in listOf(firstId, secondId)) {
+            partnerLock(data, state, id)?.let { return state.fail(it) }
+        }
+        val p = state.player
+        if (p.energy < a.energy) return state.fail("Zu erschöpft für diese Teamaktivität.")
+        if (p.health < 35) return state.fail("Die Krankenstation verbietet Teamtraining.")
+        val career = state.career
+        val sessions = if (career.sessionsDay == state.clock.day) career.sessionsToday else 0
+        if (sessions >= DAILY_SESSIONS + 1) return state.fail("Die maximale Anzahl täglicher Trainingseinheiten ist erreicht.")
+        val fatigue = if (sessions >= DAILY_SESSIONS) 0.4 else 1.0
+        var s = state.copy(
+            career = career.copy(sessionsDay = state.clock.day, sessionsToday = sessions + 1,
+                trainingDays = (career.trainingDays.filter { it > state.clock.day - 90 } + state.clock.day).distinct()),
+            player = p.copy(
+                energy = (p.energy - a.energy).pct(),
+                stress = (p.stress - a.stressRelief + if (a.id == "course") 4 else 0).pct()
+            )
+        )
+        val f1 = Relations.get(data, s, firstId).friendship
+        val f2 = Relations.get(data, s, secondId).friendship
+        val friendshipBoost = when {
+            f1 >= 80 && f2 >= 80 -> 2.4
+            f1 >= 50 && f2 >= 50 -> 1.8
+            else -> 1.0
+        }
+        val bondGain = when {
+            friendshipBoost >= 2.4 -> 18
+            friendshipBoost >= 1.8 -> 12
+            else -> 7
+        }
+        val resultLines = mutableListOf(a.label + " mit " + Relations.displayName(data, s, firstId) +
+            " und " + Relations.displayName(data, s, secondId))
+        for (id in listOf(firstId, secondId)) {
+            val life = Life.life(data, s, id)
+            val skills = Life.attributeRatings(data, s, id).toMutableMap()
+            val partials = life.attributeProgress.toMutableMap()
+            if (a.attribute != null) {
+                val gain = (24 * friendshipBoost * fatigue).toInt().coerceAtLeast(1)
+                val (rating, fraction) = growRating(skills[a.attribute] ?: 30, partials[a.attribute] ?: 0, gain)
+                skills[a.attribute] = rating
+                partials[a.attribute] = fraction
+            }
+            val xp = (a.npcXp * friendshipBoost * fatigue).toInt().coerceAtLeast(1)
+            s = s.copy(living = s.living.copy(lives = s.living.lives +
+                (id to life.copy(attributes = skills, attributeProgress = partials,
+                    careerXp = life.careerXp + xp, trainingDays = life.trainingDays + 1,
+                    stress = (life.stress - a.stressRelief).pct(),
+                    mood = (life.mood + 6).pct(),
+                    lastDecision = a.label + " im Team", lastDecisionDay = s.clock.day))))
+            s = Relations.update(data, s, id) {
+                it.copy(friendship = it.friendship + 3, trust = it.trust + 2, respect = it.respect + 1)
+            }
+            resultLines += Relations.displayName(data, s, id) + ": Prüfungs-XP +$xp, Freundschaft +3"
+        }
+        val key = LivingState.key(firstId, secondId)
+        s = s.copy(living = s.living.copy(bonds = s.living.bonds +
+            (key to (Life.bond(s, firstId, secondId) + bondGain).coerceIn(-100, 100))))
+        resultLines += "Freundschaft zwischen " + Relations.displayName(data, s, firstId) +
+            " und " + Relations.displayName(data, s, secondId) + " +$bondGain"
+        if (a.attribute != null) {
+            val current = s.player.attributes[a.attribute] ?: 30
+            val gain = (24 * friendshipBoost * fatigue).toInt().coerceAtLeast(1)
+            val (rating, fraction) = growRating(current, s.player.trainingProgress[a.attribute] ?: 0, gain)
+            s = s.copy(player = s.player.copy(attributes = s.player.attributes + (a.attribute to rating),
+                trainingProgress = s.player.trainingProgress + (a.attribute to fraction)))
+            resultLines += Attr.label(a.attribute) + " " + current + " → " + rating + " (inkl. Teilfortschritt)"
+        }
+        s = grantXp(data, s, (trainingXp(24, p.level) * friendshipBoost * fatigue).toInt()).state
+        s = Career.checkGoals(s, resultLines)
+        val t = World.passTime(data, s, 1)
+        return Result(t.state, resultLines + t.messages)
+    }
+
     // --- Ränge --------------------------------------------------------------
 
     data class RankCheck(val rank: RankDefinition, val requirements: List<Pair<String, Boolean>>) {
