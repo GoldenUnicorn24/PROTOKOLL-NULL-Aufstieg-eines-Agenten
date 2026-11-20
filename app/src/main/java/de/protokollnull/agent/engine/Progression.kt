@@ -124,7 +124,7 @@ object Progression {
         if (partnerId == null || !Relations.isKnownNpc(data, state, partnerId)) return null
         val friendship = Relations.get(data, state, partnerId).friendship
         return when {
-            friendship >= 95 -> PartnerTrainingBoost("Unzertrennliches Team", 3.25, 2.2, 80, 65, 6, 20)
+            friendship >= 95 -> PartnerTrainingBoost("Beste Freunde", 3.25, 2.2, 80, 65, 6, 20)
             friendship >= 80 -> PartnerTrainingBoost("Enge Freunde", 2.75, 1.9, 65, 50, 5, 12)
             friendship >= 50 -> PartnerTrainingBoost("Gute Freunde", 2.2, 1.6, 48, 34, 4)
             friendship >= 25 -> PartnerTrainingBoost("Trainingspartner", 1.35, 1.15, 24, 16, 3)
