@@ -203,7 +203,9 @@ data class TacticalState(
     val holdTurns: Int = 0,
     val held: Int = 0,
     val stalemate: Int = 0,
-    val progressMark: Int = 0
+    val progressMark: Int = 0,
+    /** Fortschritt des einfachen Karten-freien Einsatzmodus (0..2 Annäherung). */
+    val quickProgress: Int = 0
 ) {
     fun tile(x: Int, y: Int): Char =
         if (y in tiles.indices && x in 0 until tiles[y].length) tiles[y][x] else '#'
