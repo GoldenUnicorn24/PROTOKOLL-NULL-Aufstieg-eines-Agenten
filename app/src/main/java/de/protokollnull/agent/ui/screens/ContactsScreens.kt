@@ -44,12 +44,12 @@ fun ContactsScreen(vm: GameViewModel, s: GameState) {
     }
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
-            Text("PERSONALAKTEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("PERSONALAKTEN", Pn.Accent)
             Text("KONTAKTE & BEZIEHUNGEN", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(6.dp))
             PresenceStrip(vm, s)
             Spacer(Modifier.height(6.dp))
-            ChipRow(listOf("all" to "Alle", "hq" to "Im HQ", "away" to "Abwesend", "friends" to "Freunde", "rivals" to "Spannungen", "team" to "Team", "feed" to "Divisionsleben"), filter) { filter = it }
+            PnTabs(listOf("all" to "Alle", "hq" to "Im HQ", "away" to "Abwesend", "friends" to "Freunde", "rivals" to "Spannungen", "team" to "Team", "feed" to "Divisionsleben"), filter) { filter = it }
         }
         if (filter == "feed") {
             val feed = s.living.feed.reversed().filter { World.revealed(data, s, it.npcId) || it.npcId == "player" }.take(60)
@@ -151,7 +151,8 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                     if (Romance.romanceable(data, s, id) && r.romanceStage > 0) Pill(Romance.stageName(data, s, id, r.romanceStage), Pn.Violet)
                 }
             }
-            ChipRow(listOf("profile" to "Akte", "duty" to "Dienst", "career" to "Laufbahn", "relation" to "Beziehung", "circle" to "Umfeld", "talk" to "Interaktion"), tab) { tab = it }
+            PnTabs(listOf("profile" to "Akte", "talk" to "Interaktion", "relation" to "Beziehung", "duty" to "Dienst", "career" to "Laufbahn", "circle" to "Umfeld"), tab,
+                badges = if (Dialogues.available(data, s, id).isNotEmpty()) setOf("talk") else emptySet()) { tab = it }
             when (tab) {
                 "profile" -> {
                     GlassPanel {
@@ -159,7 +160,7 @@ fun NpcDetailScreen(vm: GameViewModel, s: GameState, id: String, initialTab: Str
                         val look = def?.look
                         if (!look.isNullOrBlank()) { Text(if (def?.seriesCharacter == true) "Serien-Look (Referenz)" else "Erscheinungsbild", style = MaterialTheme.typography.titleSmall); Text(look, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                         val traits = def?.traits ?: custom?.traits ?: emptyList()
-                        if (traits.isNotEmpty()) ChipRow(traits.map { it to it }, "") {}
+                        if (traits.isNotEmpty()) PillRow(traits, Pn.Violet)
                         val interests = Life.interests(data, s, id)
                         if (interests.isNotEmpty()) KeyValue("Interessen", interests.joinToString())
                         val values = Life.values(data, s, id)
@@ -264,8 +265,24 @@ private fun CareerFile(vm: GameViewModel, s: GameState, id: String) {
         if (l.lastDecision.isNotBlank()) KeyValue("Letzte Entscheidung", l.lastDecision)
     }
     GlassPanel {
+        Text("Attribute", style = MaterialTheme.typography.titleSmall)
+        val values = Life.attributeRatings(data, s, id)
+        val maxRating = maxOf(100, values.values.maxOrNull() ?: 100)
+        AttributeRadar(
+            Attr.all.map { Attr.label(it).take(5) to (values[it] ?: 0) },
+            Modifier.size(144.dp).align(Alignment.CenterHorizontally), max = maxRating
+        )
+        Attr.all.forEach { a ->
+            val rating = values[a] ?: 0
+            StatBar(Attr.label(a), rating, maxOf(100, rating), Pn.Accent)
+        }
+    }
+    GlassPanel {
         Text("Kompetenzen", style = MaterialTheme.typography.titleSmall)
-        Life.focusAreas.forEach { a -> StatBar(Life.focusLabel(a), Life.competence(data, s, id, a), 10, if (a == l.focus) Pn.Warn else Pn.Accent) }
+        Life.focusAreas.forEach { a ->
+            StatBar(Life.focusLabel(a), Life.competence(data, s, id, a), 10,
+                if (a == l.focus) Pn.Warn else Pn.Accent)
+        }
     }
     val events = s.living.feed.filter { it.npcId == id || id in it.others }.takeLast(8).reversed()
     if (events.isNotEmpty()) GlassPanel {

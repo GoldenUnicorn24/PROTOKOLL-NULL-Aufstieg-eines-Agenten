@@ -316,6 +316,10 @@ class RulesTest {
         assertTrue("voss_resolved" in m016.requires!!.flagsAll)
         val ranks = d.ranks.associateBy { it.rank }
         assertEquals(listOf("M020"), ranks.getValue(8).requiredMissions)
-        assertTrue(d.dialogues.any { it.id == "dlg_final" && it.nodes.first().choices.size == 4 })
+        // v1.0: die vier ursprünglichen Enden bleiben bedingungslos wählbar, zwei neue hängen an Storysträngen
+        val finale = d.dialogues.first { it.id == "dlg_final" }.nodes.first().choices
+        assertEquals(listOf("reform", "order", "shadow", "exit"), finale.filter { it.conditions == null }.map { it.id })
+        assertEquals(mapOf("alliance" to listOf("alliance_forged"), "academy" to listOf("academy_founded")),
+            finale.filter { it.conditions != null }.associate { it.id to it.conditions!!.flagsAll })
     }
 }

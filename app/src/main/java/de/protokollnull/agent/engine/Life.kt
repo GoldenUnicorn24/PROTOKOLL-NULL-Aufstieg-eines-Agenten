@@ -84,6 +84,30 @@ object Life {
         else -> "intel"
     }
 
+    /**
+     * Gemeinsame 6er-Attributskala für sämtliche Charaktere. Für ältere Saves
+     * ohne individuelle NPC-Ratings werden stabile Ausgangswerte aus dem
+     * Figurenprofil berechnet; Training speichert danach echte Veränderungen.
+     */
+    fun attributeRatings(data: GameData, state: GameState, id: String): Map<String, Int> {
+        val l = life(data, state, id)
+        val def = data.agentById[id]
+        val own = state.customNpcs.firstOrNull { it.id == id }
+        val combat = def?.combat ?: (own?.skills?.get("stamina") ?: 2) * 6 + 28
+        val focus = l.focus.ifBlank { "combat" }
+        val base = linkedMapOf(
+            Attr.FITNESS to combat.coerceAtLeast(15),
+            Attr.PRECISION to (combat - 5).coerceAtLeast(15),
+            Attr.INTELLECT to (if (focus in setOf("tech", "intel")) 55 else 35),
+            Attr.CHARISMA to (if (focus == "social") 55 else 35),
+            Attr.PERCEPTION to (if (focus == "intel") 55 else 40),
+            Attr.WILLPOWER to (if (focus == "medic") 45 else 40)
+        )
+        return base.mapValues { (attribute, initial) ->
+            (l.attributes[attribute] ?: initial).coerceAtLeast(0)
+        }
+    }
+
     fun rank(data: GameData, state: GameState, id: String): Int = life(data, state, id).rank
 
     fun traits(data: GameData, state: GameState, id: String): List<String> =
@@ -310,8 +334,25 @@ object Life {
                     s = feed(data, s, LifeEvent(day, id, "skill", "${name(data, s, id)} macht Fortschritte: ${focusLabel(l.focus)} Stufe ${level + 1}."), null)
                     l.copy(skillProgress = l.skillProgress + (l.focus to 0), skillGain = l.skillGain + (l.focus to level + 1))
                 } else l.copy(skillProgress = l.skillProgress + (l.focus to prog))
-                l = l.copy(status = LifeStatus.TRAINING, statusUntil = -1, statusNote = focusLabel(l.focus), careerXp = l.careerXp + 3 + if (ambitious) 1 else 0,
-                    trainingDays = l.trainingDays + 1, stress = (l.stress + 2).pct(), lastDecision = "Training: " + focusLabel(l.focus), lastDecisionDay = day)
+                // Auch autonomes NPC-Training entwickelt die gleichen sechs Attribute,
+                // die man in jeder Personalakte sehen kann – nicht bloß unsichtbare Skillpunkte.
+                val attr = when (l.focus) {
+                    "combat" -> Attr.FITNESS
+                    "tech" -> Attr.INTELLECT
+                    "intel" -> Attr.PERCEPTION
+                    "social" -> Attr.CHARISMA
+                    "medic" -> Attr.WILLPOWER
+                    else -> Attr.FITNESS
+                }
+                val currentRating = attributeRatings(data, s, id)[attr] ?: 30
+                val (rating, fraction) = Progression.growRating(currentRating,
+                    l.attributeProgress[attr] ?: 0, if (ambitious) 14 else 10)
+                l = l.copy(attributes = l.attributes + (attr to rating),
+                    attributeProgress = l.attributeProgress + (attr to fraction),
+                    status = LifeStatus.TRAINING, statusUntil = -1, statusNote = focusLabel(l.focus),
+                    careerXp = l.careerXp + 3 + if (ambitious) 1 else 0,
+                    trainingDays = l.trainingDays + 1, stress = (l.stress + 2).pct(),
+                    lastDecision = "Training: " + focusLabel(l.focus), lastDecisionDay = day)
             }
             LifeStatus.FREE -> l = l.copy(status = LifeStatus.FREE, statusUntil = -1, statusNote = freeNote(data, s, id, rng), mood = (l.mood + 3).pct(), stress = (l.stress - 4).pct(), lastDecision = "Freizeit", lastDecisionDay = day)
             else -> l = l.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "", careerXp = l.careerXp + if (profile in setOf("leader", "rogue")) 0 else 2, lastDecision = "Dienst", lastDecisionDay = day)

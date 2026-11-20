@@ -17,7 +17,8 @@ class ExpandedEquipmentTest {
         assertEquals(60, added.size)
         assertEquals(24, added.count { it.category == "weapons" })
         assertEquals(36, added.count { it.category != "weapons" })
-        assertEquals(102, d.items.size)
+        // v1.0 ergänzt weitere Gegenstände (gear_/gift_); der v0.7-Bestand bleibt vollständig
+        assertTrue(d.items.size >= 102)
         assertEquals(60, added.map { it.icon }.distinct().size)
         val slots = setOf("none", "weapon", "armor", "gadget", "comms", "bag", "accessory")
         added.forEach { def ->

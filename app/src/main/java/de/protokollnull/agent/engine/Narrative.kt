@@ -106,7 +106,7 @@ object Dialogues {
     }
 
     fun format(text: String, state: GameState): String = text
-        .replace("{codename}", state.player.codename)
+        .replace("{codename}", state.player.identityName)
         .replace("{name}", state.player.firstName)
         .replace("{fullname}", state.player.displayName)
 }
@@ -141,9 +141,20 @@ object Quests {
                     changed = true
                 }
             }
+            // v1.0: Kapitelabschlüsse als feste Flags (für Feier-Einblendung, Kapitel 4 und Tests)
+            for ((flag, required) in chapterRules) {
+                if (flag !in s.flags && required.all { it in s.flags }) { s = s.copy(flags = s.flags + flag); changed = true }
+            }
         }
         return Result(s, msgs)
     }
+
+    /** Kapitel gilt als abgeschlossen, wenn alle zugehörigen Hauptaufträge erledigt sind. */
+    val chapterRules = listOf(
+        "ch2_done" to listOf("quest_q11", "quest_q12", "quest_q13"),
+        "ch3_done" to listOf("quest_q17"),
+        "ch4_done" to listOf("quest_q24")
+    )
 }
 
 /** Enden und Epilog: aus Story-Flags und Beziehungen zusammengesetzt. */
@@ -151,7 +162,10 @@ object Endings {
     data class Section(val title: String, val text: String)
 
     fun endingId(state: GameState): String? =
-        listOf("ending_reform", "ending_order", "ending_shadow", "ending_exit").firstOrNull { it in state.flags }
+        all.firstOrNull { it in state.flags }
+
+    /** v1.0: sechs Enden – die vier ursprünglichen plus „Das Bündnis“ und „Die Akademie“. */
+    val all = listOf("ending_reform", "ending_order", "ending_shadow", "ending_exit", "ending_alliance", "ending_academy")
 
     fun pending(state: GameState): Boolean = endingId(state) != null && "epilogue_seen" !in state.flags
 
@@ -160,6 +174,8 @@ object Endings {
         "ending_order" -> "Ende: Die neue Ordnung"
         "ending_shadow" -> "Ende: Phönix"
         "ending_exit" -> "Ende: Spurlos"
+        "ending_alliance" -> "Ende: Das Bündnis"
+        "ending_academy" -> "Ende: Die Akademie"
         else -> "Epilog"
     }
 
@@ -171,6 +187,8 @@ object Endings {
             "ending_reform" -> "Die Anhörungen dauern ein Jahr. Am Ende steht eine Division mit Gesetz, Aufsicht und Grenzen – und du an ihrer Spitze, öffentlich vereidigt. Niemand wird mehr abgeschaltet. Manche nennen dich naiv. Die Rekruten nennen dich die erste Direktion, die ihnen ihre Namen zurückgegeben hat."
             "ending_order" -> "Die Division bleibt im Schatten, aber die Schatten haben neue Regeln. Keine Abschaltungen, keine Kinder in Programmen, keine Lügen innerhalb der Mauern. Die Aufsicht ahnt, dass du etwas verbirgst. Sie ahnt auch, dass die Welt sicherer geworden ist."
             "ending_shadow" -> "PHOENIX steigt aus der Asche – effizienter, verborgener, deins. Sieben neue Kandidaten, sieben neue Nummern. Manchmal, spät in der Nacht, ertappst du dich dabei, wie du leise sprichst und selten lobst."
+            "ending_alliance" -> "Die Division wird kleiner, aber sie bekommt Fenster. Ein gemeinsamer Stab aus Divisionsleuten, Nikitas Netzwerk und denen, die ihr gerettet habt, jagt Black Meridian – mit richterlicher Kontrolle und einer Akte, die jeder Betroffene einsehen darf. Nikita trägt keinen Dienstausweis. Sie sagt, sie brauche keinen, solange du ihren Kaffee bezahlst."
+            "ending_academy" -> "Die Akademie wächst langsam, Jahrgang um Jahrgang. Wer dort lernt, ist volljährig oder in einer Schule mit Vormundschaft, kann jederzeit gehen und kennt seinen eigenen Namen. Die Direktion leitet jetzt jemand anderes – mit deiner Akte auf dem Schreibtisch und einer Notiz am Rand: „Nie wieder Nummern.“"
             else -> "Die Enthüllung beherrscht wochenlang die Schlagzeilen. Die Division wird aufgelöst, Percy angeklagt, Untersuchungsausschüsse tagen. Du bist zu diesem Zeitpunkt längst jemand anderes, irgendwo am Meer, mit einem Namen, den nur zwei Menschen kennen."
         })
         val voss = when {
@@ -213,6 +231,15 @@ object Endings {
                 else -> "Die Mappe mit den Bahnhofsfotos liegt jetzt in deinem Schreibtisch. Du weißt, wer die Bilder bestellt hat. Auf dem Formular für den nächsten Auftrag ist die Unterschriftszeile noch frei."
             })
         }
+        if ("alex_shadow_done" in f) out += Section("Alex' Vergangenheit", if ("alex_ledger_burned" in f)
+            "Die verbrannte Seite aus Semjonows Notizbuch erwähnt Alex nie wieder. Sie trägt das Foto ihres Vaters jetzt in der Brusttasche, nicht mehr in der Schublade."
+            else "Die Meridian-Konten aus dem Notizbuch haben drei Netzwerke ausgetrocknet. Alex hat dir verziehen – an einem Abend, an dem sie es dir nicht gesagt, sondern gekocht hat.")
+        when {
+            "birkhoff_ghost_recruited" in f -> out += Section("Der Geist im Netz", "Birkhoffs Praktikantin leitet inzwischen die Netzabwehr. Die beiden streiten täglich über Einrückungen und sind unzertrennlich.")
+            "birkhoff_ghost_caught" in f -> out += Section("Der Geist im Netz", "Die junge Hackerin hat ihre Strafe abgesessen. Birkhoff hat ihr am Tag der Entlassung einen Laptop vor die Tür gestellt – ohne Absender.")
+        }
+        if ("michael_reckoning" in f) out += Section("Die Seiten im Archiv", "Michael besucht einmal im Jahr ein Grab, an dem du ihn nie gefragt hast, wessen es ist. Seit dem Tag im Archiv nimmt er dich manchmal mit.")
+        if ("academy_founded" in f && id != "ending_academy") out += Section("Die Akademie", if ("academy_hard" in f) "Die Akademie bildet gut aus – vielleicht zu gut. Manchmal hörst du in der Trainingshalle Sätze, die du von PHOENIX kennst." else "Die Akademie nimmt jedes Jahr neue Freiwillige auf. Keiner von ihnen bekommt eine Nummer.")
         if ("nikita_ally" in f) out += Section("Nikita", "Nikita taucht manchmal auf, ungefragt, mit einem Kaffee und einer Warnung. Ihr seid keine Freundinnen oder Freunde. Aber Verbündete.")
         val birkhoff = Relations.get(data, state, "birkhoff")
         if (birkhoff.trust >= 60) out += Section("Birkhoff", "Birkhoff hat dein Büro verwanzt, um zu beweisen, dass er es kann. Dann hat er dir die Wanzen geschenkt. Freundschaft auf seine Art.")

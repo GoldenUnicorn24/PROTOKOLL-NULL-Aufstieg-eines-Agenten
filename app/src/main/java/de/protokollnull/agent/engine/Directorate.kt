@@ -285,6 +285,8 @@ object Directorate {
         }
         if ("proj_counter_intel" in s.flags) s = Ops.shiftInfluence(s, "syndicate", -2)
         s = Command.weekly(data, s)
+        // v1.0: abgelaufene Direktionsagenda genau einmal bewerten
+        s = Agenda.weekly(data, s, lines, msgs)
         // Dilemma auslösen
         s = maybeDilemma(data, s, week)
         if (s.lead.pendingDilemma != null && state.lead.pendingDilemma == null) msgs += "Führungsentscheidung: ${dilemmaById[s.lead.pendingDilemma]?.title}"

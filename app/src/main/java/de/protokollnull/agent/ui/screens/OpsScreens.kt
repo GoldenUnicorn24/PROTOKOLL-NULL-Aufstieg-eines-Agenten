@@ -23,23 +23,33 @@ import de.protokollnull.agent.ui.theme.*
 
 /** v0.7 Mission Control: Aufträge, Kampagne, Ketten, Weltlage, Akten, Berichte. */
 @Composable
-fun MissionControlScreen(vm: GameViewModel, s: GameState, initialTab: String = "board") {
+fun MissionControlScreen(vm: GameViewModel, s: GameState, initialTab: String = "board", showTitle: Boolean = true) {
     val data = vm.data
     var tab by remember { mutableStateOf(initialTab) }
-    LaunchedEffect(s.clock.day, s.phase) { if (s.ops.lastGenDay < s.clock.day) vm.update { Ops.refresh(data, it) } }
-    LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    // Sicherheitsnetz für sehr alte Spielstände: Auftragslage einmalig erzeugen (sonst passiert das beim Tageswechsel/Laden)
+    LaunchedEffect(s.clock.day, s.phase) { if (s.phase == "game" && s.ops.lastGenDay < 0) vm.update { Ops.refresh(data, it) } }
+    val readyStory = data.missions.count { it.id !in s.completedMissions && Missions.lockReason(data, s, it) == null }
+    val openCases = s.ops.cases.values.count { !it.solved }
+    LazyColumn(contentPadding = PaddingValues(start = Sp.gutter, end = Sp.gutter, top = 12.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
-            Text("MISSION CONTROL", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-            Text("SHADOW OPERATIONS", style = MaterialTheme.typography.titleLarge)
-            Spacer(Modifier.height(6.dp))
-            ChipRow(listOf("board" to "Aufträge", "story" to "Kampagne", "chains" to "Ketten", "world" to "Weltlage", "journal" to "Akten", "reports" to "Berichte"), tab) { tab = it }
+            if (showTitle) {
+                Overline("Einsatzzentrale")
+                Text("MISSION CONTROL", style = MaterialTheme.typography.titleLarge)
+                Spacer(Modifier.height(8.dp))
+            }
+            PnTabs(listOf("board" to "Aufträge", "story" to "Kampagne", "chains" to "Ketten", "world" to "Weltlage", "journal" to "Akten", "reports" to "Berichte"), tab,
+                badges = buildSet { if (readyStory > 0) add("story"); if (s.ops.contracts.any { it.urgency >= 3 }) add("board"); if (openCases > 0) add("journal") }) { tab = it }
         }
         when (tab) {
             "board" -> boardItems(vm, s)
             "story" -> data.missions.groupBy { it.chapter }.forEach { (chapter, list) ->
                 item(key = "h_$chapter") {
                     val done = list.count { it.id in s.completedMissions }
-                    SectionLabel(chapter.ifBlank { "Aufträge" }, trailing = "$done/${list.size}", icon = PnIcons.Flag)
+                    Column {
+                        SectionLabel(chapter.ifBlank { "Aufträge" }, trailing = "$done/${list.size}", icon = PnIcons.Flag)
+                        Spacer(Modifier.height(4.dp))
+                        StatBar("Fortschritt", done, list.size, if (done == list.size) Pn.Ok else Pn.Accent, showValue = false)
+                    }
                 }
                 items(list, key = { it.id }) { m -> StoryMissionCard(vm, s, m) }
             }
@@ -47,11 +57,11 @@ fun MissionControlScreen(vm: GameViewModel, s: GameState, initialTab: String = "
             "world" -> item { WorldPanel(vm, s) }
             "journal" -> {
                 val cases = Cases.all.filter { s.ops.cases.containsKey(it.id) }
-                if (cases.isEmpty()) item { SmallNote("Noch keine Ermittlungen. Fälle öffnen sich mit der Zeit und durch Hinweise aus Aufträgen.") }
+                if (cases.isEmpty()) item { EmptyState(PnIcons.Search, "Keine offenen Akten", "Fälle öffnen sich mit der Zeit und durch Hinweise aus erfüllten Aufträgen.") }
                 items(cases, key = { it.id }) { c -> CaseCard(vm, s, c) }
             }
             else -> {
-                if (s.reports.isEmpty()) item { SmallNote("Noch keine Einsatzberichte.") }
+                if (s.reports.isEmpty()) item { EmptyState(PnIcons.Archive, "Noch keine Einsatzberichte", "Nach jeder Nachbesprechung erscheint hier der Bericht mit Belohnungen und Folgen.") }
                 items(s.reports.reversed()) { r -> ReportCard(r) }
             }
         }
@@ -86,14 +96,13 @@ private fun BoardFilters(vm: GameViewModel, s: GameState) {
         val staff = Life.presenceSummary(data, s)
         val avail = Missions.teamCandidates(data, s, MissionDefinition("probe", "", "hq", "x", threat = 1)).size
         var open by remember { mutableStateOf(false) }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            StatTile("Aufträge", "${s.ops.contracts.size}", Modifier.weight(1f), PnIcons.Target)
+            StatTile("Bereit", "$avail", Modifier.weight(1f), PnIcons.People, Pn.Ok)
+            StatTile("Ausfälle", "${(staff[LifeStatus.INJURED]?.size ?: 0) + (staff[LifeStatus.MISSION]?.size ?: 0)}", Modifier.weight(1f), PnIcons.Cross, Pn.Warn)
+        }
         GlassPanel(padding = 12.dp) {
-            Text("LAGE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Pill("${s.ops.contracts.size} Aufträge")
-                Pill("Team verfügbar $avail", Pn.Ok)
-                (staff[LifeStatus.INJURED]?.size ?: 0).takeIf { it > 0 }?.let { Pill("Verletzt $it", Pn.Danger) }
-                (staff[LifeStatus.MISSION]?.size ?: 0).takeIf { it > 0 }?.let { Pill("Im Einsatz $it", Pn.Warn) }
-            }
+            Row(verticalAlignment = Alignment.CenterVertically) { PnIcon(PnIcons.Filter, size = 15.dp); Spacer(Modifier.width(6.dp)); Overline("Filter") }
             CompactChips(listOf("all" to "Alles", "urgent" to "Dringend", "short" to "Frist ≤ 2 T.", "multi" to "Mehrtägig", "team" to "Teamauftrag", "easy" to "Gefahr ≤ 2", "hard" to "Gefahr ≥ 4", "chain" to "Kette"), f.tag) { f = f.copy(tag = it) }
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable { open = !open }.padding(vertical = 4.dp)) {
                 val active = listOfNotNull(f.region.takeIf { it != "all" }?.let { Ops.regionLabel(data, it) }, f.type.takeIf { it != "all" }?.let { Ops.archetypeById[it]?.label })
@@ -106,7 +115,8 @@ private fun BoardFilters(vm: GameViewModel, s: GameState) {
             }
         }
         val list = filterContracts(s, f)
-        if (list.isEmpty()) SmallNote(if (s.ops.contracts.isEmpty()) "Keine offenen Aufträge. Neue Aufträge treffen täglich ein." else "Kein Auftrag passt zu diesen Filtern.")
+        if (list.isEmpty()) EmptyState(PnIcons.Radar, if (s.ops.contracts.isEmpty()) "Keine offenen Aufträge" else "Kein Treffer", if (s.ops.contracts.isEmpty()) "Neue Aufträge treffen täglich ein – zum Beispiel nach dem Schlafen oder im Zeitplan." else "Kein Auftrag passt zu diesen Filtern.",
+            if (s.ops.contracts.isEmpty()) null else "Filter zurücksetzen", if (s.ops.contracts.isEmpty()) null else ({ f = BoardFilter() }))
         list.forEach { c -> ContractCard(vm, s, c) }
         if (Ages.player(s) < 18) SmallNote("Unter 18: nur Observation, Aufklärung aus der Distanz, Verhandlung, Datenauswertung und Informationsbeschaffung ohne Taktikbrett, Gefahrenstufe ≤ 2.")
         val history = s.ops.history.takeLast(8).reversed()
@@ -226,7 +236,7 @@ private fun WorldPanel(vm: GameViewModel, s: GameState) {
             }
         }
         GlassPanel {
-            Text("WELTLAGE · LETZTE ENTWICKLUNGEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("WELTLAGE · LETZTE ENTWICKLUNGEN", Pn.Accent)
             if (s.ops.worldLog.isEmpty()) SmallNote("Noch keine Entwicklungen.")
             s.ops.worldLog.takeLast(10).reversed().forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
         }
@@ -254,7 +264,7 @@ private fun CaseCard(vm: GameViewModel, s: GameState, c: Cases.CaseDef) {
 @Composable
 fun CaseScreen(vm: GameViewModel, s: GameState, caseId: String) {
     val data = vm.data
-    val c = Cases.byId[caseId] ?: run { LaunchedEffect(Unit) { vm.back() }; return }
+    val c = Cases.byId[caseId] ?: run { LaunchedEffect(Unit) { vm.backFrom(Overlay.Case(caseId)) }; return }
     val st = s.ops.cases[caseId]
     val clues = Cases.known(s, caseId)
     val refuted = clues.mapNotNull { it.contradicts }.toSet()
@@ -317,7 +327,7 @@ fun ContractBriefingPanel(vm: GameViewModel, s: GameState, c: Contract) {
     val comp = Ops.complicationById[c.complicationId]
     val entry = Ops.entryById[c.entryId]
     GlassPanel(accent = if (c.urgency >= 3) Pn.Danger else Pn.Warn) {
-        Text("AUFTRAG", style = MaterialTheme.typography.labelSmall, color = Pn.Warn)
+        Overline("AUFTRAG", Pn.Warn)
         KeyValue("Auftraggeber", c.clientNpc?.let { Relations.displayName(data, s, it) } ?: Ops.clientById[c.clientId]?.name ?: c.clientId)
         KeyValue("Gegenseite", Ops.factionName(data, c.targetFaction))
         KeyValue("Dringlichkeit", when (c.urgency) { 3 -> "Kritisch"; 2 -> "Dringend"; else -> "Routine" }, if (c.urgency >= 3) Pn.Danger else Pn.Text)
@@ -340,7 +350,7 @@ fun ContractBriefingPanel(vm: GameViewModel, s: GameState, c: Contract) {
         }
     }
     GlassPanel(accent = Pn.Violet) {
-        Text("RISIKEN & KONSEQUENZEN", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+        Overline("RISIKEN & KONSEQUENZEN", Pn.Violet)
         c.risks.forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
         Text("Bei Erfolg: ${c.successConsequence}", style = MaterialTheme.typography.bodySmall, color = Pn.Ok)
         Text("Bei Misserfolg oder Fristablauf: ${c.failConsequence}", style = MaterialTheme.typography.bodySmall, color = Pn.Danger)
@@ -348,7 +358,7 @@ fun ContractBriefingPanel(vm: GameViewModel, s: GameState, c: Contract) {
     }
     if (c.status == ContractStatus.OPEN || c.status == ContractStatus.POSTPONED) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         ActionButton("Vertagen", Modifier.weight(1f), enabled = c.status == ContractStatus.OPEN && c.urgency < 3, secondary = true, subtitle = "+3 Tage, −20 %") { vm.act { d, x -> Ops.postpone(d, x, c.id) } }
-        ActionButton("Ablehnen", Modifier.weight(1f), secondary = true, subtitle = if (c.urgency >= 3) "Haltung −1" else "ohne Folgen") { vm.act { d, x -> Ops.decline(d, x, c.id) }; vm.back() }
+        ActionButton("Ablehnen", Modifier.weight(1f), secondary = true, subtitle = if (c.urgency >= 3) "Haltung −1" else "ohne Folgen") { vm.act { d, x -> Ops.decline(d, x, c.id) }; vm.backFrom(Overlay.Briefing(c.id)) }
     }
 }
 
@@ -364,40 +374,22 @@ fun UnavailableTeamNote(vm: GameViewModel, s: GameState, m: MissionDefinition, c
         reason?.let { id to it }
     }
     if (out.isNotEmpty()) GlassPanel(padding = 10.dp, accent = Pn.Muted) {
-        Text("NICHT VERFÜGBAR", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+        Overline("NICHT VERFÜGBAR", Pn.Muted)
         out.forEach { (id, r) -> Text("${Relations.displayName(data, s, id)} – $r", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
     }
 }
 
-/** HQ-Kurzlage: dringende Aufträge, Weltlage, offene Akten. */
-@Composable
-fun OpsHqCard(vm: GameViewModel, s: GameState) {
-    if (s.ops.lastGenDay < 0) return
-    val urgent = s.ops.contracts.count { it.urgency >= 2 }
-    val running = s.ops.contracts.count { it.status == ContractStatus.IN_PROGRESS }
-    val openCases = s.ops.cases.values.count { !it.solved }
-    GlassPanel(accent = if (urgent > 0) Pn.Warn else Pn.Accent, onClick = { vm.open(Overlay.MissionControl("world")) }) {
-        Text("SHADOW OPERATIONS", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Pill("${s.ops.contracts.size} Aufträge")
-            if (urgent > 0) Pill("$urgent dringend", Pn.Warn)
-            if (running > 0) Pill("$running laufend", Pn.Violet)
-            if (openCases > 0) Pill("$openCases Akten", Pn.Muted)
-        }
-        StatBar("Einfluss Black Meridian", Ops.faction(s, "syndicate").influence, 100, Pn.Danger)
-        s.ops.worldLog.lastOrNull()?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2) }
-    }
-}
 
-/** Kompakte, horizontal scrollbare Auswahlchips (spart Platz im Hochformat). */
+/** Kompakte, horizontal scrollbare Auswahlchips (spart Platz im Hochformat); die Auswahl scrollt in Sicht. */
 @Composable
 fun CompactChips(options: List<Pair<String, String>>, selected: String, onSelect: (String) -> Unit) {
-    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        options.forEach { (id, label) ->
-            val sel = id == selected
-            Text(label, style = MaterialTheme.typography.labelMedium, color = if (sel) Pn.Navy else Pn.Text,
-                modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (sel) Pn.Accent else Color(0x14FFFFFF))
-                    .clickable { onSelect(id) }.padding(horizontal = 10.dp, vertical = 6.dp))
+    val state = androidx.compose.foundation.lazy.rememberLazyListState()
+    val idx = options.indexOfFirst { it.first == selected }
+    LaunchedEffect(idx) { if (idx > 0) state.scrollToItem((idx - 1).coerceAtLeast(0)) }
+    androidx.compose.foundation.lazy.LazyRow(state = state, modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        items(options.size) { i ->
+            val (id, label) = options[i]
+            PnChip(label, id == selected) { onSelect(id) }
         }
     }
 }

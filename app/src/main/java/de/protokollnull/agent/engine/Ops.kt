@@ -519,6 +519,9 @@ object Ops {
             if (obj.tactical != null) stages += tacticalStage(data, c, obj, time, next = "close")
         }
         if (lastPhase) stages += closeStage(c, obj, chainStep, target)
+        // v1.0: Missionsdirektor 3.0 – deterministische Wendung zwischen Vorgehen und Durchführung
+        val withTwist = Twists.apply(stages.toList(), c)
+        stages.clear(); stages += withTwist
         val title = if (c.phases > 1) "${c.title} · Tag ${c.phase + 1}/${c.phases}" else c.title
         return MissionDefinition(
             id = c.id, title = title, locationId = c.regionId, type = typeFor(arch.id), minRank = 1, minAge = c.minAge,
@@ -533,7 +536,8 @@ object Ops {
             stages = stages, witnesses = if (entry.id == "crowd" || c.complicationId == "civilians") 2 else 0, risk = d, repeatable = false,
             maxTeam = c.maxTeam, recommendedItems = when (arch.id) {
                 "observation", "recon" -> listOf("binoculars", "camera"); "data" -> listOf("laptop", "usb"); "intel" -> listOf("smartphone", "usb")
-                "undercover" -> listOf("passport", "smartphone"); "rescue", "protection" -> listOf("medkit", "vest_light"); "escort", "joint" -> listOf("radio_secure", "vest_light")
+                "undercover" -> listOf("passport", "gear_cover_papers"); "rescue", "protection" -> listOf("medkit", "vest_light"); "escort", "joint" -> listOf("radio_secure", "vest_light")
+                "negotiation" -> listOf("gear_earpiece", "notebook")
                 else -> listOf("notebook")
             },
             debriefSuccess = c.successConsequence, debriefFail = c.failConsequence
@@ -628,15 +632,61 @@ object Ops {
         s = s.copy(ops = s.ops.copy(settled = (s.ops.settled + settleKey).let { if (it.size > 200) it.drop(it.size - 200).toSet() else it }))
         // Teamfolgen für alle Einsätze: Bilanz, Verletzungen, Erinnerungen
         val downed = run.tactical?.units?.filter { it.ally && it.down && !it.isPlayer }?.map { it.id }?.toSet() ?: emptySet()
-        run.team.forEach { id ->
+        run.team.distinct().forEach { id ->
             val l = Life.life(data, s, id)
-            var nl = if (result == "success") l.copy(missions = l.missions + 1, careerXp = l.careerXp + 15 + m.threat * 5, mood = (l.mood + 5).coerceIn(0, 100))
+            val friends = Relations.get(data, s, id).friendship
+            val sharedBonus = if (result == "success") when {
+                friends >= 80 -> 65
+                friends >= 50 -> 35
+                friends >= 25 -> 14
+                else -> 0
+            } else 0
+            var nl = if (result == "success") l.copy(missions = l.missions + 1,
+                careerXp = l.careerXp + 15 + m.threat * 5 + sharedBonus,
+                mood = (l.mood + 5).coerceIn(0, 100))
                 else if (result == "fail") l.copy(missionsFailed = l.missionsFailed + 1, careerXp = l.careerXp + 5, mood = (l.mood - 8).coerceIn(0, 100)) else l
+            if (sharedBonus > 0) notes += "${Relations.displayName(data, s, id)}: gemeinsame Einsatzerfahrung +$sharedBonus Prüfungs-XP (Freundschaft $friends)."
             nl = if (id in downed) {
                 notes += "${Relations.displayName(data, s, id).substringBefore(" ")} ist verletzt und fällt einige Tage aus."
                 nl.copy(status = LifeStatus.INJURED, statusUntil = s.clock.day + 3 + m.threat, statusNote = "Einsatzverletzung", injuries = nl.injuries + 1)
             } else if (nl.status == LifeStatus.MISSION && nl.statusNote.startsWith("Einsatz mit")) nl.copy(status = LifeStatus.DUTY, statusUntil = -1, statusNote = "") else nl
             s = s.copy(living = s.living.copy(lives = s.living.lives + (id to nl)))
+        }
+        // Gemeinsame Einsätze schweißen die Agenten unabhängig von ihrer Beziehung
+        // zum Spieler zusammen. Wiederholte Zusammenarbeit verstärkt den Effekt.
+        // Nur echte abgeschlossene Einsätze zählen, nie Abbruch oder doppelte Abrechnung.
+        if (result == "success" || result == "fail") {
+            val teammates = run.team.distinct().filter { Relations.isKnownNpc(data, s, it) }
+            for (a in teammates.indices) for (b in a + 1 until teammates.size) {
+                val first = teammates[a]
+                val second = teammates[b]
+                val key = LivingState.key(first, second)
+                val count = ((s.living.sharedMissions[key] ?: 0).toLong() + 1L)
+                    .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+                val bondBefore = Life.bond(s, first, second)
+                val gain = if (result == "fail") 2 else when {
+                    count >= 10 -> 12
+                    count >= 5 -> 10
+                    count >= 3 -> 7
+                    else -> 4
+                }
+                val bondAfter = (bondBefore + gain).coerceIn(-100, 100)
+                s = s.copy(living = s.living.copy(
+                    sharedMissions = s.living.sharedMissions + (key to count),
+                    bonds = s.living.bonds + (key to bondAfter)
+                ))
+                // Kleine, seltene Meilensteine statt eines neuen Absatzes nach jedem Einsatz.
+                if (result == "success" && count in setOf(3, 5, 10)) {
+                    notes += "${Relations.displayName(data, s, first)} und " +
+                        "${Relations.displayName(data, s, second)}: $count gemeinsame Einsätze, Freundschaft $bondAfter."
+                }
+            }
+            // Die Zusammenarbeit verbessert auch die normale Freundschaft zu den Begleitern.
+            if (result == "success") for (id in teammates) {
+                s = Relations.update(data, s, id) {
+                    it.copy(friendship = it.friendship + 2, trust = it.trust + 1)
+                }
+            }
         }
         val c = contract(s, m.id) ?: return s to notes
         s = Command.recordMission(s, run.team, result == "success" && c.phase >= c.phases - 1)

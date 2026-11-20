@@ -2,6 +2,7 @@ package de.protokollnull.agent
 
 import de.protokollnull.agent.data.GameData
 import de.protokollnull.agent.engine.World
+import de.protokollnull.agent.engine.TacticalMaps
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -73,10 +74,14 @@ class ContentValidationTest {
                     o.success.effects?.giveItems?.keys?.forEach { assertTrue(it in itemIds) }
                 }
                 if (st.type == "tactical") {
-                    val map = st.tactical!!.map
+                    // v1.0: Story-Einsätze dürfen Karten aus der Kartenbibliothek verwenden
+                    val map = st.tactical!!.map.ifEmpty { TacticalMaps.byId[st.tactical!!.mapId]?.rows ?: emptyList() }
+                    assertTrue("${m.id}: Karte ${st.tactical!!.mapId}", map.isNotEmpty())
                     assertTrue("${m.id}: Spieler-Spawn", map.any { 'P' in it })
                     assertTrue("${m.id}: Gegner", map.any { 'E' in it })
-                    if (st.tactical!!.objective == "reach") assertTrue("${m.id}: Ziel X", map.any { 'X' in it })
+                    if (st.tactical!!.objective in setOf("reach", "extract", "escort")) assertTrue("${m.id}: Ziel X", map.any { 'X' in it })
+                    if (st.tactical!!.objective == "intel") assertTrue("${m.id}: Infopunkte", map.any { 'I' in it })
+                    if (st.tactical!!.objective in setOf("protect", "rendezvous")) assertTrue("${m.id}: Zone Z", map.any { 'Z' in it })
                 }
                 if (st.type == "search") assertTrue(st.spots.size >= st.cluesNeeded + 1)
                 if (st.type == "observe") assertTrue(st.targets.size >= 2)

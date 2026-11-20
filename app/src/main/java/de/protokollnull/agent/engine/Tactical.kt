@@ -13,6 +13,10 @@ import kotlin.math.sign
  * Schussrichtung, Missionsziele jenseits von „alle ausschalten“ (Evakuierung,
  * Eskorte, Infopunkte, Aufklärung, Treffpunkt, Schutzposition), Gegnerrollen,
  * Patt-Erkennung und Teamwerte aus der Lebenssimulation.
+ *
+ * v1.0 (Taktik 3.0): Reaktionsfeuer von Überwachungsposten, Rückzug angeschlagener
+ * Gegner in Deckung, Überwältigungsversuche des Stoßtrupps, eine nachvollziehbare
+ * Team-KI („Team handelt“) sowie Pfad- und Gefahrenvorschau für die Oberfläche.
  */
 object Tactical {
     const val MOVE_RANGE = 3
@@ -95,7 +99,7 @@ object Tactical {
         val hpScaled = (maxHp * (p.health.coerceAtLeast(30)) / 100).coerceAtLeast(4)
         val spawn0 = pSpawns.getOrElse(0) { 0 to h - 1 }
         units += TacticalUnit(
-            id = "player", name = p.codename, ally = true, x = spawn0.first, y = spawn0.second,
+            id = "player", name = p.identityName, ally = true, x = spawn0.first, y = spawn0.second,
             hp = hpScaled, maxHp = maxHp, accuracy = 45 + prec / 2 + (p.skills["weapon_handling"] ?: 0) * 4,
             damage = 3 + weaponDmg, armor = armor, isPlayer = true,
             ability = if (p.rank >= 8) "command" else when {
@@ -277,8 +281,67 @@ object Tactical {
         var n = replace(t, u.copy(x = x, y = y, ap = u.ap - 1, guarding = false))
         n = log(n, "${u.name} bewegt sich.")
         n = onEnterTile(n, n.units.first { it.id == unitId })
+        n = reactionFire(n, unitId)
         return checkEnd(n)
     }
+
+    /**
+     * Überwachungsposten feuern einmal pro Runde auf eine Bewegung in ihrem Sichtfeld
+     * (Treffer −10). Schutzpersonen werden nicht gezielt beschossen.
+     */
+    fun reactionFire(t: TacticalState, movedId: String): TacticalState {
+        var n = t
+        val moved = n.units.firstOrNull { it.id == movedId && !it.down && !it.evacuated } ?: return n
+        if (moved.vip) return n
+        val watchers = n.units.filter {
+            !it.ally && !it.down && it.role == "overwatch" && it.stunned == 0 && !it.reacted &&
+                dist(it.x, it.y, moved.x, moved.y) <= it.range && lineOfSight(n, it.x, it.y, moved.x, moved.y)
+        }
+        for (w in watchers) {
+            val target = n.units.first { it.id == movedId }
+            if (target.down) break
+            val chance = (hitChance(n, w, target) - 10).coerceIn(5, 95)
+            val r = rng(n)
+            val roll = r.percent()
+            n = n.copy(rolls = n.rolls + 1)
+            n = replace(n, w.copy(reacted = true))
+            n = if (roll <= chance) {
+                val dmg = (w.damage - 1 + r.range(-1, 1) - target.armor).coerceAtLeast(1)
+                val hp = target.hp - dmg
+                log(replace(n, target.copy(hp = hp)), "Reaktionsfeuer: ${w.name} trifft ${target.name} (−$dmg)" + if (hp <= 0) " – kampfunfähig!" else ".")
+            } else log(n, "Reaktionsfeuer: ${w.name} verfehlt ${target.name} ($roll/$chance).")
+        }
+        return n
+    }
+
+    /** Kürzester Weg (inklusive Ziel, ohne Start) innerhalb der Bewegungsreichweite oder leer. */
+    fun path(t: TacticalState, u: TacticalUnit, tx: Int, ty: Int, range: Int = MOVE_RANGE): List<Pair<Int, Int>> {
+        val prev = mutableMapOf<Pair<Int, Int>, Pair<Int, Int>?>((u.x to u.y) to null)
+        val depth = mutableMapOf((u.x to u.y) to 0)
+        val queue = ArrayDeque(listOf(u.x to u.y))
+        while (queue.isNotEmpty()) {
+            val cur = queue.removeFirst()
+            if (cur == (tx to ty)) break
+            val d = depth.getValue(cur)
+            if (d >= range) continue
+            for ((dx, dy) in listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)) {
+                val nx = cur.first + dx; val ny = cur.second + dy
+                val nxt = nx to ny
+                if (nx !in 0 until t.width || ny !in 0 until t.height || nxt in prev) continue
+                if (!passable(t.tile(nx, ny)) || unitAt(t, nx, ny) != null) continue
+                prev[nxt] = cur; depth[nxt] = d + 1; queue.addLast(nxt)
+            }
+        }
+        if ((tx to ty) !in prev) return emptyList()
+        val out = mutableListOf<Pair<Int, Int>>()
+        var c: Pair<Int, Int>? = tx to ty
+        while (c != null && c != (u.x to u.y)) { out += c; c = prev[c] }
+        return out.reversed()
+    }
+
+    /** Wie viele handlungsfähige Gegner ein Feld in Reichweite und Sicht haben (Gefahrenvorschau). */
+    fun dangerAt(t: TacticalState, x: Int, y: Int): Int =
+        t.units.count { !it.ally && !it.down && it.stunned == 0 && dist(it.x, it.y, x, y) <= it.range && lineOfSight(t, it.x, it.y, x, y) }
 
     private fun onEnterTile(t: TacticalState, u: TacticalUnit): TacticalState {
         val tile = t.tile(u.x, u.y)
@@ -403,6 +466,19 @@ object Tactical {
         return n
     }
 
+    private fun enemyTakedown(n0: TacticalState, e: TacticalUnit, target: TacticalUnit): TacticalState {
+        var n = n0
+        val chance = (e.accuracy - 5 - (if (target.guarding) 15 else 0)).coerceIn(10, 85)
+        val r = rng(n)
+        val roll = r.percent()
+        n = n.copy(rolls = n.rolls + 1)
+        return if (roll <= chance) {
+            val dmg = (3 - target.armor).coerceAtLeast(1)
+            val hp = target.hp - dmg
+            log(replace(n, target.copy(hp = hp, stunned = if (target.isPlayer) 0 else 1)), "${e.name} überwältigt ${target.name} (−$dmg)" + if (hp <= 0) " – kampfunfähig!" else if (!target.isPlayer) ", setzt eine Runde aus." else ".")
+        } else log(n, "${target.name} wehrt ${e.name} ab ($roll/$chance).")
+    }
+
     private fun ownCover(n: TacticalState, x: Int, y: Int): Int {
         val threats = targets(n)
         if (threats.isEmpty()) return 0
@@ -414,10 +490,13 @@ object Tactical {
         if (options.isEmpty()) return null
         val allies = targets(n)
         if (allies.isEmpty()) return null
+        val wounded = e.hp * 3 <= e.maxHp
         fun score(x: Int, y: Int): Int {
             val shot = bestShot(n, e, x, y)
             val nearest = allies.minOf { dist(x, y, it.x, it.y) }
             val homeDist = if (e.homeX >= 0) dist(x, y, e.homeX, e.homeY) else 0
+            // v1.0: Angeschlagene Gegner suchen Deckung und Abstand, statt blind vorzurücken
+            if (wounded) return ownCover(n, x, y) * 3 + nearest * 4 + (shot?.second ?: 0) / 2
             return when (e.role) {
                 "guard" -> (shot?.second ?: 0) + ownCover(n, x, y) - homeDist * 12
                 "flanker" -> (shot?.let { it.second * 2 - cover(n, x, y, it.first.x, it.first.y) * 2 } ?: -nearest * 6) + ownCover(n, x, y) / 2
@@ -443,6 +522,14 @@ object Tactical {
             var ap = 2
             while (ap > 0) {
                 if (targets(n).isEmpty()) break
+                // v1.0: Stoßtrupp versucht, eine benachbarte Einheit in Deckung zu überwältigen
+                val adjacent = if (e.role == "rusher" && ap >= 2) targets(n).filter { !it.vip && dist(it.x, it.y, e.x, e.y) == 1 }
+                    .minByOrNull { it.hp } else null
+                if (adjacent != null && cover(n, e.x, e.y, adjacent.x, adjacent.y) > 0) {
+                    n = enemyTakedown(n, e, adjacent)
+                    ap = 0
+                    break
+                }
                 val shot = bestShot(n, e, e.x, e.y)
                 val threshold = when (e.role) { "overwatch" -> 20; "flanker" -> 40; "guard" -> 25; else -> 30 }
                 if (shot != null && hitChance(n, e, shot.first) >= threshold) {
@@ -471,7 +558,7 @@ object Tactical {
             turn = n.turn + 1, stalemate = stale, progressMark = mark,
             units = n.units.map {
                 if (it.ally) it.copy(ap = if (it.stunned > 0) 0 else 2, guarding = false, abilityCooldown = (it.abilityCooldown - 1).coerceAtLeast(0), stunned = (it.stunned - 1).coerceAtLeast(0))
-                else it
+                else it.copy(reacted = false)
             }
         )
         if (n.selectedUnit == null || n.units.firstOrNull { it.id == n.selectedUnit }?.let { it.down || it.evacuated } == true) {
@@ -479,6 +566,62 @@ object Tactical {
         }
         n = log(n, "— Runde ${n.turn} —")
         return checkEnd(n, endOfRound = true)
+    }
+
+    // --- Team-KI (v1.0) -------------------------------------------------------------------
+
+    /**
+     * „Team handelt“: Alle Teammitglieder (nicht du, nicht die Schutzperson) verbrauchen ihre
+     * Aktionspunkte nach nachvollziehbaren Regeln – gute Schüsse nehmen, Verletzte versorgen,
+     * Infopunkte sichern, sonst in sichere Deckung mit Schussfeld vorrücken oder sichern.
+     * Nutzt ausschließlich die normalen Aktionen, damit alle Regeln (Sicht, AP, Reaktionsfeuer) gelten.
+     */
+    fun teamAuto(t0: TacticalState): TacticalState {
+        var t = t0
+        val ids = t.units.filter { it.ally && !it.isPlayer && !it.vip && !it.down && !it.evacuated }.map { it.id }
+        for (id in ids) {
+            var guard = 0
+            while (guard++ < 4 && !t.finished) {
+                val a = t.units.firstOrNull { it.id == id } ?: break
+                if (a.down || a.ap <= 0 || a.stunned > 0) break
+                val enemies = t.units.filter { !it.ally && !it.down }
+                if (enemies.isEmpty() && t.objective == "eliminate") break
+                val shot = enemies.filter { attackBlocker(t, a, it) == null }.maxByOrNull { hitChance(t, a, it) * 10 - it.hp }
+                if (shot != null && hitChance(t, a, shot) >= 40) { t = attack(t, a.id, shot.id); continue }
+                val adj = enemies.firstOrNull { dist(it.x, it.y, a.x, a.y) == 1 }
+                if (adj != null && a.ap >= 2 && (a.accuracy + 10 - (if (adj.guarding) 15 else 0)) >= 55) { t = takedown(t, a.id, adj.id); continue }
+                if (a.ability == "medic" && a.abilityCooldown == 0 && t.units.any { it.ally && !it.down && !it.evacuated && dist(it.x, it.y, a.x, a.y) <= 1 && it.hp * 2 <= it.maxHp }) {
+                    t = useAbility(t, a.id, null); continue
+                }
+                if (t.tile(a.x, a.y) == 'I' && key(a.x, a.y) !in t.secured && t.objective == "intel") { t = secure(t, a.id); continue }
+                val dest = autoMoveTarget(t, a)
+                if (dest != null) { t = move(t, a.id, dest.first, dest.second); continue }
+                if (shot != null) { t = attack(t, a.id, shot.id); continue }
+                t = guard(t, a.id)
+                break
+            }
+        }
+        return log(t, "Team hat gehandelt.")
+    }
+
+    private fun autoMoveTarget(t: TacticalState, a: TacticalUnit): Pair<Int, Int>? {
+        val enemies = t.units.filter { !it.ally && !it.down }
+        val goals = buildList {
+            if (t.objective == "intel") (0 until t.height).forEach { y -> (0 until t.width).forEach { x -> if (t.tile(x, y) == 'I' && key(x, y) !in t.secured) add(x to y) } }
+            if (t.objective == "recon") (0 until t.height).forEach { y -> (0 until t.width).forEach { x -> if (t.tile(x, y) == 'R' && key(x, y) !in t.secured) add(x to y) } }
+            if (t.objective in setOf("protect", "rendezvous")) (0 until t.height).forEach { y -> (0 until t.width).forEach { x -> if (t.tile(x, y) == 'Z') add(x to y) } }
+        }
+        fun score(x: Int, y: Int): Int {
+            val probe = a.copy(x = x, y = y)
+            val best = enemies.filter { dist(x, y, it.x, it.y) <= a.range && lineOfSight(t, x, y, it.x, it.y) }.maxOfOrNull { hitChanceFrom(t, probe, x, y, it) } ?: 0
+            val coverVal = if (enemies.isEmpty()) 0 else enemies.minOf { cover(t, it.x, it.y, x, y) }
+            val goal = goals.minOfOrNull { dist(x, y, it.first, it.second) }
+            val nearest = enemies.minOfOrNull { dist(x, y, it.x, it.y) } ?: 0
+            return best + coverVal * 2 - dangerAt(t, x, y) * 10 - (goal ?: 0) * 6 - (if (goal == null && best == 0) nearest * 3 else 0)
+        }
+        val options = reachable(t, a).toList().sortedWith(compareBy({ it.second }, { it.first }))
+        val best = options.maxByOrNull { score(it.first, it.second) } ?: return null
+        return if (score(best.first, best.second) > score(a.x, a.y)) best else null
     }
 
     /** Fingerabdruck des Brettzustands für die Patt-Erkennung. */

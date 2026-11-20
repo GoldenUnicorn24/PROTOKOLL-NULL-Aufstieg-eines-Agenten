@@ -38,19 +38,16 @@ private fun activityIcon(id: String) = when (id) {
 // ---------------------------------------------------------------------------
 
 @Composable
-fun CareerScreen(vm: GameViewModel, s: GameState) {
+fun CareerScreen(vm: GameViewModel, s: GameState, initialTab: String = "overview") {
     val data = vm.data
     val check = Progression.nextRankCheck(data, s)
     val c = s.career
     val ev = Career.latestEvaluation(s)
-    var tab by remember { mutableStateOf("overview") }
+    var tab by remember { mutableStateOf(initialTab) }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Karriere", "Rang ${s.player.rank}/12 · ${data.rank(s.player.rank).name}", onBack = { vm.back() })
-        Row(Modifier.padding(horizontal = 16.dp).horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("overview" to "Übersicht", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})").forEach { (id, l) ->
-                FilterChip(selected = tab == id, onClick = { tab = id }, label = { Text(l) })
-            }
-        }
+        PnTabs(listOf("overview" to "Übersicht", "board" to "Rangliste", "ranks" to "Ränge & Freigaben", "journal" to "Journal (${s.journal.size})"), tab,
+            Modifier.padding(horizontal = Sp.gutter, vertical = 8.dp), badges = if (Progression.examReady(data, s)) setOf("overview") else emptySet()) { tab = it }
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             when (tab) {
                 "overview" -> {
@@ -61,7 +58,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                                     Text(ev?.grade ?: "–", style = MaterialTheme.typography.displaySmall.copy(fontSize = 32.sp), color = gradeColor(ev?.grade))
                                 }
                                 Column(Modifier.weight(1f)) {
-                                    Text("LEISTUNGSBEURTEILUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                                    Overline("LEISTUNGSBEURTEILUNG", Pn.Accent)
                                     Text(if (ev != null) "vor ${s.clock.day - ev.day} Tagen · ${ev.score}/100" else "Noch keine Beurteilung", style = MaterialTheme.typography.titleSmall)
                                     Text(ev?.comment ?: "Bitte Michael im Ausbildungsbereich um eine Beurteilung.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
@@ -78,7 +75,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                     }
                     if (check != null) item {
                         GlassPanel(accent = if (check.ready) Pn.Ok else Pn.Warn) {
-                            Text("NÄCHSTER DIENSTGRAD", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("NÄCHSTER DIENSTGRAD", Pn.Accent)
                             Text(check.rank.name.uppercase(), style = MaterialTheme.typography.titleLarge)
                             Text(check.rank.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             check.requirements.forEach { (t, ok) ->
@@ -109,7 +106,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                     item {
                         SectionLabel("Auszeichnungen", trailing = "${c.awards.size}/${Career.awardTitles.size}", icon = PnIcons.Star)
                         Spacer(Modifier.height(6.dp))
-                        ChipRow(Career.awardTitles.map { (id, t) -> id to (if (id in c.awards) "★ $t" else "☆ $t") }, "") {}
+                        PillRow(Career.awardTitles.map { (id, t) -> if (id in c.awards) "★ $t" else "☆ $t" }, Pn.Warn)
                     }
                 }
                 "ranks" -> items(data.ranks) { r ->
@@ -132,6 +129,7 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
                         }
                     }
                 }
+                "board" -> leaderboardItems(vm, s)
                 else -> {
                     if (s.journal.isEmpty()) item { SmallNote("Noch keine Einträge. Beurteilungen, Prüfungen, Ziele und Auszeichnungen erscheinen hier.") }
                     items(s.journal.reversed()) { j ->
@@ -148,12 +146,69 @@ fun CareerScreen(vm: GameViewModel, s: GameState) {
     }
 }
 
+/** v1.0: Die Rangliste der Division – berechnet aus echten Laufbahnwerten. */
+private fun androidx.compose.foundation.lazy.LazyListScope.leaderboardItems(vm: GameViewModel, s: GameState) {
+    val data = vm.data
+    val board = Leaderboard.board(data, s)
+    val me = board.indexOfFirst { it.isPlayer }
+    val trend = Leaderboard.trend(s)
+    item {
+        GlassPanel(accent = if (me == 0) Pn.Warn else Pn.Accent) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                ProgressRing(board.size - me, board.size, 64.dp, if (me == 0) Pn.Warn else Pn.Accent, "${me + 1}.")
+                Column(Modifier.weight(1f)) {
+                    Overline("Dein Platz auf der Tafel")
+                    Text("Platz ${me + 1} von ${board.size}", style = MaterialTheme.typography.titleMedium)
+                    Text(when {
+                        trend > 0 -> "▲ $trend seit letzter Woche"
+                        trend < 0 -> "▼ ${-trend} seit letzter Woche"
+                        s.career.boardWeek >= 0 -> "Unverändert seit letzter Woche"
+                        else -> "Erste Wertung – der Trend erscheint nach einer Woche"
+                    }, style = MaterialTheme.typography.labelSmall, color = if (trend > 0) Pn.Ok else if (trend < 0) Pn.Danger else MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Text("${board[me].score}", style = PnType.metric, color = Pn.Text)
+            }
+            if (me > 0) {
+                val gap = board[me - 1].score - board[me].score
+                InfoNote("Bis Platz $me (${board[me - 1].name}) fehlen dir $gap Punkte.", Pn.Accent, PnIcons.Target)
+            }
+        }
+    }
+    items(board.size) { i ->
+        val e = board[i]
+        val tone = when { e.isPlayer -> Pn.Accent; i == 0 -> Pn.Warn; else -> Pn.Muted }
+        Row(
+            Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                .background(if (e.isPlayer) Pn.Accent.copy(alpha = 0.14f) else Color(0x0DFFFFFF))
+                .border(1.dp, if (e.isPlayer) Pn.Accent.copy(alpha = 0.6f) else Pn.Hairline, RoundedCornerShape(12.dp))
+                .then(if (!e.isPlayer) Modifier.clickable(role = androidx.compose.ui.semantics.Role.Button) { vm.open(Overlay.Npc(e.id, "career")) } else Modifier)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("${i + 1}", style = PnType.metric.copy(fontSize = 20.sp), color = tone, modifier = Modifier.width(30.dp))
+            if (e.isPlayer) PlayerPortrait(s, 34.dp) else NpcPortrait(data, s, e.id, 34.dp)
+            Column(Modifier.weight(1f)) {
+                Text(e.name + if (e.isPlayer) " (du)" else "", style = MaterialTheme.typography.titleSmall, maxLines = 1)
+                Text(data.rank(e.rank).name + " · ${e.missions} " + (if (e.missions == 1) "Einsatz" else "Einsätze") + if (!e.isPlayer && !LifeStatus.inHq(e.status)) " · ${LifeStatus.label(e.status)}" else "",
+                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            }
+            Box(Modifier.size(28.dp).clip(CircleShape).background(gradeColor(e.grade).copy(alpha = 0.18f)).border(1.dp, gradeColor(e.grade), CircleShape), contentAlignment = Alignment.Center) {
+                Text(e.grade ?: "–", style = PnType.data.copy(fontSize = 12.sp), color = gradeColor(e.grade))
+            }
+            Text("${e.score}", style = PnType.data, color = Pn.Text, modifier = Modifier.width(44.dp), textAlign = androidx.compose.ui.text.style.TextAlign.End)
+        }
+    }
+    item {
+        SmallNote("Punkte: Dienstgrad × 100 · letzte Note (A 40 bis E 0) · erfolgreiche Einsätze × 3 (höchstens 60) · Ausbildung bis 30 (bei dir Trainingstage der letzten 30 Tage, bei anderen der Fortschritt zur nächsten Prüfung). Die Leitungsebene steht nicht auf der Tafel. Antippen öffnet die Laufbahn.")
+    }
+}
+
 @Composable
 private fun GoalsPanel(vm: GameViewModel, s: GameState) {
     var attr by remember { mutableStateOf(s.player.weakness.takeIf { it in Attr.all } ?: Attr.FITNESS) }
     val cur = s.player.attributes[attr] ?: 30
     val cap = Stats.attributeCap(s.player.level)
-    var target by remember(attr) { mutableIntStateOf((s.career.goals[attr] ?: (cur + 5)).coerceAtMost(cap.coerceAtLeast(cur + 1))) }
+    var target by remember(attr) { mutableIntStateOf(s.career.goals[attr] ?: (cur + 5)) }
     GlassPanel(padding = 14.dp) {
         s.career.goals.forEach { (a, t) ->
             val v = s.player.attributes[a] ?: 30
@@ -167,9 +222,9 @@ private fun GoalsPanel(vm: GameViewModel, s: GameState) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             ActionButton("−", secondary = true, enabled = target > cur + 1) { target-- }
             Text("${Attr.label(attr)}: $cur → $target", modifier = Modifier.weight(1f), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleSmall)
-            ActionButton("+", secondary = true, enabled = target < 100) { target++ }
+            ActionButton("+", secondary = true, enabled = target < Int.MAX_VALUE / 1024 - 1) { target++ }
         }
-        if (target > cap) SmallNote("Hinweis: Das Attributlimit liegt bei Level ${s.player.level} bei $cap – mehr Level nötig.")
+        SmallNote("Dein Rating kann durch Training dauerhaft über 100 steigen. Hohe Werte brauchen mehr Ausdauer.")
         ActionButton("Ziel festlegen", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Flag) { vm.update { Career.setGoal(it, attr, target) } }
     }
 }
@@ -184,7 +239,7 @@ fun ExamScreen(vm: GameViewModel, s: GameState) {
     val e = s.activeExam ?: return
     val rankName = data.rank(e.rank).name
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("BEFÖRDERUNGSPRÜFUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+        Overline("BEFÖRDERUNGSPRÜFUNG", Pn.Accent)
         Text(rankName.uppercase(), style = MaterialTheme.typography.displaySmall.copy(fontSize = 32.sp, lineHeight = 36.sp))
         PhaseStepper(listOf("narrative", "search", "observe", "narrative"), e.phase.coerceAtMost(3))
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -221,7 +276,7 @@ fun ExamScreen(vm: GameViewModel, s: GameState) {
             else -> {
                 val sc = Career.scenario(e.rank)
                 GlassPanel {
-                    Text("PHASE 3 · LAGEENTSCHEIDUNG", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+                    Overline("PHASE 3 · LAGEENTSCHEIDUNG", Pn.Accent)
                     Text(sc.title, style = MaterialTheme.typography.titleMedium)
                     Text(sc.text, style = MaterialTheme.typography.bodyMedium)
                 }
@@ -243,11 +298,8 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
     LaunchedEffect(s.simReports.size) { if (s.simReports.lastOrNull()?.endDay == s.clock.day) tab = "report" }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Zeitplan", Clock.dateLabel(s.clock.day) + " · " + Clock.slotNames[s.clock.slot], onBack = { vm.back() })
-        Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("plan" to "Plan", "run" to "Zeitraum", "report" to "Bericht").forEach { (id, l) ->
-                FilterChip(selected = tab == id, onClick = { tab = id }, label = { Text(l) }, enabled = id != "report" || s.simReports.isNotEmpty())
-            }
-        }
+        PnTabs((listOf("plan" to "Plan", "run" to "Zeitraum") + if (s.simReports.isNotEmpty()) listOf("report" to "Bericht") else emptyList()), tab,
+            Modifier.padding(horizontal = Sp.gutter, vertical = 8.dp)) { tab = it }
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             when (tab) {
                 "plan" -> {
@@ -276,7 +328,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                     item {
                         val f = Simulation.forecast(s)
                         GlassPanel(accent = if (f.warning != null) Pn.Warn else Pn.Ok) {
-                            Text("WOCHENPROGNOSE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("WOCHENPROGNOSE", Pn.Accent)
                             KeyValue("Trainingstage", "${f.trainingDays}")
                             KeyValue("Ruhetage", "${f.restDays}")
                             KeyValue("Stress pro Woche", Effs.signed(f.stressPerWeek), if (f.stressPerWeek > 15) Pn.Danger else Pn.Text)
@@ -288,7 +340,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                 "run" -> {
                     item {
                         GlassPanel {
-                            Text("ZEITRAUM WÄHLEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                            Overline("ZEITRAUM WÄHLEN", Pn.Accent)
                             Text("Die Simulation hält bei wichtigen Ereignissen automatisch an: 18. Geburtstag, neue Story-Ereignisse, kritische Gesundheit, erfüllte Prüfungsauflagen.", style = MaterialTheme.typography.bodySmall)
                             KeyValue("Heute", Clock.dateLabel(s.clock.day))
                             KeyValue("Bis zum 18. Geburtstag", if (Ages.player(s) >= 18) "volljährig" else "${Clock.daysUntilAge(s.clock.day, 18)} Tage")
@@ -301,7 +353,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.padding(bottom = 10.dp)) {
                                 row.forEach { (d, l) ->
                                     ActionButton(l, Modifier.weight(1f), secondary = d != 30, icon = PnIcons.Calendar) {
-                                        vm.act { dd, x -> Simulation.run(dd, x, d) }
+                                        vm.actAsync("Zeitraffer: $d Tage werden simuliert …") { dd, x -> Simulation.run(dd, x, d) }
                                         tab = "report"
                                     }
                                 }
@@ -309,7 +361,7 @@ fun SimulationScreen(vm: GameViewModel, s: GameState) {
                             }
                         }
                         if (Ages.player(s) < 18) ActionButton("Bis zum 18. Geburtstag", Modifier.fillMaxWidth(), subtitle = "${Clock.daysUntilAge(s.clock.day, 18)} Tage", icon = PnIcons.Star) {
-                            vm.act { dd, x -> Simulation.run(dd, x, Clock.daysUntilAge(x.clock.day, 18).coerceAtLeast(1)) }
+                            vm.actAsync("Zeitraffer bis zum 18. Geburtstag …") { dd, x -> Simulation.run(dd, x, Clock.daysUntilAge(x.clock.day, 18).coerceAtLeast(1)) }
                             tab = "report"
                         }
                     }
@@ -336,7 +388,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel {
-            Text("TRAINING", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("TRAINING", Pn.Accent)
             r.activityDays.forEach { (a, n) -> KeyValue(Simulation.activity(a).name, "$n Tage") }
             if (r.failedSessions > 0) KeyValue("Ohne Ergebnis (Erschöpfung/Stress/niemand da)", "${r.failedSessions}", Pn.Warn)
             if (r.attributeGains.isEmpty()) SmallNote("Keine Attributsteigerung in diesem Zeitraum.")
@@ -348,7 +400,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel {
-            Text("VERFASSUNG & FINANZEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("VERFASSUNG & FINANZEN", Pn.Accent)
             KeyValue("Gesundheit", "${r.healthBefore} → ${r.healthAfter}")
             KeyValue("Wunden", "${r.woundsBefore} → ${r.woundsAfter}", if (r.woundsAfter < r.woundsBefore) Pn.Ok else Pn.Text)
             KeyValue("Stress", "${r.stressBefore} → ${r.stressAfter}")
@@ -360,7 +412,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     if (r.relationChanges.isNotEmpty()) item {
         GlassPanel {
-            Text("BEGEGNUNGEN", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+            Overline("BEGEGNUNGEN", Pn.Accent)
             r.relationChanges.entries.sortedByDescending { it.value }.forEach { (id, d) ->
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
                     NpcPortrait(data, s, id, 30.dp, height = 36.dp)
@@ -373,7 +425,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
     }
     item {
         GlassPanel(accent = Pn.Muted) {
-            Text("EREIGNISPROTOKOLL", style = MaterialTheme.typography.labelSmall, color = Pn.Muted)
+            Overline("EREIGNISPROTOKOLL", Pn.Muted)
             if (r.events.isEmpty()) SmallNote("Ruhige Zeit – keine besonderen Vorkommnisse.")
             r.events.forEach { Text("• $it", style = MaterialTheme.typography.bodySmall) }
         }
@@ -388,13 +440,17 @@ private fun androidx.compose.foundation.lazy.LazyListScope.simReport(vm: GameVie
 fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
     val data = vm.data
     val present = World.npcsIn(data, s, s.location)
-    val trainers = present.filter { it in Progression.trainers.keys }
-    val partners = present.filter { it !in Progression.trainers.keys && Relations.get(data, s, it).friendship >= 25 }
+    val eligible = present.filter { Progression.partnerLock(data, s, it) == null }
+    val trainers = eligible.filter { it in Progression.trainers.keys }
     var trainer by remember { mutableStateOf(trainers.firstOrNull()) }
     var partner by remember { mutableStateOf<String?>(null) }
     var intensity by remember { mutableStateOf("normal") }
+    val partners = eligible.filter { it != trainer }
+        .sortedByDescending { Relations.get(data, s, it).friendship }
+    val chosenPartner = partner?.takeIf { it in partners }
+    val selectedTrainer = trainer?.takeIf { it in trainers }
+    val partnerBoost = Progression.partnerBoost(data, s, chosenPartner)
     val sessions = if (s.career.sessionsDay == s.clock.day) s.career.sessionsToday else 0
-    val cap = Stats.attributeCap(s.player.level)
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Trainingsplaner", data.roomById[s.location]?.name ?: "", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -402,11 +458,9 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                 GlassPanel {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text("HEUTE", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-                            Text("$sessions / ${Progression.DAILY_SESSIONS} volle Einheiten", style = MaterialTheme.typography.titleSmall)
-                            Text("Danach nur noch geringer Fortschritt (Ermüdung).", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Overline("TRAINING", Pn.Accent)
+                            Text("$sessions / ${Progression.DAILY_SESSIONS} Einheiten", style = MaterialTheme.typography.titleSmall)
                         }
-                        Pill("Limit $cap", Pn.Violet)
                     }
                     StatBar("Energie", s.player.energy, 100, Pn.Accent, icon = PnIcons.Bolt)
                     if (s.player.wounds > 0) Text("Verletzt: intensives Körpertraining gesperrt, Heilung ${s.player.woundProgress}/7 Tage.", color = Pn.Danger, style = MaterialTheme.typography.bodySmall)
@@ -414,8 +468,8 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
             }
             item {
                 GlassPanel {
-                    Text("AUSBILDER", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
-                    if (trainers.isEmpty()) SmallNote("Gerade ist hier kein Ausbilder. Michael ist vormittags in der Trainingshalle, nachmittags am Präzisionsstand; Birkhoff und Sonya im Techniklabor.")
+                    Overline("AUSBILDER", Pn.Accent)
+                    if (trainers.isEmpty()) SmallNote("Kein Ausbilder anwesend.")
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         (listOf<String?>(null) + trainers).forEach { t ->
                             val sel = t == trainer
@@ -425,19 +479,38 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 if (t != null) NpcPortrait(data, s, t, 60.dp) else IconTile(PnIcons.Fist, Pn.Muted, 60.dp)
-                                Text(if (t == null) "Allein" else Relations.displayName(data, s, t).substringBefore(" "), style = MaterialTheme.typography.labelMedium, maxLines = 1)
+                                Text(if (t == null) "Keiner" else Relations.displayName(data, s, t).substringBefore(" "), style = MaterialTheme.typography.labelMedium, maxLines = 1)
                                 if (t != null) Text((Progression.trainers[t] ?: emptySet()).joinToString("/") { Attr.label(it).take(4) }, style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp), color = Pn.Muted, maxLines = 1)
                             }
                         }
                     }
-                    if (partners.isNotEmpty()) {
-                        Text("Trainingspartner", style = MaterialTheme.typography.titleSmall)
-                        ChipRow(listOf("" to "Keiner") + partners.map { it to Relations.displayName(data, s, it).substringBefore(" ") }, partner ?: "") { partner = it.ifBlank { null } }
+                    Text("Trainingspartner", style = MaterialTheme.typography.titleSmall)
+                    if (partners.isEmpty()) {
+                        SmallNote("Kein Trainingspartner anwesend.")
+                    } else {
+                        ChipRow(listOf("" to "Keiner") + partners.map { it to Relations.displayName(data, s, it).substringBefore(" ") },
+                            chosenPartner ?: "") { partner = it.ifBlank { null } }
+                    }
+                    if (chosenPartner != null && partnerBoost != null) {
+                        val friendship = Relations.get(data, s, chosenPartner).friendship
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            NpcPortrait(data, s, chosenPartner, 44.dp)
+                            Column(Modifier.weight(1f)) {
+                                Text(Relations.displayName(data, s, chosenPartner), style = MaterialTheme.typography.titleSmall)
+                                Text("Freundschaft $friendship · ${partnerBoost.label}",
+                                    style = MaterialTheme.typography.bodySmall, color = Pn.Muted)
+                            }
+                            Pill("×${partnerBoost.progressMult}", Pn.Ok)
+                        }
                     }
                     Text("Intensität", style = MaterialTheme.typography.titleSmall)
                     ChipRow(Progression.intensities.map { it.id to it.name }, intensity) { intensity = it }
                     val iv = Progression.intensities.first { it.id == intensity }
-                    SmallNote("Energie ×${iv.energyMult} · Fortschritt ×${iv.progressMult} · Verletzungsrisiko ${iv.injuryRisk} %")
+                    SmallNote("Energie ×${iv.energyMult} · Fortschritt ×${iv.progressMult} · Risiko ${iv.injuryRisk}%")
                 }
             }
             items(Progression.trainings) { t ->
@@ -446,17 +519,18 @@ fun TrainingPlannerScreen(vm: GameViewModel, s: GameState) {
                 val cur = s.player.attributes[t.attribute] ?: 30
                 val bonus = Progression.trainerBonus(data, s, trainer, t.attribute)
                 val goal = s.career.goals[t.attribute]
-                GlassPanel(padding = 12.dp, accent = if (bonus > 0) Pn.Ok else Pn.Accent) {
+                GlassPanel(padding = 12.dp, accent = if (bonus > 0 || partnerBoost != null) Pn.Ok else Pn.Accent) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text(t.name, style = MaterialTheme.typography.titleSmall)
-                            Text("${Attr.label(t.attribute)} $cur/$cap · Teilfortschritt ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("${Attr.label(t.attribute)} $cur · ${(s.player.trainingProgress[t.attribute] ?: 0) * 2}%" + (goal?.let { " · Ziel $it" } ?: ""), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         if (bonus > 0) Pill("Ausbilder +$bonus", Pn.Ok)
+                        else if (partnerBoost != null) Pill("Bonus ×${partnerBoost.progressMult}", Pn.Ok)
                     }
-                    StatBar("", cur, cap, if (cur >= cap) Pn.Warn else Pn.Accent, showValue = false)
-                    ActionButton("Trainieren · −$cost Energie · 1 Slot", Modifier.fillMaxWidth(), enabled = s.player.energy >= cost && sessions <= Progression.DAILY_SESSIONS, secondary = true, icon = PnIcons.Fist) {
-                        vm.act { d, x -> Progression.train(d, x, t.id, partner, trainer, intensity) }
+                    StatBar("", cur, maxOf(100, cur), Pn.Accent, showValue = false)
+                    ActionButton("Trainieren · −$cost Energie", Modifier.fillMaxWidth(), enabled = s.player.energy >= cost && sessions <= Progression.DAILY_SESSIONS, secondary = true, icon = PnIcons.Fist) {
+                        vm.act { d, x -> Progression.train(d, x, t.id, chosenPartner, trainer, intensity) }
                     }
                 }
             }

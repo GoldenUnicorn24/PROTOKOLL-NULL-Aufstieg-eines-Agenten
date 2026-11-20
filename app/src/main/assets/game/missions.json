@@ -902,6 +902,9 @@
             "failure": {
               "text": "Ein Detail passt nicht zur Akte.",
               "cover": -1
+            },
+            "itemBonus": {
+              "gear_cover_papers": 8
             }
           },
           {
@@ -1042,6 +1045,10 @@
             "failure": {
               "text": "Er versteht es erst beim zweiten Mal.",
               "cover": -1
+            },
+            "itemBonus": {
+              "gear_cover_papers": 8,
+              "gear_earpiece": 6
             }
           },
           {
@@ -1109,6 +1116,10 @@
                   "michael": -2
                 }
               }
+            },
+            "itemBonus": {
+              "gear_city_map": 10,
+              "gear_running_shoes": 6
             }
           },
           {
@@ -1731,6 +1742,10 @@
             "failure": {
               "text": "Ein Ziegel fällt.",
               "alarm": 1
+            },
+            "itemBonus": {
+              "gear_rope_ladder": 12,
+              "gear_running_shoes": 6
             }
           },
           {
@@ -1748,6 +1763,9 @@
             "failure": {
               "text": "Misstrauen im Treppenhaus.",
               "alarm": 1
+            },
+            "itemBonus": {
+              "gear_disguise_kit": 10
             }
           }
         ]
@@ -1802,7 +1820,9 @@
             },
             "itemBonus": {
               "medkit": 15,
-              "bandage": 6
+              "bandage": 6,
+              "gear_med_scanner": 10,
+              "gear_splint": 6
             }
           },
           {
@@ -1883,6 +1903,9 @@
             "failure": {
               "text": "Ein Fehler beim Übersetzen.",
               "cover": -1
+            },
+            "itemBonus": {
+              "gift_phrasebook": 6
             }
           },
           {
@@ -1900,6 +1923,10 @@
             "failure": {
               "text": "Er wird misstrauisch.",
               "cover": -1
+            },
+            "itemBonus": {
+              "gear_cover_papers": 10,
+              "gear_disguise_kit": 8
             }
           }
         ]
@@ -3154,5 +3181,2059 @@
     ],
     "debriefSuccess": "PHOENIX ist Geschichte. Was davon bleibt, entscheidest du.",
     "debriefFail": "Voss ist entkommen. Aber du kennst jetzt jeden seiner Schritte."
+  },
+  {
+    "id": "M023",
+    "title": "Alex' Schatten",
+    "locationId": "city",
+    "type": "observation",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "minRank": 4,
+    "minAge": 18,
+    "threat": 2,
+    "xp": 420,
+    "credits": 120,
+    "reputation": 8,
+    "giverId": "alex",
+    "factionId": "independent",
+    "maxTeam": 2,
+    "recommendedItems": [
+      "binoculars",
+      "camera"
+    ],
+    "description": "Alex bittet dich um Hilfe – außerhalb der Dienstwege. Ein Mann aus der Vergangenheit ihres Vaters ist in der Stadt aufgetaucht und fragt nach ihr.",
+    "briefing": "Alex: „Ich will nur wissen, was er will. Kein Bericht. Noch nicht.“",
+    "requires": {
+      "missionsDone": [
+        "M011"
+      ],
+      "flagsAll": [
+        "met_alex"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Ein Gefallen unter Freunden",
+        "text": "Alex sitzt auf der Treppe vor dem Schießstand und dreht ein altes Foto zwischen den Fingern. Darauf: ihr Vater, lachend, neben einem Mann mit Narbe über der Braue. „Semjonow. Er war damals der Buchhalter. Wenn er hier ist, sucht er etwas.“",
+        "options": [
+          {
+            "id": "promise",
+            "text": "„Wir machen das zusammen. Aber ich sage Michael Bescheid, wenn es gefährlich wird.“",
+            "success": {
+              "text": "Alex atmet aus. „Okay. Das ist fair.“",
+              "intel": 1,
+              "effects": {
+                "otherTrust": {
+                  "alex": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "empathy",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Sie nickt, aber du siehst, dass sie dir das Versprechen nicht ganz glaubt.",
+              "effects": {
+                "otherTrust": {
+                  "alex": 1
+                }
+              }
+            }
+          },
+          {
+            "id": "offbook",
+            "text": "„Kein Wort zu niemandem. Ich bin dabei.“",
+            "success": {
+              "text": "Alex umarmt dich kurz und hart. „Danke.“",
+              "effects": {
+                "otherTrust": {
+                  "alex": 6
+                },
+                "setFlags": [
+                  "alex_offbook"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "alex"
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Das Café am Kanal",
+        "text": "Semjonow trifft drei Leute nacheinander. Einer davon trägt die Übergabe. Beobachte die Gesprächsmuster.",
+        "targets": [
+          "Kellner",
+          "Zeitungsleser",
+          "Radfahrerin",
+          "Mann am Tresen"
+        ],
+        "rounds": 4,
+        "intelNeeded": 2,
+        "successText": "Die Radfahrerin trägt einen Umschlag mit dem Siegel einer Bank – ein Schließfach.",
+        "failText": "Du verlierst den Faden, aber das Wort „Schließfach“ fällt zweimal."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Das Schließfach",
+        "text": "Im Schließfach liegt ein Notizbuch: Kontobewegungen, Namen, ein Eintrag mit Alex' Geburtsdatum. Semjonow will es verkaufen – an Black Meridian.",
+        "options": [
+          {
+            "id": "burn",
+            "text": "Das Buch Alex geben. Es ist ihre Geschichte.",
+            "success": {
+              "text": "Alex blättert lange, dann reißt sie die Seite mit ihrem Namen heraus und verbrennt sie im Hof. Den Rest übergibt sie selbst an Birkhoff.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alex_shadow_done",
+                  "alex_ledger_burned"
+                ],
+                "otherTrust": {
+                  "alex": 8
+                },
+                "memory": "Das Notizbuch am Kanal"
+              }
+            }
+          },
+          {
+            "id": "report",
+            "text": "Das Buch offiziell sichern – es enthält Meridian-Konten.",
+            "success": {
+              "text": "Alex ist enttäuscht, aber sie versteht. Die Konten bringen der Division einen echten Vorteil.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alex_shadow_done",
+                  "alex_ledger_kept"
+                ],
+                "faction": {
+                  "syndicate": -6
+                },
+                "otherTrust": {
+                  "alex": -2,
+                  "michael": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Alex nimmt dir das Buch aus der Hand. „Nein.“ Ihr streitet. Am Ende liegt es bei Birkhoff – und zwischen euch eine Kälte.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alex_shadow_done",
+                  "alex_ledger_kept"
+                ],
+                "otherTrust": {
+                  "alex": -6
+                }
+              }
+            },
+            "itemBonus": {
+              "gear_cover_papers": 6
+            }
+          }
+        ]
+      }
+    ],
+    "successEffects": {
+      "xp": 60
+    },
+    "debriefSuccess": "Semjonow verlässt die Stadt mit leeren Händen. Alex spricht zum ersten Mal offen über ihren Vater.",
+    "debriefFail": "Semjonow ist untergetaucht – mitsamt dem Notizbuch.",
+    "witnesses": 0,
+    "risk": 2
+  },
+  {
+    "id": "M024",
+    "title": "Geist im Netz",
+    "locationId": "tech",
+    "type": "investigation",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "minRank": 4,
+    "minAge": 18,
+    "threat": 3,
+    "xp": 480,
+    "credits": 180,
+    "reputation": 10,
+    "giverId": "birkhoff",
+    "factionId": "independent",
+    "maxTeam": 2,
+    "recommendedItems": [
+      "laptop",
+      "kit_frequency_meter"
+    ],
+    "description": "Jemand loggt sich mit Birkhoffs altem Hacker-Namen in Divisionsserver ein. Birkhoff ist nervöser, als er zugibt.",
+    "briefing": "Birkhoff: „Niemand benutzt diesen Namen. Niemand. Außer mir – vor zehn Jahren.“",
+    "requires": {
+      "missionsDone": [
+        "M012"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Logdateien",
+        "text": "Drei Nächte Zugriffsprotokolle. Irgendwo darin steckt das Muster des Eindringlings.",
+        "spots": [
+          "Firewall-Log",
+          "Druckerwarteschlange",
+          "Mail-Relay",
+          "VPN-Knoten",
+          "Kantinenkasse",
+          "Backup-Band",
+          "Wartungstunnel",
+          "Kamera 7",
+          "Archivserver"
+        ],
+        "cluesNeeded": 3,
+        "actions": 6,
+        "successText": "Die Spur führt zu einer Serverfarm am Stadtrand – angemietet über eine Briefkastenfirma.",
+        "failText": "Unvollständig, aber die Serverfarm taucht in zwei Protokollen auf."
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Serverfarm",
+        "text": "Sichere die Datenknoten (I), bevor die Gegenseite ihre Spuren löscht.",
+        "tactical": {
+          "map": [],
+          "mapId": "serverfarm",
+          "enemyName": "Sicherheitsdienst",
+          "enemyHp": 6,
+          "enemyAccuracy": 55,
+          "objective": "intel",
+          "maxTurns": 12,
+          "nonLethal": true,
+          "vipName": "",
+          "requiredSecured": 2,
+          "holdTurns": 0
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Der Geist",
+        "text": "Am Terminal sitzt eine Neunzehnjährige mit Kapuzenpulli. Auf ihrem Bildschirm läuft Birkhoffs alter Code – Zeile für Zeile verbessert.",
+        "options": [
+          {
+            "id": "recruit",
+            "text": "Birkhoff hereinholen und ihr ein Angebot machen.",
+            "success": {
+              "text": "Birkhoff starrt auf den Code. „Du hast meine Rekursion gefixt.“ Die junge Frau grinst. Eine Woche später hat die Technik eine neue Praktikantin.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "birkhoff_ghost_recruited"
+                ],
+                "otherTrust": {
+                  "birkhoff": 8
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "negotiation",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Sie springt auf und rennt – aber Birkhoff hat ihren Code. „Sie kommt wieder“, sagt er. Er klingt fast stolz.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "birkhoff_ghost_fled"
+                ],
+                "otherTrust": {
+                  "birkhoff": 3
+                }
+              }
+            }
+          },
+          {
+            "id": "arrest",
+            "text": "Festnehmen. Sie hat in Divisionsserver eingebrochen.",
+            "success": {
+              "text": "Die Festnahme verläuft ruhig. Birkhoff schweigt den ganzen Rückweg.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "birkhoff_ghost_caught"
+                ],
+                "otherTrust": {
+                  "birkhoff": -3
+                },
+                "faction": {
+                  "government": 3
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "birkhoff"
+      }
+    ],
+    "debriefSuccess": "Der Geist im Netz hat ein Gesicht. Birkhoff wirkt, als hätte jemand einen alten Spiegel aufgehängt.",
+    "debriefFail": "Die Daten sind gelöscht. Birkhoff baut die Firewall in einer Nacht neu.",
+    "witnesses": 0,
+    "risk": 3
+  },
+  {
+    "id": "M025",
+    "title": "Kaffee mit einer Abtrünnigen",
+    "locationId": "city",
+    "type": "undercover",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "minRank": 5,
+    "minAge": 18,
+    "threat": 3,
+    "xp": 520,
+    "credits": 150,
+    "reputation": 8,
+    "giverId": "nikita",
+    "factionId": "independent",
+    "maxTeam": 1,
+    "recommendedItems": [
+      "smartphone",
+      "kit_micro_camera"
+    ],
+    "description": "Nikita schlägt einen Treffpunkt vor: ein Dach über der Altstadt. Sie will wissen, ob man dir trauen kann – und ob du ihr traust.",
+    "briefing": "Eine Nachricht ohne Absender: „22 Uhr. Komm allein. Bring keine Wanze mit – ich merke es.“",
+    "requires": {
+      "missionsDone": [
+        "M014"
+      ],
+      "flagsAll": [
+        "nikita_ally"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Die Bedingung",
+        "text": "Michael erwischt dich an der Schleuse. „Du triffst sie.“ Keine Frage. „Ich komme nicht mit. Aber ich will, dass du zurückkommst.“",
+        "options": [
+          {
+            "id": "honest",
+            "text": "„Ich erzähle dir danach alles.“",
+            "success": {
+              "text": "Michael nickt. Das reicht ihm.",
+              "effects": {
+                "otherTrust": {
+                  "michael": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": null,
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Er glaubt dir – halb.",
+              "effects": {
+                "otherTrust": {
+                  "michael": 1
+                }
+              }
+            }
+          },
+          {
+            "id": "wire",
+            "text": "Heimlich einen Sender einnähen.",
+            "success": {
+              "text": "Ein Sender, so klein wie ein Hemdknopf.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "nikita_wired"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "electronics",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Die Naht sitzt schief. Sie wird es sehen.",
+              "effects": {
+                "setFlags": [
+                  "nikita_wired"
+                ]
+              },
+              "alarm": 1
+            },
+            "itemBonus": {
+              "gear_earpiece": 10
+            }
+          }
+        ],
+        "speakerId": "michael"
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Dachterrasse",
+        "text": "Jemand ist dir gefolgt. Erreiche den Treffpunkt (Z), bevor die Verfolger dich stellen.",
+        "tactical": {
+          "map": [],
+          "mapId": "rooftop",
+          "enemyName": "Verfolger",
+          "enemyHp": 5,
+          "enemyAccuracy": 52,
+          "objective": "rendezvous",
+          "maxTurns": 12,
+          "nonLethal": true,
+          "vipName": "",
+          "requiredSecured": 0,
+          "holdTurns": 0
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Zwei Tassen Kaffee",
+        "text": "Nikita reicht dir einen Becher. „Die Verfolger gehören nicht zu Percy. Sie gehören zu Meridian. Jemand verkauft deine Bewegungen.“ Sie mustert dich. „Hast du eine Wanze dabei?“",
+        "options": [
+          {
+            "id": "truth",
+            "text": "Die Wahrheit sagen – egal, wie die Antwort lautet.",
+            "success": {
+              "text": "„Gut.“ Sie lächelt zum ersten Mal. „Dann reden wir über einen Plan.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alliance_1"
+                ],
+                "otherTrust": {
+                  "nikita": 8
+                },
+                "memory": "Kaffee auf dem Dach"
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Sie hört zu, ohne etwas zu verraten. „Wir sehen uns.“ Aber sie lässt dir eine Nummer da.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alliance_1"
+                ],
+                "otherTrust": {
+                  "nikita": 3
+                }
+              }
+            }
+          },
+          {
+            "id": "lie",
+            "text": "„Nein.“",
+            "success": {
+              "text": "Sie lässt es dir durchgehen. Ob sie es weiß, kannst du nicht sagen.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alliance_1"
+                ],
+                "otherTrust": {
+                  "nikita": 1
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "lie_detector",
+              "difficulty": 65
+            },
+            "failure": {
+              "text": "Sie tippt auf deinen Hemdknopf. „Grüß Michael.“ Dann ist sie weg.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "nikita": -6
+                },
+                "setFlags": [
+                  "nikita_burned_once"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "nikita"
+      }
+    ],
+    "debriefSuccess": "Ein Leck bei Meridian, ein Plan mit einer Abtrünnigen. Die Division muss davon nichts wissen – noch nicht.",
+    "debriefFail": "Du kehrst ohne Antworten zurück. Nikita meldet sich nicht.",
+    "witnesses": 0,
+    "risk": 3
+  },
+  {
+    "id": "M026",
+    "title": "Brücke der Verräter",
+    "locationId": "city",
+    "type": "rescue",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "minRank": 7,
+    "minAge": 20,
+    "threat": 4,
+    "xp": 760,
+    "credits": 420,
+    "reputation": 18,
+    "giverId": "nikita",
+    "factionId": "syndicate",
+    "maxTeam": 3,
+    "recommendedItems": [
+      "vest_light",
+      "radio_secure",
+      "kit_tracker_beacon"
+    ],
+    "description": "Nikitas Quelle bei Black Meridian will aussteigen. Übergabe auf der Hängebrücke – und Meridian weiß davon.",
+    "briefing": "Nikita: „Sie heißt Wera. Sie hat zwei Kinder. Wenn wir sie verlieren, verlieren wir alles, was sie weiß.“",
+    "requires": {
+      "missionsDone": [
+        "M019"
+      ],
+      "flagsAll": [
+        "alliance_1"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Gemeinsamer Plan",
+        "text": "Nikita und du über einem Stadtplan. Zwei Schulen, zwei Methoden. „Ich würde die Brücke sperren“, sagt sie. „Du würdest Leute an beide Enden stellen.“",
+        "options": [
+          {
+            "id": "hers",
+            "text": "Nikitas Plan: schnell, riskant, direkt.",
+            "success": {
+              "text": "Ihr bewegt euch wie ein eingespieltes Team.",
+              "intel": 1,
+              "effects": {
+                "otherTrust": {
+                  "nikita": 5
+                }
+              }
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "stamina",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Zu schnell – ein Späher sieht euch.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "yours",
+            "text": "Dein Plan: Teams an beiden Enden, Funkdisziplin.",
+            "success": {
+              "text": "Nikita hebt eine Braue – und folgt deiner Ansage.",
+              "intel": 2,
+              "effects": {
+                "otherTrust": {
+                  "nikita": 3
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "planning",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Ein Funkkanal ist gestört.",
+              "alarm": 1
+            }
+          }
+        ],
+        "speakerId": "nikita"
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Hängebrücke",
+        "text": "Bring Wera sicher zum Ausgang (X). Meridians Leute kommen von beiden Seiten.",
+        "tactical": {
+          "map": [],
+          "mapId": "bridge",
+          "enemyName": "Meridian-Agent",
+          "enemyHp": 7,
+          "enemyAccuracy": 60,
+          "objective": "escort",
+          "maxTurns": 14,
+          "nonLethal": true,
+          "vipName": "Wera",
+          "requiredSecured": 0,
+          "holdTurns": 0
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Wera",
+        "text": "Wera zittert, als sie den Umschlag übergibt: Zahlungswege, ein Name im Divisionsrat. „Ich will nur meine Kinder sehen.“",
+        "options": [
+          {
+            "id": "protect",
+            "text": "Ihr ein neues Leben besorgen – mit Divisionsmitteln.",
+            "success": {
+              "text": "Nikita sieht dich lange an. „Vielleicht kann man bei euch doch etwas ändern.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "alliance_forged"
+                ],
+                "otherTrust": {
+                  "nikita": 8
+                },
+                "credits": -200,
+                "memory": "Wera auf der Brücke"
+              }
+            }
+          },
+          {
+            "id": "use",
+            "text": "Wera als Doppelagentin zurückschicken.",
+            "success": {
+              "text": "Sie geht zurück. Die Informationen sind Gold wert. Nikita sagt nichts – das ist schlimmer als jeder Vorwurf.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "faction": {
+                  "syndicate": -10
+                },
+                "otherTrust": {
+                  "nikita": -5
+                },
+                "setFlags": [
+                  "wera_returned"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Wera weigert sich. Nikita bringt sie selbst in Sicherheit.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "otherTrust": {
+                  "nikita": -3
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "nikita"
+      }
+    ],
+    "successEffects": {
+      "faction": {
+        "syndicate": -8
+      }
+    },
+    "debriefSuccess": "Die Brücke hält. Und zwischen Division und einer Abtrünnigen entsteht etwas, das wie Vertrauen aussieht.",
+    "debriefFail": "Wera ist verschwunden. Meridian hat aufgeräumt.",
+    "witnesses": 0,
+    "risk": 4
+  },
+  {
+    "id": "M027",
+    "title": "Die erste Klasse",
+    "locationId": "director",
+    "type": "management",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "minRank": 9,
+    "minAge": 23,
+    "threat": 1,
+    "xp": 600,
+    "credits": 0,
+    "reputation": 15,
+    "giverId": "michael",
+    "factionId": "division",
+    "maxTeam": 1,
+    "description": "Nach der Wahrheit über PHOENIX braucht die Division eine neue Ausbildung. Michael legt dir ein leeres Blatt hin: „Du weißt, wie es nicht geht. Zeig mir, wie es geht.“",
+    "briefing": "Michael: „Kinder werden hier nie wieder Nummern sein. Das ist die einzige Regel, die ich vorgebe.“",
+    "requires": {
+      "minRank": 9,
+      "flagsAll": [
+        "phoenix_truth"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Wer darf kommen?",
+        "text": "Die erste Frage: Wen nimmt die neue Akademie auf?",
+        "options": [
+          {
+            "id": "adults",
+            "text": "Nur Volljährige. Freiwillig, mit Rückzugsrecht.",
+            "success": {
+              "text": "Michael nickt langsam. „Das kostet uns Talente. Und rettet uns die Seele.“",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "academy_adults"
+                ],
+                "otherTrust": {
+                  "michael": 5
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "planning",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Der Rat ist skeptisch, aber du setzt dich durch.",
+              "effects": {
+                "setFlags": [
+                  "academy_adults"
+                ]
+              }
+            }
+          },
+          {
+            "id": "youth",
+            "text": "Ab 16 – mit Schule, Vormundschaft und ohne Einsätze bis 18.",
+            "success": {
+              "text": "Ein Modell mit Lehrerinnen, Sozialdienst und Ausstiegsrecht. Selbst Amanda findet nichts auszusetzen.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "academy_youth"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Die Aufsicht verlangt Nachbesserungen – aber das Modell steht.",
+              "effects": {
+                "setFlags": [
+                  "academy_youth"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "michael"
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Was wird gelehrt?",
+        "text": "Der Lehrplan. Jede Zeile ist eine Entscheidung darüber, wer diese Menschen werden.",
+        "options": [
+          {
+            "id": "ethics",
+            "text": "Recht, Ethik und Deeskalation zuerst – dann Technik.",
+            "success": {
+              "text": "Birkhoff verspricht einen Kurs „Wie man nicht wie Percy wird“.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "analysis",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Ein guter Lehrplan, nur zu lang.",
+              "stress": 5
+            }
+          },
+          {
+            "id": "field",
+            "text": "Praxis zuerst – wer überlebt, lernt den Rest.",
+            "success": {
+              "text": "Effizient. Michael sagt nichts, aber er streicht eine Zeile in deinem Entwurf durch.",
+              "effects": {
+                "otherTrust": {
+                  "michael": -3
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Die Unterschrift",
+        "text": "Die Gründungsurkunde liegt vor dir. Unter deinem Namen ist Platz für eine zweite Unterschrift.",
+        "options": [
+          {
+            "id": "michael",
+            "text": "Michael unterschreibt mit.",
+            "success": {
+              "text": "Er zögert, dann setzt er seinen Namen darunter. „Für die, die wir nicht retten konnten.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "academy_charter"
+                ],
+                "otherTrust": {
+                  "michael": 6
+                },
+                "memory": "Die Gründungsurkunde"
+              }
+            }
+          },
+          {
+            "id": "alone",
+            "text": "Du unterschreibst allein – die Verantwortung liegt bei dir.",
+            "success": {
+              "text": "Die Tinte trocknet. Die Akademie existiert auf Papier.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "academy_charter"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Die Akademie hat eine Satzung. Jetzt braucht sie Menschen, die ihr glauben.",
+    "debriefFail": "Der Entwurf scheitert im Rat.",
+    "witnesses": 0,
+    "risk": 1
+  },
+  {
+    "id": "M028",
+    "title": "Prüfstein",
+    "locationId": "training",
+    "type": "training",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "minRank": 9,
+    "minAge": 23,
+    "threat": 2,
+    "xp": 680,
+    "credits": 200,
+    "reputation": 14,
+    "giverId": "michael",
+    "factionId": "division",
+    "maxTeam": 3,
+    "recommendedItems": [
+      "training_drone",
+      "radio_secure"
+    ],
+    "description": "Der erste Jahrgang der Akademie in einer Übung – und ein echter Zwischenfall: Unbekannte dringen ins Testlabor ein.",
+    "briefing": "Michael: „Heute zeigst du ihnen nicht, wie man gewinnt. Sondern, wie man aufeinander aufpasst.“",
+    "requires": {
+      "flagsAll": [
+        "academy_charter"
+      ],
+      "missionsDone": [
+        "M020"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "tactical",
+        "title": "Testlabor",
+        "text": "Halte die Schutzzone (Z), bis die Rekruten evakuiert sind. Markierungsmunition – aber die Eindringlinge sind echt.",
+        "tactical": {
+          "map": [],
+          "mapId": "lab",
+          "enemyName": "Eindringling",
+          "enemyHp": 6,
+          "enemyAccuracy": 55,
+          "objective": "protect",
+          "maxTurns": 12,
+          "nonLethal": true,
+          "vipName": "Rekrutin Jana",
+          "requiredSecured": 0,
+          "holdTurns": 4
+        }
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Nachbesprechung mit dem Jahrgang",
+        "text": "Zwölf Gesichter, alle blass. Eine Rekrutin fragt: „Ist das jetzt unser Leben?“",
+        "options": [
+          {
+            "id": "truth",
+            "text": "„Nur, wenn ihr es wollt. Ihr könnt jederzeit gehen.“",
+            "success": {
+              "text": "Niemand geht. Aber alle sitzen ein bisschen aufrechter.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "academy_founded"
+                ],
+                "otherTrust": {
+                  "michael": 5
+                },
+                "memory": "Der erste Jahrgang"
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "inspire",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Zwei verlassen die Akademie. Die anderen bleiben – aus eigenem Entschluss.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "academy_founded"
+                ]
+              }
+            }
+          },
+          {
+            "id": "hard",
+            "text": "„Das ist die Arbeit. Gewöhnt euch daran.“",
+            "success": {
+              "text": "Disziplin statt Wärme. Die Akademie besteht, aber sie erinnert ein wenig zu sehr an früher.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "academy_founded",
+                  "academy_hard"
+                ],
+                "otherTrust": {
+                  "michael": -4
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Der erste Jahrgang hat seine Feuertaufe bestanden – ohne dass jemand zur Nummer wurde.",
+    "debriefFail": "Die Übung endet im Chaos. Der Rat zweifelt am Projekt.",
+    "witnesses": 0,
+    "risk": 2
+  },
+  {
+    "id": "M029",
+    "title": "Michaels Akte",
+    "locationId": "archives",
+    "type": "investigation",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "minRank": 6,
+    "minAge": 19,
+    "threat": 1,
+    "xp": 440,
+    "credits": 60,
+    "reputation": 6,
+    "giverId": "michael",
+    "factionId": "division",
+    "maxTeam": 1,
+    "recommendedItems": [
+      "flashlight",
+      "kit_evidence_kit"
+    ],
+    "description": "Im Archiv taucht eine versiegelte Akte über den Anschlag auf, bei dem Michael seine Familie verlor. Jemand hat Seiten ausgetauscht.",
+    "briefing": "Birkhoff: „Ich habe sie nicht gesucht. Sie lag einfach falsch einsortiert. Und das passiert hier nie zufällig.“",
+    "requires": {
+      "missionsDone": [
+        "M017"
+      ],
+      "flagsAll": [
+        "ch2_done"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Archivkeller",
+        "text": "Fünf Kartons, drei Jahrzehnte. Finde die ausgetauschten Seiten.",
+        "spots": [
+          "Karton 1998",
+          "Mikrofilm",
+          "Ausleihkarten",
+          "Kopierer-Zähler",
+          "Karton 2003",
+          "Spesenbelege",
+          "Leere Hülle",
+          "Aktenvernichter",
+          "Personalakte P."
+        ],
+        "cluesNeeded": 3,
+        "actions": 6,
+        "successText": "Die Originalseiten liegen in Percys alter Spesenmappe: Der Anschlag war bekannt. Niemand hat gewarnt.",
+        "failText": "Du findest genug, um zu wissen, dass jemand gelogen hat – nicht genug, um zu wissen, wer."
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Michael",
+        "text": "Michael liest die Seiten im Stehen. Als er fertig ist, legt er sie sehr sorgfältig zusammen.",
+        "options": [
+          {
+            "id": "stay",
+            "text": "Bei ihm bleiben. Nichts sagen.",
+            "success": {
+              "text": "Nach einer langen Zeit sagt er: „Danke, dass du sie gefunden hast. Und nicht weggesehen.“",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "michael_reckoning"
+                ],
+                "otherTrust": {
+                  "michael": 10
+                },
+                "memory": "Die Seiten im Archiv"
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "empathy",
+              "difficulty": 35
+            },
+            "failure": {
+              "text": "Er bittet dich zu gehen. Am nächsten Morgen steht er pünktlich in der Trainingshalle.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "michael_reckoning"
+                ],
+                "otherTrust": {
+                  "michael": 5
+                }
+              }
+            }
+          },
+          {
+            "id": "percy",
+            "text": "„Wir bringen das vor die Aufsicht.“",
+            "success": {
+              "text": "„Nicht für mich“, sagt er. „Für die anderen Familien.“ Ihr bereitet die Akte gemeinsam vor.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "michael_reckoning",
+                  "percy_ledger"
+                ],
+                "otherTrust": {
+                  "michael": 6
+                },
+                "faction": {
+                  "government": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Er schüttelt den Kopf. „Noch nicht.“ Die Akte bleibt bei dir.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "michael_reckoning"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "michael"
+      }
+    ],
+    "debriefSuccess": "Eine alte Wunde, endlich ausgesprochen.",
+    "debriefFail": "Die Akte bleibt unvollständig.",
+    "witnesses": 0,
+    "risk": 1
+  },
+  {
+    "id": "M030",
+    "title": "Postkarte ohne Absender",
+    "locationId": "director",
+    "type": "investigation",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 1,
+    "xp": 700,
+    "credits": 150,
+    "reputation": 10,
+    "giverId": "birkhoff",
+    "factionId": "division",
+    "recommendedItems": [
+      "kit_cipher_disk",
+      "laptop"
+    ],
+    "description": "Ein Jahr nach deiner Entscheidung liegt eine Postkarte auf deinem Schreibtisch. Vorn ein Bahnhof. Hinten sieben Zahlen – und eine achte.",
+    "briefing": "Birkhoff: „Sieben Zahlen kennen wir: die PHOENIX-Kandidaten. Die achte nicht. Und sie ist neu.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "search",
+        "title": "Die achte Zahl",
+        "text": "Birkhoff hat die Zahl in jedes Register gejagt. Hilf ihm, die Treffer zu sortieren.",
+        "spots": [
+          "Meldeamt",
+          "Waisenhausregister",
+          "Spendenquittungen",
+          "Reisebuchungen",
+          "Schulakten",
+          "Klinikbetten",
+          "Stiftungsbericht",
+          "Mietverträge",
+          "Telefonliste"
+        ],
+        "cluesNeeded": 3,
+        "actions": 6,
+        "successText": "Die Zahl gehört zu einem Mädchen in einem Internat der „Lenz-Stiftung“. Die Stiftung wurde vor elf Monaten gegründet.",
+        "failText": "Teile passen zusammen: eine Stiftung, ein Internat, ein Name – Dr. Lenz."
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Ein bekanntes Muster",
+        "text": "Bahnhofsfotos, Waisen, Hochbegabtenstipendien. Jemand baut PHOENIX nach.",
+        "options": [
+          {
+            "id": "quiet",
+            "text": "Verdeckt ermitteln – niemand darf gewarnt werden.",
+            "success": {
+              "text": "Ein kleines Team, keine Akten auf dem Hauptserver.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_known",
+                  "lenz_quiet"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "intellect",
+              "skill": "planning",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Zu klein gedacht – aber der Plan steht.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_known",
+                  "lenz_quiet"
+                ]
+              }
+            }
+          },
+          {
+            "id": "council",
+            "text": "Den Rat sofort informieren.",
+            "success": {
+              "text": "Der Rat bewilligt Mittel. Irgendwo im Gebäude hört jemand mit.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_known",
+                  "lenz_open"
+                ],
+                "faction": {
+                  "government": 3
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "birkhoff"
+      }
+    ],
+    "debriefSuccess": "Es gibt einen Kandidaten 8. Und jemanden, der Kandidat 9 sucht.",
+    "debriefFail": "Die Spur verläuft im Sand.",
+    "witnesses": 0,
+    "risk": 1
+  },
+  {
+    "id": "M031",
+    "title": "Meridians Rache",
+    "locationId": "harbor",
+    "type": "tactical",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 4,
+    "xp": 900,
+    "credits": 500,
+    "reputation": 20,
+    "giverId": "michael",
+    "factionId": "syndicate",
+    "maxTeam": 4,
+    "recommendedItems": [
+      "vest_heavy",
+      "radio_secure",
+      "medkit"
+    ],
+    "description": "Black Meridian schlägt zurück: Ein Lagerhaus der Division am Hafen wird überfallen. Darin: Akten aller aktiven Agentinnen und Agenten.",
+    "briefing": "Michael: „Wenn die Akten fallen, fallen Menschen. Wir halten das Lager.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M030"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Lagebild",
+        "text": "Funkverkehr, zwei Fahrzeuge, mindestens sechs Angreifer.",
+        "options": [
+          {
+            "id": "hold",
+            "text": "Verstärkung anfordern, das Lager halten.",
+            "success": {
+              "text": "Dein Team geht ruhig in Stellung.",
+              "intel": 2
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "commander",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Die Verstärkung braucht länger.",
+              "alarm": 1
+            }
+          },
+          {
+            "id": "evac",
+            "text": "Akten zuerst evakuieren.",
+            "success": {
+              "text": "Die wichtigsten Kisten sind im Wagen.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "files_evacuated"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "logistics",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Halbfertig, als die ersten Schüsse fallen.",
+              "alarm": 1
+            },
+            "itemBonus": {
+              "gear_messenger_bag": 8
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Lagerhalle",
+        "text": "Halte die Schutzposition (Z) und schütze die Archivarin.",
+        "tactical": {
+          "map": [],
+          "mapId": "warehouse",
+          "enemyName": "Meridian-Stoßtrupp",
+          "enemyHp": 7,
+          "enemyAccuracy": 62,
+          "objective": "protect",
+          "maxTurns": 14,
+          "nonLethal": true,
+          "vipName": "Archivarin Roth",
+          "requiredSecured": 0,
+          "holdTurns": 4
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Der Anführer",
+        "text": "Der Anführer des Stoßtrupps liegt verletzt zwischen Kisten. Auf seinem Telefon: eine Nachricht von „L.“",
+        "options": [
+          {
+            "id": "deal",
+            "text": "Ihm einen Deal anbieten: Informationen gegen Schutz.",
+            "success": {
+              "text": "„L. bezahlt Meridian für Unruhe. Damit ihr nicht hinseht, wo es wichtig ist.“",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "lenz_meridian_link"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "negotiation",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Er schweigt – aber das Telefon reicht.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_meridian_link"
+                ]
+              }
+            }
+          },
+          {
+            "id": "hand",
+            "text": "Der Polizei übergeben.",
+            "success": {
+              "text": "Ordentlich und legal. Das Telefon geht an Birkhoff.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_meridian_link"
+                ],
+                "faction": {
+                  "government": 4
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "successEffects": {
+      "faction": {
+        "syndicate": -10
+      }
+    },
+    "debriefSuccess": "Das Lager hält. Meridian ist nur ein Werkzeug – die Hand dahinter heißt Lenz.",
+    "debriefFail": "Akten sind verloren. Agenten müssen untertauchen.",
+    "witnesses": 0,
+    "risk": 4
+  },
+  {
+    "id": "M032",
+    "title": "Kandidat 8",
+    "locationId": "hospital",
+    "type": "rescue",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 4,
+    "xp": 950,
+    "credits": 300,
+    "reputation": 22,
+    "giverId": "nikita",
+    "factionId": "phoenix",
+    "maxTeam": 3,
+    "recommendedItems": [
+      "kit_rescue_cutter",
+      "medkit",
+      "keycard"
+    ],
+    "description": "Das Internat der Lenz-Stiftung ist ein Labor. Kandidat 8 ist vierzehn Jahre alt – so alt wie du damals.",
+    "briefing": "Nikita: „Ich habe das schon einmal zu spät gemacht. Nicht noch einmal.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M031"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "observe",
+        "title": "Besuchszeit",
+        "text": "Getarnt als Elternbeirat beobachtest du die Wachwechsel.",
+        "targets": [
+          "Pförtner",
+          "Hausmeister",
+          "Erzieherin",
+          "Laborant"
+        ],
+        "rounds": 4,
+        "intelNeeded": 2,
+        "successText": "Der Laborant hat einen Schlüssel zum Untergeschoss – und Angst vor seinem Chef.",
+        "failText": "Lückenhaft, aber das Untergeschoss ist der Schlüssel."
+      },
+      {
+        "id": "s2",
+        "type": "tactical",
+        "title": "Forschungslabor",
+        "text": "Bring Kandidat 8 zur Evakuierung (X).",
+        "tactical": {
+          "map": [],
+          "mapId": "lab",
+          "enemyName": "Wachdienst",
+          "enemyHp": 7,
+          "enemyAccuracy": 60,
+          "objective": "extract",
+          "maxTurns": 14,
+          "nonLethal": true,
+          "vipName": "Kandidat 8",
+          "requiredSecured": 0,
+          "holdTurns": 0
+        }
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Leonie",
+        "text": "Sie heißt Leonie. Sie fragt, ob ihre Mutter weiß, wo sie ist. Du weißt die Antwort: Die Mutter glaubt, Leonie habe ein Stipendium.",
+        "options": [
+          {
+            "id": "home",
+            "text": "Leonie nach Hause bringen – heute noch.",
+            "success": {
+              "text": "Die Mutter öffnet im Bademantel. Dann schreit sie, und dann umarmt sie ihre Tochter, und du gehst die Treppe hinunter, bevor jemand sieht, dass du weinst.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "leonie_home"
+                ],
+                "memory": "Leonie an der Tür"
+              }
+            }
+          },
+          {
+            "id": "witness",
+            "text": "Leonie als Zeugin schützen, bis Lenz gefasst ist.",
+            "success": {
+              "text": "Leonie entscheidet selbst: „Ich will, dass er aufhört.“ Ihre Aussage wird alles verändern.",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "leonie_witness"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "empathy",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Sie will nur nach Hause. Du bringst sie hin – die Aussage kann warten.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "leonie_home"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "nikita"
+      }
+    ],
+    "successEffects": {
+      "faction": {
+        "phoenix": -12
+      }
+    },
+    "debriefSuccess": "Kandidat 8 hat wieder einen Namen.",
+    "debriefFail": "Das Labor ist geräumt – mit den Kindern.",
+    "witnesses": 0,
+    "risk": 4
+  },
+  {
+    "id": "M033",
+    "title": "Die Anhörung",
+    "locationId": "director",
+    "type": "dialogue",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 1,
+    "xp": 700,
+    "credits": 0,
+    "reputation": 18,
+    "giverId": "amanda",
+    "factionId": "government",
+    "maxTeam": 1,
+    "description": "Die Aufsicht lädt dich vor: Wie konnte unter deiner Führung ein zweites PHOENIX entstehen?",
+    "briefing": "Amanda: „Sie werden fragen, was du gewusst hast. Antworte auf die Frage, die sie nicht stellen.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M032"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Erste Frage",
+        "text": "„Direktion, hatten Sie Kenntnis von der Lenz-Stiftung?“",
+        "options": [
+          {
+            "id": "candid",
+            "text": "Offen den Zeitpunkt der ersten Spur nennen.",
+            "success": {
+              "text": "Ein Raunen. Dann Respekt.",
+              "intel": 1,
+              "effects": {
+                "faction": {
+                  "government": 5
+                }
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "iron_will",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Die Wahrheit klingt wie eine Ausrede.",
+              "stress": 8
+            }
+          },
+          {
+            "id": "deflect",
+            "text": "Auf die Erfolge verweisen.",
+            "success": {
+              "text": "Elegant – aber Amanda verzieht keine Miene.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "silver_tongue",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Die Vorsitzende unterbricht dich.",
+              "stress": 10,
+              "effects": {
+                "faction": {
+                  "government": -3
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "amanda"
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Die Frage, die keiner stellt",
+        "text": "Amanda reicht dir einen Zettel: „Wer hat Lenz finanziert?“ Darunter ein Name, den du kennst: ein Mitglied der Aufsicht selbst.",
+        "options": [
+          {
+            "id": "expose",
+            "text": "Den Namen öffentlich nennen.",
+            "success": {
+              "text": "Stille. Dann Blitzlichter. Die Anhörung wird zur Anklage – gegen jemand anderen.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "financier_exposed"
+                ],
+                "faction": {
+                  "government": -4,
+                  "civilian": 8
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "persuasion",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Man glaubt dir nicht sofort – aber der Name steht im Protokoll.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "financier_exposed"
+                ]
+              }
+            }
+          },
+          {
+            "id": "leverage",
+            "text": "Den Namen für später behalten.",
+            "success": {
+              "text": "Amanda lächelt dünn. „Du lernst.“ Ein Hebel in deiner Schublade.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "financier_leverage"
+                ],
+                "otherTrust": {
+                  "amanda": 5
+                }
+              }
+            }
+          }
+        ],
+        "speakerId": "amanda"
+      }
+    ],
+    "debriefSuccess": "Die Anhörung ist überstanden. Die Spur zu Lenz führt jetzt nach ganz oben.",
+    "debriefFail": "Die Aufsicht kürzt dein Budget.",
+    "witnesses": 0,
+    "risk": 1
+  },
+  {
+    "id": "M034",
+    "title": "Schattenhandel",
+    "locationId": "embassy",
+    "type": "undercover",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 3,
+    "xp": 800,
+    "credits": 400,
+    "reputation": 15,
+    "giverId": "alex",
+    "factionId": "syndicate",
+    "maxTeam": 2,
+    "recommendedItems": [
+      "passport",
+      "kit_concealed_vest",
+      "smartphone"
+    ],
+    "description": "Meridian versteigert in einer Botschaftsresidenz Lenz' Forschungsdaten. Du gehst als Käuferin bzw. Käufer hinein.",
+    "briefing": "Alex: „Ich kenne diese Leute. Ich kenne, wie sie reden. Lass mich mitkommen.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M033"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Die Legende",
+        "text": "Deine Tarnidentität: Vertretung eines privaten Sicherheitskonzerns.",
+        "options": [
+          {
+            "id": "alex",
+            "text": "Alex führt das Gespräch auf Russisch.",
+            "success": {
+              "text": "Alex ist brillant. Niemand zweifelt.",
+              "intel": 1,
+              "cover": 1,
+              "effects": {
+                "otherTrust": {
+                  "alex": 4
+                }
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "language",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Ein Gast erkennt ihren Namen.",
+              "cover": -1
+            }
+          },
+          {
+            "id": "self",
+            "text": "Du übernimmst – Alex hält sich im Hintergrund.",
+            "success": {
+              "text": "Kühl, glaubwürdig, gefährlich.",
+              "intel": 1
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "disguise",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Deine Hände verraten Nervosität.",
+              "cover": -1
+            },
+            "itemBonus": {
+              "gear_cover_papers": 12,
+              "gear_disguise_kit": 8
+            }
+          }
+        ],
+        "speakerId": "alex"
+      },
+      {
+        "id": "s2",
+        "type": "observe",
+        "title": "Die Auktion",
+        "text": "Vier Bieter, ein Datenträger. Wer arbeitet für Lenz?",
+        "targets": [
+          "Herr im grauen Anzug",
+          "Frau mit Fächer",
+          "Diplomat",
+          "Bodyguard"
+        ],
+        "rounds": 4,
+        "intelNeeded": 2,
+        "successText": "Der Diplomat bietet nie – er nickt nur dem Auktionator zu. Er ist Lenz' Mann.",
+        "failText": "Du bist dir nicht sicher, aber der Diplomat verlässt den Raum zu früh."
+      },
+      {
+        "id": "s3",
+        "type": "choice",
+        "title": "Zugriff",
+        "text": "Der Diplomat geht zu seinem Wagen. In seiner Tasche: Lenz' Aufenthaltsort.",
+        "options": [
+          {
+            "id": "follow",
+            "text": "Folgen und den Aufenthaltsort bestätigen.",
+            "success": {
+              "text": "Eine alte Bibliothek. Lenz arbeitet nachts.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_located"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "perception",
+              "skill": "shadowstep",
+              "difficulty": 50
+            },
+            "failure": {
+              "text": "Du verlierst ihn – aber Birkhoff ortet das Telefon.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_located"
+                ]
+              }
+            },
+            "itemBonus": {
+              "gear_city_map": 8,
+              "gear_earpiece": 6
+            }
+          },
+          {
+            "id": "grab",
+            "text": "Ihn auf dem Parkplatz festsetzen.",
+            "success": {
+              "text": "Schnell und leise. Er redet im Wagen.",
+              "next": "END_SUCCESS",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "lenz_located"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "fitness",
+              "skill": "defense",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Er kann telefonieren, bevor du ihn hast. Lenz ist gewarnt.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_located",
+                  "lenz_warned"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "debriefSuccess": "Die Daten sind gesichert, Lenz ist gefunden.",
+    "debriefFail": "Die Daten wechseln den Besitzer. Lenz verschwindet erneut.",
+    "witnesses": 0,
+    "risk": 3
+  },
+  {
+    "id": "M035",
+    "title": "Die letzte Kandidatin",
+    "locationId": "embassy",
+    "type": "tactical",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 5,
+    "xp": 1100,
+    "credits": 600,
+    "reputation": 25,
+    "giverId": "michael",
+    "factionId": "phoenix",
+    "maxTeam": 4,
+    "recommendedItems": [
+      "vest_heavy",
+      "night_vision",
+      "radio_secure"
+    ],
+    "description": "Dr. Lenz hat sich in der Staatsbibliothek verschanzt – mit seinen Unterlagen und einer letzten Kandidatin.",
+    "briefing": "Michael: „Diesmal sind wir rechtzeitig.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M034"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "tactical",
+        "title": "Staatsbibliothek",
+        "text": "Sichere die Forschungsunterlagen (I), bevor Lenz sie vernichtet.",
+        "tactical": {
+          "map": [],
+          "mapId": "library",
+          "enemyName": "Lenz-Sicherheit",
+          "enemyHp": 8,
+          "enemyAccuracy": 62,
+          "objective": "intel",
+          "maxTurns": 14,
+          "nonLethal": true,
+          "vipName": "",
+          "requiredSecured": 2,
+          "holdTurns": 0
+        }
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Dr. Lenz",
+        "text": "Lenz ist kleiner, als du dachtest. „Ich habe nur weitergemacht, wo man aufgehört hat. Sie selbst sind der Beweis, dass es funktioniert.“",
+        "options": [
+          {
+            "id": "arrest",
+            "text": "„Ich bin der Beweis, dass es nicht funktionieren darf.“ Festnehmen.",
+            "success": {
+              "text": "Die Handschellen klicken. Er lächelt nicht mehr.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_arrested"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "iron_will",
+              "difficulty": 40
+            },
+            "failure": {
+              "text": "Er redet weiter, bis die Tür des Wagens zufällt.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_arrested"
+                ]
+              }
+            }
+          },
+          {
+            "id": "files",
+            "text": "Ihn reden lassen – jede Minute bringt Namen.",
+            "success": {
+              "text": "Er nennt drei weitere Geldgeber, bevor er merkt, was er tut.",
+              "next": "END_SUCCESS",
+              "intel": 2,
+              "effects": {
+                "setFlags": [
+                  "lenz_arrested",
+                  "lenz_network"
+                ]
+              }
+            },
+            "check": {
+              "attribute": "charisma",
+              "skill": "interview",
+              "difficulty": 55
+            },
+            "failure": {
+              "text": "Er durchschaut dich und schweigt.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "lenz_arrested"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "successEffects": {
+      "faction": {
+        "phoenix": -20
+      }
+    },
+    "debriefSuccess": "Das zweite PHOENIX endet in einem Lesesaal.",
+    "debriefFail": "Lenz entkommt durch einen Tunnel unter dem Lesesaal.",
+    "witnesses": 0,
+    "risk": 5
+  },
+  {
+    "id": "M036",
+    "title": "Nachbeben",
+    "locationId": "director",
+    "type": "story",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "minRank": 10,
+    "minAge": 25,
+    "threat": 1,
+    "xp": 1200,
+    "credits": 0,
+    "reputation": 30,
+    "giverId": "michael",
+    "factionId": "division",
+    "maxTeam": 1,
+    "description": "Lenz ist gefasst. Die Kandidaten haben Namen. Bleibt eine Frage: Was lernt die Division daraus – und was lernst du?",
+    "briefing": "Michael: „Damals hat niemand gefragt, was danach kommt. Frag du.“",
+    "requires": {
+      "flagsAll": [
+        "epilogue_seen"
+      ],
+      "missionsDone": [
+        "M035"
+      ]
+    },
+    "stages": [
+      {
+        "id": "s1",
+        "type": "choice",
+        "title": "Die Kinder",
+        "text": "Elf Kinder aus den Lenz-Internaten. Wohin mit ihnen?",
+        "options": [
+          {
+            "id": "families",
+            "text": "Zurück zu ihren Familien, begleitet von Sozialdiensten.",
+            "success": {
+              "text": "Elf Türen öffnen sich. Manche zögern länger als andere.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "ch4_families"
+                ],
+                "faction": {
+                  "civilian": 6
+                }
+              }
+            }
+          },
+          {
+            "id": "academy",
+            "text": "Ein Platz in der Akademie – nur wenn sie wollen, mit Schule und Vormundschaft.",
+            "success": {
+              "text": "Vier wollen bleiben. Die anderen gehen nach Hause. Beides ist richtig.",
+              "intel": 1,
+              "effects": {
+                "setFlags": [
+                  "ch4_academy"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "type": "choice",
+        "title": "Das Gesetz",
+        "text": "Die Aufsicht will ein Gesetz gegen Programme wie PHOENIX – und braucht deine Stimme.",
+        "options": [
+          {
+            "id": "testify",
+            "text": "Öffentlich aussagen – als ehemaliger Kandidat 7.",
+            "success": {
+              "text": "Du sprichst über den Bahnhof, über die grüne Lehne, über die Nummer. Danach ist es sehr still. Das Gesetz wird verabschiedet.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "phoenix_law",
+                  "ch4_testified"
+                ],
+                "faction": {
+                  "civilian": 10,
+                  "government": 5
+                },
+                "memory": "Die Aussage"
+              }
+            },
+            "check": {
+              "attribute": "willpower",
+              "skill": "inspire",
+              "difficulty": 45
+            },
+            "failure": {
+              "text": "Deine Stimme bricht, aber du redest weiter. Das Gesetz kommt – knapp.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "phoenix_law",
+                  "ch4_testified"
+                ]
+              }
+            }
+          },
+          {
+            "id": "closed",
+            "text": "Hinter verschlossenen Türen beraten.",
+            "success": {
+              "text": "Das Gesetz kommt, nüchtern und vollständig. Niemand erfährt, wer es geschrieben hat.",
+              "next": "END_SUCCESS",
+              "effects": {
+                "setFlags": [
+                  "phoenix_law"
+                ]
+              }
+            }
+          }
+        ],
+        "speakerId": "michael"
+      }
+    ],
+    "debriefSuccess": "Das Nachbeben ist vorbei. Die Division ist eine andere geworden – und du auch.",
+    "debriefFail": "Das Gesetz scheitert. Die Arbeit geht weiter.",
+    "witnesses": 0,
+    "risk": 1
   }
 ]

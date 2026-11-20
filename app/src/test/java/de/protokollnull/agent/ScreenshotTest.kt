@@ -34,7 +34,11 @@ class ScreenshotTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private fun shot(name: String) {
+    private var vmRef: GameViewModel? = null
+
+    private fun shot(name: String, keepCelebration: Boolean = false) {
+        // Feier-Einblendungen (Level/Rang) würden die Kernscreens verdecken
+        if (!keepCelebration) vmRef?.dismissCelebration()
         compose.waitForIdle()
         compose.mainClock.advanceTimeBy(1500)
         compose.waitForIdle()
@@ -45,6 +49,7 @@ class ScreenshotTest {
     fun coreScreens() {
         val app = ApplicationProvider.getApplicationContext<Application>()
         val vm = GameViewModel(app)
+        vmRef = vm
         vm.updateSettings { it.copy(animations = false, sfxVolume = 0, musicVolume = 0) }
         val loader = ImageLoader.Builder(app).components { add(SvgDecoder.Factory()) }
             .dispatcher(Dispatchers.Unconfined).allowHardware(false).crossfade(false).build()
@@ -190,10 +195,37 @@ class ScreenshotTest {
         vm.closeOverlays(); vm.open(Overlay.City("event")); shot("48_alltagsereignis")
         vm.update { it.copy(life = it.life.copy(pendingEvent = null)) }
         vm.closeOverlays(); vm.open(Overlay.Npc("thom", "duty")); shot("49_personalakte_dienst")
+        // v1.0: Taktik 3.0 mit Team, Direktionsagenda, Kapitel 4, Wendung, Beförderung, neues Ende
+        vm.update { s0 ->
+            val setup = TacticalSetup(emptyList(), mapId = "lab", objective = "extract", enemyName = "Wachdienst", enemyHp = 6, enemyAccuracy = 58, vipName = "Kandidat 8")
+            s0.copy(activeMission = MissionRun("M032", 3L, "s2", tactical = Tactical.setup(vm.data, s0, setup, listOf("alex", "birkhoff"), 3L, 3)))
+        }
+        vm.closeOverlays(); shot("50_taktik3_labor")
+        vm.update { it.copy(activeMission = null) }
+        vm.update { s0 -> Agenda.choose(vm.data, Directorate.ensure(vm.data, s0), "people").state }
+        vm.closeOverlays(); vm.open(Overlay.DirectorView("agenda")); shot("51_direktion_agenda")
+        vm.update { it.copy(flags = it.flags + setOf("epilogue_seen", "ending_order", "voss_resolved"), completedDialogues = it.completedDialogues + "dlg_final" + "dlg_ch4_intro") }
+        vm.closeOverlays(); vm.open(Overlay.Briefing("M030")); shot("52_kapitel4_briefing")
+        vm.update { s0 ->
+            val base = Ops.refresh(vm.data, s0)
+            val c = (1L..60L).asSequence().mapNotNull { seed -> Ops.generate(vm.data, base, base.clock.day, 992, seed, forced = Ops.archetypeById.getValue("intel"))?.copy(id = "SHOT_TWIST$seed", complicationId = "none", chainId = null, caseId = null, difficulty = 3) }
+                .first { Twists.forContract(it) != null }
+            val def = Ops.toMission(vm.data, base, c)
+            base.copy(ops = base.ops.copy(contracts = base.ops.contracts + c), activeMission = MissionRun(c.id, 1L, "twist", generated = def))
+        }
+        vm.closeOverlays(); shot("53_wendung")
+        vm.update { it.copy(activeMission = null, flags = it.flags - setOf("epilogue_seen", "ending_order")) }
+        vm.update { it.copy(player = it.player.copy(rank = 11)) }
+        vm.act { d, s0 -> Result(Progression.applyPromotion(d, s0, 12)) }
+        vm.dismissToast(); shot("54_feier_befoerderung", keepCelebration = true)
+        vm.dismissCelebration()
+        vm.closeOverlays(); vm.open(Overlay.CareerView("board")); shot("56_rangliste")
         vm.closeOverlays(); vm.open(Overlay.Saves); shot("23_spielstaende")
         vm.closeOverlays()
         vm.update { it.copy(flags = it.flags + setOf("ending_order", "voss_arrested", "kira_rescued", "nikita_ally")) }
         shot("24_epilog")
+        vm.update { it.copy(flags = it.flags - "ending_order" + setOf("ending_academy", "academy_founded", "michael_reckoning", "alex_shadow_done", "alex_ledger_burned")) }
+        shot("55_epilog_akademie")
         assertNotNull(vm.state.value)
     }
 }

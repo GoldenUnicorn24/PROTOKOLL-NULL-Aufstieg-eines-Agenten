@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
 import de.protokollnull.agent.BuildConfig
 import de.protokollnull.agent.ui.CastPortraitSettings
 import de.protokollnull.agent.ui.GameViewModel
@@ -41,34 +42,43 @@ import java.util.Locale
 fun StartScreen(vm: GameViewModel) {
     val auto = remember { vm.slotInfo("auto") }
     val autoState = remember { if (auto != null) vm.peek("auto") else null }
-    Column(
-        Modifier.fillMaxSize().systemBarsPadding().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
-        de.protokollnull.agent.ui.ScenePanel("hq", Modifier.fillMaxWidth().height(235.dp),
-            "Aufstieg eines Agenten", "PROTOKOLL NULL", cover = true)
-        if (auto != null) {
-            GlassPanel(onClick = { vm.load("auto") }) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                    if (autoState != null) Box(Modifier.size(58.dp, 72.dp).clip(RoundedCornerShape(12.dp))) { de.protokollnull.agent.ui.AvatarCanvas(autoState.player.appearance.avatar, Modifier.fillMaxSize()) }
-                    Column(Modifier.weight(1f)) {
-                        Text("FORTSETZEN", style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
-                        Text(auto.title, style = MaterialTheme.typography.titleMedium)
-                        Text(auto.subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    PnIcon(PnIcons.Play, size = 26.dp)
-                }
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        // Kinoartiger Kopfbereich bis unter die Statusleiste
+        Box(Modifier.fillMaxWidth().height(330.dp)) {
+            de.protokollnull.agent.ui.ScenePanel("hq", Modifier.fillMaxSize(), "", "", cover = true)
+            Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(Color(0x99060C17), Color.Transparent, Color(0xFF060C17)))))
+            RadarEmblem(Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(16.dp).size(64.dp))
+            Column(Modifier.align(Alignment.BottomStart).padding(horizontal = 24.dp, vertical = 8.dp)) {
+                Text("AUFSTIEG EINES AGENTEN", style = PnType.overline.copy(fontSize = 12.sp), color = Pn.Accent)
+                Text("PROTOKOLL NULL", style = MaterialTheme.typography.displaySmall.copy(fontSize = 44.sp, lineHeight = 46.sp), color = Pn.Text)
+                Text("Spionage-RPG · Ausbildung, Einsätze, Beziehungen, Direktion", style = MaterialTheme.typography.bodySmall, color = Pn.Muted)
             }
         }
-        ActionButton("Neues Spiel", Modifier.fillMaxWidth(), subtitle = "Agent erstellen · Prolog ab 13 Jahren", icon = PnIcons.Plus) { vm.newGame() }
-        ActionButton("Spielstand laden", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Save) { vm.open(Overlay.Saves) }
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            ActionButton("Einstellungen", Modifier.weight(1f), secondary = true, icon = PnIcons.Gear) { vm.open(Overlay.Settings) }
-            ActionButton("Credits", Modifier.weight(1f), secondary = true, icon = PnIcons.Star) { vm.open(Overlay.Credits) }
+        Column(Modifier.padding(horizontal = 24.dp, vertical = 12.dp).navigationBarsPadding(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (auto != null) {
+                GlassPanel(onClick = { vm.load("auto") }) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                        if (autoState != null) Box(Modifier.size(58.dp, 72.dp).clip(RoundedCornerShape(12.dp))) { de.protokollnull.agent.ui.AvatarCanvas(autoState.player.appearance.avatar, Modifier.fillMaxSize()) }
+                        Column(Modifier.weight(1f)) {
+                            Overline("Fortsetzen")
+                            Text(auto.title, style = MaterialTheme.typography.titleMedium)
+                            Text(auto.subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Box(Modifier.size(46.dp).clip(RoundedCornerShape(23.dp)).background(Pn.Accent), contentAlignment = Alignment.Center) { PnIcon(PnIcons.Play, Pn.OnAccent, 22.dp) }
+                    }
+                }
+            }
+            ActionButton("Neues Spiel", Modifier.fillMaxWidth(), subtitle = "Agent erstellen · Prolog ab 13 Jahren", icon = PnIcons.Plus, secondary = auto != null) { vm.newGame() }
+            ActionButton("Spielstand laden", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Save) { vm.open(Overlay.Saves) }
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                ActionButton("Einstellungen", Modifier.weight(1f), secondary = true, icon = PnIcons.Gear) { vm.open(Overlay.Settings) }
+                ActionButton("Credits", Modifier.weight(1f), secondary = true, icon = PnIcons.Star) { vm.open(Overlay.Credits) }
+            }
+            Spacer(Modifier.height(4.dp))
+            Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v${BuildConfig.VERSION_NAME}",
+                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterHorizontally), textAlign = TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
         }
-        Spacer(Modifier.height(8.dp))
-        Text("Privater Fan-Prototyp im Nikita-Universum · offline spielbar · v${BuildConfig.VERSION_NAME}",
-            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
 }
 
@@ -97,67 +107,88 @@ fun RadarEmblem(modifier: Modifier = Modifier) {
 fun SettingsScreen(vm: GameViewModel) {
     val s by vm.settings.collectAsState()
     Column(Modifier.fillMaxSize()) {
-        ScreenHeader("Einstellungen", "System", onBack = { vm.back() })
+        ScreenHeader("Einstellungen", "System & Zugänglichkeit", onBack = { vm.back() })
         Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            SectionLabel("Darstellung", icon = PnIcons.Eye)
             GlassPanel {
                 Text("Schriftgröße", style = MaterialTheme.typography.titleSmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf(0.9f to "S", 1f to "M", 1.15f to "L", 1.3f to "XL").forEach { (v, l) ->
-                        FilterChip(selected = s.fontScale == v, onClick = { vm.updateSettings { it.copy(fontScale = v) } }, label = { Text(l) })
+                        PnChip(l, s.fontScale == v, Modifier.weight(1f)) { vm.updateSettings { it.copy(fontScale = v) } }
                     }
                 }
+                Text("Vorschau: Michael legt dir die Akte hin. „Lies sie gründlich – Einzelheiten retten Leben.“", style = MaterialTheme.typography.bodyMedium, color = Pn.Text.copy(alpha = 0.85f))
+                SmallNote("Wirkt zusätzlich zur Schriftgröße des Systems.")
             }
             GlassPanel {
-                SettingSwitch("Animationen", "Übergänge, animierte Balken", s.animations) { v -> vm.updateSettings { it.copy(animations = v) } }
-                SettingSwitch("Hoher Kontrast", "Kräftigere Rahmen und Sekundärtexte", s.highContrast) { v -> vm.updateSettings { it.copy(highContrast = v) } }
-                SettingSwitch("Haptik", "Vibration bei Aktionen", s.haptics) { v -> vm.updateSettings { it.copy(haptics = v) } }
+                SettingSwitch("Animationen", "Übergänge, Feier-Einblendungen, Schreibmaschinentext. Aus = reduzierte Bewegung.", s.animations) { v -> vm.updateSettings { it.copy(animations = v) } }
+                SettingSwitch("Hoher Kontrast", "Kräftigere Rahmen und hellere Sekundärtexte", s.highContrast) { v -> vm.updateSettings { it.copy(highContrast = v) } }
+                SettingSwitch("Haptik", "Vibration bei Meldungen", s.haptics) { v -> vm.updateSettings { it.copy(haptics = v) } }
             }
-            CastPortraitSettings(vm.data.agents.filter { it.seriesCharacter }.map { it.id to it.name })
+            SectionLabel("Audio", icon = PnIcons.Music)
             GlassPanel {
                 Text("Musik (prozedural, eigene Komposition): ${s.musicVolume}%", style = MaterialTheme.typography.titleSmall)
                 Slider(value = s.musicVolume.toFloat(), onValueChange = { v -> vm.updateSettings { it.copy(musicVolume = v.toInt()) } }, valueRange = 0f..100f, steps = 9)
                 Text("Effektlautstärke: ${s.sfxVolume}%", style = MaterialTheme.typography.titleSmall)
                 Slider(value = s.sfxVolume.toFloat(), onValueChange = { v -> vm.updateSettings { it.copy(sfxVolume = v.toInt()) } }, valueRange = 0f..100f, steps = 9)
             }
+            SectionLabel("Private Serienporträts", icon = PnIcons.Profile)
+            CastPortraitSettings(vm.data.agents.filter { it.seriesCharacter }.map { it.id to it.name })
+            SmallNote("Alle Daten bleiben auf diesem Gerät. Das Spiel benötigt keine Internetverbindung.")
         }
     }
 }
 
 @Composable
 private fun SettingSwitch(title: String, sub: String, value: Boolean, onChange: (Boolean) -> Unit) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 48.dp)) {
         Column(Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.titleSmall)
             Text(sub, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Switch(checked = value, onCheckedChange = onChange)
+        Spacer(Modifier.width(10.dp))
+        Switch(checked = value, onCheckedChange = onChange, colors = SwitchDefaults.colors(checkedTrackColor = Pn.Accent, checkedThumbColor = Pn.OnAccent))
     }
 }
 
 @Composable
 fun SavesScreen(vm: GameViewModel, inGame: Boolean) {
     var refresh by remember { mutableIntStateOf(0) }
+    var confirm by remember { mutableStateOf<Pair<String, String>?>(null) }
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> if (uri != null) vm.exportTo(uri) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) vm.importFrom(uri) }
     val fmt = remember { SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY) }
+    confirm?.let { (action, slot) ->
+        PnDialog(
+            title = if (action == "delete") "${vm.slotName(slot)} löschen?" else "${vm.slotName(slot)} überschreiben?",
+            text = if (action == "delete") "Der Spielstand wird endgültig entfernt." else "Der vorhandene Spielstand in diesem Slot wird durch den aktuellen ersetzt.",
+            confirmLabel = if (action == "delete") "Löschen" else "Überschreiben", danger = action == "delete",
+            onConfirm = { if (action == "delete") vm.deleteSlot(slot) else vm.saveTo(slot); refresh++; confirm = null },
+            onDismiss = { confirm = null }
+        )
+    }
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Spielstände", "3 Slots + Autosave", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             listOf("auto", "slot1", "slot2", "slot3").forEach { slot ->
                 item(key = slot + refresh) {
                     val info = vm.slotInfo(slot)
-                    GlassPanel {
+                    GlassPanel(accent = if (info == null) Pn.Muted else Pn.Accent) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconTile(if (slot == "auto") PnIcons.Clock else PnIcons.Save, if (info == null) Pn.Muted else Pn.Accent, 42.dp)
+                            Spacer(Modifier.width(12.dp))
                             Column(Modifier.weight(1f)) {
-                                Text(vm.slotName(slot).uppercase(), style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
-                                Text(info?.title ?: "— leer —", style = MaterialTheme.typography.titleSmall)
+                                Overline(vm.slotName(slot))
+                                Text(info?.title ?: "Leer", style = MaterialTheme.typography.titleSmall, color = if (info == null) Pn.Muted else Pn.Text)
                                 if (info != null) Text(info.subtitle + " · " + fmt.format(Date(info.savedAt)), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             if (info != null) ActionButton("Laden", Modifier.weight(1f)) { vm.load(slot) }
-                            if (inGame && slot != "auto") ActionButton("Speichern", Modifier.weight(1f), secondary = true) { vm.saveTo(slot); refresh++ }
-                            if (info != null && slot != "auto") ActionButton("Löschen", Modifier.weight(1f), secondary = true) { vm.deleteSlot(slot); refresh++ }
+                            if (inGame && slot != "auto") ActionButton("Speichern", Modifier.weight(1f), secondary = true) {
+                                if (info != null) confirm = "save" to slot else { vm.saveTo(slot); refresh++ }
+                            }
+                            if (info != null && slot != "auto") ActionButton("Löschen", Modifier.weight(1f), secondary = true, danger = true) { confirm = "delete" to slot }
                         }
                     }
                 }
@@ -165,14 +196,14 @@ fun SavesScreen(vm: GameViewModel, inGame: Boolean) {
             item {
                 GlassPanel {
                     Text("Import / Export", style = MaterialTheme.typography.titleSmall)
-                    Text("JSON-Datei mit Versionsangabe. Ältere Spielstände werden beim Import automatisch migriert.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("JSON-Datei mit Versionsangabe. Ältere Spielstände (ab v0.1) werden beim Import automatisch migriert.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (inGame) ActionButton("Exportieren", Modifier.weight(1f), secondary = true) { exportLauncher.launch("protokoll_null_spielstand.json") }
                         ActionButton("Importieren", Modifier.weight(1f), secondary = true) { importLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) }
                     }
                 }
             }
-            if (inGame) item { ActionButton("Zum Hauptmenü", Modifier.fillMaxWidth(), secondary = true) { vm.goToStart() } }
+            if (inGame) item { ActionButton("Zum Hauptmenü", Modifier.fillMaxWidth(), secondary = true, icon = PnIcons.Back) { vm.goToStart() } }
         }
     }
 }
@@ -224,7 +255,8 @@ fun CreditsScreen(vm: GameViewModel) {
 
 @Composable
 fun SmallNote(text: String) {
-    Text(text, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Start)
+    // v1.0: Hinweise in Inter statt Monospace – lesbar auch bei großer Schrift
+    Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Start)
 }
 
 @Composable

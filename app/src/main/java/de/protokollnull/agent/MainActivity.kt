@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         visible = false
+        vm.flushSave()
         music.stop()
         super.onStop()
     }

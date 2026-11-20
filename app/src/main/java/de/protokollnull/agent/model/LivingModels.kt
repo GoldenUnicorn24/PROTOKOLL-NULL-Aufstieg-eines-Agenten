@@ -48,6 +48,9 @@ data class NpcLife(
     /** Zusätzliche Fertigkeitsstufen aus eigenem Training. */
     val skillGain: Map<String, Int> = emptyMap(),
     val skillProgress: Map<String, Int> = emptyMap(),
+    /** Sechs trainierbare Attribute wie beim Spieler; alte Saves bleiben durch Defaults gültig. */
+    val attributes: Map<String, Int> = emptyMap(),
+    val attributeProgress: Map<String, Int> = emptyMap(),
     val trainingDays: Int = 0,
     val missions: Int = 0,
     val missionsFailed: Int = 0,
@@ -123,6 +126,8 @@ data class LivingState(
     val lives: Map<String, NpcLife> = emptyMap(),
     /** NPC-NPC-Beziehung, Schlüssel „a|b“ (alphabetisch), −100..100. */
     val bonds: Map<String, Int> = emptyMap(),
+    /** Wie oft zwei NPCs gemeinsam einen Einsatz absolviert haben (einmal pro Einsatz). */
+    val sharedMissions: Map<String, Int> = emptyMap(),
     /** Volljährige NPC-Paare, Schlüssel wie [bonds]. */
     val couples: Set<String> = emptySet(),
     val feed: List<LifeEvent> = emptyList(),

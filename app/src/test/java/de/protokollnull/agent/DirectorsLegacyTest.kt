@@ -555,7 +555,7 @@ class DirectorsLegacyTest {
         assertEquals(s.ops, loaded.ops)
         assertEquals(s.living, loaded.living)
         assertEquals(s.relations, loaded.relations)
-        assertEquals(102, loaded.player.inventory.size)
+        assertEquals(d.items.size, loaded.player.inventory.size)
         assertEquals("small", loaded.life.housing)
         assertEquals("courier", loaded.life.coverJob)
         assertEquals(LeadershipState(), loaded.lead)

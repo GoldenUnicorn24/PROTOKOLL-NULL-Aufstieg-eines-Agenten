@@ -14,16 +14,27 @@ android {
         applicationId = "de.protokollnull.agent"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "0.8.0-beta"
+        versionCode = 9
+        versionName = "1.0.0-rc1"
     }
     // Optional local-only assets: app/src/private/assets/ (gitignored).
     sourceSets {
         getByName("main") { assets.srcDir("src/private/assets") }
     }
+    // Release-Signatur nur aus Umgebungsvariablen (z. B. GitHub-Secrets) – niemals Schlüssel im Repository.
+    val releaseKeystore = System.getenv("PN_KEYSTORE_FILE")?.let { file(it) }?.takeIf { it.exists() }
+    signingConfigs {
+        if (releaseKeystore != null) create("release") {
+            storeFile = releaseKeystore
+            storePassword = System.getenv("PN_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("PN_KEY_ALIAS")
+            keyPassword = System.getenv("PN_KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (releaseKeystore != null) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

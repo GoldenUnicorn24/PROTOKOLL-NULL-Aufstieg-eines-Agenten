@@ -1,6 +1,12 @@
 package de.protokollnull.agent.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -40,31 +46,41 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
     LazyVerticalGrid(columns = GridCells.Fixed(2), contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item(span = { GridItemSpan(2) }) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("AUSRÜSTUNG", style = MaterialTheme.typography.labelSmall, color = Pn.Accent)
+                Overline("AUSRÜSTUNG", Pn.Accent)
                 Text("INVENTAR", style = MaterialTheme.typography.titleLarge)
                 StatBar("Gewicht ${"%.1f".format(weight / 1000.0)} / ${"%.1f".format(cap / 1000.0)} kg", weight, cap, if (weight > cap * 0.9) Pn.Danger else Pn.Accent, showValue = false)
                 GlassPanel(padding = 12.dp) {
-                    Text("Ausrüstungsslots", style = MaterialTheme.typography.titleSmall)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Ausrüstungsslots", style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                        Text("${p.equipment.size}/${Slots.ids.size} belegt", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     Slots.ids.chunked(3).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { slot ->
                                 val uid = p.equipment[slot]
                                 val st = p.inventory.firstOrNull { it.uid == uid }
                                 val def = st?.let { data.itemById[it.itemId] }
-                                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                                    if (def != null) ItemIcon(def.icon, 52.dp, tint = Pn.rarity[def.rarity] ?: Pn.Accent, modifier = Modifier.padding(2.dp))
-                                    else Box(Modifier.size(52.dp), contentAlignment = Alignment.Center) { Text("—", color = Pn.Muted) }
-                                    Text(Slots.label(slot), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, maxLines = 1)
+                                Column(
+                                    Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).background(Color(0x0FFFFFFF))
+                                        .border(1.dp, if (def != null) (Pn.rarity[def.rarity] ?: Pn.Accent).copy(alpha = 0.5f) else Pn.Hairline, RoundedCornerShape(12.dp))
+                                        .clickable(enabled = st != null, role = androidx.compose.ui.semantics.Role.Button) { st?.let { vm.open(Overlay.Item(it.uid)) } }
+                                        .padding(vertical = 8.dp, horizontal = 4.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    if (def != null) ItemIcon(def.icon, 48.dp, tint = Pn.rarity[def.rarity] ?: Pn.Accent)
+                                    else Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) { PnIcon(slotIcon(slot), Pn.Muted.copy(alpha = 0.5f), 22.dp) }
+                                    Text(Slots.label(slot), style = MaterialTheme.typography.labelSmall, color = if (def != null) Pn.Text else MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, maxLines = 1)
+                                    Text(def?.name ?: "frei", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                                 }
                             }
                         }
                     }
                 }
                 LoadoutPanel(vm, s)
-                ChipRow(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
+                CompactChips(categoryLabels.entries.map { it.key to it.value }, filter) { filter = it }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ActionButton("Spind-Lager (${p.storage.size})", Modifier.weight(1f), secondary = true) { vm.open(Overlay.Storage) }
-                    ActionButton("Ausrüstungskammer", Modifier.weight(1f), secondary = true, enabled = s.location == "armory", subtitle = if (s.location == "armory") null else "nur vor Ort") { vm.open(Overlay.Shop) }
+                    ActionButton("Spind (${p.storage.size})", Modifier.weight(1f), secondary = true, icon = PnIcons.Box, subtitle = "Lager") { vm.open(Overlay.Storage) }
+                    ActionButton("Kammer", Modifier.weight(1f), secondary = true, icon = PnIcons.Bag, enabled = s.location == "armory", subtitle = if (s.location == "armory") "Anfordern" else "nur vor Ort (Ebene −1)") { vm.open(Overlay.Shop) }
                 }
             }
         }
@@ -81,15 +97,19 @@ fun InventoryScreen(vm: GameViewModel, s: GameState) {
                 Text((if (st.uid in eq) "◆ ausgerüstet · " else "") + "Zustand ${st.condition}%", style = MaterialTheme.typography.labelSmall, color = if (st.condition < 30) Pn.Danger else MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        if (list.isEmpty()) item(span = { GridItemSpan(2) }) { SmallNote("Keine Gegenstände in dieser Kategorie.") }
+        if (list.isEmpty()) item(span = { GridItemSpan(2) }) { EmptyState(PnIcons.Box, "Nichts in dieser Kategorie", "Gegenstände erhältst du aus Einsätzen oder forderst sie in der Ausrüstungskammer (Ebene −1) an.") }
     }
+}
+
+private fun slotIcon(slot: String) = when (slot) {
+    "weapon" -> PnIcons.Target; "armor" -> PnIcons.Shield; "gadget" -> PnIcons.Chip; "comms" -> PnIcons.Chat; "bag" -> PnIcons.Bag; else -> PnIcons.Box
 }
 
 @Composable
 fun ItemDetailScreen(vm: GameViewModel, s: GameState, uid: Long) {
     val data = vm.data
     val st = s.player.inventory.firstOrNull { it.uid == uid }
-    if (st == null) { LaunchedEffect(uid) { vm.back() }; return }
+    if (st == null) { LaunchedEffect(uid) { vm.backFrom(Overlay.Item(uid)) }; return }
     val def = data.itemById[st.itemId] ?: return
     val color = Pn.rarity[def.rarity] ?: Pn.Accent
     val equipped = uid in s.player.equipment.values
@@ -150,7 +170,7 @@ fun ShopScreen(vm: GameViewModel, s: GameState) {
     Column(Modifier.fillMaxSize()) {
         ScreenHeader("Ausrüstungskammer", "Owen · ${s.player.credits} Cr", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            item { ChipRow(categoryLabels.entries.filter { it.key != "equipped" }.map { it.key to it.value }, filter) { filter = it } }
+            item { CompactChips(categoryLabels.entries.filter { it.key != "equipped" }.map { it.key to it.value }, filter) { filter = it } }
             item { SmallNote("Anforderung gegen Credits. Freigaben richten sich nach deinem Rang. Wartung und Rückgabe in der Detailansicht eines Gegenstands.") }
             items(items, key = { it.id }) { def ->
                 val price = Inventory.price(def, s)
@@ -186,7 +206,7 @@ fun StorageScreen(vm: GameViewModel, s: GameState) {
         ScreenHeader("Spind-Lager", "Persönliches Lager", onBack = { vm.back() })
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             item { SmallNote("Was du nicht trägst, lagert hier. Neue Gegenstände landen automatisch im Spind, wenn deine Tragkraft erreicht ist.") }
-            if (s.player.storage.isEmpty()) item { SmallNote("Der Spind ist leer.") }
+            if (s.player.storage.isEmpty()) item { EmptyState(PnIcons.Box, "Der Spind ist leer", "Lege Gegenstände aus der Detailansicht in den Spind, um Gewicht zu sparen.") }
             items(s.player.storage, key = { it.uid }) { st ->
                 val def = data.itemById[st.itemId]
                 GlassPanel(padding = 12.dp) {
@@ -207,19 +227,21 @@ fun StorageScreen(vm: GameViewModel, s: GameState) {
 @Composable
 private fun LoadoutPanel(vm: GameViewModel, s: GameState) {
     val data = vm.data
-    GlassPanel(padding = 12.dp, accent = Pn.Violet) {
-        Text("AUSRÜSTUNGSPROFILE", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
-        s.loadouts.forEach { lo ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(lo.name, style = MaterialTheme.typography.titleSmall)
-                    Text(if (lo.items.isEmpty()) "leer – aktuelle Ausrüstung speichern" else lo.items.values.joinToString { data.itemById[it]?.name ?: it },
-                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+    var open by remember { mutableStateOf(false) }
+    GlassPanel(padding = 12.dp, accent = Pn.Violet, onClick = { open = !open }) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Overline("Ausrüstungsprofile", Pn.Violet, Modifier.weight(1f))
+            Text("${s.loadouts.count { it.items.isNotEmpty() }}/${s.loadouts.size} gespeichert " + if (open) "▲" else "▼", style = MaterialTheme.typography.labelSmall, color = Pn.Violet)
+        }
+        if (open) s.loadouts.forEach { lo ->
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(lo.name, style = MaterialTheme.typography.titleSmall)
+                Text(if (lo.items.isEmpty()) "leer – speichert deine aktuelle Ausrüstung" else lo.items.values.joinToString { data.itemById[it]?.name ?: it },
+                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ActionButton("Anlegen", Modifier.weight(1f), enabled = lo.items.isNotEmpty(), secondary = true) { vm.act { d, x -> Inventory.applyLoadout(d, x, lo.id) } }
+                    ActionButton("Speichern", Modifier.weight(1f), secondary = true) { vm.act { d, x -> Inventory.saveLoadout(d, x, lo.id) } }
                 }
-                Spacer(Modifier.width(6.dp))
-                ActionButton("Anlegen", enabled = lo.items.isNotEmpty(), secondary = true) { vm.act { d, x -> Inventory.applyLoadout(d, x, lo.id) } }
-                Spacer(Modifier.width(6.dp))
-                ActionButton("Speichern", secondary = true) { vm.act { d, x -> Inventory.saveLoadout(d, x, lo.id) } }
             }
         }
     }

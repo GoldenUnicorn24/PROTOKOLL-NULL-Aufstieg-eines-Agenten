@@ -558,5 +558,167 @@
         "quest_q18"
       ]
     }
+  },
+  {
+    "id": "q20",
+    "chapter": "Kapitel 2 · Protokoll Null",
+    "title": "Alte Schatten",
+    "description": "Alex und Birkhoff holen ihre Vergangenheit ein. Beide brauchen Hilfe, die nicht im Dienstplan steht.",
+    "giverId": "alex",
+    "conditions": {
+      "flagsAll": [
+        "ch1_done"
+      ],
+      "minAge": 18
+    },
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Alex' Schatten",
+        "missionId": "M023"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Geist im Netz",
+        "missionId": "M024"
+      }
+    ],
+    "reward": {
+      "xp": 200,
+      "reputation": 5
+    },
+    "completeFlag": "quest_q20"
+  },
+  {
+    "id": "q21",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Das Bündnis",
+    "description": "Nikita bietet eine Zusammenarbeit an – gegen Black Meridian und gegen das Leck in der Division.",
+    "giverId": "nikita",
+    "conditions": {
+      "flagsAll": [
+        "nikita_ally"
+      ]
+    },
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Kaffee mit einer Abtrünnigen",
+        "missionId": "M025"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Brücke der Verräter",
+        "missionId": "M026"
+      }
+    ],
+    "reward": {
+      "xp": 300,
+      "reputation": 8
+    },
+    "completeFlag": "quest_q21"
+  },
+  {
+    "id": "q22",
+    "chapter": "Kapitel 3 · Schattenrat",
+    "title": "Die Akademie",
+    "description": "Die Division braucht eine Ausbildung ohne PHOENIX-Methoden. Du schreibst sie.",
+    "giverId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "phoenix_truth"
+      ],
+      "minRank": 9
+    },
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Die erste Klasse",
+        "missionId": "M027"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Prüfstein",
+        "missionId": "M028"
+      }
+    ],
+    "reward": {
+      "xp": 400,
+      "reputation": 10
+    },
+    "completeFlag": "quest_q22"
+  },
+  {
+    "id": "q23",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "title": "Kandidat 8",
+    "description": "Eine Postkarte, eine achte Zahl, eine Stiftung. Jemand baut PHOENIX nach.",
+    "giverId": "birkhoff",
+    "conditions": {
+      "flagsAll": [
+        "epilogue_seen"
+      ]
+    },
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Postkarte ohne Absender",
+        "missionId": "M030"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Meridians Rache",
+        "missionId": "M031"
+      },
+      {
+        "id": "o3",
+        "text": "Mission: Kandidat 8",
+        "missionId": "M032"
+      }
+    ],
+    "reward": {
+      "xp": 500,
+      "reputation": 10
+    },
+    "completeFlag": "quest_q23"
+  },
+  {
+    "id": "q24",
+    "chapter": "Kapitel 4 · Nachbeben",
+    "title": "Nachbeben",
+    "description": "Von der Anhörung bis zur Bibliothek: Dr. Lenz muss gestoppt werden – und die Division muss sich entscheiden, was sie daraus lernt.",
+    "giverId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "quest_q23"
+      ]
+    },
+    "objectives": [
+      {
+        "id": "o1",
+        "text": "Mission: Die Anhörung",
+        "missionId": "M033"
+      },
+      {
+        "id": "o2",
+        "text": "Mission: Schattenhandel",
+        "missionId": "M034"
+      },
+      {
+        "id": "o3",
+        "text": "Mission: Die letzte Kandidatin",
+        "missionId": "M035"
+      },
+      {
+        "id": "o4",
+        "text": "Mission: Nachbeben",
+        "missionId": "M036"
+      }
+    ],
+    "reward": {
+      "xp": 800,
+      "reputation": 20
+    },
+    "completeFlag": "quest_q24"
   }
 ]

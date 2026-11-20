@@ -2,7 +2,7 @@ package de.protokollnull.agent.model
 
 import kotlinx.serialization.Serializable
 
-const val CURRENT_SCHEMA = 5
+const val CURRENT_SCHEMA = 6
 
 /** Attribute des Spielercharakters (0..100). */
 object Attr {
@@ -70,7 +70,7 @@ data class Appearance(
 data class PlayerCharacter(
     val firstName: String = "Lena",
     val lastName: String = "Berg",
-    val codename: String = "Null",
+    val codename: String = "",
     val gender: String = "female",
     val appearance: Appearance = Appearance(),
     val background: String = "analyst",
@@ -104,7 +104,9 @@ data class PlayerCharacter(
     /** v0.6: Interessen für Kompatibilität und Geschenke. */
     val interests: List<String> = emptyList()
 ) {
-    val displayName: String get() = "$firstName $lastName"
+    val displayName: String get() = "$firstName $lastName".trim()
+    /** Wenn kein Deckname gewählt wurde, verwenden alle Systeme Vor- und Nachname. */
+    val identityName: String get() = codename.trim().ifBlank { displayName }
 }
 
 @Serializable
@@ -165,7 +167,10 @@ data class TacticalUnit(
     val range: Int = 6,
     val homeX: Int = -1,
     val homeY: Int = -1,
-    val evacuated: Boolean = false
+    val evacuated: Boolean = false,
+    // --- v1.0
+    /** Überwachungsposten hat in dieser Runde bereits auf eine Bewegung reagiert. */
+    val reacted: Boolean = false
 ) {
     val down: Boolean get() = hp <= 0
 }
@@ -198,7 +203,11 @@ data class TacticalState(
     val holdTurns: Int = 0,
     val held: Int = 0,
     val stalemate: Int = 0,
-    val progressMark: Int = 0
+    val progressMark: Int = 0,
+    /** Fortschritt des einfachen Karten-freien Einsatzmodus (0..2 Annäherung). */
+    val quickProgress: Int = 0,
+    /** Einmaliges Zeitbudget beim Wechsel aus einem festgefahrenen Karteneinsatz. */
+    val quickDeadline: Int = 0
 ) {
     fun tile(x: Int, y: Int): Char =
         if (y in tiles.indices && x in 0 until tiles[y].length) tiles[y][x] else '#'
@@ -384,7 +393,11 @@ data class CareerState(
     val sessionsToday: Int = 0,
     val lastMentorDay: Int = -1,
     val goals: Map<String, Int> = emptyMap(),
-    val awards: Set<String> = emptySet()
+    val awards: Set<String> = emptySet(),
+    // --- v1.0: wöchentliche Momentaufnahme der Ranglistenplatzierung
+    val boardWeek: Int = -1,
+    val boardPlace: Int = -1,
+    val boardPrevPlace: Int = -1
 )
 
 @Serializable

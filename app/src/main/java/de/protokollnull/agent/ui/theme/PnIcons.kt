@@ -68,6 +68,26 @@ object PnIcons {
     val Plus = build("plus", "M12 5v14M5 12h14")
     val Music = build("music", "M9 18V6l11-2v12", "M6.5 15.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5zM17.5 13.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5z")
 
+    // --- v1.0 Ergänzungen
+    val Check = build("check", "M5 12.5l4.5 4.5L19 7.5")
+    val Info = build("info", "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 1 0 0-17z", "M12 11v5.5M12 7.8h.01")
+    val Close = build("close", "M6 6l12 12M18 6 6 18")
+    val Filter = build("filter", "M4 5h16l-6 7.5V19l-4 1.5v-8z")
+    val Trophy = build("trophy", "M8 4h8v5a4 4 0 0 1-8 0z", "M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4", "M12 13v4M8.5 20.5h7M9.5 17h5v3.5h-5z")
+    val Chart = build("chart", "M4 20V4M4 20h16", "M8 16v-4M12 16V8M16 16v-6")
+    val Book = build("book", "M5 4.5h9.5A2.5 2.5 0 0 1 17 7v13H7.5A2.5 2.5 0 0 1 5 17.5z", "M5 17.5A2.5 2.5 0 0 1 7.5 15H17", "M19 6v14")
+    val Moon = build("moon", "M19.5 14.5A8 8 0 0 1 9.5 4.5 8 8 0 1 0 19.5 14.5z")
+    val Medal = build("medal", "M8 3h3l1 4 1-4h3l-2.5 6.5", "M12 9.5a5 5 0 1 0 0 10 5 5 0 1 0 0-10z", "M12 12l.9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3z")
+    val Wallet = build("wallet", "M4 7.5h15a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18V6.5A1.5 1.5 0 0 1 5 5h11v2.5", "M16 13.5h2")
+    val Map = build("map", "M3.5 6.5 9 4l6 2.5L20.5 4v13.5L15 20l-6-2.5-5.5 2.5z", "M9 4v13.5M15 6.5V20")
+    val Home = build("home", "M4 11 12 4.5 20 11", "M6 9.5V19.5h4.5v-5h3v5H18V9.5")
+    val Briefcase = build("briefcase", "M3.5 8h17v11h-17z", "M9 8V5.5h6V8", "M3.5 13h17")
+    val Swap = build("swap", "M7 7h12l-3-3M17 17H5l3 3")
+    val Route = build("route", "M6 19a2 2 0 1 0 0-4 2 2 0 1 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 1 0 0 4z", "M8 17h7.5a3 3 0 0 0 0-6H8.5a3 3 0 0 1 0-6H16")
+    val Robot = build("autopilot", "M7 8h10v9H7z", "M12 4v4M9.5 12h.01M14.5 12h.01M10 15h4M4 11v3M20 11v3")
+    val Flame = build("flame", "M12 21a6 6 0 0 0 6-6c0-4-3-5.5-3.5-9.5C12 7 9 9.5 9 12.5c-1-.5-1.5-1.5-1.5-3C6.5 11 6 13 6 15a6 6 0 0 0 6 6z")
+    val Hourglass = build("hourglass", "M7 3.5h10M7 20.5h10", "M8 3.5c0 4.5 4 5 4 8.5s-4 4-4 8.5M16 3.5c0 4.5-4 5-4 8.5s4 4 4 8.5")
+
     fun forRoom(id: String): ImageVector = when (id) {
         "lobby" -> Door; "dorm" -> Bed; "canteen" -> Food; "city" -> City; "training" -> Fist
         "range" -> Target; "medical" -> Cross; "armory" -> Box; "ops" -> Radar; "tech" -> Chip

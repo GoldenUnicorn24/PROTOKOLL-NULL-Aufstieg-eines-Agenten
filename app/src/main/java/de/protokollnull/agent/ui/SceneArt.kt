@@ -36,7 +36,7 @@ fun ScenePanel(place: String, modifier: Modifier, label: String, title: String, 
         Image(painterResource(artwork(place)), null, Modifier.matchParentSize(), contentScale = ContentScale.Crop)
         Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xEA071019)))))
         Column(Modifier.align(Alignment.BottomStart).padding(16.dp)) {
-            Text(label.uppercase(), style = MaterialTheme.typography.labelLarge, color = Pn.Accent)
+            Text(label.uppercase(), style = de.protokollnull.agent.ui.theme.PnType.overline, color = Pn.Accent)
             Text(title, style = if (cover) MaterialTheme.typography.displaySmall else MaterialTheme.typography.headlineSmall, color = Color.White)
         }
     }

@@ -70,7 +70,7 @@
     "description": "Dienstausrüstung für volljährige Einsatzkräfte. Im Spiel abstrakt: erhöht Wirkung im Taktikmodus.",
     "slot": "weapon",
     "damage": 2,
-    "minRank": 4,
+    "minRank": 2,
     "bonuses": {
       "precision": 5
     }
@@ -618,7 +618,7 @@
     "baseValue": 1450,
     "description": "Zuverlässige Dienstpistole im fiktiven Division-Arsenal · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 5
@@ -635,7 +635,7 @@
     "baseValue": 1550,
     "description": "Kompakte Seitenwaffe für verdeckte Einsätze · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 6
@@ -652,7 +652,7 @@
     "baseValue": 1850,
     "description": "Präzise Pistole für spezialisierte Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 2,
     "bonuses": {
       "precision": 7
@@ -669,7 +669,7 @@
     "baseValue": 2200,
     "description": "Robuste Dienstpistole für erfahrene Einsatzkräfte · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -686,7 +686,7 @@
     "baseValue": 1300,
     "description": "Klassische Dienstpistole · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 2,
     "bonuses": {
       "precision": 4
@@ -703,7 +703,7 @@
     "baseValue": 2600,
     "description": "Präzisionsorientierte Pistole aus der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 6
@@ -720,7 +720,7 @@
     "baseValue": 2950,
     "description": "Leichte Spezialpistole mit abstrakter höherer Wirkung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -737,7 +737,7 @@
     "baseValue": 3300,
     "description": "Kompakte Maschinenpistole für Divisionsoperationen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 3,
     "bonuses": {
       "precision": 5
@@ -754,7 +754,7 @@
     "baseValue": 4400,
     "description": "Spezialisierte Maschinenpistole für leise Missionen in der Fiktion · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 3,
     "bonuses": {
       "precision": 6
@@ -771,7 +771,7 @@
     "baseValue": 5500,
     "description": "Sehr kompaktes Einsatzgerät für Elite-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 3,
     "bonuses": {
       "precision": 7
@@ -788,7 +788,7 @@
     "baseValue": 3900,
     "description": "Robuste Maschinenpistole mit höherem Taktikwert · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 3
@@ -805,7 +805,7 @@
     "baseValue": 6200,
     "description": "Spezialisierte Maschinenpistole für Hochrisikoeinsätze · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -822,7 +822,7 @@
     "baseValue": 4500,
     "description": "Modulares Karabinergewehr für Außendienstteams · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 5,
+    "minRank": 3,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -839,7 +839,7 @@
     "baseValue": 7600,
     "description": "Hochwertiges Einsatzgewehr für erfahrene Division-Agenten · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 5,
     "bonuses": {
       "precision": 5
@@ -856,7 +856,7 @@
     "baseValue": 5100,
     "description": "Kompaktes Sturmgewehr für taktische Spielmissionen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 4
@@ -873,7 +873,7 @@
     "baseValue": 8300,
     "description": "Modulares Spezialgewehr für höchste Freigabestufen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 4
@@ -890,7 +890,7 @@
     "baseValue": 3600,
     "description": "Widerstandsfähiges Sturmgewehr aus Spezialbeständen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 2
@@ -907,7 +907,7 @@
     "baseValue": 8800,
     "description": "Präzisionsgewehr für Distanz- und Aufklärungsrollen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 8
@@ -924,7 +924,7 @@
     "baseValue": 10200,
     "description": "Schweres Präzisionsgewehr der Eliteausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 9,
+    "minRank": 7,
     "damage": 6,
     "bonuses": {
       "precision": 5
@@ -941,7 +941,7 @@
     "baseValue": 8200,
     "description": "Präzisionsplattform für die abstrakte Taktiksimulation · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 8,
+    "minRank": 6,
     "damage": 5,
     "bonuses": {
       "precision": 9
@@ -958,7 +958,7 @@
     "baseValue": 6400,
     "description": "Schrotflinte für spezielle Missionstypen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 7,
+    "minRank": 5,
     "damage": 5,
     "bonuses": {
       "precision": 2
@@ -975,7 +975,7 @@
     "baseValue": 4600,
     "description": "Robuste Schrotflinte in der Ausrüstungskammer · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 6,
+    "minRank": 4,
     "damage": 4,
     "bonuses": {
       "precision": 3
@@ -992,7 +992,7 @@
     "baseValue": 1100,
     "description": "Nicht-tödliche Einsatzoption für fiktionale Missionen · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 4,
+    "minRank": 2,
     "damage": 1,
     "bonuses": {
       "precision": 5
@@ -1009,7 +1009,7 @@
     "baseValue": 950,
     "description": "Nicht-tödliche Nahbereichsausrüstung · Taktische Spielwerte sind bewusst abstrahiert.",
     "slot": "weapon",
-    "minRank": 3,
+    "minRank": 1,
     "damage": 1,
     "bonuses": {
       "precision": 3
@@ -1573,5 +1573,369 @@
     "slot": "bag",
     "minRank": 2,
     "capacityBonusGrams": 1600
+  },
+  {
+    "id": "gear_caffeine",
+    "name": "Koffeintabletten",
+    "category": "medical",
+    "weightGrams": 40,
+    "rarity": "common",
+    "maxStack": 5,
+    "baseValue": 40,
+    "description": "Hält wach – auf Kosten der Nerven. Energie +20, Stress +6.",
+    "effect": {
+      "energy": 20,
+      "stress": 6
+    },
+    "icon": "gear_caffeine",
+    "slot": "none"
+  },
+  {
+    "id": "gear_tea_flask",
+    "name": "Kräutertee-Thermoskanne",
+    "category": "medical",
+    "weightGrams": 450,
+    "rarity": "common",
+    "maxStack": 3,
+    "baseValue": 30,
+    "description": "Eine ruhige Minute zwischen zwei Einsätzen. Stress −12, Energie +5.",
+    "effect": {
+      "stress": -12,
+      "energy": 5
+    },
+    "icon": "gear_tea_flask",
+    "slot": "none"
+  },
+  {
+    "id": "gear_burn_gel",
+    "name": "Brandwundengel",
+    "category": "medical",
+    "weightGrams": 120,
+    "rarity": "uncommon",
+    "maxStack": 4,
+    "baseValue": 120,
+    "description": "Kühlt und schützt. Gesundheit +15.",
+    "effect": {
+      "health": 15
+    },
+    "icon": "gear_burn_gel",
+    "slot": "none"
+  },
+  {
+    "id": "gear_splint",
+    "name": "Faltbare Schiene",
+    "category": "medical",
+    "weightGrams": 300,
+    "rarity": "uncommon",
+    "maxStack": 2,
+    "baseValue": 180,
+    "description": "Stabilisiert Prellungen und Brüche. Gesundheit +22.",
+    "effect": {
+      "health": 22
+    },
+    "minRank": 2,
+    "icon": "gear_splint",
+    "slot": "none"
+  },
+  {
+    "id": "gear_breath_trainer",
+    "name": "Atemtrainer",
+    "category": "medical",
+    "weightGrams": 90,
+    "rarity": "uncommon",
+    "maxStack": 3,
+    "baseValue": 90,
+    "description": "Geführte Atemübung gegen Anspannung. Stress −8.",
+    "effect": {
+      "stress": -8
+    },
+    "icon": "gear_breath_trainer",
+    "slot": "none"
+  },
+  {
+    "id": "gear_earpiece",
+    "name": "Unauffälliger Ohrhörer",
+    "category": "gadgets",
+    "weightGrams": 10,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 650,
+    "description": "Funkverbindung, die im Gespräch niemand bemerkt.",
+    "slot": "comms",
+    "bonuses": {
+      "charisma": 2,
+      "perception": 1
+    },
+    "minRank": 3,
+    "icon": "gear_earpiece"
+  },
+  {
+    "id": "gear_satphone",
+    "name": "Satellitentelefon",
+    "category": "gadgets",
+    "weightGrams": 380,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1800,
+    "description": "Verbindung auch dort, wo kein Netz mehr ist.",
+    "slot": "comms",
+    "bonuses": {
+      "intellect": 2,
+      "willpower": 1
+    },
+    "minRank": 5,
+    "icon": "gear_satphone"
+  },
+  {
+    "id": "gear_smart_glasses",
+    "name": "Datenbrille",
+    "category": "gadgets",
+    "weightGrams": 80,
+    "rarity": "epic",
+    "maxStack": 1,
+    "baseValue": 3600,
+    "description": "Blendet Lageinformationen ins Sichtfeld ein.",
+    "slot": "accessory",
+    "bonuses": {
+      "perception": 3,
+      "intellect": 1
+    },
+    "minRank": 6,
+    "icon": "gear_smart_glasses"
+  },
+  {
+    "id": "gear_disguise_kit",
+    "name": "Maskenbildner-Set",
+    "category": "tools",
+    "weightGrams": 700,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1400,
+    "description": "Perücken, Prothesen, Haltung – eine andere Person in zehn Minuten.",
+    "slot": "gadget",
+    "bonuses": {
+      "charisma": 3
+    },
+    "minRank": 4,
+    "icon": "gear_disguise_kit"
+  },
+  {
+    "id": "gear_lockpick_gun",
+    "name": "Elektrischer Pick",
+    "category": "tools",
+    "weightGrams": 260,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1600,
+    "description": "Öffnet einfache Schlösser in Sekunden – abstraktes Missions-Werkzeug.",
+    "slot": "gadget",
+    "bonuses": {
+      "precision": 2,
+      "intellect": 1
+    },
+    "minRank": 4,
+    "icon": "gear_lockpick_gun"
+  },
+  {
+    "id": "gear_running_shoes",
+    "name": "Leichte Laufschuhe",
+    "category": "equipment",
+    "weightGrams": 520,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 220,
+    "description": "Für Parcours, Verfolgungen und lange Nächte.",
+    "slot": "accessory",
+    "bonuses": {
+      "fitness": 2
+    },
+    "icon": "gear_running_shoes"
+  },
+  {
+    "id": "gear_tactical_watch",
+    "name": "Taktische Uhr",
+    "category": "equipment",
+    "weightGrams": 70,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 480,
+    "description": "Synchronisierte Zeit, Kompass, Pulsmesser.",
+    "slot": "accessory",
+    "bonuses": {
+      "perception": 1,
+      "willpower": 1
+    },
+    "icon": "gear_tactical_watch"
+  },
+  {
+    "id": "gear_civil_jacket",
+    "name": "Schutzjacke (zivil)",
+    "category": "armor",
+    "weightGrams": 1400,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1300,
+    "description": "Sieht aus wie eine Stadtjacke, schützt wie eine leichte Weste.",
+    "slot": "armor",
+    "armor": 1,
+    "bonuses": {
+      "charisma": 1
+    },
+    "minRank": 4,
+    "icon": "gear_civil_jacket"
+  },
+  {
+    "id": "gear_messenger_bag",
+    "name": "Kuriertasche",
+    "category": "equipment",
+    "weightGrams": 650,
+    "rarity": "uncommon",
+    "maxStack": 1,
+    "baseValue": 420,
+    "description": "Viel Platz, wenig Aufsehen. Tragkraft +4 kg.",
+    "slot": "bag",
+    "capacityBonusGrams": 4000,
+    "icon": "gear_messenger_bag"
+  },
+  {
+    "id": "gear_field_notebook",
+    "name": "Wetterfestes Feldnotizbuch",
+    "category": "equipment",
+    "weightGrams": 180,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 90,
+    "description": "Notizen, die Regen und Einsatz überstehen.",
+    "slot": "accessory",
+    "bonuses": {
+      "intellect": 1,
+      "perception": 1
+    },
+    "icon": "gear_field_notebook"
+  },
+  {
+    "id": "gear_cover_papers",
+    "name": "Tarnpapiere",
+    "category": "documents",
+    "weightGrams": 40,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 900,
+    "description": "Ausweis, Visitenkarten und eine glaubwürdige Biografie. Hilft bei Undercover-Gesprächen.",
+    "minRank": 4,
+    "icon": "gear_cover_papers",
+    "slot": "none"
+  },
+  {
+    "id": "gear_city_map",
+    "name": "Stadtplan mit Notizen",
+    "category": "documents",
+    "weightGrams": 60,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 60,
+    "description": "Kamerapositionen, Durchgänge, Hinterhöfe – handschriftlich ergänzt.",
+    "icon": "gear_city_map",
+    "slot": "none"
+  },
+  {
+    "id": "gear_med_scanner",
+    "name": "Vitalscanner",
+    "category": "gadgets",
+    "weightGrams": 340,
+    "rarity": "rare",
+    "maxStack": 1,
+    "baseValue": 1500,
+    "description": "Misst Puls, Sauerstoff und Blutdruck – Erstversorgung mit Daten.",
+    "slot": "gadget",
+    "bonuses": {
+      "intellect": 2
+    },
+    "minRank": 3,
+    "icon": "gear_med_scanner"
+  },
+  {
+    "id": "gear_rope_ladder",
+    "name": "Strickleiter",
+    "category": "tools",
+    "weightGrams": 1600,
+    "rarity": "common",
+    "maxStack": 1,
+    "baseValue": 160,
+    "description": "Für Fenster, Dächer und Notausgänge.",
+    "icon": "gear_rope_ladder",
+    "slot": "none"
+  },
+  {
+    "id": "gift_vinyl",
+    "name": "Schallplatte",
+    "category": "equipment",
+    "weightGrams": 200,
+    "rarity": "common",
+    "maxStack": 3,
+    "baseValue": 45,
+    "description": "Ein Klassiker auf Vinyl. Ein persönliches Geschenk für Musikfans.",
+    "icon": "gift_vinyl",
+    "slot": "none"
+  },
+  {
+    "id": "gift_artbook",
+    "name": "Bildband",
+    "category": "equipment",
+    "weightGrams": 900,
+    "rarity": "common",
+    "maxStack": 2,
+    "baseValue": 60,
+    "description": "Fotografie und Kunst aus fünf Jahrzehnten. Geschenk für Kunst- und Bücherfans.",
+    "icon": "gift_artbook",
+    "slot": "none"
+  },
+  {
+    "id": "gift_chess",
+    "name": "Reiseschach",
+    "category": "equipment",
+    "weightGrams": 300,
+    "rarity": "common",
+    "maxStack": 2,
+    "baseValue": 50,
+    "description": "Magnetisch, klein, unverwüstlich. Geschenk für Schachspieler.",
+    "icon": "gift_chess",
+    "slot": "none"
+  },
+  {
+    "id": "gift_spices",
+    "name": "Gewürzset",
+    "category": "equipment",
+    "weightGrams": 400,
+    "rarity": "common",
+    "maxStack": 2,
+    "baseValue": 40,
+    "description": "Zwölf Gewürze aus aller Welt. Geschenk für alle, die gern kochen.",
+    "icon": "gift_spices",
+    "slot": "none"
+  },
+  {
+    "id": "gift_phrasebook",
+    "name": "Sprachführer",
+    "category": "equipment",
+    "weightGrams": 250,
+    "rarity": "common",
+    "maxStack": 2,
+    "baseValue": 35,
+    "description": "Redewendungen in acht Sprachen. Geschenk für Sprachbegeisterte.",
+    "icon": "gift_phrasebook",
+    "slot": "none"
+  },
+  {
+    "id": "gift_sketchbook",
+    "name": "Skizzenbuch",
+    "category": "equipment",
+    "weightGrams": 350,
+    "rarity": "common",
+    "maxStack": 2,
+    "baseValue": 30,
+    "description": "Dickes Papier, ein guter Bleistift. Geschenk für Zeichner und Schreibende.",
+    "icon": "gift_sketchbook",
+    "slot": "none"
   }
 ]
