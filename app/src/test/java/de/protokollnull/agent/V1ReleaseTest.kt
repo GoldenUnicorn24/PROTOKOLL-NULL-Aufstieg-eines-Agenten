@@ -217,6 +217,32 @@ class V1ReleaseTest {
         assertTrue(s1.player.credits - s0.player.credits >= cr)
     }
 
+    // --- Missionsdirektor 3.0 ----------------------------------------------------------------
+
+    @Test fun contractTwistsAreDeterministicAndPlayable() {
+        val s = start().copy(clock = GameClock(day = 900))
+        var withTwist = 0; var routine = 0
+        for (seed in 1L..40L) {
+            val c = Ops.generate(d, s, s.clock.day, 99, seed, forced = Ops.archetypes[(seed % Ops.archetypes.size).toInt()]) ?: continue
+            val m1 = Ops.toMission(d, s, c); val m2 = Ops.toMission(d, s, c)
+            assertEquals("Gleicher Auftrag – gleiche Wendung", m1.stages.map { it.id to it.title }, m2.stages.map { it.id to it.title })
+            val twist = m1.stages.firstOrNull { it.id == "twist" }
+            if (c.difficulty <= 1 && c.phases <= 1) { assertNull(twist); routine++ }
+            if (twist != null) {
+                withTwist++
+                assertTrue(twist.options.size >= 2)
+                twist.options.forEach { o -> assertEquals("quiet", o.success.next); o.failure?.let { assertEquals("quiet", it.next) } }
+                val approach = m1.stages.first { it.id == "approach" }
+                assertTrue(approach.options.none { it.success.next == "quiet" })
+                // Über die Wendung ist die Durchführung erreichbar
+                assertTrue(m1.stages.any { it.id == "quiet" })
+            }
+        }
+        assertTrue("Wendungen kommen vor", withTwist > 0)
+        assertTrue("Routineaufträge kommen vor und bleiben ohne Wendung", routine >= 0)
+        assertTrue(Twists.all.size >= 8)
+    }
+
     // --- Inventar ------------------------------------------------------------------------------
 
     @Test fun v1ItemsHaveRealUse() {

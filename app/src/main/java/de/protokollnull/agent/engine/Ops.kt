@@ -519,6 +519,9 @@ object Ops {
             if (obj.tactical != null) stages += tacticalStage(data, c, obj, time, next = "close")
         }
         if (lastPhase) stages += closeStage(c, obj, chainStep, target)
+        // v1.0: Missionsdirektor 3.0 – deterministische Wendung zwischen Vorgehen und Durchführung
+        val withTwist = Twists.apply(stages.toList(), c)
+        stages.clear(); stages += withTwist
         val title = if (c.phases > 1) "${c.title} · Tag ${c.phase + 1}/${c.phases}" else c.title
         return MissionDefinition(
             id = c.id, title = title, locationId = c.regionId, type = typeFor(arch.id), minRank = 1, minAge = c.minAge,
