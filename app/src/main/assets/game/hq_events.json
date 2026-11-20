@@ -1494,5 +1494,448 @@
         }
       }
     ]
+  },
+  {
+    "id": "hq_alex_father",
+    "title": "Alex kocht",
+    "npcId": "alex",
+    "conditions": {
+      "flagsAll": [
+        "alex_shadow_done"
+      ]
+    },
+    "minDay": 30,
+    "weight": 26,
+    "text": "In der Gemeinschaftsküche riecht es nach Rote Bete und Dill. Alex steht am Herd, die Ärmel hochgekrempelt. „Borschtsch. Das Rezept meines Vaters. Ich dachte, nach der Sache mit dem Notizbuch …“ Sie stellt dir einen Teller hin.",
+    "choices": [
+      {
+        "id": "listen",
+        "text": "Essen und zuhören",
+        "result": "Alex erzählt von Sonntagen in Moskau, von einem Vater, der beim Kochen sang. Zum ersten Mal klingt es nicht wie ein Verhör.",
+        "effects": {
+          "friendship": 6,
+          "trust": 3
+        },
+        "memories": {
+          "alex": "Borschtsch in der Gemeinschaftsküche"
+        }
+      },
+      {
+        "id": "share",
+        "text": "Von deiner eigenen Familie erzählen",
+        "result": "Du erzählst vom Bahnhof. Alex legt den Löffel weg und hört zu, ohne etwas zu sagen. Das ist mehr wert als jeder Trost.",
+        "effects": {
+          "trust": 6,
+          "stress": -6
+        },
+        "memories": {
+          "alex": "Wir haben über unsere Familien geredet"
+        }
+      },
+      {
+        "id": "busy",
+        "text": "Leider keine Zeit",
+        "result": "„Klar.“ Sie isst allein. Am nächsten Tag ist die Küche wieder aufgeräumt, als wäre nichts gewesen.",
+        "npcEffects": {
+          "alex": {
+            "friendship": -3
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_birkhoff_intern",
+    "title": "Krach in der Technik",
+    "npcId": "birkhoff",
+    "conditions": {
+      "flagsAll": [
+        "birkhoff_ghost_recruited"
+      ]
+    },
+    "minDay": 20,
+    "repeatDays": 120,
+    "weight": 18,
+    "text": "Aus dem Technikraum dringt Geschrei. Birkhoff und seine neue Praktikantin streiten über Tabulatoren, Verschlüsselung und darüber, wer wessen Code „zerstört“ hat.",
+    "choices": [
+      {
+        "id": "mediate",
+        "text": "Vermitteln – beide haben recht",
+        "result": "Am Ende einigen sie sich auf ein gemeinsames Protokoll. Birkhoff murmelt etwas, das wie „Danke“ klingt.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "negotiation",
+          "difficulty": 40
+        },
+        "effects": {
+          "trust": 4,
+          "xp": 30
+        },
+        "failResult": "Beide drehen sich zu dir um und sind sich plötzlich einig: Du verstehst nichts von Code.",
+        "failEffects": {
+          "respect": -1
+        }
+      },
+      {
+        "id": "leave",
+        "text": "Die Tür leise wieder schließen",
+        "result": "Eine Stunde später teilen sie sich eine Pizza. Manche Streits muss man nicht lösen.",
+        "effects": {
+          "friendship": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_michael_grave",
+    "title": "Ein freier Nachmittag",
+    "npcId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "michael_reckoning"
+      ],
+      "minTrust": 60
+    },
+    "minDay": 30,
+    "weight": 20,
+    "text": "Michael steht mit dem Autoschlüssel in der Hand an der Schleuse. „Ich fahre raus. Einmal im Jahr.“ Er zögert. „Du kannst mitkommen, wenn du willst.“",
+    "choices": [
+      {
+        "id": "go",
+        "text": "Mitfahren",
+        "result": "Ein kleiner Friedhof am Stadtrand. Ihr redet kaum. Auf der Rückfahrt legt Michael kurz die Hand auf deine Schulter.",
+        "effects": {
+          "trust": 7,
+          "friendship": 5
+        },
+        "memories": {
+          "michael": "Der Friedhof am Stadtrand"
+        }
+      },
+      {
+        "id": "decline",
+        "text": "„Das ist deins. Aber danke, dass du fragst.“",
+        "result": "Er nickt. Am nächsten Morgen liegt ein Kaffee auf deinem Platz in der Trainingshalle.",
+        "effects": {
+          "respect": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_nikita_canteen",
+    "title": "Besuch in der Kantine",
+    "npcId": "nikita",
+    "involved": [
+      "percy"
+    ],
+    "conditions": {
+      "flagsAll": [
+        "alliance_1"
+      ],
+      "minRank": 7
+    },
+    "minDay": 10,
+    "weight": 22,
+    "text": "Nikita sitzt in der Kantine, als gehöre sie hierher, und rührt in einem Kaffee. Am Nachbartisch wird es still. Percy steht in der Tür und lächelt sein dünnes Lächeln.",
+    "choices": [
+      {
+        "id": "join",
+        "text": "Dich offen zu ihr setzen",
+        "result": "Die halbe Kantine sieht zu. Nikita grinst. „Mutig.“ Percy notiert sich etwas.",
+        "effects": {
+          "trust": 6
+        },
+        "npcEffects": {
+          "percy": {
+            "trust": -4
+          }
+        },
+        "memories": {
+          "nikita": "Kaffee vor der ganzen Kantine"
+        }
+      },
+      {
+        "id": "outside",
+        "text": "Sie diskret nach draußen bitten",
+        "result": "Auf dem Parkplatz gibt sie dir eine Adresse. „Nächstes Mal komme ich nicht rein. Versprochen.“",
+        "effects": {
+          "trust": 3
+        }
+      },
+      {
+        "id": "amanda",
+        "text": "Amanda informieren",
+        "result": "Amanda kümmert sich. Nikita ist weg, bevor die Sicherheit kommt – und sie weiß, wer angerufen hat.",
+        "effects": {
+          "trust": -6
+        },
+        "npcEffects": {
+          "amanda": {
+            "trust": 4
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_companion_offer",
+    "title": "{name} hat ein Angebot",
+    "npcId": "assigned_companion",
+    "conditions": {
+      "minTrust": 45
+    },
+    "minDay": 900,
+    "repeatDays": 0,
+    "weight": 16,
+    "text": "„Eine Außenstelle in Lissabon sucht jemanden mit meinem Profil.“ {name} dreht ein Kuvert in den Händen. „Ein Jahr. Vielleicht länger. Ich habe noch nicht unterschrieben.“",
+    "choices": [
+      {
+        "id": "support",
+        "text": "„Geh. Ich halte hier die Stellung.“",
+        "result": "{name} unterschreibt am nächsten Morgen – und schreibt dir aus Lissabon lange Briefe über Fliesen und Fischmärkte.",
+        "effects": {
+          "trust": 5,
+          "friendship": 3
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "careerXp": 40,
+            "mood": 10
+          }
+        ],
+        "memories": {
+          "assigned_companion": "Du hast mich nach Lissabon gehen lassen"
+        }
+      },
+      {
+        "id": "stay",
+        "text": "„Bleib. Wir brauchen dich hier.“",
+        "result": "{name} bleibt. Ob aus Überzeugung oder dir zuliebe, sagt {name} nicht.",
+        "check": {
+          "attribute": "charisma",
+          "skill": "persuasion",
+          "difficulty": 45
+        },
+        "effects": {
+          "friendship": 2
+        },
+        "life": [
+          {
+            "npcId": "assigned_companion",
+            "mood": -4
+          }
+        ],
+        "failResult": "„Das ist meine Entscheidung“, sagt {name} ruhig – und unterschreibt.",
+        "failEffects": {
+          "respect": 2
+        }
+      },
+      {
+        "id": "yours",
+        "text": "„Was willst du selbst?“",
+        "result": "Eine lange Pause. Dann ein Lächeln. „Ich glaube, ich wollte das nur einmal laut sagen.“ {name} entscheidet sich ohne dich – und das fühlt sich richtig an.",
+        "effects": {
+          "trust": 7
+        },
+        "memories": {
+          "assigned_companion": "Du hast gefragt, was ich selbst will"
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_academy_speech",
+    "title": "Der neue Jahrgang",
+    "npcId": "michael",
+    "conditions": {
+      "flagsAll": [
+        "academy_founded"
+      ]
+    },
+    "minDay": 30,
+    "repeatDays": 365,
+    "weight": 18,
+    "text": "Der neue Jahrgang der Akademie sitzt in der Trainingshalle. Zwanzig Freiwillige, alle volljährig oder in der Schulklasse mit Vormundschaft. Michael nickt dir zu: Die Begrüßung gehört dir.",
+    "choices": [
+      {
+        "id": "speech",
+        "text": "Eine ehrliche Rede halten",
+        "result": "Du sprichst über Fehler, über das Recht zu gehen und darüber, dass niemand hier eine Nummer ist. Hinterher bleibt eine Rekrutin stehen und bedankt sich.",
+        "check": {
+          "attribute": "willpower",
+          "skill": "inspire",
+          "difficulty": 40
+        },
+        "effects": {
+          "reputation": 5,
+          "xp": 40,
+          "trust": 3
+        },
+        "failResult": "Die Worte kommen holprig. Aber die Rekruten merken, dass sie ernst gemeint sind.",
+        "failEffects": {
+          "reputation": 2
+        }
+      },
+      {
+        "id": "michael",
+        "text": "Michael den Vortritt lassen",
+        "result": "Michael spricht kurz und klar. Am Ende sagt er: „Und wer Fragen hat, geht zu ihr.“ Er zeigt auf dich.",
+        "effects": {
+          "respect": 4
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_wera_photo",
+    "title": "Ein Foto aus dem Süden",
+    "npcId": "nikita",
+    "conditions": {
+      "flagsAll": [
+        "alliance_forged"
+      ]
+    },
+    "minDay": 40,
+    "weight": 16,
+    "text": "Nikita legt dir ein Foto auf den Tisch: Wera mit zwei Kindern an einem Strand, alle drei sonnenverbrannt. Auf der Rückseite steht nur: „Danke.“",
+    "choices": [
+      {
+        "id": "keep",
+        "text": "Das Foto behalten",
+        "result": "Es steht jetzt auf deinem Schreibtisch, halb hinter dem Monitor. Manchmal, an schlechten Tagen, schiebst du den Monitor ein Stück zur Seite.",
+        "effects": {
+          "trust": 3,
+          "stress": -8
+        },
+        "memories": {
+          "nikita": "Weras Foto vom Strand"
+        }
+      },
+      {
+        "id": "give",
+        "text": "Es Nikita zurückgeben – sie hat mehr riskiert",
+        "result": "Nikita steckt es ein, ohne etwas zu sagen. Aber sie lächelt.",
+        "effects": {
+          "trust": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_leonie_visit",
+    "title": "Besuch an der Schleuse",
+    "npcId": "michael",
+    "conditions": {
+      "flagsAny": [
+        "leonie_home",
+        "leonie_witness"
+      ]
+    },
+    "minDay": 20,
+    "weight": 18,
+    "text": "Am Empfang steht ein Mädchen mit Schulrucksack, daneben ihre Mutter. Leonie. Sie hat dir etwas gemalt: einen Bahnhof, und darüber, sehr groß, ihren Namen.",
+    "choices": [
+      {
+        "id": "time",
+        "text": "Dir Zeit nehmen und sie herumführen",
+        "result": "Leonie will alles sehen und fragt Birkhoff Löcher in den Bauch. Beim Abschied sagt ihre Mutter nur: „Sie schläft wieder durch.“",
+        "effects": {
+          "reputation": 4,
+          "stress": -10,
+          "xp": 30
+        }
+      },
+      {
+        "id": "brief",
+        "text": "Kurz danken und das Bild annehmen",
+        "result": "Das Bild hängt jetzt neben der Tür zum Direktorat. Wer reinkommt, sieht es zuerst.",
+        "effects": {
+          "stress": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_burnout",
+    "title": "Michael hält dich auf",
+    "npcId": "michael",
+    "minPlayerStress": 75,
+    "minDay": 40,
+    "repeatDays": 60,
+    "weight": 28,
+    "text": "Michael stellt sich dir in den Weg, als du zum dritten Mal an diesem Tag in die Einsatzzentrale willst. „Du siehst aus wie ich vor zehn Jahren. Und das ist kein Kompliment.“",
+    "choices": [
+      {
+        "id": "rest",
+        "text": "Den Rest des Tages freinehmen",
+        "result": "Ein Spaziergang, ein Essen, zehn Stunden Schlaf. Die Welt ist am nächsten Morgen noch da.",
+        "effects": {
+          "stress": -22,
+          "energy": 15,
+          "trust": 3
+        }
+      },
+      {
+        "id": "talk",
+        "text": "Mit ihm reden statt arbeiten",
+        "result": "Ihr redet über alles, was dich nicht schlafen lässt. Am Ende ist nichts gelöst – aber leichter.",
+        "effects": {
+          "stress": -12,
+          "friendship": 4
+        }
+      },
+      {
+        "id": "push",
+        "text": "„Ich komme klar.“",
+        "result": "Michael tritt beiseite. Er sagt nichts mehr, aber er sieht dir lange nach.",
+        "effects": {
+          "stress": 5,
+          "xp": 20
+        },
+        "npcEffects": {
+          "michael": {
+            "trust": -2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "hq_kira_postcard",
+    "title": "Post für Kandidat 7",
+    "npcId": "kira",
+    "conditions": {
+      "flagsAll": [
+        "kira_rescued"
+      ]
+    },
+    "minDay": 60,
+    "repeatDays": 180,
+    "weight": 12,
+    "text": "Eine Postkarte ohne Absender, aber mit Kiras kleiner, schiefer Schrift: „Ich habe heute zum ersten Mal meinen echten Namen unterschrieben. Es hat sich angefühlt wie fremdes Geld.“",
+    "choices": [
+      {
+        "id": "answer",
+        "text": "Ausführlich zurückschreiben",
+        "result": "Du schreibst drei Seiten über Namen, die man wieder lernen muss. Kira antwortet nach einem Monat mit einem einzigen Satz: „Gelernt.“",
+        "effects": {
+          "trust": 5,
+          "friendship": 4
+        },
+        "memories": {
+          "kira": "Briefe über echte Namen"
+        }
+      },
+      {
+        "id": "short",
+        "text": "Eine kurze Karte schicken",
+        "result": "„Steht dir.“ Mehr passt nicht auf die Karte. Mehr braucht es auch nicht.",
+        "effects": {
+          "friendship": 2
+        }
+      }
+    ]
   }
 ]

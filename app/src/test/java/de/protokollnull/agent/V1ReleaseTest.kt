@@ -217,6 +217,26 @@ class V1ReleaseTest {
         assertTrue(s1.player.credits - s0.player.credits >= cr)
     }
 
+    // --- Lebendige Division: Story-Entscheidungen wirken später nach --------------------------
+
+    @Test fun newHqEventsFollowStoryDecisions() {
+        val base = start().copy(clock = GameClock(day = 900))
+        val alex = d.hqEventById.getValue("hq_alex_father")
+        assertFalse(HqEvents.eligible(d, base, alex, base.clock.day))
+        val after = base.copy(flags = base.flags + "alex_shadow_done", living = base.living.copy(lives = base.living.lives + ("alex" to Life.life(d, base, "alex").copy(status = LifeStatus.DUTY))))
+        // Kennt man Alex und ist sie anwesend, kann die Szene auftreten
+        if (World.revealed(d, after, "alex")) assertTrue(HqEvents.eligible(d, after, alex, after.clock.day) || HqEvents.pending(d, after) != null)
+        val burnout = d.hqEventById.getValue("hq_burnout")
+        assertFalse(HqEvents.eligible(d, base.copy(player = base.player.copy(stress = 20)), burnout, base.clock.day))
+        // Alle neuen Szenen haben Wahlmöglichkeiten mit Wirkung
+        listOf("hq_alex_father", "hq_birkhoff_intern", "hq_michael_grave", "hq_nikita_canteen", "hq_companion_offer", "hq_academy_speech",
+            "hq_wera_photo", "hq_leonie_visit", "hq_burnout", "hq_kira_postcard").forEach { id ->
+            val e = d.hqEventById.getValue(id)
+            assertTrue(id, e.choices.size >= 2)
+            e.choices.forEach { c -> assertTrue("$id/${c.id} ohne Wirkung", c.effects != null || c.npcEffects.isNotEmpty() || c.life.isNotEmpty() || c.memories.isNotEmpty()) }
+        }
+    }
+
     // --- Missionsdirektor 3.0 ----------------------------------------------------------------
 
     @Test fun contractTwistsAreDeterministicAndPlayable() {
